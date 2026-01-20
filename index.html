@@ -2,411 +2,411 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,  initial-scale=1.0">
     <title>Macau Traffic Monitor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin:  0;
+            padding:  0;
+            box-sizing:  border-box;
+            font-family:  'Segoe UI',  Tahoma,  Geneva,  Verdana,  sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
+            background:  linear-gradient(135deg,  #1a2a6c,  #b21f1f,  #1a2a6c);
+            color:  #fff;
+            min-height:  100vh;
+            padding:  20px;
+            overflow-x:  hidden;
         }
         
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width:  1400px;
+            margin:  0 auto;
         }
         
         header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 20px;
+            text-align:  center;
+            padding:  20px 0;
+            margin-bottom:  20px;
         }
         
         .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            display:  flex;
+            align-items:  center;
+            justify-content:  center;
+            gap:  15px;
+            margin-bottom:  10px;
         }
         
         .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #ffd700, #ff8c00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            width:  80px;
+            height:  80px;
+            background:  linear-gradient(45deg,  #ffd700,  #ff8c00);
+            border-radius:  50%;
+            display:  flex;
+            align-items:  center;
+            justify-content:  center;
+            box-shadow:  0 0 20px rgba(255,  215,  0,  0.5);
         }
         
         .logo i {
-            font-size: 40px;
-            color: #8b0000;
+            font-size:  40px;
+            color:  #8b0000;
         }
         
         h1 {
-            font-size: 2.8rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 5px;
+            font-size:  2.8rem;
+            text-shadow:  0 2px 4px rgba(0,  0,  0,  0.5);
+            margin-bottom:  5px;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 20px;
+            font-size:  1.2rem;
+            opacity:  0.9;
+            max-width:  600px;
+            margin:  0 auto 20px;
         }
         
         .dashboard {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
+            display:  flex;
+            flex-wrap:  wrap;
+            gap:  20px;
+            margin-bottom:  30px;
         }
         
         .map-container {
-            flex: 3;
-            min-width: 300px;
-            height: 600px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
+            flex:  3;
+            min-width:  300px;
+            height:  600px;
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            overflow:  hidden;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
+            position:  relative;
         }
         
         #map {
-            width: 100%;
-            height: 100%;
-            border-radius: 15px;
-            border: none;
+            width:  100%;
+            height:  100%;
+            border-radius:  15px;
+            border:  none;
         }
         
         .info-panel {
-            flex: 1;
-            min-width: 250px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            flex:  1;
+            min-width:  250px;
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            padding:  20px;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
         }
         
         .panel-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffd700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            font-size:  1.5rem;
+            margin-bottom:  20px;
+            text-align:  center;
+            color:  #ffd700;
+            display:  flex;
+            align-items:  center;
+            justify-content:  center;
+            gap:  10px;
         }
         
         .traffic-status {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+            display:  flex;
+            justify-content:  space-between;
+            margin-bottom:  25px;
+            padding:  15px;
+            background:  rgba(0,  0,  0,  0.2);
+            border-radius:  10px;
         }
         
         .status-item {
-            text-align: center;
+            text-align:  center;
         }
         
         .status-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 5px 0;
+            font-size:  1.8rem;
+            font-weight:  bold;
+            margin:  5px 0;
         }
         
         .status-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size:  0.9rem;
+            opacity:  0.8;
         }
         
-        .congestion-high { color: #ff4d4d; }
-        .congestion-medium { color: #ffcc00; }
-        .congestion-low { color: #4dff4d; }
+        .congestion-high { color:  #ff4d4d; }
+        .congestion-medium { color:  #ffcc00; }
+        .congestion-low { color:  #4dff4d; }
         
         .waiting-times {
-            margin-top: 20px;
+            margin-top:  20px;
         }
         
         .waiting-time-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            display:  flex;
+            justify-content:  space-between;
+            padding:  12px 0;
+            border-bottom:  1px solid rgba(255,  255,  255,  0.1);
+            transition:  all 0.3s ease;
         }
         
-        .waiting-time-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            padding-left: 10px;
+        .waiting-time-item: hover {
+            background:  rgba(255,  255,  255,  0.1);
+            padding-left:  10px;
         }
         
-        .waiting-time-item:last-child {
-            border-bottom: none;
+        .waiting-time-item: last-child {
+            border-bottom:  none;
         }
         
         .location-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
         }
         
         .time-display {
-            font-weight: bold;
+            font-weight:  bold;
         }
         
         /* Updated color classes for more accurate ranges */
-        .time-low { color: #4dff4d; }      /* Green - Light Traffic (<10 min) */
-        .time-medium { color: #ffcc00; }   /* Yellow - Moderate Traffic (10-20 min) */
-        .time-high { color: #ff4d4d; }     /* Red - Heavy Traffic (20-40 min) */
-        .time-severe { color: #9932cc; }   /* Purple - Severe Traffic (40+ min) */
-        .time-closed { color: #808080; }   /* Gray - Closed/Blocked */
+        .time-low { color:  #4dff4d; }      /* Green - Light Traffic (<10 min) */
+        .time-medium { color:  #ffcc00; }   /* Yellow - Moderate Traffic (10-20 min) */
+        .time-high { color:  #ff4d4d; }     /* Red - Heavy Traffic (20-40 min) */
+        .time-severe { color:  #9932cc; }   /* Purple - Severe Traffic (40+ min) */
+        .time-closed { color:  #808080; }   /* Gray - Closed/Blocked */
         
         .legend {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
+            background:  rgba(0,  0,  0,  0.7);
+            padding:  10px;
+            border-radius:  8px;
+            margin-top:  20px;
         }
         
         .legend-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #ffd700;
+            font-weight:  bold;
+            margin-bottom:  8px;
+            color:  #ffd700;
         }
         
         .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
+            display:  flex;
+            align-items:  center;
+            margin-bottom:  5px;
+            font-size:  0.9rem;
         }
         
         .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-            margin-right: 10px;
+            width:  20px;
+            height:  20px;
+            border-radius:  3px;
+            margin-right:  10px;
         }
         
         /* Updated legend colors for accurate ranges */
-        .legend-severe { background-color: #9932cc; }  /* Purple */
-        .legend-high { background-color: #ff4d4d; }    /* Red */
-        .legend-medium { background-color: #ffcc00; }  /* Yellow */
-        .legend-low { background-color: #4dff4d; }     /* Green */
-        .legend-closed { background-color: #808080; }  /* Gray */
+        .legend-severe { background-color:  #9932cc; }  /* Purple */
+        .legend-high { background-color:  #ff4d4d; }    /* Red */
+        .legend-medium { background-color:  #ffcc00; }  /* Yellow */
+        .legend-low { background-color:  #4dff4d; }     /* Green */
+        .legend-closed { background-color:  #808080; }  /* Gray */
         
         .app-promo {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            padding:  20px;
+            margin-top:  20px;
+            text-align:  center;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
         }
         
         .app-promo h2 {
-            color: #ffd700;
-            margin-bottom: 15px;
+            color:  #ffd700;
+            margin-bottom:  15px;
         }
         
         .app-features {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+            display:  flex;
+            justify-content:  center;
+            gap:  20px;
+            margin:  20px 0;
+            flex-wrap:  wrap;
         }
         
         .feature {
-            flex: 1;
-            min-width: 150px;
-            text-align: center;
+            flex:  1;
+            min-width:  150px;
+            text-align:  center;
         }
         
         .feature i {
-            font-size: 2rem;
-            color: #ffd700;
-            margin-bottom: 10px;
+            font-size:  2rem;
+            color:  #ffd700;
+            margin-bottom:  10px;
         }
         
         .app-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            display:  flex;
+            justify-content:  center;
+            gap:  15px;
+            margin-top:  20px;
+            flex-wrap:  wrap;
         }
         
         .app-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            border-radius: 30px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
+            padding:  10px 20px;
+            border-radius:  30px;
+            background:  #000;
+            color:  #fff;
+            text-decoration:  none;
+            font-weight:  bold;
+            transition:  all 0.3s ease;
         }
         
-        .app-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .app-btn: hover {
+            transform:  translateY(-3px);
+            box-shadow:  0 5px 15px rgba(0,  0,  0,  0.3);
         }
         
         .app-btn.apple {
-            background: #000;
+            background:  #000;
         }
         
         .app-btn.google {
-            background: #34A853;
+            background:  #34A853;
         }
         
         footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            opacity: 0.8;
+            text-align:  center;
+            padding:  20px;
+            margin-top:  20px;
+            font-size:  0.9rem;
+            opacity:  0.8;
         }
         
         .map-instructions {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            z-index: 1000;
-            animation: fadeOut 5s forwards;
+            position:  absolute;
+            top:  10px;
+            right:  10px;
+            background:  rgba(0,  0,  0,  0.7);
+            padding:  10px;
+            border-radius:  5px;
+            font-size:  0.9rem;
+            z-index:  1000;
+            animation:  fadeOut 5s forwards;
         }
         
         @keyframes fadeOut {
-            0% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
+            0% { opacity:  1; }
+            80% { opacity:  1; }
+            100% { opacity:  0; visibility:  hidden; }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width:  768px) {
             .dashboard {
-                flex-direction: column;
+                flex-direction:  column;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size:  2.2rem;
             }
             
             .map-container {
-                height: 400px;
+                height:  400px;
             }
         }
         
         /* Data source indicators */
         .data-source {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.8rem;
-            opacity: 0.7;
-            margin-top: 5px;
+            display:  flex;
+            align-items:  center;
+            gap:  5px;
+            font-size:  0.8rem;
+            opacity:  0.7;
+            margin-top:  5px;
         }
         
         .data-source i {
-            font-size: 0.7rem;
+            font-size:  0.7rem;
         }
         
         /* Loading states */
         .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px;
-            color: #ffd700;
+            display:  flex;
+            align-items:  center;
+            justify-content:  center;
+            gap:  10px;
+            padding:  10px;
+            color:  #ffd700;
         }
         
         .spinner {
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 2px solid #ffd700;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
+            border:  2px solid rgba(255,  255,  255,  0.3);
+            border-radius:  50%;
+            border-top:  2px solid #ffd700;
+            width:  16px;
+            height:  16px;
+            animation:  spin 1s linear infinite;
         }
         
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% { transform:  rotate(0deg); }
+            100% { transform:  rotate(360deg); }
         }
         
         /* Status indicators */
         .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-left: 5px;
+            display:  inline-block;
+            width:  10px;
+            height:  10px;
+            border-radius:  50%;
+            margin-left:  5px;
         }
         
         .status-live {
-            background-color: #4dff4d;
-            box-shadow: 0 0 5px #4dff4d;
+            background-color:  #4dff4d;
+            box-shadow:  0 0 5px #4dff4d;
         }
         
         .status-offline {
-            background-color: #ff4d4d;
+            background-color:  #ff4d4d;
         }
         
         /* Current time display */
         .current-time {
-            text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            text-align:  center;
+            padding:  10px;
+            background:  rgba(0,  0,  0,  0.3);
+            border-radius:  8px;
+            margin-bottom:  15px;
+            font-size:  1.1rem;
         }
         
         .median-time {
-            text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            text-align:  center;
+            padding:  10px;
+            background:  rgba(0,  0,  0,  0.3);
+            border-radius:  8px;
+            margin-top:  15px;
+            font-size:  1.1rem;
+            font-weight:  bold;
         }
         
         .median-value {
-            color: #ffd700;
-            font-size: 1.3rem;
+            color:  #ffd700;
+            font-size:  1.3rem;
         }
     </style>
 </head>
@@ -435,12 +435,12 @@
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
-            
+    
             <div class="info-panel">
                 <h2 class="panel-title"><i class="fas fa-info-circle"></i> Traffic Overview</h2>
                 
                 <div class="current-time">
-                    Current Time: <span id="current-time-display">--:--:--</span>
+                    Current Time:  <span id="current-time-display">--: --: --</span>
                 </div>
                 
                 <div class="traffic-status">
@@ -515,7 +515,7 @@
                 </div>
                 
                 <div class="median-time">
-                    Median Traffic Time: <span class="median-value" id="median-time">-- min</span>
+                    Median Traffic Time:  <span class="median-value" id="median-time">-- min</span>
                 </div>
                 
                 <div class="legend">
@@ -543,7 +543,7 @@
                 </div>
             </div>
         </div>
-        
+        <div style="height: 500px;"><div id="rt-64b1888d3b8d3c0f9912574a07fb3c6a"></div> <script src="https://rumbletalk.com/client/?nK3BHSIO"></script></div>
         <div class="app-promo">
             <h2><i class="fas fa-mobile-alt"></i> Get Traffic Updates on the Go</h2>
             <p>Download our mobile app for traffic alerts and navigation assistance</p>
@@ -587,74 +587,75 @@
         
         <footer>
             <p>Macau Traffic Monitor © 2026 | Traffic data for Macau Special Administrative Region</p>
-            <p>Data Sources: Google Maps API | DSAT (Direcção de Serviços de Trânsito)</p>
+            <p>Data Sources:  Google Maps API | DSAT (Direcção de Serviços de Trânsito)</p>
         </footer>
     </div>
     
     <script>
         // Traffic data for each location with time ranges
         const trafficData = {
-            "friendship": [
-                { start: 7, end: 9.5, min: 6, max: 15 },
-                { start: 9, end: 15, min: 5, max: 10 },
-                { start: 15.01, end: 20, min: 6, max: 15 },
-                { start: 19, end: 6.99, min: 4, max: 10 }
-            ],
-            "sai-van": [
-                { start: 7, end: 9.5, min: 6, max: 10, chance: 0.33 },
-                { start: 9, end: 15, min: 5, max: 10 },
-                { start: 15.01, end: 18.99, min: 6, max: 15 },
-                { start: 19, end: 6.99, min: 4, max: 10 }
-            ],
-            "horta": [
-                { start: 7, end: 9.99, min: 10, max: 18 },
-                { start: 10, end: 15, min: 5, max: 10 },
-                { start: 15.5, end: 18.99, min: 15, max: 30 },
-                { start: 19, end: 6.99, min: 4, max: 8 }
-            ],
-            "san-ma": [
-                { start: 7, end: 8.99, min: 6, max: 10 },
-                { start: 9, end: 15, min: 5, max: 15 },
-                { start: 15.01, end: 18.99, min: 10, max: 20 },
-                { start: 19, end: 6.99, min: 4, max: 10 }
-            ],
-            "praca": [
-                { start: 7, end: 8.99, min: 6, max: 15 },
-                { start: 9, end: 15, min: 6, max: 15 },
-                { start: 15.01, end: 18.99, min: 6, max: 15 },
-                { start: 19, end: 6.99, min: 6, max: 15 }
-            ],
-            "portas": [
-                { start: 7, end: 8.99, min: 5, max: 10 },
-                { start: 9, end: 15, min: 10, max: 15 },
-                { start: 15.01, end: 20, min: 10, max: 25 },
-                { start: 19, end: 23, min: 10, max: 15 },
-                { start: 23.01, end: 6.99, min: 1, max: 3 }
-            ],
-            "cotai": [
-                { start: 7, end: 8.99, min: 6, max: 15 },
-                { start: 9, end: 15, min: 6, max: 15 },
-                { start: 15.01, end: 18.99, min: 10, max: 15 },
-                { start: 19, end: 6.99, min: 6, max: 10 }
+            "friendship":  [
+                { start:  7,  end:  9.5,  min:  6,  max:  15 }, 
+                { start:  9,  end:  15,  min:  5,  max:  10 }, 
+                { start:  15.01,  end:  20,  min:  6,  max:  15 }, 
+                { start:  19,  end:  6.99,  min:  4,  max:  10 }
+            ], 
+            "sai-van":  [
+                { start:  7,  end:  9.5,  min:  6,  max:  10,  chance:  0.33 }, 
+                { start:  9,  end:  15,  min:  5,  max:  10 }, 
+                { start:  15.01,  end:  18.99,  min:  6,  max:  15 }, 
+                { start:  19,  end:  6.99,  min:  4,  max:  10 }
+            ], 
+            "horta":  [
+                { start:  7,  end:  9.99,  min:  10,  max:  18 }, 
+                { start:  10,  end:  15,  min:  5,  max:  10 }, 
+                { start:  15.5,  end:  18.99,  min:  15,  max:  30 }, 
+                { start:  19,  end:  6.99,  min:  4,  max:  8 }
+            ], 
+            "san-ma":  [
+                { start:  7,  end:  8.99,  min:  6,  max:  10 }, 
+                { start:  9,  end:  15,  min:  5,  max:  15 }, 
+                { start:  15.01,  end:  18.99,  min:  10,  max:  20 }, 
+                { start:  19,  end:  6.99,  min:  4,  max:  10 }
+            ], 
+            "praca":  [
+                { start:  7,  end:  8.99,  min:  6,  max:  15 }, 
+                { start:  9,  end:  15,  min:  6,  max:  15 }, 
+                { start:  15.01,  end:  18.99,  min:  6,  max:  15 }, 
+                { start:  19,  end:  6.99,  min:  6,  max:  15 }
+            ], 
+            "portas":  [
+                { start:  7,  end:  8.99,  min:  5,  max:  10 }, 
+                { start:  9,  end:  15,  min:  10,  max:  15 }, 
+                { start:  15.01,  end:  20,  min:  10,  max:  25 }, 
+                { start:  19,  end:  23,  min:  10,  max:  15 }, 
+                { start:  23.01,  end:  6.99,  min:  1,  max:  3 }
+            ], 
+            "cotai":  [
+                { start:  7,  end:  8.99,  min:  6,  max:  15 }, 
+                { start:  9,  end:  15,  min:  6,  max:  15 }, 
+                { start:  15.01,  end:  18.99,  min:  10,  max:  15 }, 
+                { start:  19,  end:  6.99,  min:  6,  max:  10 }
             ]
         };
 
         // Initialize current times for each location
         const currentTimes = {};
         let medianTime = 0;
+        let lastUpdateTime = 0;
 
-        // Function to get current time in decimal format (e.g., 14.5 for 2:30 PM)
+        // Function to get current time in decimal format (e.g.,  14.5 for 2: 30 PM)
         function getCurrentTimeDecimal() {
             const now = new Date();
             return now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
         }
 
-        // Function to format time as HH:MM:SS
+        // Function to format time as HH: MM: SS
         function formatTime(date) {
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
-            return `${hours}:${minutes}:${seconds}`;
+            const hours = String(date.getHours()).padStart(2,  '0');
+            const minutes = String(date.getMinutes()).padStart(2,  '0');
+            const seconds = String(date.getSeconds()).padStart(2,  '0');
+            return `${hours}: ${minutes}: ${seconds}`;
         }
 
         // Function to get traffic time for a location based on current time
@@ -664,7 +665,7 @@
             
             // Find the appropriate time range
             for (const range of data) {
-                // Handle overnight ranges (e.g., 19:00 to 06:59)
+                // Handle overnight ranges (e.g.,  19: 00 to 06: 59)
                 if (range.start > range.end) {
                     if (currentTime >= range.start || currentTime <= range.end) {
                         // Special handling for Sai Van Bridge with chance
@@ -673,7 +674,11 @@
                                 return Math.floor(Math.random() * (30 - 11 + 1)) + 11;
                             }
                         }
-                        return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+                        // Calculate base time as midpoint of range
+                        const baseTime = Math.floor((range.min + range.max) / 2);
+                        // Add small fluctuation
+                        const fluctuation = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+                        return Math.max(range.min, Math.min(range.max, baseTime + fluctuation));
                     }
                 } else {
                     if (currentTime >= range.start && currentTime <= range.end) {
@@ -683,7 +688,11 @@
                                 return Math.floor(Math.random() * (30 - 11 + 1)) + 11;
                             }
                         }
-                        return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+                        // Calculate base time as midpoint of range
+                        const baseTime = Math.floor((range.min + range.max) / 2);
+                        // Add small fluctuation
+                        const fluctuation = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+                        return Math.max(range.min, Math.min(range.max, baseTime + fluctuation));
                     }
                 }
             }
@@ -697,50 +706,64 @@
             const now = new Date();
             document.getElementById('current-time-display').textContent = formatTime(now);
             
-            let totalTime = 0;
-            let count = 0;
+            // Only update traffic times every 30 seconds to prevent too frequent changes
+            const currentTime = now.getTime();
+            const shouldUpdateTraffic = currentTime - lastUpdateTime > 30000;
             
-            for (const location in trafficData) {
-                const timeElement = document.getElementById(`${location}-time`);
-                if (timeElement) {
-                    let newTime;
-                    
-                    // If this is the first time, initialize with calculated time
-                    if (currentTimes[location] === undefined) {
-                        newTime = getTrafficTime(location);
-                        currentTimes[location] = newTime;
-                    } else {
-                        // For subsequent updates, adjust by -1, 0, or +1 minute
-                        const adjustment = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
-                        newTime = Math.max(1, currentTimes[location] + adjustment);
-                        currentTimes[location] = newTime;
+            if (shouldUpdateTraffic) {
+                lastUpdateTime = currentTime;
+                
+                let totalTime = 0;
+                let count = 0;
+                const times = [];
+                
+                for (const location in trafficData) {
+                    const timeElement = document.getElementById(`${location}-time`);
+                    if (timeElement) {
+                        let newTime;
+                        
+                        // If this is the first time,  initialize with calculated time
+                        if (currentTimes[location] === undefined) {
+                            newTime = getTrafficTime(location);
+                            currentTimes[location] = newTime;
+                        } else {
+                            // For subsequent updates,  adjust by -1,  0,  or +1 minute
+                            const adjustment = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+                            newTime = Math.max(1, currentTimes[location] + adjustment);
+                            currentTimes[location] = newTime;
+                        }
+                        
+                        timeElement.textContent = `${newTime} min`;
+                        times.push(newTime);
+                        
+                        // Update color class based on time
+                        timeElement.className = 'time-display';
+                        if (newTime < 10) {
+                            timeElement.classList.add('time-low');
+                        } else if (newTime < 20) {
+                            timeElement.classList.add('time-medium');
+                        } else if (newTime < 40) {
+                            timeElement.classList.add('time-high');
+                        } else {
+                            timeElement.classList.add('time-severe');
+                        }
+                        
+                        totalTime += newTime;
+                        count++;
                     }
-                    
-                    timeElement.textContent = `${newTime} min`;
-                    
-                    // Update color class based on time
-                    timeElement.className = 'time-display';
-                    if (newTime < 10) {
-                        timeElement.classList.add('time-low');
-                    } else if (newTime < 20) {
-                        timeElement.classList.add('time-medium');
-                    } else if (newTime < 40) {
-                        timeElement.classList.add('time-high');
-                    } else {
-                        timeElement.classList.add('time-severe');
-                    }
-                    
-                    totalTime += newTime;
-                    count++;
                 }
+                
+                // Calculate and display median time
+                if (times.length > 0) {
+                    times.sort((a, b) => a - b);
+                    const mid = Math.floor(times.length / 2);
+                    medianTime = times.length % 2 !== 0 ? times[mid] : (times[mid - 1] + times[mid]) / 2;
+                    document.getElementById('median-time').textContent = `${Math.round(medianTime)} min`;
+                }
+                
+                // Update average delay
+                document.getElementById('average-delay').textContent = `${Math.round(medianTime)} min`;
             }
-            
-            // Calculate and display median time
-            medianTime = Math.round(totalTime / count);
-            document.getElementById('median-time').textContent = `${medianTime} min`;
-            
-            // Update average delay
-            document.getElementById('average-delay').textContent = `${medianTime} min`;
         }
 
         // Initialize the application
@@ -748,8 +771,8 @@
             // Update times immediately
             updateTrafficTimes();
             
-            // Update times every minute
-            setInterval(updateTrafficTimes, 60000);
+            // Update times every second
+            setInterval(updateTrafficTimes, 1000);
         }
         
         // Start the application when the page loads
