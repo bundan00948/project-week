@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -504,7 +505,28 @@
                 grid-template-columns:     1fr;
             }
         }
+        .chat-box {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .chat-box h2 {
+        color: #ffd700;
+        margin-bottom: 20px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     </style>
+    <!-- Elfsight Popup | Untitled Popup -->
+<script src="https://elfsightcdn.com/platform.js" async></script>
+<div class="elfsight-app-c9616ffe-955b-4c76-816a-7e105b98b486" data-elfsight-app-lazy></div>
 </head>
 <body>
     <div class="container">
@@ -540,15 +562,15 @@
                 </div>
                 
                 <div class="traffic-status">
-                    <div class="status-item">
-                        <div class="status-label">Overall Traffic</div>
-                        <div class="status-value congestion-medium">MODERATE</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-label">Average Delay</div>
-                        <div class="status-value" id="average-delay">15 min</div>
-                    </div>
-                </div>
+    <div class="status-item">
+        <div class="status-label">Overall Traffic</div>
+        <div class="status-value congestion-low">LIGHT</div>
+    </div>
+    <div class="status-item">
+        <div class="status-label">Average Delay</div>
+        <div class="status-value" id="average-delay">15 min</div>
+    </div>
+</div>
                 
                 <div class="waiting-times">
                     <h3><i class="fas fa-clock"></i> Estimated Crossing Duration</h3>
@@ -643,7 +665,7 @@
         <!-- New container below map and next to legend -->
         <div class="additional-info">
             <div class="info-box">
-                <h3><i class="fas fa-info-circle"></i> Traffic Information</h3>
+                <h3><i class="fas fa-info-circle"></i> Website Traffic Information</h3>
                 <div class="info-content">
                     <p>This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.</p>
                     <ul>
@@ -796,9 +818,15 @@
         </div>
         
 <!-- Elfsight Comments | Untitled Comments -->
-<script src="https:  //elfsightcdn.com/platform.js" async></script>
-<div class="elfsight-app-a7d035f1-d15d-43a4-b7d3-59975d7af233" data-elfsight-app-lazy></div>
-<div style="height:    500px;"><div id="rt-64b1888d3b8d3c0f9912574a07fb3c6a"></div> <script src="https: //rumbletalk.com/client/?nK3BHSIO"></script></div>
+
+<!-- Elfsight Comments Container -->
+<div class="chat-box">
+    <h2>Chat</h2>
+    <div class="elfsight-container">
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div class="elfsight-app-a7d035f1-d15d-43a4-b7d3-59975d7af233" data-elfsight-app-lazy></div>
+    </div>
+</div>
         <div class="app-promo">
             <h2><i class="fas fa-mobile-alt"></i> Get Traffic Updates on the Go</h2>
             <p>Download our mobile app for traffic alerts and navigation assistance</p>
@@ -1034,6 +1062,6 @@
         window.addEventListener('DOMContentLoaded',     init);
     </script>
     
-    <script async src="https:  //iframely.net/embed.js"></script>
+    <script async src="https://iframely.net/embed.js"></script>
 </body>
 </html>
