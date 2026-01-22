@@ -364,136 +364,6 @@
             }
         }
         
-        /* Bulk Update Styles */
-        .bulk-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        .bulk-section h3 {
-            color: #ffd700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .bulk-controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .bulk-controls .btn {
-            flex: 1;
-            min-width: 150px;
-            justify-content: center;
-        }
-        
-        .bulk-form {
-            display: none;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        
-        .bulk-form.active {
-            display: block;
-        }
-        
-        .bulk-form .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .bulk-form .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .bulk-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .bulk-actions .btn {
-            flex: 1;
-        }
-        
-        .camera-selection {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-        }
-        
-        .camera-selection-item {
-            background: rgba(255, 215, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.5);
-            border-radius: 5px;
-            padding: 5px 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .camera-selection-item .remove-btn {
-            background: none;
-            border: none;
-            color: #ff4d4d;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .select-all-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        
-        .select-all-container input {
-            width: auto;
-        }
-        
-        .progress-container {
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: #4dff4d;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .progress-text {
-            text-align: center;
-            margin-top: 5px;
-            font-size: 0.9rem;
-        }
-        
         .stats-container {
             display: flex;
             gap: 20px;
@@ -522,190 +392,14 @@
             opacity: 0.8;
         }
         
-        /* Upload Section */
-        .upload-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        .upload-section h3 {
-            color: #ffd700;
-            margin-bottom: 15px;
+        .position-container {
             display: flex;
+            gap: 10px;
             align-items: center;
-            gap: 10px;
         }
         
-        .upload-form {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        
-        .file-upload {
-            border: 2px dashed rgba(255, 215, 0, 0.5);
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .file-upload:hover {
-            background: rgba(255, 215, 0, 0.1);
-            border-color: #ffd700;
-        }
-        
-        .file-upload i {
-            font-size: 3rem;
-            color: #ffd700;
-            margin-bottom: 15px;
-        }
-        
-        .file-upload p {
-            margin: 10px 0;
-        }
-        
-        .file-input {
-            display: none;
-        }
-        
-        .file-info {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .file-info.active {
-            display: block;
-        }
-        
-        .preview-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-        
-        .preview-table th, 
-        .preview-table td {
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px;
-            text-align: left;
-        }
-        
-        .preview-table th {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        .preview-table tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .upload-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .upload-actions .btn {
+        .position-input {
             flex: 1;
-        }
-        
-        .upload-progress {
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .upload-progress.active {
-            display: block;
-        }
-        
-        .upload-status {
-            margin-top: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .upload-status.processing {
-            color: #ffd700;
-        }
-        
-        .upload-status.completed {
-            color: #4dff4d;
-        }
-        
-        .upload-status.error {
-            color: #ff4d4d;
-        }
-        
-        .template-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: #ffd700;
-            text-decoration: none;
-        }
-        
-        .template-link:hover {
-            text-decoration: underline;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .tab.active {
-            background: #ffd700;
-            color: #000;
-            font-weight: bold;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .error-message {
-            color: #ff4d4d;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .error-message.show {
-            display: block;
-        }
-        
-        .column-info {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 3px solid #ffd700;
-            padding: 10px;
-            margin: 15px 0;
-            border-radius: 0 5px 5px 0;
         }
     </style>
 </head>
@@ -732,13 +426,12 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Enter your password">
-                <div class="error-message" id="loginError">Invalid credentials. Please try again.</div>
             </div>
             <button class="btn" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i> Login
             </button>
             <p style="margin-top: 15px; color: #ffd700;">
-                <i class="fas fa-info-circle"></i> Go away and get lost if you're not a staff
+                <i class="fas fa-info-circle"></i> Get away and go lost if you're not staff
             </p>
         </div>
         
@@ -758,12 +451,6 @@
                 <button class="btn btn-secondary" id="refreshBtn">
                     <i class="fas fa-sync-alt"></i> Refresh Data
                 </button>
-                <button class="btn btn-warning" id="bulkUpdateBtn">
-                    <i class="fas fa-edit"></i> Bulk Update
-                </button>
-                <button class="btn btn-info" id="bulkUploadBtn">
-                    <i class="fas fa-upload"></i> Bulk Upload
-                </button>
                 <button class="btn btn-danger" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
@@ -773,148 +460,6 @@
                 <div class="stat-card">
                     <div class="stat-label">Total Cameras</div>
                     <div class="stat-value" id="totalCameras">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Selected</div>
-                    <div class="stat-value" id="selectedCameras">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Updated</div>
-                    <div class="stat-value" id="updatedCameras">0</div>
-                </div>
-            </div>
-            
-            <div class="tabs">
-                <div class="tab active" data-tab="bulk-update">Bulk Update</div>
-                <div class="tab" data-tab="bulk-upload">Bulk Upload</div>
-            </div>
-            
-            <!-- Bulk Update Section -->
-            <div class="tab-content active" id="bulkUpdateTab">
-                <div class="bulk-section">
-                    <h3><i class="fas fa-edit"></i> Bulk Update Cameras</h3>
-                    <p>Select cameras below and update their properties in bulk.</p>
-                    
-                    <div class="bulk-controls">
-                        <button class="btn btn-secondary" id="selectAllBtn">
-                            <i class="fas fa-check-square"></i> Select All
-                        </button>
-                        <button class="btn btn-secondary" id="deselectAllBtn">
-                            <i class="fas fa-square"></i> Deselect All
-                        </button>
-                    </div>
-                    
-                    <div class="camera-selection" id="cameraSelection">
-                        <p>No cameras selected</p>
-                    </div>
-                    
-                    <button class="btn btn-warning" id="openBulkFormBtn" disabled>
-                        <i class="fas fa-edit"></i> Update Selected Cameras
-                    </button>
-                    
-                    <div class="bulk-form" id="bulkUpdateForm">
-                        <h3>Update Properties</h3>
-                        <div class="form-group">
-                            <label for="bulkLocation">Location</label>
-                            <select id="bulkLocation">
-                                <option value="">-- Keep Current --</option>
-                                <option value="macau-city">Macau City</option>
-                                <option value="taipa">Taipa</option>
-                                <option value="bridges">Cross-Sea Bridges</option>
-                                <option value="border">Border Crossings</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bulkEmbedUrl">Embed URL (applies to all selected)</label>
-                            <input type="text" id="bulkEmbedUrl" placeholder="New embed URL (leave blank to keep current)">
-                        </div>
-                        
-                        <div class="bulk-actions">
-                            <button class="btn btn-warning" id="applyBulkUpdateBtn">
-                                <i class="fas fa-sync-alt"></i> Apply Updates
-                            </button>
-                            <button class="btn btn-secondary" id="cancelBulkUpdateBtn">
-                                <i class="fas fa-times"></i> Cancel
-                            </button>
-                        </div>
-                        
-                        <div class="progress-container" id="progressContainer">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="progressFill"></div>
-                            </div>
-                            <div class="progress-text" id="progressText">0% Complete</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Bulk Upload Section -->
-            <div class="tab-content" id="bulkUploadTab">
-                <div class="upload-section">
-                    <h3><i class="fas fa-upload"></i> Bulk Upload Cameras</h3>
-                    <p>Upload a CSV file with 5 columns: English Title, Chinese Title, Portuguese Title, Japanese Title, Embed URL</p>
-                    
-                    <div class="column-info">
-                        <strong>Required Format:</strong> English Title, Chinese Title, Portuguese Title, Japanese Title, Embed URL
-                    </div>
-                    
-                    <a href="#" class="template-link" id="downloadTemplate">
-                        <i class="fas fa-download"></i> Download CSV Template
-                    </a>
-                    
-                    <div class="upload-form">
-                        <div class="file-upload" id="fileUploadArea">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Drag & Drop your CSV file here</p>
-                            <p>or</p>
-                            <button class="btn btn-info" id="browseFileBtn">
-                                <i class="fas fa-folder-open"></i> Browse Files
-                            </button>
-                            <input type="file" id="fileInput" class="file-input" accept=".csv">
-                        </div>
-                        
-                        <div class="file-info" id="fileInfo">
-                            <h4>File Information</h4>
-                            <p><strong>File Name:</strong> <span id="fileName">-</span></p>
-                            <p><strong>Size:</strong> <span id="fileSize">-</span></p>
-                            
-                            <div class="preview-table-container">
-                                <h4>Preview (5 columns)</h4>
-                                <table class="preview-table" id="previewTable">
-                                    <thead>
-                                        <tr>
-                                            <th>English Title</th>
-                                            <th>Chinese Title</th>
-                                            <th>Portuguese Title</th>
-                                            <th>Japanese Title</th>
-                                            <th>Embed URL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="previewTableBody">
-                                        <!-- Preview data will be inserted here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        
-                        <div class="upload-actions">
-                            <button class="btn btn-success" id="uploadBtn" disabled>
-                                <i class="fas fa-upload"></i> Upload Cameras
-                            </button>
-                            <button class="btn btn-secondary" id="resetUploadBtn">
-                                <i class="fas fa-redo"></i> Reset
-                            </button>
-                        </div>
-                        
-                        <div class="upload-progress" id="uploadProgress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="uploadProgressFill"></div>
-                            </div>
-                            <div class="progress-text" id="uploadProgressText">0% Complete</div>
-                            <div class="upload-status" id="uploadStatus">Ready to upload</div>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -970,6 +515,14 @@
                     </select>
                 </div>
                 
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <div class="position-container">
+                        <input type="number" id="position" class="position-input" min="1" placeholder="Position number">
+                        <span id="positionExample" style="opacity: 0.7;">e.g. Macau City - 1</span>
+                    </div>
+                </div>
+                
                 <div style="display: flex; gap: 15px; margin-top: 25px;">
                     <button class="btn" id="saveCameraBtn">
                         <i class="fas fa-save"></i> Save Camera
@@ -994,12 +547,12 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0", 
-            authDomain: "macau-traffic-501cb.firebaseapp.com", 
-            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com", 
-            projectId: "macau-traffic-501cb", 
-            storageBucket: "macau-traffic-501cb.appspot.com", 
-            messagingSenderId: "123456789012", 
+            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",     
+            authDomain: "macau-traffic-501cb.firebaseapp.com",     
+            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",     
+            projectId: "macau-traffic-501cb",     
+            storageBucket: "macau-traffic-501cb.appspot.com",     
+            messagingSenderId: "123456789012",     
             appId: "1:123456789012:web:abcdef1234567890abcdef"
         };
 
@@ -1015,26 +568,9 @@
         const notification = document.getElementById('notification');
         const statusIndicator = document.getElementById('statusIndicator');
         const statusText = document.getElementById('statusText');
-        const cameraSelection = document.getElementById('cameraSelection');
-        const bulkUpdateForm = document.getElementById('bulkUpdateForm');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileName = document.getElementById('fileName');
-        const fileSize = document.getElementById('fileSize');
-        const previewTableBody = document.getElementById('previewTableBody');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const uploadProgress = document.getElementById('uploadProgress');
-        const uploadProgressFill = document.getElementById('uploadProgressFill');
-        const uploadProgressText = document.getElementById('uploadProgressText');
-        const uploadStatus = document.getElementById('uploadStatus');
-        const loginError = document.getElementById('loginError');
 
         // Stats elements
         const totalCamerasEl = document.getElementById('totalCameras');
-        const selectedCamerasEl = document.getElementById('selectedCameras');
-        const updatedCamerasEl = document.getElementById('updatedCameras');
 
         // Buttons
         const loginBtn = document.getElementById('loginBtn');
@@ -1044,19 +580,6 @@
         const saveCameraBtn = document.getElementById('saveCameraBtn');
         const cancelBtn = document.getElementById('cancelBtn');
         const closeModal = document.getElementById('closeModal');
-        const bulkUpdateBtn = document.getElementById('bulkUpdateBtn');
-        const bulkUploadBtn = document.getElementById('bulkUploadBtn');
-        const selectAllBtn = document.getElementById('selectAllBtn');
-        const deselectAllBtn = document.getElementById('deselectAllBtn');
-        const openBulkFormBtn = document.getElementById('openBulkFormBtn');
-        const applyBulkUpdateBtn = document.getElementById('applyBulkUpdateBtn');
-        const cancelBulkUpdateBtn = document.getElementById('cancelBulkUpdateBtn');
-        const browseFileBtn = document.getElementById('browseFileBtn');
-        const fileInput = document.getElementById('fileInput');
-        const fileUploadArea = document.getElementById('fileUploadArea');
-        const resetUploadBtn = document.getElementById('resetUploadBtn');
-        const downloadTemplate = document.getElementById('downloadTemplate');
-        const tabs = document.querySelectorAll('.tab');
 
         // Form fields
         const emailInput = document.getElementById('email');
@@ -1068,8 +591,7 @@
         const japaneseTitleInput = document.getElementById('japaneseTitle');
         const embedUrlInput = document.getElementById('embedUrl');
         const locationSelect = document.getElementById('location');
-        const bulkLocationSelect = document.getElementById('bulkLocation');
-        const bulkEmbedUrlInput = document.getElementById('bulkEmbedUrl');
+        const positionInput = document.getElementById('position');
 
         // Current editing camera ID
         let currentEditingCameraId = null;
@@ -1077,19 +599,22 @@
         // Authentication state
         let isAuthenticated = false;
 
-        // Selected cameras for bulk update
-        let selectedCameras = [];
-
         // All cameras data
         let allCameras = {};
-
-        // CSV data for upload
-        let csvData = [];
 
         // Initialize the application
         function init() {
             updateConnectionStatus(true);
             loadCameras();
+            
+            // Update position example when location changes
+            locationSelect.addEventListener('change', updatePositionExample);
+        }
+
+        // Update position example text
+        function updatePositionExample() {
+            const locationText = locationSelect.options[locationSelect.selectedIndex].text;
+            document.getElementById('positionExample').textContent = `e.g. ${locationText} - 1`;
         }
 
         // Update connection status indicator
@@ -1127,21 +652,19 @@
             const password = passwordInput.value.trim();
             
             if (!email || !password) {
-                loginError.textContent = 'Please enter both email and password';
-                loginError.classList.add('show');
+                showNotification('Please enter both email and password', true);
                 return;
             }
             
-            // Correct credentials
+            // In a real app, this would be a Firebase authentication call
+            // For demo purposes, we'll use a simple check
             if (email === 'admin@macautraffic.com' && password === 'Admin123') {
                 isAuthenticated = true;
                 authSection.style.display = 'none';
                 camerasSection.style.display = 'block';
                 showNotification('Login successful!');
-                loginError.classList.remove('show');
             } else {
-                loginError.textContent = 'Invalid credentials. Please try again.';
-                loginError.classList.add('show');
+                showNotification('Invalid credentials. Please try again.', true);
             }
         }
 
@@ -1152,7 +675,6 @@
             camerasSection.style.display = 'none';
             emailInput.value = '';
             passwordInput.value = '';
-            loginError.classList.remove('show');
             showNotification('You have been logged out');
         }
 
@@ -1184,8 +706,6 @@
         // Update statistics
         function updateStats() {
             totalCamerasEl.textContent = Object.keys(allCameras).length;
-            selectedCamerasEl.textContent = selectedCameras.length;
-            updatedCamerasEl.textContent = '0';
         }
 
         // Display cameras in the grid
@@ -1201,9 +721,10 @@
                         <i class="fas fa-video"></i> ${camera.titles.en}
                     </div>
                     <div class="camera-details">
-                        <p><strong>ID:</strong> ${cameraId}</p>
-                        <p><strong>Location:</strong> ${camera.location}</p>
-                        <p><strong>URL:</strong> ${camera.embedUrl}</p>
+                        <p><strong>ID: </strong> ${cameraId}</p>
+                        <p><strong>Location: </strong> ${camera.location}</p>
+                        <p><strong>Position: </strong> ${camera.position || 'Not set'}</p>
+                        <p><strong>URL: </strong> ${camera.embedUrl}</p>
                     </div>
                     <iframe class="camera-iframe" src="${camera.embedUrl}" allowfullscreen></iframe>
                     <div class="camera-actions">
@@ -1212,9 +733,6 @@
                         </button>
                         <button class="btn btn-danger delete-btn" data-id="${cameraId}">
                             <i class="fas fa-trash"></i> Delete
-                        </button>
-                        <button class="btn btn-warning select-btn" data-id="${cameraId}">
-                            <i class="fas fa-check-circle"></i> Select
                         </button>
                     </div>
                 `;
@@ -1229,162 +747,6 @@
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', () => deleteCamera(btn.dataset.id));
             });
-            
-            // Add event listeners to select buttons
-            document.querySelectorAll('.select-btn').forEach(btn => {
-                btn.addEventListener('click', () => toggleCameraSelection(btn.dataset.id));
-            });
-        }
-
-        // Toggle camera selection for bulk update
-        function toggleCameraSelection(cameraId) {
-            const index = selectedCameras.indexOf(cameraId);
-            if (index === -1) {
-                selectedCameras.push(cameraId);
-            } else {
-                selectedCameras.splice(index, 1);
-            }
-            updateCameraSelectionDisplay();
-            updateStats();
-        }
-
-        // Update camera selection display
-        function updateCameraSelectionDisplay() {
-            if (selectedCameras.length === 0) {
-                cameraSelection.innerHTML = '<p>No cameras selected</p>';
-                openBulkFormBtn.disabled = true;
-                return;
-            }
-            
-            openBulkFormBtn.disabled = false;
-            cameraSelection.innerHTML = '';
-            
-            selectedCameras.forEach(cameraId => {
-                const camera = allCameras[cameraId];
-                if (camera) {
-                    const item = document.createElement('div');
-                    item.className = 'camera-selection-item';
-                    item.innerHTML = `
-                        <span>${camera.titles.en}</span>
-                        <button class="remove-btn" data-id="${cameraId}">×</button>
-                    `;
-                    cameraSelection.appendChild(item);
-                }
-            });
-            
-            // Add event listeners to remove buttons
-            document.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const cameraId = btn.dataset.id;
-                    const index = selectedCameras.indexOf(cameraId);
-                    if (index !== -1) {
-                        selectedCameras.splice(index, 1);
-                        updateCameraSelectionDisplay();
-                        updateStats();
-                    }
-                });
-            });
-        }
-
-        // Select all cameras
-        function selectAllCameras() {
-            selectedCameras = Object.keys(allCameras);
-            updateCameraSelectionDisplay();
-            updateStats();
-        }
-
-        // Deselect all cameras
-        function deselectAllCameras() {
-            selectedCameras = [];
-            updateCameraSelectionDisplay();
-            updateStats();
-        }
-
-        // Open bulk update form
-        function openBulkUpdateForm() {
-            if (selectedCameras.length === 0) {
-                showNotification('Please select at least one camera', true);
-                return;
-            }
-            bulkUpdateForm.classList.add('active');
-        }
-
-        // Apply bulk update
-        async function applyBulkUpdate() {
-            const location = bulkLocationSelect.value;
-            const embedUrl = bulkEmbedUrlInput.value.trim();
-            
-            if (!location && !embedUrl) {
-                showNotification('Please specify at least one property to update', true);
-                return;
-            }
-            
-            // Show progress
-            progressContainer.style.display = 'block';
-            progressFill.style.width = '0%';
-            progressText.textContent = '0% Complete';
-            
-            // Disable buttons during update
-            applyBulkUpdateBtn.disabled = true;
-            cancelBulkUpdateBtn.disabled = true;
-            
-            try {
-                const total = selectedCameras.length;
-                let completed = 0;
-                updatedCamerasEl.textContent = '0';
-                
-                // Update each selected camera
-                for (const cameraId of selectedCameras) {
-                    const cameraRef = database.ref('cameras/' + cameraId);
-                    const snapshot = await cameraRef.once('value');
-                    const cameraData = snapshot.val();
-                    
-                    if (cameraData) {
-                        // Update only the specified properties
-                        if (location) {
-                            cameraData.location = location;
-                        }
-                        if (embedUrl) {
-                            cameraData.embedUrl = embedUrl;
-                        }
-                        
-                        // Save updated data
-                        await cameraRef.set(cameraData);
-                    }
-                    
-                    // Update progress
-                    completed++;
-                    const progress = Math.round((completed / total) * 100);
-                    progressFill.style.width = progress + '%';
-                    progressText.textContent = `${progress}% Complete`;
-                    updatedCamerasEl.textContent = completed;
-                }
-                
-                // Reset form and selection
-                bulkLocationSelect.value = '';
-                bulkEmbedUrlInput.value = '';
-                selectedCameras = [];
-                updateCameraSelectionDisplay();
-                bulkUpdateForm.classList.remove('active');
-                updateStats();
-                
-                // Reload cameras
-                loadCameras();
-                
-                showNotification(`Successfully updated ${total} cameras!`);
-            } catch (error) {
-                console.error('Error during bulk update: ', error);
-                showNotification('Failed to update cameras', true);
-            } finally {
-                // Re-enable buttons
-                applyBulkUpdateBtn.disabled = false;
-                cancelBulkUpdateBtn.disabled = false;
-                
-                // Hide progress after delay
-                setTimeout(() => {
-                    progressContainer.style.display = 'none';
-                }, 2000);
-            }
         }
 
         // Open modal for adding new camera
@@ -1398,6 +760,8 @@
             japaneseTitleInput.value = '';
             embedUrlInput.value = '';
             locationSelect.value = 'macau-city';
+            positionInput.value = '';
+            updatePositionExample();
             cameraModal.style.display = 'flex';
         }
 
@@ -1414,11 +778,13 @@
                         cameraIdInput.value = cameraId;
                         cameraIdInput.disabled = true;
                         englishTitleInput.value = camera.titles.en;
-                        chineseTitleInput.value = camera.titles.zh || '';
-                        portugueseTitleInput.value = camera.titles.pt || '';
-                        japaneseTitleInput.value = camera.titles.ja || '';
+                        chineseTitleInput.value = camera.titles.zh;
+                        portugueseTitleInput.value = camera.titles.pt;
+                        japaneseTitleInput.value = camera.titles.ja;
                         embedUrlInput.value = camera.embedUrl;
                         locationSelect.value = camera.location;
+                        positionInput.value = camera.position || '';
+                        updatePositionExample();
                         cameraModal.style.display = 'flex';
                     } else {
                         showNotification('Camera not found', true);
@@ -1439,6 +805,7 @@
             const japaneseTitle = japaneseTitleInput.value.trim();
             const embedUrl = embedUrlInput.value.trim();
             const location = locationSelect.value;
+            const position = positionInput.value.trim();
             
             if (!cameraId || !englishTitle || !embedUrl) {
                 showNotification('Please fill in all required fields', true);
@@ -1448,12 +815,13 @@
             const cameraData = {
                 titles: {
                     en: englishTitle, 
-                    zh: chineseTitle || '', 
-                    pt: portugueseTitle || '', 
-                    ja: japaneseTitle || ''
+                    zh: chineseTitle, 
+                    pt: portugueseTitle, 
+                    ja: japaneseTitle
                 }, 
                 embedUrl: embedUrl, 
-                location: location
+                location: location,
+                position: position ? parseInt(position) : null
             };
             
             const camerasRef = database.ref('cameras/' + cameraId);
@@ -1491,244 +859,6 @@
             cameraIdInput.disabled = false;
         }
 
-        // Cancel bulk update
-        function cancelBulkUpdate() {
-            bulkUpdateForm.classList.remove('active');
-            bulkLocationSelect.value = '';
-            bulkEmbedUrlInput.value = '';
-        }
-
-        // Handle file upload
-        function handleFileUpload(file) {
-            if (!file) return;
-            
-            // Update file info
-            fileName.textContent = file.name;
-            fileSize.textContent = formatFileSize(file.size);
-            fileInfo.classList.add('active');
-            
-            // Parse CSV file
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const content = e.target.result;
-                parseCSV(content);
-            };
-            reader.readAsText(file);
-        }
-
-        // Format file size
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Parse CSV content (5 columns: English, Chinese, Portuguese, Japanese, Embed URL)
-        function parseCSV(content) {
-            const lines = content.split('\n');
-            
-            // Clear previous data
-            csvData = [];
-            previewTableBody.innerHTML = '';
-            
-            // Process each line
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                
-                // Skip header row
-                if (i === 0 && line.toLowerCase().includes('english')) continue;
-                
-                // Split by comma but handle quoted values
-                const values = [];
-                let current = '';
-                let inQuotes = false;
-                
-                for (let j = 0; j < line.length; j++) {
-                    const char = line[j];
-                    
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        values.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
-                }
-                values.push(current.trim());
-                
-                // Must have exactly 5 columns
-                if (values.length !== 5) {
-                    showNotification(`Line ${i+1} has ${values.length} columns, expected 5`, true);
-                    continue;
-                }
-                
-                const cameraData = {
-                    en: values[0], 
-                    zh: values[1] || '', 
-                    pt: values[2] || '', 
-                    ja: values[3] || '', 
-                    embedUrl: values[4]
-                };
-                
-                // Validate required fields
-                if (!cameraData.en) {
-                    showNotification(`Line ${i+1}: Missing English title`, true);
-                    continue;
-                }
-                
-                if (!cameraData.embedUrl || !cameraData.embedUrl.startsWith('http')) {
-                    showNotification(`Line ${i+1}: Invalid embed URL`, true);
-                    continue;
-                }
-                
-                csvData.push(cameraData);
-                
-                // Add to preview table
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${cameraData.en}</td>
-                    <td>${cameraData.zh || '-'}</td>
-                    <td>${cameraData.pt || '-'}</td>
-                    <td>${cameraData.ja || '-'}</td>
-                    <td>${cameraData.embedUrl}</td>
-                `;
-                previewTableBody.appendChild(row);
-            }
-            
-            // Enable upload button if we have data
-            uploadBtn.disabled = csvData.length === 0;
-            
-            if (csvData.length > 0) {
-                showNotification(`Parsed ${csvData.length} cameras from CSV`);
-            }
-        }
-
-        // Upload cameras from CSV
-        async function uploadCameras() {
-            if (csvData.length === 0) {
-                showNotification('No camera data to upload', true);
-                return;
-            }
-            
-            // Show upload progress
-            uploadProgress.classList.add('active');
-            uploadProgressFill.style.width = '0%';
-            uploadProgressText.textContent = '0% Complete';
-            uploadStatus.textContent = 'Processing upload...';
-            uploadStatus.className = 'upload-status processing';
-            
-            // Disable buttons during upload
-            uploadBtn.disabled = true;
-            resetUploadBtn.disabled = true;
-            
-            try {
-                const total = csvData.length;
-                let completed = 0;
-                
-                // Upload each camera
-                for (const camera of csvData) {
-                    // Generate a unique camera ID
-                    const cameraId = 'camera-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
-                    
-                    const cameraData = {
-                        titles: {
-                            en: camera.en, 
-                            zh: camera.zh, 
-                            pt: camera.pt, 
-                            ja: camera.ja
-                        }, 
-                        embedUrl: camera.embedUrl, 
-                        location: 'macau-city' // Default location
-                    };
-                    
-                    // Save to Firebase
-                    await database.ref('cameras/' + cameraId).set(cameraData);
-                    
-                    // Update progress
-                    completed++;
-                    const progress = Math.round((completed / total) * 100);
-                    uploadProgressFill.style.width = progress + '%';
-                    uploadProgressText.textContent = `${progress}% Complete`;
-                }
-                
-                // Update status
-                uploadStatus.textContent = 'Upload completed successfully!';
-                uploadStatus.className = 'upload-status completed';
-                
-                // Reset form
-                resetUploadForm();
-                
-                // Reload cameras
-                loadCameras();
-                
-                showNotification(`Successfully uploaded ${total} cameras!`);
-            } catch (error) {
-                console.error('Error during upload: ', error);
-                uploadStatus.textContent = 'Upload failed. Please try again.';
-                uploadStatus.className = 'upload-status error';
-                showNotification('Failed to upload cameras', true);
-            } finally {
-                // Re-enable buttons
-                uploadBtn.disabled = false;
-                resetUploadBtn.disabled = false;
-                
-                // Hide progress after delay
-                setTimeout(() => {
-                    uploadProgress.classList.remove('active');
-                }, 3000);
-            }
-        }
-
-        // Reset upload form
-        function resetUploadForm() {
-            fileInput.value = '';
-            fileInfo.classList.remove('active');
-            previewTableBody.innerHTML = '';
-            csvData = [];
-            uploadBtn.disabled = true;
-        }
-
-        // Download CSV template (5 columns)
-        function downloadCSVTemplate() {
-            const csvContent = "English Title,Chinese Title,Portuguese Title,Japanese Title,Embed URL\n" +
-                              "Main Street Camera,,Câmara da Rua Principal,,https://example.com/camera1\n" +
-                              "Harbour View Camera,,Vista do Porto,,https://example.com/camera2\n" +
-                              "Bridge Approach Camera,,Câmara de Aproximação da Ponte,,https://example.com/camera3";
-            
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'camera_template.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Switch tabs
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab content
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            
-            // Add active class to clicked tab
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-        }
-
         // Event Listeners
         loginBtn.addEventListener('click', login);
         addCameraBtn.addEventListener('click', openAddCameraModal);
@@ -1737,52 +867,6 @@
         saveCameraBtn.addEventListener('click', saveCamera);
         cancelBtn.addEventListener('click', closeCameraModal);
         closeModal.addEventListener('click', closeCameraModal);
-        bulkUpdateBtn.addEventListener('click', () => switchTab('bulk-update'));
-        bulkUploadBtn.addEventListener('click', () => switchTab('bulk-upload'));
-        selectAllBtn.addEventListener('click', selectAllCameras);
-        deselectAllBtn.addEventListener('click', deselectAllCameras);
-        openBulkFormBtn.addEventListener('click', openBulkUpdateForm);
-        applyBulkUpdateBtn.addEventListener('click', applyBulkUpdate);
-        cancelBulkUpdateBtn.addEventListener('click', cancelBulkUpdate);
-        
-        // File upload events
-        browseFileBtn.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileUpload(e.target.files[0]);
-            }
-        });
-        
-        fileUploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileUploadArea.style.backgroundColor = 'rgba(255, 215, 0, 0.2)';
-        });
-        
-        fileUploadArea.addEventListener('dragleave', () => {
-            fileUploadArea.style.backgroundColor = '';
-        });
-        
-        fileUploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileUploadArea.style.backgroundColor = '';
-            if (e.dataTransfer.files.length > 0) {
-                handleFileUpload(e.dataTransfer.files[0]);
-            }
-        });
-        
-        uploadBtn.addEventListener('click', uploadCameras);
-        resetUploadBtn.addEventListener('click', resetUploadForm);
-        downloadTemplate.addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadCSVTemplate();
-        });
-        
-        // Tab switching
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                switchTab(tab.dataset.tab);
-            });
-        });
         
         // Close modal when clicking outside
         window.addEventListener('click', (e) => {
