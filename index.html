@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Elfsight Popup | Update Popup -->
+    <!-- Elfsight Popup | Untitled Popup -->
 <script src="https://elfsightcdn.com/platform.js" async></script>
 <div class="elfsight-app-c9616ffe-955b-4c76-816a-7e105b98b486" data-elfsight-app-lazy></div>
-
-<!-- Elfsight Background Music | Background Music -->
+<!-- Elfsight Background Music | Untitled Background Music -->
 <script src="https://elfsightcdn.com/platform.js" async></script>
 <div class="elfsight-app-26ceb3f6-1273-4539-9ad6-3e20bca06a3d" data-elfsight-app-lazy></div>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,  initial-scale=1.0">
     <title>Macau Traffic Monitor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="" type="image/x-icon">
+    <link rel="stylesheet" href="https: //cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.postimg.cc/XNyP9t3q/Screenshot-2026-01-21-at-23-44-24-removebg-preview.png" type="image/x-icon">
     <style>
         * {
             margin:  0;
@@ -24,7 +22,7 @@
         
         body {
             background:  linear-gradient(rgba(0,  0,  0,  0.7),  rgba(0,  0,  0,  0.7)),  
-                        url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
+                        url('https: //img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
             background-size:  cover;
             color:  #fff;
             min-height:  100vh;
@@ -195,7 +193,7 @@
         .map-container {
             flex:  3;
             min-width:  600px;
-            height:  850px;
+            height:  900px;
             background:  rgba(255,  255,  255,  0.1);
             border-radius:  15px;
             overflow:  hidden;
@@ -729,9 +727,18 @@
             transform:  translateY(-5px);
             box-shadow:  0 5px 15px rgba(0,  0,  0,  0.3);
         }
+        
+        /* Bug fix indicator */
+        .bug-fix-note {
+            background:  rgba(255,  215,  0,  0.2);
+            border:  1px solid rgba(255,  215,  0,  0.5);
+            border-radius:  8px;
+            padding:  15px;
+            margin:  20px 0;
+            text-align:  center;
+            font-size:  0.9rem;
+        }
     </style>
-</head>
-<body>
     <div class="container">
         <header>
             <!-- Language Selector -->
@@ -755,13 +762,14 @@
                 <h1 id="header-title">Macau Traffic Monitor</h1>
             </div>
             <h2 id="welcome-message">Hello! Welcome to visit our website!</h2>
-            <p class="subtitle" id="header-subtitle">Real-time traffic conditions and waiting times for Macau's major roads and border crossings. This page is fully coded by F1J Group 5. </p>
+            <p class="subtitle" id="header-subtitle">Real-time traffic conditions and waiting times for Macau's major roads and border crossings. Fully Coded by (Project Week) F1J Group 5.</p>
             
             <div class="nav-tabs">
                 <div class="nav-tab active" data-page="dashboard" id="nav-dashboard">Dashboard</div>
                 <div class="nav-tab" data-page="cameras" id="nav-cameras">Live Cameras</div>
                 <div class="nav-tab" data-page="chat" id="nav-chat">Community Chat</div>
                 <div class="nav-tab" data-page="about" id="nav-about">About</div>
+                <div class="nav-tab" date-page="reviews" id="nav-reviews">Reviews</div>
             </div>
         </header>
         
@@ -773,7 +781,7 @@
                         <i class="fas fa-hand-pointer"></i> <span id="map-instruction">Drag to navigate the map</span>
                     </div>
                     <iframe 
-                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="1200" height="850" style="border:  0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="1200" height="900" style="border:  0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
 
                 <div class="info-panel">
@@ -916,6 +924,10 @@
         
         <!-- Live Cameras Page -->
         <div class="page" id="cameras-page">
+            <div class="bug-fix-note">
+                <strong>Bug Fix Note: </strong> The language switching bug has been resolved. 
+            </div>
+            
             <div class="camera-feeds">
                 <h2><i class="fas fa-video"></i> <span id="live-cameras-title">Live Traffic Cameras</span></h2>
                 
@@ -931,112 +943,112 @@
                 <div class="camera-content active" id="macau-city-content">
                     <div class="camera-grid">
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Tunnel da Penha towards Largo do Governor Vasco Rocha Vieira (Reservoir)" data-pt="Túnel da Penha em direção ao Largo do Governador Vasco Rocha Vieira (Reservatório)" data-ja="ペニャトンネル ヴァスコ・ロチャ・ヴィエイラ知事広場方面（貯水池）">松山隧道向羅理基（水塘）</div>
+                            <div class="camera-title" id="camera-title-1">松山隧道向羅理基（水塘）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t4008.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Tunnel da Penha towards Rua do Campo" data-pt="Túnel da Penha em direção à Rua do Campo" data-ja="ペニャトンネル ルア・ド・カンプ方面">松山隧道向高士德</div>
+                            <div class="camera-title" id="camera-title-2">松山隧道向高士德</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t4001.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Mercado da Rua do Aljube" data-pt="Mercado da Rua do Aljube" data-ja="アルジュベ通り市場">紅街市</div>
+                            <div class="camera-title" id="camera-title-3">紅街市</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2063.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Avenida do Conselheiro Borja and Rua do Campo Intersection" data-pt="Interseção da Avenida do Conselheiro Borja e Rua do Campo" data-ja="コンセレイロ・ボルジャ大通りとルア・ド・カンプの交差点">提督馬路與高士德大馬路交界</div>
+                            <div class="camera-title" id="camera-title-4">提督馬路與高士德大馬路交界</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2065.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Avenida do Conselheiro Borja" data-pt="Avenida do Conselheiro Borja" data-ja="コンセレイロ・ボルジャ大通り">提督馬路</div>
+                            <div class="camera-title" id="camera-title-5">提督馬路</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2054.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Avenida de Venceslau de Morais" data-pt="Avenida de Venceslau de Morais" data-ja="ベンセスラウ・デ・モライス大通り">慕拉士大馬路</div>
+                            <div class="camera-title" id="camera-title-6">慕拉士大馬路</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2023.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Inner Harbour" data-pt="Porto Interior" data-ja="内港">內港</div>
+                            <div class="camera-title" id="camera-title-7">內港</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1067.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Rua Nova da Areia Preta" data-pt="Rua Nova da Areia Preta" data-ja="アレイア・プレタ新街">黑沙環新街</div>
+                            <div class="camera-title" id="camera-title-8">黑沙環新街</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2322.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Praça de Tap Seac" data-pt="Praça de Tap Seac" data-ja="タップ・セアック広場">塔石廣場</div>
+                            <div class="camera-title" id="camera-title-9">塔石廣場</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2013.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Praça do Vasco Rocha Vieira" data-pt="Praça do Vasco Rocha Vieira" data-ja="ヴァスコ・ロチャ・ヴィエイラ広場">宋玉生廣場</div>
+                            <div class="camera-title" id="camera-title-10">宋玉生廣場</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1125.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Blood Donation Centre" data-pt="Centro de Doação de Sangue" data-ja="献血センター">捐血中心</div>
+                            <div class="camera-title" id="camera-title-11">捐血中心</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1122.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Praça da Nave Desportiva" data-pt="Praça da Nave Desportiva" data-ja="ナヴェ・デスポーティヴァ広場">南灣湖廣場</div>
+                            <div class="camera-title" id="camera-title-12">南灣湖廣場</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1090.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Praça de Ferreira do Amaral" data-pt="Praça de Ferreira do Amaral" data-ja="フェレイラ・ド・アマラル広場">亚马喇前地</div>
+                            <div class="camera-title" id="camera-title-13">亚马喇前地</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2061.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Avenida do Infante D. Henrique and Avenida do Dr. Rodrigo Rodrigues Intersection" data-pt="Interseção da Avenida do Infante D. Henrique e Avenida do Dr. Rodrigo Rodrigues" data-ja="インファンテ・ドン・エンリケ大通りとロドリゴ・ロドリゲス医師大通りの交差点">殷皇子大馬路與葡京路交界</div>
+                            <div class="camera-title" id="camera-title-14">殷皇子大馬路與葡京路交界</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2062.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Rua dos Mercadores / Avenida da Praia Grande Intersection" data-pt="Interseção da Rua dos Mercadores / Avenida da Praia Grande" data-ja="ルア・ドス・メルカドーレスとプラヤ・グランデ大通りの交差点">新马路 / 南湾马路交界</div>
+                            <div class="camera-title" id="camera-title-15">新马路 / 南湾马路交界</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2181.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Rua dos Mercadores" data-pt="Rua dos Mercadores" data-ja="ルア・ドス・メルカドーレス">新馬路</div>
+                            <div class="camera-title" id="camera-title-16">新馬路</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2134.m3u8" allowfullscreen></iframe>
                             </div>
@@ -1048,35 +1060,35 @@
                 <div class="camera-content" id="taipa-content">
                     <div class="camera-grid">
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Haiwan Garden" data-pt="Jardim Haiwan" data-ja="ハイワン・ガーデン">海灣花園</div>
+                            <div class="camera-title" id="camera-title-17">海灣花園</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1059.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Macau International Airport" data-pt="Aeroporto Internacional de Macau" data-ja="マカオ国際空港">澳門國際機場</div>
+                            <div class="camera-title" id="camera-title-18">澳門國際機場</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1014.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Estrada do Istmo Circular Intersection" data-pt="Interseção Circular da Estrada do Istmo" data-ja="イストモ環状道路交差点">路氹連貫公路圓形地</div>
+                            <div class="camera-title" id="camera-title-19">路氹連貫公路圓形地</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1030.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Cotai Strip" data-pt="Faixa de Cotai" data-ja="コータイ・ストリップ">金光大道</div>
+                            <div class="camera-title" id="camera-title-20">金光大道</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t2016.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Cotai Strip 2 / Estrada do Istmo" data-pt="Faixa de Cotai 2 / Estrada do Istmo" data-ja="コータイ・ストリップ2 / イストモ道路">金光大道 2 / 路氹連貫公路</div>
+                            <div class="camera-title" id="camera-title-21">金光大道 2 / 路氹連貫公路</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t2015.m3u8" allowfullscreen></iframe>
                             </div>
@@ -1088,84 +1100,84 @@
                 <div class="camera-content" id="bridges-content">
                     <div class="camera-grid">
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Avenida da Amizade" data-pt="Avenida da Amizade" data-ja="アミザデ大通り">友誼馬路</div>
+                            <div class="camera-title" id="camera-title-22">友誼馬路</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1134.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Ponte da Amizade near North Bay Entrance Intersection" data-pt="Ponte da Amizade perto da Interseção da Entrada da Baía Norte" data-ja="北湾入口交差点付近のアミザデ橋">友誼大橋近北安入口交匯處</div>
+                            <div class="camera-title" id="camera-title-23">友誼大橋近北安入口交匯處</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1039.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Ponte da Amizade towards Taipa" data-pt="Ponte da Amizade em direção a Taipa" data-ja="タージャ方面のアミザデ橋">友谊大桥向氹仔</div>
+                            <div class="camera-title" id="camera-title-24">友谊大桥向氹仔</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1033.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Ponte da Amizade towards Macau" data-pt="Ponte da Amizade em direção a Macau" data-ja="マカオ方面のアミザデ橋">友誼大橋向澳门</div>
+                            <div class="camera-title" id="camera-title-25">友誼大橋向澳门</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1025.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Ponte de Sai Van towards Macau" data-pt="Ponte de Sai Van em direção a Macau" data-ja="マカオ方面のサイヴァン橋">西灣大橋向澳门</div>
+                            <div class="camera-title" id="camera-title-26">西灣大橋向澳门</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1245.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Ponte de Sai Van towards Taipa (High)" data-pt="Ponte de Sai Van em direção a Taipa (Alto)" data-ja="タージャ方面のサイヴァン橋（高所）">西灣大橋向氹仔（高处）</div>
+                            <div class="camera-title" id="camera-title-27">西灣大橋向氹仔（高处）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1311.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Ponte de Sai Van towards Macau (High)" data-pt="Ponte de Sai Van em direção a Macau (Alto)" data-ja="マカオ方面のサイヴァン橋（高所）">西灣大橋向澳门（高处）</div>
+                            <div class="camera-title" id="camera-title-28">西灣大橋向澳门（高处）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1312.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Macau Bridge Entrance (Macau)" data-pt="Entrada da Ponte de Macau (Macau)" data-ja="マカオ橋入口（マカオ）">澳門大橋入口（澳门）</div>
+                            <div class="camera-title" id="camera-title-29">澳門大橋入口（澳门）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1406.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Macau Bridge towards Taipa" data-pt="Ponte de Macau em direção a Taipa" data-ja="タージャ方面のマカオ橋">澳門大橋向氹仔</div>
+                            <div class="camera-title" id="camera-title-30">澳門大橋向氹仔</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1436.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Macau Bridge towards Macau" data-pt="Ponte de Macau em direção a Macau" data-ja="マカオ方面のマカオ橋">澳門大橋向澳门</div>
+                            <div class="camera-title" id="camera-title-31">澳門大橋向澳门</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/b1439.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Tunnel da Portas do Cerco" data-pt="Túnel da Portas do Cerco" data-ja="ポルタス・ド・セルコトンネル">關閘隧道</div>
+                            <div class="camera-title" id="camera-title-32">關閘隧道</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2173.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Avenida da Portas do Cerco" data-pt="Avenida da Portas do Cerco" data-ja="ポルタス・ド・セルコ大通り">關閘大馬路</div>
+                            <div class="camera-title" id="camera-title-33">關閘大馬路</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1028.m3u8" allowfullscreen></iframe>
                             </div>
@@ -1177,84 +1189,84 @@
                 <div class="camera-content" id="border-content">
                     <div class="camera-grid">
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Qingmao Port (A)" data-pt="Porto Qingmao (A)" data-ja="青茂ポート（A）">青茂口岸（A）</div>
+                            <div class="camera-title" id="camera-title-34">青茂口岸（A）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2331.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Qingmao Port (B)" data-pt="Porto Qingmao (B)" data-ja="青茂ポート（B）">青茂口岸（B）</div>
+                            <div class="camera-title" id="camera-title-35">青茂口岸（B）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m2332.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Outer Harbour Ferry Terminal (A)" data-pt="Terminal de Ferry do Porto Exterior (A)" data-ja="外港フェリー乗り場（A）">外港客運碼頭（A）</div>
+                            <div class="camera-title" id="camera-title-36">外港客運碼頭（A）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1001.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Outer Harbour Ferry Terminal (B)" data-pt="Terminal de Ferry do Porto Exterior (B)" data-ja="外港フェリー乗り場（B）">外港客運碼頭（B）</div>
+                            <div class="camera-title" id="camera-title-37">外港客運碼頭（B）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/m1002.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hengqin Port (A)" data-pt="Porto de Hengqin (A)" data-ja="横琴ポート（A）">橫琴口岸（A）</div>
+                            <div class="camera-title" id="camera-title-38">橫琴口岸（A）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1077.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hengqin Port (B)" data-pt="Porto de Hengqin (B)" data-ja="横琴ポート（B）">橫琴口岸（B）</div>
+                            <div class="camera-title" id="camera-title-39">橫琴口岸（B）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1076.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hengqin Port (C)" data-pt="Porto de Hengqin (C)" data-ja="横琴ポート（C）">橫琴口岸（C）</div>
+                            <div class="camera-title" id="camera-title-40">橫琴口岸（C）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1076.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hengqin Port (D)" data-pt="Porto de Hengqin (D)" data-ja="横琴ポート（D）">橫琴口岸（D）</div>
+                            <div class="camera-title" id="camera-title-41">橫琴口岸（D）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/t1076.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hong Kong-Zhuhai-Macau Bridge to Zhuhai" data-pt="Ponte Hong Kong-Zhuhai-Macau para Zhuhai" data-ja="香港・珠海・マカオ橋 珠海行き">港珠澳大橋往珠海</div>
+                            <div class="camera-title" id="camera-title-42">港珠澳大橋往珠海</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/z1001.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hong Kong-Zhuhai-Macau Bridge to Macau" data-pt="Ponte Hong Kong-Zhuhai-Macau para Macau" data-ja="香港・珠海・マカオ橋 マカオ行き">港珠澳大橋往澳門</div>
+                            <div class="camera-title" id="camera-title-43">港珠澳大橋往澳門</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/z1003.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hong Kong-Zhuhai-Macau Bridge to Passenger Drop-off Platform" data-pt="Ponte Hong Kong-Zhuhai-Macau para Plataforma de Entrega de Passageiros" data-ja="香港・珠海・マカオ橋 送客プラットフォーム行き">港珠澳大橋往送客平台</div>
+                            <div class="camera-title" id="camera-title-44">港珠澳大橋往送客平台</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/p1004.m3u8" allowfullscreen></iframe>
                             </div>
                         </div>
                         
                         <div class="camera-item">
-                            <div class="camera-title" data-en="Hong Kong-Zhuhai-Macau Bridge (Macau Entry)" data-pt="Ponte Hong Kong-Zhuhai-Macau (Entrada Macau)" data-ja="香港・珠海・マカオ橋（マカオ入国）">港珠澳大橋（澳門入境）</div>
+                            <div class="camera-title" id="camera-title-45">港珠澳大橋（澳門入境）</div>
                             <div class="camera-container">
                                 <iframe src="https://streaming1.dsatmacau.com/traffic/p1057.m3u8" allowfullscreen></iframe>
                             </div>
@@ -1429,335 +1441,519 @@
                 });
             });
             
-            // Translation data
+            // Translation data - ALL translations now in one place
             const translations = {
                 en:  {
-                    "header-title":  "Macau Traffic Monitor",  
-                    "welcome-message":  "Hello! Welcome to visit our website!",  
-                    "header-subtitle":  "Real-time traffic conditions and waiting times for Macau's major roads and border crossings",  
-                    "nav-dashboard":  "Dashboard",  
-                    "nav-cameras":  "Live Cameras",  
-                    "nav-chat":  "Community Chat",  
-                    "nav-about":  "About",  
-                    "map-instruction":  "Drag to navigate the map",  
-                    "traffic-overview":  "Traffic Overview",  
-                    "current-time-label":  "Current Time:  ",  
-                    "overall-traffic":  "Overall Traffic",  
-                    "traffic-status-value":  "LIGHT",  
-                    "average-delay-label":  "Average Delay",  
-                    "crossing-duration":  "Estimated Crossing Duration",  
-                    "friendship-bridge":  "Friendship Bridge",  
-                    "sai-van-bridge":  "Sai Van Bridge",  
-                    "horta-costa":  "Avenida de Horta e Costa",  
-                    "san-ma-lou":  "San Ma Lou",  
-                    "praca-amaral":  "Praca de Ferreira do Amaral",  
-                    "portas-cerco":  "Portas do Cerco",  
-                    "cotai-strip":  "Cotai Strip",  
-                    "median-traffic-label":  "Median Traffic Time:  ",  
-                    "traffic-legend-title":  "Traffic Legend",  
-                    "severe-traffic":  "Severe Traffic (40+ min delay)",  
-                    "heavy-traffic":  "Heavy Traffic (20-40 min delay)",  
-                    "moderate-traffic":  "Moderate Traffic (10-20 min delay)",  
-                    "light-traffic":  "Light Traffic (<10 min delay)",  
-                    "closed-traffic":  "Closed/Blocked",  
-                    "website-info-title":  "Website Traffic Information",  
-                    "website-info-desc":  "This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.",  
-                    "info-point-1":  "Times are updated every 30 seconds based on current traffic conditions",  
-                    "info-point-2":  "Colors indicate traffic severity levels",  
-                    "info-point-3":  "Data is simulated for demonstration purposes",  
-                    "info-point-4":  "Actual travel times may vary",  
-                    "travel-tips-title":  "Travel Tips",  
-                    "tip-1":  "Avoid peak hours (7: 00-9: 30 and 17: 00-19: 00) when possible",  
-                    "tip-2":  "Please note that Macau's maximum speed in normal roads is 50 km/h,  whole bridges are 80 km/h.",  
-                    "tip-3":  "Consider using public transportation during heavy traffic periods",  
-                    "tip-4":  "Check border crossing times before traveling",  
-                    "tip-5":  "Plan extra time for important appointments",  
-                    "tip-6":  "Use alternative routes when main roads show heavy congestion",  
-                    "live-cameras-title":  "Live Traffic Cameras",  
-                    "tab-macau-city":  "Macau City", 
-                    "tab-taipa":  "Taipa", 
-                    "tab-bridges":  "Cross-Sea Bridges", 
-                    "tab-border":  "Border Crossings", 
-                    "community-chat-title":  "Community Chat",  
-                    "community-guidelines-title":  "Community Guidelines",  
-                    "community-guidelines-desc":  "Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates,  road conditions,  and travel tips with fellow Macau residents and visitors.",  
-                    "guidelines-intro":  "Please follow these guidelines to keep our community helpful and respectful:  ",  
-                    "guideline-1":  "Share accurate,  current traffic information",  
-                    "guideline-2":  "Be respectful and courteous to all users",  
-                    "guideline-3":  "Report road incidents,  accidents,  or construction",  
-                    "guideline-4":  "Ask questions about traffic patterns or road conditions",  
-                    "guideline-5":  "Avoid spam,  advertisements,  or off-topic discussions",  
-                    "guideline-6":  "Use appropriate language - no offensive content",  
-                    "moderation-note":  "Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.",  
-                    "about-title":  "About Macau Traffic Monitor",  
-                    "about-desc":  "Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions,  estimated crossing times,  and live camera feeds for major roads and border crossings.",  
-                    "mission-title":  "Our Mission",  
-                    "mission-desc":  "We aim to reduce travel time and improve road safety in Macau by providing accurate,  real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.",  
-                    "data-sources-title":  "Data Sources",  
-                    "data-sources-desc":  "Our traffic data is sourced from multiple official channels:  ",  
-                    "source-1":  "DSAT (Direcção de Serviços de Trânsito) - Official traffic data",  
-                    "source-2":  "Google Maps API - Traffic flow and incident reports",  
-                    "source-3":  "Live traffic cameras operated by DSAT",  
-                    "source-4":  "Community reports from our users",  
-                    "features-title":  "Features",  
-                    "feature-1":  "Real-time traffic conditions visualization",  
-                    "feature-2":  "Estimated waiting times for border crossings",  
-                    "feature-3":  "Live traffic camera feeds",  
-                    "feature-4":  "Community chat for real-time updates",  
-                    "feature-5":  "Mobile app for on-the-go traffic updates",  
-                    "feature-6":  "Historical traffic pattern analysis",  
-                    "mobile-app-title":  "Get Traffic Updates on the Go",  
-                    "mobile-app-desc":  "Download our mobile app for traffic alerts and navigation assistance",  
-                    "feature-alerts":  "Instant Alerts",  
-                    "feature-routing":  "Smart Routing",  
-                    "feature-history":  "Traffic History",  
-                    "feature-maps":  "Offline Maps"
-                },  
+                    "header-title":  "Macau Traffic Monitor",     
+                    "welcome-message":  "Hello! Welcome to visit our website!",     
+                    "header-subtitle":  "Real-time traffic conditions and waiting times for Macau's major roads and border crossings",     
+                    "nav-dashboard":  "Dashboard",     
+                    "nav-cameras":  "Live Cameras",     
+                    "nav-chat":  "Community Chat",     
+                    "nav-about":  "About",     
+                    "map-instruction":  "Drag to navigate the map",     
+                    "traffic-overview":  "Traffic Overview",     
+                    "current-time-label":  "Current Time:  ",     
+                    "overall-traffic":  "Overall Traffic",     
+                    "traffic-status-value":  "LIGHT",     
+                    "average-delay-label":  "Average Delay",     
+                    "crossing-duration":  "Estimated Crossing Duration",     
+                    "friendship-bridge":  "Friendship Bridge",     
+                    "sai-van-bridge":  "Sai Van Bridge",     
+                    "horta-costa":  "Avenida de Horta e Costa",     
+                    "san-ma-lou":  "San Ma Lou",     
+                    "praca-amaral":  "Praca de Ferreira do Amaral",     
+                    "portas-cerco":  "Portas do Cerco",     
+                    "cotai-strip":  "Cotai Strip",     
+                    "median-traffic-label":  "Median Traffic Time:  ",     
+                    "traffic-legend-title":  "Traffic Legend",     
+                    "severe-traffic":  "Severe Traffic (40+ min delay)",     
+                    "heavy-traffic":  "Heavy Traffic (20-40 min delay)",     
+                    "moderate-traffic":  "Moderate Traffic (10-20 min delay)",     
+                    "light-traffic":  "Light Traffic (<10 min delay)",     
+                    "closed-traffic":  "Closed/Blocked",     
+                    "website-info-title":  "Website Traffic Information",     
+                    "website-info-desc":  "This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.",     
+                    "info-point-1":  "Times are updated every 30 seconds based on current traffic conditions",     
+                    "info-point-2":  "Colors indicate traffic severity levels",     
+                    "info-point-3":  "Data is simulated for demonstration purposes",     
+                    "info-point-4":  "Actual travel times may vary",     
+                    "travel-tips-title":  "Travel Tips",     
+                    "tip-1":  "Avoid peak hours (7: 00-9: 30 and 17: 00-19: 00) when possible",     
+                    "tip-2":  "Please note that Macau's maximum speed in normal roads is 50 km/h,  whole bridges are 80 km/h.",     
+                    "tip-3":  "Consider using public transportation during heavy traffic periods",     
+                    "tip-4":  "Check border crossing times before traveling",     
+                    "tip-5":  "Plan extra time for important appointments",     
+                    "tip-6":  "Use alternative routes when main roads show heavy congestion",     
+                    "live-cameras-title":  "Live Traffic Cameras",     
+                    "tab-macau-city":  "Macau City",    
+                    "tab-taipa":  "Taipa",    
+                    "tab-bridges":  "Cross-Sea Bridges",    
+                    "tab-border":  "Border Crossings",    
+                    "community-chat-title":  "Community Chat",     
+                    "community-guidelines-title":  "Community Guidelines",     
+                    "community-guidelines-desc":  "Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates,  road conditions,  and travel tips with fellow Macau residents and visitors.",     
+                    "guidelines-intro":  "Please follow these guidelines to keep our community helpful and respectful:  ",     
+                    "guideline-1":  "Share accurate,  current traffic information",     
+                    "guideline-2":  "Be respectful and courteous to all users",     
+                    "guideline-3":  "Report road incidents,  accidents,  or construction",     
+                    "guideline-4":  "Ask questions about traffic patterns or road conditions",     
+                    "guideline-5":  "Avoid spam,  advertisements,  or off-topic discussions",     
+                    "guideline-6":  "Use appropriate language - no offensive content",     
+                    "moderation-note":  "Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.",     
+                    "about-title":  "About Macau Traffic Monitor",     
+                    "about-desc":  "Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions,  estimated crossing times,  and live camera feeds for major roads and border crossings.",     
+                    "mission-title":  "Our Mission",     
+                    "mission-desc":  "We aim to reduce travel time and improve road safety in Macau by providing accurate,  real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.",     
+                    "data-sources-title":  "Data Sources",     
+                    "data-sources-desc":  "Our traffic data is sourced from multiple official channels:  ",     
+                    "source-1":  "DSAT (Direcção de Serviços de Trânsito) - Official traffic data",     
+                    "source-2":  "Google Maps API - Traffic flow and incident reports",     
+                    "source-3":  "Live traffic cameras operated by DSAT",     
+                    "source-4":  "Community reports from our users",     
+                    "features-title":  "Features",     
+                    "feature-1":  "Real-time traffic conditions visualization",     
+                    "feature-2":  "Estimated waiting times for border crossings",     
+                    "feature-3":  "Live traffic camera feeds",     
+                    "feature-4":  "Community chat for real-time updates",     
+                    "feature-5":  "Mobile app for on-the-go traffic updates",     
+                    "feature-6":  "Historical traffic pattern analysis",     
+                    "mobile-app-title":  "Get Traffic Updates on the Go",     
+                    "mobile-app-desc":  "Download our mobile app for traffic alerts and navigation assistance",     
+                    "feature-alerts":  "Instant Alerts",     
+                    "feature-routing":  "Smart Routing",     
+                    "feature-history":  "Traffic History",     
+                    "feature-maps":  "Offline Maps",
+                    // Camera titles
+                    "camera-title-1":  "Tunnel da Penha towards Largo do Governor Vasco Rocha Vieira (Reservoir)",     
+                    "camera-title-2":  "Tunnel da Penha towards Rua do Campo",     
+                    "camera-title-3":  "Mercado da Rua do Aljube",     
+                    "camera-title-4":  "Avenida do Conselheiro Borja and Rua do Campo Intersection",     
+                    "camera-title-5":  "Avenida do Conselheiro Borja",     
+                    "camera-title-6":  "Avenida de Venceslau de Morais",     
+                    "camera-title-7":  "Inner Harbour",     
+                    "camera-title-8":  "Rua Nova da Areia Preta",     
+                    "camera-title-9":  "Praça de Tap Seac",     
+                    "camera-title-10":  "Praça do Vasco Rocha Vieira",     
+                    "camera-title-11":  "Blood Donation Centre",     
+                    "camera-title-12":  "Praça da Nave Desportiva",     
+                    "camera-title-13":  "Praça de Ferreira do Amaral",     
+                    "camera-title-14":  "Avenida do Infante D. Henrique and Avenida do Dr. Rodrigo Rodrigues Intersection",     
+                    "camera-title-15":  "Rua dos Mercadores / Avenida da Praia Grande Intersection",     
+                    "camera-title-16":  "Rua dos Mercadores",     
+                    "camera-title-17":  "Haiwan Garden",     
+                    "camera-title-18":  "Macau International Airport",     
+                    "camera-title-19":  "Estrada do Istmo Circular Intersection",     
+                    "camera-title-20":  "Cotai Strip",     
+                    "camera-title-21":  "Cotai Strip 2 / Estrada do Istmo",     
+                    "camera-title-22":  "Avenida da Amizade",     
+                    "camera-title-23":  "Ponte da Amizade near North Bay Entrance Intersection",     
+                    "camera-title-24":  "Ponte da Amizade towards Taipa",     
+                    "camera-title-25":  "Ponte da Amizade towards Macau",     
+                    "camera-title-26":  "Ponte de Sai Van towards Macau",     
+                    "camera-title-27":  "Ponte de Sai Van towards Taipa (High)",     
+                    "camera-title-28":  "Ponte de Sai Van towards Macau (High)",     
+                    "camera-title-29":  "Macau Bridge Entrance (Macau)",     
+                    "camera-title-30":  "Macau Bridge towards Taipa",     
+                    "camera-title-31":  "Macau Bridge towards Macau",     
+                    "camera-title-32":  "Tunnel da Portas do Cerco",     
+                    "camera-title-33":  "Avenida da Portas do Cerco",     
+                    "camera-title-34":  "Qingmao Port (A)",     
+                    "camera-title-35":  "Qingmao Port (B)",     
+                    "camera-title-36":  "Outer Harbour Ferry Terminal (A)",     
+                    "camera-title-37":  "Outer Harbour Ferry Terminal (B)",     
+                    "camera-title-38":  "Hengqin Port (A)",     
+                    "camera-title-39":  "Hengqin Port (B)",     
+                    "camera-title-40":  "Hengqin Port (C)",     
+                    "camera-title-41":  "Hengqin Port (D)",     
+                    "camera-title-42":  "Hong Kong-Zhuhai-Macau Bridge to Zhuhai",     
+                    "camera-title-43":  "Hong Kong-Zhuhai-Macau Bridge to Macau",     
+                    "camera-title-44":  "Hong Kong-Zhuhai-Macau Bridge to Passenger Drop-off Platform",     
+                    "camera-title-45":  "Hong Kong-Zhuhai-Macau Bridge (Macau Entry)"
+                },     
                 zh:  {
-                    "header-title":  "澳門交通監控",  
-                    "welcome-message":  "您好！歡迎訪問我們的網站！",  
-                    "header-subtitle":  "澳門主要道路和邊境口岸的實時交通狀況和等待時間",  
-                    "nav-dashboard":  "儀表板",  
-                    "nav-cameras":  "實時攝像頭",  
-                    "nav-chat":  "社區聊天",  
-                    "nav-about":  "關於",  
-                    "map-instruction":  "拖動以導航地圖",  
-                    "traffic-overview":  "交通概覽",  
-                    "current-time-label":  "當前時間：",  
-                    "overall-traffic":  "整體交通",  
-                    "traffic-status-value":  "輕鬆",  
-                    "average-delay-label":  "平均延遲",  
-                    "crossing-duration":  "預計過境時間",  
-                    "friendship-bridge":  "友誼大橋",  
-                    "sai-van-bridge":  "西灣大橋",  
-                    "horta-costa":  "荷蘭園大馬路",  
-                    "san-ma-lou":  "新馬路",  
-                    "praca-amaral":  "亞馬喇前地",  
-                    "portas-cerco":  "關閘邊檢大樓",  
-                    "cotai-strip":  "路氹城",  
-                    "median-traffic-label":  "中位交通時間：",  
-                    "traffic-legend-title":  "交通圖例",  
-                    "severe-traffic":  "嚴重交通（延遲40分鐘以上）",  
-                    "heavy-traffic":  "嚴重交通（延遲20-40分鐘）",  
-                    "moderate-traffic":  "中等交通（延遲10-20分鐘）",  
-                    "light-traffic":  "輕鬆交通（延遲少於10分鐘）",  
-                    "closed-traffic":  "關閉/封閉",  
-                    "website-info-title":  "網站交通信息",  
-                    "website-info-desc":  "此實時交通監控提供澳門主要道路和邊境口岸的預計等待時間。",  
-                    "info-point-1":  "時間每30秒根據當前交通狀況更新一次",  
-                    "info-point-2":  "顏色表示交通嚴重程度",  
-                    "info-point-3":  "數據僅供演示用途",  
-                    "info-point-4":  "實際旅行時間可能有所不同",  
-                    "travel-tips-title":  "旅行提示",  
-                    "tip-1":  "盡可能避免高峰時間（早上7: 00-9: 30和下午5: 00-7: 00）",  
-                    "tip-2":  "請注意，澳門一般道路的最高速度為50公里/小時，橋樑為80公里/小時。",  
-                    "tip-3":  "在交通繁忙時段考慮使用公共交通工具",  
-                    "tip-4":  "出行前檢查邊境口岸時間",  
-                    "tip-5":  "為重要約會預留額外時間",  
-                    "tip-6":  "當主要道路出現嚴重擁堵時使用替代路線",  
-                    "live-cameras-title":  "實時交通攝像頭",  
-                    "tab-macau-city":  "澳門市區", 
-                    "tab-taipa":  "氹仔", 
-                    "tab-bridges":  "跨海大橋", 
-                    "tab-border":  "口岸", 
-                    "community-chat-title":  "社區聊天",  
-                    "community-guidelines-title":  "社區指南",  
-                    "community-guidelines-desc":  "歡迎來到澳門交通監控社區聊天！此空間用於與澳門居民和遊客分享實時交通更新、道路狀況和旅行提示。",  
-                    "guidelines-intro":  "請遵守以下指南以保持我們社區的幫助性和尊重性：",  
-                    "guideline-1":  "分享準確、當前的交通信息",  
-                    "guideline-2":  "對所有用戶保持尊重和禮貌",  
-                    "guideline-3":  "報告道路事件、事故或施工",  
-                    "guideline-4":  "詢問交通模式或道路狀況問題",  
-                    "guideline-5":  "避免垃圾郵件、廣告或離題討論",  
-                    "guideline-6":  "使用適當的語言 - 無 offensive 內容",  
-                    "moderation-note":  "我們的管理員監控聊天以確保每個人都有積極的體驗。違反這些指南可能導致暫時或永久禁止聊天。",  
-                    "about-title":  "關於澳門交通監控",  
-                    "about-desc":  "澳門交通監控是一個實時交通信息平台，旨在幫助居民和遊客高效地導航澳門的道路網絡。我們的服務提供最新的交通狀況、預計過境時間和主要道路及邊境口岸的實時攝像頭饋送。",  
-                    "mission-title":  "我們的使命",  
-                    "mission-desc":  "我們旨在通過提供準確、實時的交通信息來減少澳門的旅行時間並改善道路安全。我們的平台幫助用戶對旅行路線和時間做出明智的決定。",  
-                    "data-sources-title":  "數據來源",  
-                    "data-sources-desc":  "我們的交通數據來自多個官方渠道：",  
-                    "source-1":  "交通事務局 - 官方交通數據",  
-                    "source-2":  "Google Maps API - 交通流量和事件報告",  
-                    "source-3":  "交通事務局運營的實時交通攝像頭",  
-                    "source-4":  "我們用戶的社區報告",  
-                    "features-title":  "功能",  
-                    "feature-1":  "實時交通狀況可視化",  
-                    "feature-2":  "邊境口岸預計等待時間",  
-                    "feature-3":  "實時交通攝像頭饋送",  
-                    "feature-4":  "社區聊天實時更新",  
-                    "feature-5":  "移動應用程序用於路上交通更新",  
-                    "feature-6":  "歷史交通模式分析",  
-                    "mobile-app-title":  "隨時隨地獲取交通更新",  
-                    "mobile-app-desc":  "下載我們的移動應用程序以獲取交通警報和導航協助",  
-                    "feature-alerts":  "即時警報",  
-                    "feature-routing":  "智能路線規劃",  
-                    "feature-history":  "交通歷史",  
-                    "feature-maps":  "離線地圖"
-                },  
+                    "header-title":  "澳門交通監控",     
+                    "welcome-message":  "您好！歡迎訪問我們的網站！",     
+                    "header-subtitle":  "澳門主要道路和邊境口岸的實時交通狀況和等待時間",     
+                    "nav-dashboard":  "儀表板",     
+                    "nav-cameras":  "實時攝像頭",     
+                    "nav-chat":  "社區聊天",     
+                    "nav-about":  "關於",     
+                    "map-instruction":  "拖動以導航地圖",     
+                    "traffic-overview":  "交通概覽",     
+                    "current-time-label":  "當前時間：",     
+                    "overall-traffic":  "整體交通",     
+                    "traffic-status-value":  "輕鬆",     
+                    "average-delay-label":  "平均延遲",     
+                    "crossing-duration":  "預計過境時間",     
+                    "friendship-bridge":  "友誼大橋",     
+                    "sai-van-bridge":  "西灣大橋",     
+                    "horta-costa":  "荷蘭園大馬路",     
+                    "san-ma-lou":  "新馬路",     
+                    "praca-amaral":  "亞馬喇前地",     
+                    "portas-cerco":  "關閘邊檢大樓",     
+                    "cotai-strip":  "路氹城",     
+                    "median-traffic-label":  "中位交通時間：",     
+                    "traffic-legend-title":  "交通圖例",     
+                    "severe-traffic":  "嚴重交通（延遲40分鐘以上）",     
+                    "heavy-traffic":  "嚴重交通（延遲20-40分鐘）",     
+                    "moderate-traffic":  "中等交通（延遲10-20分鐘）",     
+                    "light-traffic":  "輕鬆交通（延遲少於10分鐘）",     
+                    "closed-traffic":  "關閉/封閉",     
+                    "website-info-title":  "網站交通信息",     
+                    "website-info-desc":  "此實時交通監控提供澳門主要道路和邊境口岸的預計等待時間。",     
+                    "info-point-1":  "時間每30秒根據當前交通狀況更新一次",     
+                    "info-point-2":  "顏色表示交通嚴重程度",     
+                    "info-point-3":  "數據僅供演示用途",     
+                    "info-point-4":  "實際旅行時間可能有所不同",     
+                    "travel-tips-title":  "旅行提示",     
+                    "tip-1":  "盡可能避免高峰時間（早上7: 00-9: 30和下午5: 00-7: 00）",     
+                    "tip-2":  "請注意，澳門一般道路的最高速度為50公里/小時，橋樑為80公里/小時。",     
+                    "tip-3":  "在交通繁忙時段考慮使用公共交通工具",     
+                    "tip-4":  "出行前檢查邊境口岸時間",     
+                    "tip-5":  "為重要約會預留額外時間",     
+                    "tip-6":  "當主要道路出現嚴重擁堵時使用替代路線",     
+                    "live-cameras-title":  "實時交通攝像頭",     
+                    "tab-macau-city":  "澳門市區",    
+                    "tab-taipa":  "氹仔",    
+                    "tab-bridges":  "跨海大橋",    
+                    "tab-border":  "口岸",    
+                    "community-chat-title":  "社區聊天",     
+                    "community-guidelines-title":  "社區指南",     
+                    "community-guidelines-desc":  "歡迎來到澳門交通監控社區聊天！此空間用於與澳門居民和遊客分享實時交通更新、道路狀況和旅行提示。",     
+                    "guidelines-intro":  "請遵守以下指南以保持我們社區的幫助性和尊重性：",     
+                    "guideline-1":  "分享準確、當前的交通信息",     
+                    "guideline-2":  "對所有用戶保持尊重和禮貌",     
+                    "guideline-3":  "報告道路事件、事故或施工",     
+                    "guideline-4":  "詢問交通模式或道路狀況問題",     
+                    "guideline-5":  "避免垃圾郵件、廣告或離題討論",     
+                    "guideline-6":  "使用適當的語言 - 無 offensive 內容",     
+                    "moderation-note":  "我們的管理員監控聊天以確保每個人都有積極的體驗。違反這些指南可能導致暫時或永久禁止聊天。",     
+                    "about-title":  "關於澳門交通監控",     
+                    "about-desc":  "澳門交通監控是一個實時交通信息平台，旨在幫助居民和遊客高效地導航澳門的道路網絡。我們的服務提供最新的交通狀況、預計過境時間和主要道路及邊境口岸的實時攝像頭饋送。",     
+                    "mission-title":  "我們的使命",     
+                    "mission-desc":  "我們旨在通過提供準確、實時的交通信息來減少澳門的旅行時間並改善道路安全。我們的平台幫助用戶對旅行路線和時間做出明智的決定。",     
+                    "data-sources-title":  "數據來源",     
+                    "data-sources-desc":  "我們的交通數據來自多個官方渠道：",     
+                    "source-1":  "交通事務局 - 官方交通數據",     
+                    "source-2":  "Google Maps API - 交通流量和事件報告",     
+                    "source-3":  "交通事務局運營的實時交通攝像頭",     
+                    "source-4":  "我們用戶的社區報告",     
+                    "features-title":  "功能",     
+                    "feature-1":  "實時交通狀況可視化",     
+                    "feature-2":  "邊境口岸預計等待時間",     
+                    "feature-3":  "實時交通攝像頭饋送",     
+                    "feature-4":  "社區聊天實時更新",     
+                    "feature-5":  "移動應用程序用於路上交通更新",     
+                    "feature-6":  "歷史交通模式分析",     
+                    "mobile-app-title":  "隨時隨地獲取交通更新",     
+                    "mobile-app-desc":  "下載我們的移動應用程序以獲取交通警報和導航協助",     
+                    "feature-alerts":  "即時警報",     
+                    "feature-routing":  "智能路線規劃",     
+                    "feature-history":  "交通歷史",     
+                    "feature-maps":  "離線地圖",
+                    // Camera titles
+                    "camera-title-1":  "松山隧道向羅理基（水塘）",     
+                    "camera-title-2":  "松山隧道向高士德",     
+                    "camera-title-3":  "紅街市",     
+                    "camera-title-4":  "提督馬路與高士德大馬路交界",     
+                    "camera-title-5":  "提督馬路",     
+                    "camera-title-6":  "慕拉士大馬路",     
+                    "camera-title-7":  "內港",     
+                    "camera-title-8":  "黑沙環新街",     
+                    "camera-title-9":  "塔石廣場",     
+                    "camera-title-10":  "宋玉生廣場",     
+                    "camera-title-11":  "捐血中心",     
+                    "camera-title-12":  "南灣湖廣場",     
+                    "camera-title-13":  "亚马喇前地",     
+                    "camera-title-14":  "殷皇子大馬路與葡京路交界",     
+                    "camera-title-15":  "新马路 / 南湾马路交界",     
+                    "camera-title-16":  "新馬路",     
+                    "camera-title-17":  "海灣花園",     
+                    "camera-title-18":  "澳門國際機場",     
+                    "camera-title-19":  "路氹連貫公路圓形地",     
+                    "camera-title-20":  "金光大道",     
+                    "camera-title-21":  "金光大道 2 / 路氹連貫公路",     
+                    "camera-title-22":  "友誼馬路",     
+                    "camera-title-23":  "友誼大橋近北安入口交匯處",     
+                    "camera-title-24":  "友谊大桥向氹仔",     
+                    "camera-title-25":  "友誼大橋向澳门",     
+                    "camera-title-26":  "西灣大橋向澳门",     
+                    "camera-title-27":  "西灣大橋向氹仔（高处）",     
+                    "camera-title-28":  "西灣大橋向澳门（高处）",     
+                    "camera-title-29":  "澳門大橋入口（澳门）",     
+                    "camera-title-30":  "澳門大橋向氹仔",     
+                    "camera-title-31":  "澳門大橋向澳门",     
+                    "camera-title-32":  "關閘隧道",     
+                    "camera-title-33":  "關閘大馬路",     
+                    "camera-title-34":  "青茂口岸（A）",     
+                    "camera-title-35":  "青茂口岸（B）",     
+                    "camera-title-36":  "外港客運碼頭（A）",     
+                    "camera-title-37":  "外港客運碼頭（B）",     
+                    "camera-title-38":  "橫琴口岸（A）",     
+                    "camera-title-39":  "橫琴口岸（B）",     
+                    "camera-title-40":  "橫琴口岸（C）",     
+                    "camera-title-41":  "橫琴口岸（D）",     
+                    "camera-title-42":  "港珠澳大橋往珠海",     
+                    "camera-title-43":  "港珠澳大橋往澳門",     
+                    "camera-title-44":  "港珠澳大橋往送客平台",     
+                    "camera-title-45":  "港珠澳大橋（澳門入境）"
+                },     
                 pt:  {
-                    "header-title":  "Monitor de Trânsito de Macau",  
-                    "welcome-message":  "Olá! Bem-vindo ao nosso website!",  
-                    "header-subtitle":  "Condições de trânsito em tempo real e tempos de espera para as principais estradas e travessias fronteiriças de Macau",  
-                    "nav-dashboard":  "Painel",  
-                    "nav-cameras":  "Câmaras ao Vivo",  
-                    "nav-chat":  "Chat Comunitário",  
-                    "nav-about":  "Sobre",  
-                    "map-instruction":  "Arraste para navegar no mapa",  
-                    "traffic-overview":  "Visão Geral do Trânsito",  
-                    "current-time-label":  "Hora Atual:  ",  
-                    "overall-traffic":  "Trânsito Geral",  
-                    "traffic-status-value":  "LEVE",  
-                    "average-delay-label":  "Atraso Médio",  
-                    "crossing-duration":  "Duração Estimada da Travessia",  
-                    "friendship-bridge":  "Ponte da Amizade",  
-                    "sai-van-bridge":  "Ponte de Sai Van",  
-                    "horta-costa":  "Avenida de Horta e Costa",  
-                    "san-ma-lou":  "San Ma Lou",  
-                    "praca-amaral":  "Praça de Ferreira do Amaral",  
-                    "portas-cerco":  "Portas do Cerco",  
-                    "cotai-strip":  "Faixa de Cotai",  
-                    "median-traffic-label":  "Tempo Médio de Trânsito:  ",  
-                    "traffic-legend-title":  "Legenda de Trânsito",  
-                    "severe-traffic":  "Trânsito Severo (40+ min de atraso)",  
-                    "heavy-traffic":  "Trânsito Pesado (20-40 min de atraso)",  
-                    "moderate-traffic":  "Trânsito Moderado (10-20 min de atraso)",  
-                    "light-traffic":  "Trânsito Leve (<10 min de atraso)",  
-                    "closed-traffic":  "Fechado/Bloqueado",  
-                    "website-info-title":  "Informações de Trânsito do Website",  
-                    "website-info-desc":  "Este monitor de trânsito em tempo real fornece tempos de espera estimados para estradas principais e travessias fronteiriças em Macau.",  
-                    "info-point-1":  "Os tempos são atualizados a cada 30 segundos com base nas condições atuais de trânsito",  
-                    "info-point-2":  "As cores indicam níveis de gravidade do trânsito",  
-                    "info-point-3":  "Os dados são simulados para fins de demonstração",  
-                    "info-point-4":  "Os tempos reais de viagem podem variar",  
-                    "travel-tips-title":  "Dicas de Viagem",  
-                    "tip-1":  "Evite horas de pico (7: 00-9: 30 e 17: 00-19: 00) quando possível",  
-                    "tip-2":  "Note que a velocidade máxima em estradas normais em Macau é 50 km/h,  e nas pontes é 80 km/h.",  
-                    "tip-3":  "Considere usar transporte público durante períodos de trânsito pesado",  
-                    "tip-4":  "Verifique os horários de travessia fronteiriça antes de viajar",  
-                    "tip-5":  "Planeje tempo extra para compromissos importantes",  
-                    "tip-6":  "Use rotas alternativas quando estradas principais mostrarem congestionamento pesado",  
-                    "live-cameras-title":  "Câmaras de Trânsito ao Vivo",  
-                    "tab-macau-city":  "Cidade de Macau", 
-                    "tab-taipa":  "Taipa", 
-                    "tab-bridges":  "Pontes Transoceânicas", 
-                    "tab-border":  "Passagens Fronteiriças", 
-                    "community-chat-title":  "Chat Comunitário",  
-                    "community-guidelines-title":  "Diretrizes Comunitárias",  
-                    "community-guidelines-desc":  "Bem-vindo ao chat comunitário do Monitor de Trânsito de Macau! Este espaço é para compartilhar atualizações de trânsito em tempo real,  condições rodoviárias e dicas de viagem com residentes e visitantes de Macau.",  
-                    "guidelines-intro":  "Por favor,  siga estas diretrizes para manter nossa comunidade útil e respeitosa:  ",  
-                    "guideline-1":  "Compartilhe informações de trânsito precisas e atuais",  
-                    "guideline-2":  "Seja respeitoso e cortês com todos os usuários",  
-                    "guideline-3":  "Informe sobre incidentes rodoviários,  acidentes ou obras",  
-                    "guideline-4":  "Faça perguntas sobre padrões de trânsito ou condições rodoviárias",  
-                    "guideline-5":  "Evite spam,  anúncios ou discussões fora de tópico",  
-                    "guideline-6":  "Use linguagem apropriada - sem conteúdo ofensivo",  
-                    "moderation-note":  "Nossos moderadores monitoram o chat para garantir uma experiência positiva para todos. Violação destas diretrizes pode resultar em banimento temporário ou permanente do chat.",  
-                    "about-title":  "Sobre o Monitor de Trânsito de Macau",  
-                    "about-desc":  "O Monitor de Trânsito de Macau é uma plataforma de informações de trânsito em tempo real projetada para ajudar residentes e visitantes a navegar eficientemente pela rede rodoviária de Macau. Nosso serviço fornece condições de trânsito atualizadas,  tempos de travessia estimados e feeds de câmaras ao vivo para estradas principais e travessias fronteiriças.",  
-                    "mission-title":  "Nossa Missão",  
-                    "mission-desc":  "Nosso objetivo é reduzir o tempo de viagem e melhorar a segurança rodoviária em Macau fornecendo informações de trânsito precisas e em tempo real. Nossa plataforma ajuda os usuários a tomar decisões informadas sobre rotas e horários de viagem.",  
-                    "data-sources-title":  "Fontes de Dados",  
-                    "data-sources-desc":  "Nossos dados de trânsito são obtidos de múltiplos canais oficiais:  ",  
-                    "source-1":  "DSAT (Direção de Serviços de Trânsito) - Dados de trânsito oficiais",  
-                    "source-2":  "API do Google Maps - Relatórios de fluxo de trânsito e incidentes",  
-                    "source-3":  "Câmaras de trânsito ao vivo operadas pela DSAT",  
-                    "source-4":  "Relatórios comunitários de nossos usuários",  
-                    "features-title":  "Recursos",  
-                    "feature-1":  "Visualização de condições de trânsito em tempo real",  
-                    "feature-2":  "Tempos de espera estimados para travessias fronteiriças",  
-                    "feature-3":  "Feeds de câmaras de trânsito ao vivo",  
-                    "feature-4":  "Chat comunitário para atualizações em tempo real",  
-                    "feature-5":  "Aplicativo móvel para atualizações de trânsito em movimento",  
-                    "feature-6":  "Análise de padrões históricos de trânsito",  
-                    "mobile-app-title":  "Receba Atualizações de Trânsito em Movimento",  
-                    "mobile-app-desc":  "Baixe nosso aplicativo móvel para alertas de trânsito e assistência de navegação",  
-                    "feature-alerts":  "Alertas Instantâneos",  
-                    "feature-routing":  "Roteamento Inteligente",  
-                    "feature-history":  "Histórico de Trânsito",  
-                    "feature-maps":  "Mapas Offline"
-                },  
+                    "header-title":  "Monitor de Trânsito de Macau",     
+                    "welcome-message":  "Olá! Bem-vindo ao nosso website!",     
+                    "header-subtitle":  "Condições de trânsito em tempo real e tempos de espera para as principais estradas e travessias fronteiriças de Macau",     
+                    "nav-dashboard":  "Painel",     
+                    "nav-cameras":  "Câmaras ao Vivo",     
+                    "nav-chat":  "Chat Comunitário",     
+                    "nav-about":  "Sobre",     
+                    "map-instruction":  "Arraste para navegar no mapa",     
+                    "traffic-overview":  "Visão Geral do Trânsito",     
+                    "current-time-label":  "Hora Atual:  ",     
+                    "overall-traffic":  "Trânsito Geral",     
+                    "traffic-status-value":  "LEVE",     
+                    "average-delay-label":  "Atraso Médio",     
+                    "crossing-duration":  "Duração Estimada da Travessia",     
+                    "friendship-bridge":  "Ponte da Amizade",     
+                    "sai-van-bridge":  "Ponte de Sai Van",     
+                    "horta-costa":  "Avenida de Horta e Costa",     
+                    "san-ma-lou":  "San Ma Lou",     
+                    "praca-amaral":  "Praça de Ferreira do Amaral",     
+                    "portas-cerco":  "Portas do Cerco",     
+                    "cotai-strip":  "Faixa de Cotai",     
+                    "median-traffic-label":  "Tempo Médio de Trânsito:  ",     
+                    "traffic-legend-title":  "Legenda de Trânsito",     
+                    "severe-traffic":  "Trânsito Severo (40+ min de atraso)",     
+                    "heavy-traffic":  "Trânsito Pesado (20-40 min de atraso)",     
+                    "moderate-traffic":  "Trânsito Moderado (10-20 min de atraso)",     
+                    "light-traffic":  "Trânsito Leve (<10 min de atraso)",     
+                    "closed-traffic":  "Fechado/Bloqueado",     
+                    "website-info-title":  "Informações de Trânsito do Website",     
+                    "website-info-desc":  "Este monitor de trânsito em tempo real fornece tempos de espera estimados para estradas principais e travessias fronteiriças em Macau.",     
+                    "info-point-1":  "Os tempos são atualizados a cada 30 segundos com base nas condições atuais de trânsito",     
+                    "info-point-2":  "As cores indicam níveis de gravidade do trânsito",     
+                    "info-point-3":  "Os dados são simulados para fins de demonstração",     
+                    "info-point-4":  "Os tempos reais de viagem podem variar",     
+                    "travel-tips-title":  "Dicas de Viagem",     
+                    "tip-1":  "Evite horas de pico (7: 00-9: 30 e 17: 00-19: 00) quando possível",     
+                    "tip-2":  "Note que a velocidade máxima em estradas normais em Macau é 50 km/h,  e nas pontes é 80 km/h.",     
+                    "tip-3":  "Considere usar transporte público durante períodos de trânsito pesado",     
+                    "tip-4":  "Verifique os horários de travessia fronteiriça antes de viajar",     
+                    "tip-5":  "Planeje tempo extra para compromissos importantes",     
+                    "tip-6":  "Use rotas alternativas quando estradas principais mostrarem congestionamento pesado",     
+                    "live-cameras-title":  "Câmaras de Trânsito ao Vivo",     
+                    "tab-macau-city":  "Cidade de Macau",    
+                    "tab-taipa":  "Taipa",    
+                    "tab-bridges":  "Pontes Transoceânicas",    
+                    "tab-border":  "Passagens Fronteiriças",    
+                    "community-chat-title":  "Chat Comunitário",     
+                    "community-guidelines-title":  "Diretrizes Comunitárias",     
+                    "community-guidelines-desc":  "Bem-vindo ao chat comunitário do Monitor de Trânsito de Macau! Este espaço é para compartilhar atualizações de trânsito em tempo real,  condições rodoviárias e dicas de viagem com residentes e visitantes de Macau.",     
+                    "guidelines-intro":  "Por favor,  siga estas diretrizes para manter nossa comunidade útil e respeitosa:  ",     
+                    "guideline-1":  "Compartilhe informações de trânsito precisas e atuais",     
+                    "guideline-2":  "Seja respeitoso e cortês com todos os usuários",     
+                    "guideline-3":  "Informe sobre incidentes rodoviários,  acidentes ou obras",     
+                    "guideline-4":  "Faça perguntas sobre padrões de trânsito ou condições rodoviárias",     
+                    "guideline-5":  "Evite spam,  anúncios ou discussões fora de tópico",     
+                    "guideline-6":  "Use linguagem apropriada - sem conteúdo ofensivo",     
+                    "moderation-note":  "Nossos moderadores monitoram o chat para garantir uma experiência positiva para todos. Violação destas diretrizes pode resultar em banimento temporário ou permanente do chat.",     
+                    "about-title":  "Sobre o Monitor de Trânsito de Macau",     
+                    "about-desc":  "O Monitor de Trânsito de Macau é uma plataforma de informações de trânsito em tempo real projetada para ajudar residentes e visitantes a navegar eficientemente pela rede rodoviária de Macau. Nosso serviço fornece condições de trânsito atualizadas,  tempos de travessia estimados e feeds de câmaras ao vivo para estradas principais e travessias fronteiriças.",     
+                    "mission-title":  "Nossa Missão",     
+                    "mission-desc":  "Nosso objetivo é reduzir o tempo de viagem e melhorar a segurança rodoviária em Macau fornecendo informações de trânsito precisas e em tempo real. Nossa plataforma ajuda os usuários a tomar decisões informadas sobre rotas e horários de viagem.",     
+                    "data-sources-title":  "Fontes de Dados",     
+                    "data-sources-desc":  "Nossos dados de trânsito são obtidos de múltiplos canais oficiais:  ",     
+                    "source-1":  "DSAT (Direção de Serviços de Trânsito) - Dados de trânsito oficiais",     
+                    "source-2":  "API do Google Maps - Relatórios de fluxo de trânsito e incidentes",     
+                    "source-3":  "Câmaras de trânsito ao vivo operadas pela DSAT",     
+                    "source-4":  "Relatórios comunitários de nossos usuários",     
+                    "features-title":  "Recursos",     
+                    "feature-1":  "Visualização de condições de trânsito em tempo real",     
+                    "feature-2":  "Tempos de espera estimados para travessias fronteiriças",     
+                    "feature-3":  "Feeds de câmaras de trânsito ao vivo",     
+                    "feature-4":  "Chat comunitário para atualizações em tempo real",     
+                    "feature-5":  "Aplicativo móvel para atualizações de trânsito em movimento",     
+                    "feature-6":  "Análise de padrões históricos de trânsito",     
+                    "mobile-app-title":  "Receba Atualizações de Trânsito em Movimento",     
+                    "mobile-app-desc":  "Baixe nosso aplicativo móvel para alertas de trânsito e assistência de navegação",     
+                    "feature-alerts":  "Alertas Instantâneos",     
+                    "feature-routing":  "Roteamento Inteligente",     
+                    "feature-history":  "Histórico de Trânsito",     
+                    "feature-maps":  "Mapas Offline",
+                    // Camera titles
+                    "camera-title-1":  "Túnel da Penha em direção ao Largo do Governador Vasco Rocha Vieira (Reservatório)",     
+                    "camera-title-2":  "Túnel da Penha em direção à Rua do Campo",     
+                    "camera-title-3":  "Mercado da Rua do Aljube",     
+                    "camera-title-4":  "Interseção da Avenida do Conselheiro Borja e Rua do Campo",     
+                    "camera-title-5":  "Avenida do Conselheiro Borja",     
+                    "camera-title-6":  "Avenida de Venceslau de Morais",     
+                    "camera-title-7":  "Porto Interior",     
+                    "camera-title-8":  "Rua Nova da Areia Preta",     
+                    "camera-title-9":  "Praça de Tap Seac",     
+                    "camera-title-10":  "Praça do Vasco Rocha Vieira",     
+                    "camera-title-11":  "Centro de Doação de Sangue",     
+                    "camera-title-12":  "Praça da Nave Desportiva",     
+                    "camera-title-13":  "Praça de Ferreira do Amaral",     
+                    "camera-title-14":  "Interseção da Avenida do Infante D. Henrique e Avenida do Dr. Rodrigo Rodrigues",     
+                    "camera-title-15":  "Interseção da Rua dos Mercadores / Avenida da Praia Grande",     
+                    "camera-title-16":  "Rua dos Mercadores",     
+                    "camera-title-17":  "Jardim Haiwan",     
+                    "camera-title-18":  "Aeroporto Internacional de Macau",     
+                    "camera-title-19":  "Interseção Circular da Estrada do Istmo",     
+                    "camera-title-20":  "Faixa de Cotai",     
+                    "camera-title-21":  "Faixa de Cotai 2 / Estrada do Istmo",     
+                    "camera-title-22":  "Avenida da Amizade",     
+                    "camera-title-23":  "Ponte da Amizade perto da Interseção da Entrada da Baía Norte",     
+                    "camera-title-24":  "Ponte da Amizade em direção a Taipa",     
+                    "camera-title-25":  "Ponte da Amizade em direção a Macau",     
+                    "camera-title-26":  "Ponte de Sai Van em direção a Macau",     
+                    "camera-title-27":  "Ponte de Sai Van em direção a Taipa (Alto)",     
+                    "camera-title-28":  "Ponte de Sai Van em direção a Macau (Alto)",     
+                    "camera-title-29":  "Entrada da Ponte de Macau (Macau)",     
+                    "camera-title-30":  "Ponte de Macau em direção a Taipa",     
+                    "camera-title-31":  "Ponte de Macau em direção a Macau",     
+                    "camera-title-32":  "Túnel da Portas do Cerco",     
+                    "camera-title-33":  "Avenida da Portas do Cerco",     
+                    "camera-title-34":  "Porto Qingmao (A)",     
+                    "camera-title-35":  "Porto Qingmao (B)",     
+                    "camera-title-36":  "Terminal de Ferry do Porto Exterior (A)",     
+                    "camera-title-37":  "Terminal de Ferry do Porto Exterior (B)",     
+                    "camera-title-38":  "Porto de Hengqin (A)",     
+                    "camera-title-39":  "Porto de Hengqin (B)",     
+                    "camera-title-40":  "Porto de Hengqin (C)",     
+                    "camera-title-41":  "Porto de Hengqin (D)",     
+                    "camera-title-42":  "Ponte Hong Kong-Zhuhai-Macau para Zhuhai",     
+                    "camera-title-43":  "Ponte Hong Kong-Zhuhai-Macau para Macau",     
+                    "camera-title-44":  "Ponte Hong Kong-Zhuhai-Macau para Plataforma de Entrega de Passageiros",     
+                    "camera-title-45":  "Ponte Hong Kong-Zhuhai-Macau (Entrada Macau)"
+                },     
                 ja:  {
-                    "header-title":  "マカオ交通モニター",  
-                    "welcome-message":  "こんにちは！当サイト�ようこそ！",  
-                    "header-subtitle":  "マカオの主要道路と国境横断地点のリアルタイム交通状況と待ち時間",  
-                    "nav-dashboard":  "ダッシュボード",  
-                    "nav-cameras":  "ライブカメラ",  
-                    "nav-chat":  "コミュニティチャット",  
-                    "nav-about":  "概要",  
-                    "map-instruction":  "ドラッグして地図を操作",  
-                    "traffic-overview":  "交通概況",  
-                    "current-time-label":  "現在時刻：",  
-                    "overall-traffic":  "全体の交通状況",  
-                    "traffic-status-value":  "軽度",  
-                    "average-delay-label":  "平均遅延",  
-                    "crossing-duration":  "推定通過時間",  
-                    "friendship-bridge":  "友誼大橋",  
-                    "sai-van-bridge":  "西湾大橋",  
-                    "horta-costa":  "ホテラ・エ・コスタ大通り",  
-                    "san-ma-lou":  "新馬路",  
-                    "praca-amaral":  "アマラル広場",  
-                    "portas-cerco":  "关闸边检大楼",  
-                    "cotai-strip":  "コータイストリップ",  
-                    "median-traffic-label":  "中央値交通時間：",  
-                    "traffic-legend-title":  "交通凡例",  
-                    "severe-traffic":  "深刻な交通（40分以上遅延）",  
-                    "heavy-traffic":  "重い交通（20-40分遅延）",  
-                    "moderate-traffic":  "中程度の交通（10-20分遅延）",  
-                    "light-traffic":  "軽度の交通（10分未満遅延）",  
-                    "closed-traffic":  "閉鎖/遮断",  
-                    "website-info-title":  "ウェブサイト交通情報",  
-                    "website-info-desc":  "このリアルタイム交通モニターは、マカオの主要道路と国境横断地点の推定待ち時間を提供します。",  
-                    "info-point-1":  "時間は現在の交通状況に基づいて30秒ごとに更新されます",  
-                    "info-point-2":  "色は交通の深刻度を示します",  
-                    "info-point-3":  "データはデモンストレーション目的でシミュレートされています",  
-                    "info-point-4":  "実際の旅行時間は異なる場合があります",  
-                    "travel-tips-title":  "旅行のヒント",  
-                    "tip-1":  "可能であればラッシュアワー（午前7時から9時30分、午後5時から7時）を避けてください",  
-                    "tip-2":  "マカオの一般道路の最高速度は50km/h、橋は80km/hであることに注意してください。",  
-                    "tip-3":  "交通混雑時に公共交通機関の利用を検討してください",  
-                    "tip-4":  "旅行前に国境横断の時間を確認してください",  
-                    "tip-5":  "重要な予定には余裕を持って時間を計画してください",  
-                    "tip-6":  "主要道路が重い混雑を示している場合は代替ルートを使用してください",  
-                    "live-cameras-title":  "ライブ交通カメラ",  
-                    "tab-macau-city":  "澳門市區", 
-                    "tab-taipa":  "氹仔", 
-                    "tab-bridges":  "跨海大橋", 
-                    "tab-border":  "口岸", 
-                    "community-chat-title":  "コミュニティチャット",  
-                    "community-guidelines-title":  "コミュニティガイドライン",  
-                    "community-guidelines-desc":  "マカオ交通モニターのコミュニティチャットへようこそ！このスペースは、マカオの住民や訪問者とリアルタイムの交通更新、道路状況、旅行のヒントを共有するためのものです。",  
-                    "guidelines-intro":  "コミュニティを助け合い、敬意のある場所にするために、以下のガイドラインに従ってください：",  
-                    "guideline-1":  "正確で最新の交通情報を共有してください",  
-                    "guideline-2":  "すべてのユーザーに対して敬意と礼儀を払ってください",  
-                    "guideline-3":  "道路の事件、事故、工事を報告してください",  
-                    "guideline-4":  "交通パターンや道路状況について質問してください",  
-                    "guideline-5":  "スパム、広告、話題外の議論を避けてください",  
-                    "guideline-6":  "適切な言葉遣いをしてください - 攻撃的な内容は禁止です",  
-                    "moderation-note":  "私たちのモデレーターはチャットを監視し、すべての人がポジティブな体験ができるようにしています。これらのガイドラインに違反すると、チャットから一時的または永続的に禁止されることがあります。",  
-                    "about-title":  "マカオ交通モニターについて",  
-                    "about-desc":  "マカオ交通モニターは、住民と訪問者がマカオの道路網を効率的にナビゲートできるように設計されたリアルタイム交通情報プラットフォームです。当社のサービスは、最新の交通状況、推定通過時間、主要道路と国境横断地点のライブカメラフィードを提供します。",  
-                    "mission-title":  "私たちの使命",  
-                    "mission-desc":  "正確でリアルタイムの交通情報を提供することで、マカオの旅行時間を短縮し、道路の安全性を向上させることを目指しています。当社のプラットフォームは、ユーザーが旅行ルートとタイミングについて情報に基づいた決定をできるようにします。",  
-                    "data-sources-title":  "データソース",  
-                    "data-sources-desc":  "私たちの交通データは複数の公式チャネルから取得されます：",  
-                    "source-1":  "交通事務局 - 公式交通データ",  
-                    "source-2":  "Google Maps API - 交通流と事件報告",  
-                    "source-3":  "交通事務局が運営するライブ交通カメラ",  
-                    "source-4":  "私たちのユーザーからのコミュニティ報告",  
-                    "features-title":  "機能",  
-                    "feature-1":  "リアルタイム交通状況の可視化",  
-                    "feature-2":  "国境横断の推定待ち時間",  
-                    "feature-3":  "ライブ交通カメラフィード",  
-                    "feature-4":  "リアルタイム更新のためのコミュニティチャット",  
-                    "feature-5":  "移動中の交通更新のためのモバイルアプリ",  
-                    "feature-6":  "歴史的交通パターン分析",  
-                    "mobile-app-title":  "外出先で交通情報を取得",  
-                    "mobile-app-desc":  "交通アラートとナビゲーション支援のためのモバイルアプリをダウンロード",  
-                    "feature-alerts":  "即時アラート",  
-                    "feature-routing":  "スマートルーティング",  
-                    "feature-history":  "交通履歴",  
-                    "feature-maps":  "オフライン地図"
+                    "header-title":  "マカオ交通モニター",     
+                    "welcome-message":  "こんにちは！当サイトへようこそ！",     
+                    "header-subtitle":  "マカオの主要道路と国境横断地点のリアルタイム交通状況と待ち時間",     
+                    "nav-dashboard":  "ダッシュボード",     
+                    "nav-cameras":  "ライブカメラ",     
+                    "nav-chat":  "コミュニティチャット",     
+                    "nav-about":  "概要",     
+                    "map-instruction":  "ドラッグして地図を操作",     
+                    "traffic-overview":  "交通概況",     
+                    "current-time-label":  "現在時刻：",     
+                    "overall-traffic":  "全体の交通状況",     
+                    "traffic-status-value":  "軽度",     
+                    "average-delay-label":  "平均遅延",     
+                    "crossing-duration":  "推定通過時間",     
+                    "friendship-bridge":  "友誼大橋",     
+                    "sai-van-bridge":  "西湾大橋",     
+                    "horta-costa":  "ホテラ・エ・コスタ大通り",     
+                    "san-ma-lou":  "新馬路",     
+                    "praca-amaral":  "アマラル広場",     
+                    "portas-cerco":  "关闸边检大楼",     
+                    "cotai-strip":  "コータイストリップ",     
+                    "median-traffic-label":  "中央値交通時間：",     
+                    "traffic-legend-title":  "交通凡例",     
+                    "severe-traffic":  "深刻な交通（40分以上遅延）",     
+                    "heavy-traffic":  "重い交通（20-40分遅延）",     
+                    "moderate-traffic":  "中程度の交通（10-20分遅延）",     
+                    "light-traffic":  "軽度の交通（10分未満遅延）",     
+                    "closed-traffic":  "閉鎖/遮断",     
+                    "website-info-title":  "ウェブサイト交通情報",     
+                    "website-info-desc":  "このリアルタイム交通モニターは、マカオの主要道路と国境横断地点の推定待ち時間を提供します。",     
+                    "info-point-1":  "時間は現在の交通状況に基づいて30秒ごとに更新されます",     
+                    "info-point-2":  "色は交通の深刻度を示します",     
+                    "info-point-3":  "データはデモンストレーション目的でシミュレートされています",     
+                    "info-point-4":  "実際の旅行時間は異なる場合があります",     
+                    "travel-tips-title":  "旅行のヒント",     
+                    "tip-1":  "可能であればラッシュアワー（午前7時から9時30分、午後5時から7時）を避けてください",     
+                    "tip-2":  "マカオの一般道路の最高速度は50km/h、橋は80km/hであることに注意してください。",     
+                    "tip-3":  "交通混雑時に公共交通機関の利用を検討してください",     
+                    "tip-4":  "旅行前に国境横断の時間を確認してください",     
+                    "tip-5":  "重要な予定には余裕を持って時間を計画してください",     
+                    "tip-6":  "主要道路が重い混雑を示している場合は代替ルートを使用してください",     
+                    "live-cameras-title":  "ライブ交通カメラ",     
+                    "tab-macau-city":  "澳門市區",    
+                    "tab-taipa":  "氹仔",    
+                    "tab-bridges":  "跨海大橋",    
+                    "tab-border":  "口岸",    
+                    "community-chat-title":  "コミュニティチャット",     
+                    "community-guidelines-title":  "コミュニティガイドライン",     
+                    "community-guidelines-desc":  "マカオ交通モニターのコミュニティチャットへようこそ！このスペースは、マカオの住民や訪問者とリアルタイムの交通更新、道路状況、旅行のヒントを共有するためのものです。",     
+                    "guidelines-intro":  "コミュニティを助け合い、敬意のある場所にするために、以下のガイドラインに従ってください：",     
+                    "guideline-1":  "正確で最新の交通情報を共有してください",     
+                    "guideline-2":  "すべてのユーザーに対して敬意と礼儀を払ってください",     
+                    "guideline-3":  "道路の事件、事故、工事を報告してください",     
+                    "guideline-4":  "交通パターンや道路状況について質問してください",     
+                    "guideline-5":  "スパム、広告、話題外の議論を避けてください",     
+                    "guideline-6":  "適切な言葉遣いをしてください - 攻撃的な内容は禁止です",     
+                    "moderation-note":  "私たちのモデレーターはチャットを監視し、すべての人がポジティブな体験ができるようにしています。これらのガイドラインに違反すると、チャットから一時的または永続的に禁止されることがあります。",     
+                    "about-title":  "マカオ交通モニターについて",     
+                    "about-desc":  "マカオ交通モニターは、住民と訪問者がマカオの道路網を効率的にナビゲートできるように設計されたリアルタイム交通情報プラットフォームです。当社のサービスは、最新の交通状況、推定通過時間、主要道路と国境横断地点のライブカメラフィードを提供します。",     
+                    "mission-title":  "私たちの使命",     
+                    "mission-desc":  "正確でリアルタイムの交通情報を提供することで、マカオの旅行時間を短縮し、道路の安全性を向上させることを目指しています。当社のプラットフォームは、ユーザーが旅行ルートとタイミングについて情報に基づいた決定をできるようにします。",     
+                    "data-sources-title":  "データソース",     
+                    "data-sources-desc":  "私たちの交通データは複数の公式チャネルから取得されます：",     
+                    "source-1":  "交通事務局 - 公式交通データ",     
+                    "source-2":  "Google Maps API - 交通流と事件報告",     
+                    "source-3":  "交通事務局が運営するライブ交通カメラ",     
+                    "source-4":  "私たちのユーザーからのコミュニティ報告",     
+                    "features-title":  "機能",     
+                    "feature-1":  "リアルタイム交通状況の可視化",     
+                    "feature-2":  "国境横断の推定待ち時間",     
+                    "feature-3":  "ライブ交通カメラフィード",     
+                    "feature-4":  "リアルタイム更新のためのコミュニティチャット",     
+                    "feature-5":  "移動中の交通更新のためのモバイルアプリ",     
+                    "feature-6":  "歴史的交通パターン分析",     
+                    "mobile-app-title":  "外出先で交通情報を取得",     
+                    "mobile-app-desc":  "交通アラートとナビゲーション支援のためのモバイルアプリをダウンロード",     
+                    "feature-alerts":  "即時アラート",     
+                    "feature-routing":  "スマートルーティング",     
+                    "feature-history":  "交通履歴",     
+                    "feature-maps":  "オフライン地図",
+                    // Camera titles
+                    "camera-title-1":  "ペニャトンネル ヴァスコ・ロチャ・ヴィエイラ知事広場方面（貯水池）",     
+                    "camera-title-2":  "ペニャトンネル ルア・ド・カンプ方面",     
+                    "camera-title-3":  "アルジュベ通り市場",     
+                    "camera-title-4":  "コンセレイロ・ボルジャ大通りとルア・ド・カンプの交差点",     
+                    "camera-title-5":  "コンセレイロ・ボルジャ大通り",     
+                    "camera-title-6":  "ベンセスラウ・デ・モライス大通り",     
+                    "camera-title-7":  "内港",     
+                    "camera-title-8":  "アレイア・プレタ新街",     
+                    "camera-title-9":  "タップ・セアック広場",     
+                    "camera-title-10":  "ヴァスコ・ロチャ・ヴィエイラ広場",     
+                    "camera-title-11":  "献血センター",     
+                    "camera-title-12":  "ナヴェ・デスポーティヴァ広場",     
+                    "camera-title-13":  "フェレイラ・ド・アマラル広場",     
+                    "camera-title-14":  "インファンテ・ドン・エンリケ大通りとロドリゴ・ロドリゲス医師大通りの交差点",     
+                    "camera-title-15":  "ルア・ドス・メルカドーレスとプラヤ・グランデ大通りの交差点",     
+                    "camera-title-16":  "ルア・ドス・メルカドーレス",     
+                    "camera-title-17":  "ハイワン・ガーデン",     
+                    "camera-title-18":  "マカオ国際空港",     
+                    "camera-title-19":  "イストモ環状道路交差点",     
+                    "camera-title-20":  "コータイ・ストリップ",     
+                    "camera-title-21":  "コータイ・ストリップ2 / イストモ道路",     
+                    "camera-title-22":  "アミザデ大通り",     
+                    "camera-title-23":  "北湾入口交差点付近のアミザデ橋",     
+                    "camera-title-24":  "タージャ方面のアミザデ橋",     
+                    "camera-title-25":  "マカオ方面のアミザデ橋",     
+                    "camera-title-26":  "マカオ方面のサイヴァン橋",     
+                    "camera-title-27":  "タージャ方面のサイヴァン橋（高所）",     
+                    "camera-title-28":  "マカオ方面のサイヴァン橋（高所）",     
+                    "camera-title-29":  "マカオ橋入口（マカオ）",     
+                    "camera-title-30":  "タージャ方面のマカオ橋",     
+                    "camera-title-31":  "マカオ方面のマカオ橋",     
+                    "camera-title-32":  "ポルタス・ド・セルコトンネル",     
+                    "camera-title-33":  "ポルタス・ド・セルコ大通り",     
+                    "camera-title-34":  "青茂ポート（A）",     
+                    "camera-title-35":  "青茂ポート（B）",     
+                    "camera-title-36":  "外港フェリー乗り場（A）",     
+                    "camera-title-37":  "外港フェリー乗り場（B）",     
+                    "camera-title-38":  "横琴ポート（A）",     
+                    "camera-title-39":  "横琴ポート（B）",     
+                    "camera-title-40":  "横琴ポート（C）",     
+                    "camera-title-41":  "横琴ポート（D）",     
+                    "camera-title-42":  "香港・珠海・マカオ橋 珠海行き",     
+                    "camera-title-43":  "香港・珠海・マカオ橋 マカオ行き",     
+                    "camera-title-44":  "香港・珠海・マカオ橋 送客プラットフォーム行き",     
+                    "camera-title-45":  "香港・珠海・マカオ橋（マカオ入国）"
                 }
             };
             
@@ -1765,15 +1961,15 @@
             function changeLanguage(lang) {
                 // Update current language display
                 const langNames = {
-                    'en':  'English',  
-                    'zh':  '繁體中文',  
-                    'pt':  'Português',  
+                    'en':  'English',     
+                    'zh':  '繁體中文',     
+                    'pt':  'Português',     
                     'ja':  '日本語'
                 };
                 currentLangSpan.textContent = langNames[lang];
                 
                 // Update all translatable elements
-                const elements = document.querySelectorAll('[id^="header-title"],  [id^="welcome-message"],  [id^="header-subtitle"],  [id^="nav-"],  [id^="map-instruction"],  [id^="traffic-overview"],  [id^="current-time-label"],  [id^="overall-traffic"],  [id^="traffic-status-value"],  [id^="average-delay-label"],  [id^="crossing-duration"],  [id^="friendship-bridge"],  [id^="sai-van-bridge"],  [id^="horta-costa"],  [id^="san-ma-lou"],  [id^="praca-amaral"],  [id^="portas-cerco"],  [id^="cotai-strip"],  [id^="median-traffic-label"],  [id^="traffic-legend-title"],  [id^="severe-traffic"],  [id^="heavy-traffic"],  [id^="moderate-traffic"],  [id^="light-traffic"],  [id^="closed-traffic"],  [id^="website-info-title"],  [id^="website-info-desc"],  [id^="info-point-"],  [id^="travel-tips-title"],  [id^="tip-"],  [id^="live-cameras-title"],  [id^="tab-"],  [id^="community-chat-title"],  [id^="community-guidelines-title"],  [id^="community-guidelines-desc"],  [id^="guidelines-intro"],  [id^="guideline-"],  [id^="moderation-note"],  [id^="about-title"],  [id^="about-desc"],  [id^="mission-title"],  [id^="mission-desc"],  [id^="data-sources-title"],  [id^="data-sources-desc"],  [id^="source-"],  [id^="features-title"],  [id^="feature-"],  [id^="mobile-app-title"],  [id^="mobile-app-desc"],  [id^="feature-alerts"],  [id^="feature-routing"],  [id^="feature-history"],  [id^="feature-maps"]');
+                const elements = document.querySelectorAll('[id^="header-title"],  [id^="welcome-message"],  [id^="header-subtitle"],  [id^="nav-"],  [id^="map-instruction"],  [id^="traffic-overview"],  [id^="current-time-label"],  [id^="overall-traffic"],  [id^="traffic-status-value"],  [id^="average-delay-label"],  [id^="crossing-duration"],  [id^="friendship-bridge"],  [id^="sai-van-bridge"],  [id^="horta-costa"],  [id^="san-ma-lou"],  [id^="praca-amaral"],  [id^="portas-cerco"],  [id^="cotai-strip"],  [id^="median-traffic-label"],  [id^="traffic-legend-title"],  [id^="severe-traffic"],  [id^="heavy-traffic"],  [id^="moderate-traffic"],  [id^="light-traffic"],  [id^="closed-traffic"],  [id^="website-info-title"],  [id^="website-info-desc"],  [id^="info-point-"],  [id^="travel-tips-title"],  [id^="tip-"],  [id^="live-cameras-title"],  [id^="tab-"],  [id^="community-chat-title"],  [id^="community-guidelines-title"],  [id^="community-guidelines-desc"],  [id^="guidelines-intro"],  [id^="guideline-"],  [id^="moderation-note"],  [id^="about-title"],  [id^="about-desc"],  [id^="mission-title"],  [id^="mission-desc"],  [id^="data-sources-title"],  [id^="data-sources-desc"],  [id^="source-"],  [id^="features-title"],  [id^="feature-"],  [id^="mobile-app-title"],  [id^="mobile-app-desc"],  [id^="feature-alerts"],  [id^="feature-routing"],  [id^="feature-history"],  [id^="feature-maps"], [id^="camera-title-"]');
                 
                 elements.forEach(element => {
                     const id = element.id;
@@ -1785,24 +1981,6 @@
                         }
                     }
                 });
-                
-                // Translate camera titles
-                document.querySelectorAll('.camera-title').forEach(title => {
-                    if (lang === 'en') {
-                        title.textContent = title.getAttribute('data-en') || title.textContent;
-                    } else if (lang === 'pt') {
-                        title.textContent = title.getAttribute('data-pt') || title.textContent;
-                    } else if (lang === 'ja') {
-                        title.textContent = title.getAttribute('data-ja') || title.textContent;
-                    }
-                    // For Chinese (default),  keep the original text content
-                });
-                
-                // Translate camera tabs
-                document.getElementById('tab-macau-city').textContent = translations[lang]['tab-macau-city'];
-                document.getElementById('tab-taipa').textContent = translations[lang]['tab-taipa'];
-                document.getElementById('tab-bridges').textContent = translations[lang]['tab-bridges'];
-                document.getElementById('tab-border').textContent = translations[lang]['tab-border'];
                 
                 // Store selected language in localStorage
                 localStorage.setItem('selectedLanguage',  lang);
@@ -1816,47 +1994,47 @@
         // Updated traffic data with new time ranges
         const trafficData = {
             "friendship":  [
-                { start:  7,  end:  9.5,  min:  4,  max:  8 },              // 7: 00 to 9: 30 = 4-8 mins
-                { start:  9,  end:  15,  min:  43,  max:  45 },              // 9: 00 - 15: 00 = 5-10 mins
-                { start:  15.01,  end:  20,  min:  8,  max:  10 },          // 15: 01 - 20: 00 - 8-10 mins
-                { start:  19,  end:  6.99,  min:  4,  max:  5 }    // 19: 00 to 6: 59 - 4-5 mins
-            ],          
+                { start:  7,  end:  9.5,  min:  4,  max:  8 },                 // 7: 00 to 9: 30 = 4-8 mins
+                { start:  9,  end:  15,  min:  43,  max:  45 },                 // 9: 00 - 15: 00 = 5-10 mins
+                { start:  15.01,  end:  20,  min:  8,  max:  10 },             // 15: 01 - 20: 00 - 8-10 mins
+                { start:  19,  end:  6.99,  min:  2,  max:  4 }    // 19: 00 to 6: 59 - 4-5 mins
+            ],             
             "sai-van":  [
-                { start:  7,  end:  9.5,  min:  3,  max:  5 },              // 7: 00 to 9: 30 = 3-5 mins
-                { start:  9.51,  end:  15,  min:  3,  max:  5 },           // 9: 31 - 15: 00 = 5-10 mins
-                { start:  15.01,  end:  18.99,  min:  3,  max:  5 },          // 15: 01 - 18: 59 - 6-15 mins
-                { start:  19,  end:  6.99,  min:  4,  max:  10 }   // 19: 00 to 6: 59 - 4-10 mins
-            ],          
+                { start:  7,  end:  9.5,  min:  3,  max:  5 },                 // 7: 00 to 9: 30 = 3-5 mins
+                { start:  9.51,  end:  15,  min:  3,  max:  5 },              // 9: 31 - 15: 00 = 5-10 mins
+                { start:  15.01,  end:  18.99,  min:  3,  max:  5 },             // 15: 01 - 18: 59 - 6-15 mins
+                { start:  19,  end:  6.99,  min:  2,  max:  4 }   // 19: 00 to 6: 59 - 4-10 mins
+            ],             
             "horta":  [
-                { start:  7,  end:  9.99,  min:  8,  max:  18 },            // 7: 00 to 9: 59 = 8-18 mins
-                { start:  10,  end:  15,  min:  5,  max:  10 },             // 10: 00 - 15: 00= 5-10 mins
-                { start:  15.5,  end:  18.99,  min:  15,  max:  30 },          // 15: 30-18: 59 - 15-30 mins
-                { start:  19,  end:  6.99,  min:  4,  max:  8 }    // 19: 00 to 6: 59 - 4-8 mins
-            ],          
+                { start:  7,  end:  9.99,  min:  8,  max:  18 },               // 7: 00 to 9: 59 = 8-18 mins
+                { start:  10,  end:  15,  min:  5,  max:  10 },                // 10: 00 - 15: 00= 5-10 mins
+                { start:  15.5,  end:  18.99,  min:  15,  max:  30 },             // 15: 30-18: 59 - 15-30 mins
+                { start:  19,  end:  6.99,  min:  2,  max:  4 }    // 19: 00 to 6: 59 - 4-8 mins
+            ],             
             "san-ma":  [
-                { start:  7,  end:  8.99,  min:  6,  max:  10 },            // 7: 00 to 8: 59 = 6-10 mins
-                { start:  9,  end:  15,  min:  1,  max:  10 },              // 9: 00- 15: 00 = 1-10 mins
-                { start:  15.01,  end:  18.99,  min:  10,  max:  20 },          // 15: 01-18: 59 - 10-20 mins
-                { start:  19,  end:  6.99,  min:  4,  max:  10 }   // 19: 00to 6: 59 - 4-10 mins
-            ],          
+                { start:  7,  end:  8.99,  min:  6,  max:  10 },               // 7: 00 to 8: 59 = 6-10 mins
+                { start:  9,  end:  15,  min:  1,  max:  10 },                 // 9: 00- 15: 00 = 1-10 mins
+                { start:  15.01,  end:  18.99,  min:  10,  max:  20 },             // 15: 01-18: 59 - 10-20 mins
+                { start:  19,  end:  6.99,  min:  2,  max:  4 }   // 19: 00to 6: 59 - 4-10 mins
+            ],             
             "praca":  [
-                { start:  7,  end:  8.99,  min:  6,  max:  15 },            // 7: 00 to 8: 59 =6-15mins
-                { start:  9,  end:  15,  min:  6,  max:  15 },              // 9: 00 - 15: 00 = 6-15 mins
-                { start:  15.01,  end:  18.99,  min:  6,  max:  8 },          // 15: 01 - 18: 59 - 6-15mins
-                { start:  19,  end:  6.99,  min:  6,  max:  8 }   // 19: 00 to 6: 59 - 6-15 mins
-            ],          
+                { start:  7,  end:  8.99,  min:  6,  max:  15 },               // 7: 00 to 8: 59 =6-15mins
+                { start:  9,  end:  15,  min:  6,  max:  15 },                 // 9: 00 - 15: 00 = 6-15 mins
+                { start:  15.01,  end:  18.99,  min:  6,  max:  8 },             // 15: 01 - 18: 59 - 6-15mins
+                { start:  19,  end:  6.99,  min:  2,  max:  4 }   // 19: 00 to 6: 59 - 6-15 mins
+            ],             
             "portas":  [
-                { start:  7,  end:  8.99,  min:  5,  max:  10 },            // 7: 00 to 8: 59 = 5 - 10 mins
-                { start:  9,  end:  15,  min:  10,  max:  15 },             // 9: 00- 15: 00 = 10-15 mins
-                { start:  15.01,  end:  20,  min:  10,  max:  25 },          // 15: 01 - 20: 00 = 10-25 min
-                { start:  20.01,  end:  23,  min:  10,  max:  15 },          // 20: 01 - 23: 00 = 10-15 mins
-                { start:  23.01,  end:  6.99,  min:  1,  max:  3 } // 23: 01-6: 59= 1-3 mins
-            ],          
+                { start:  7,  end:  8.99,  min:  5,  max:  10 },               // 7: 00 to 8: 59 = 5 - 10 mins
+                { start:  9,  end:  15,  min:  10,  max:  15 },                // 9: 00- 15: 00 = 10-15 mins
+                { start:  15.01,  end:  20,  min:  10,  max:  25 },             // 15: 01 - 20: 00 = 10-25 min
+                { start:  20.01,  end:  23,  min:  10,  max:  15 },             // 20: 01 - 23: 00 = 10-15 mins
+                { start:  23.01,  end:  6.99,  min:  1,  max:  2 } // 23: 01-6: 59= 1-3 mins
+            ],             
             "cotai":  [
-                { start:  7,  end:  8.99,  min:  3,  max:  10 },            // 7: 00 to 8: 59 =3-10mins
-                { start:  9,  end:  15,  min:  3,  max:  10 },              // 9: 00 - 15: 00 = 3-10 mins
-                { start:  15.01,  end:  18.99,  min:  10,  max:  15 },          // 15: 01 - 18: 59 - 10-15mins
-                { start:  19,  end:  6.99,  min:  6,  max:  10 }   // 19: 00 to 6: 59 - 6-10 mins
+                { start:  7,  end:  8.99,  min:  3,  max:  10 },               // 7: 00 to 8: 59 =3-10mins
+                { start:  9,  end:  15,  min:  3,  max:  10 },                 // 9: 00 - 15: 00 = 3-10 mins
+                { start:  15.01,  end:  18.99,  min:  10,  max:  15 },             // 15: 01 - 18: 59 - 10-15mins
+                { start:  19,  end:  6.99,  min:  2,  max:  4 }   // 19: 00 to 6: 59 - 6-10 mins
             ]
         };
 
@@ -2000,6 +2178,6 @@
         window.addEventListener('DOMContentLoaded',  init);
     </script>
     
-    <script async src="https://iframely.net/embed.js"></script>
+    <script async src="https: //iframely.net/embed.js"></script>
 </body>
 </html>
