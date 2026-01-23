@@ -3,2427 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Panel - Macau Traffic Monitor</title>
+    <title>Staff Panel – Macau Traffic Monitor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
-                        url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #ffd700, #ff8c00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-        
-        .logo i {
-            font-size: 40px;
-            color: #8b0000;
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 5px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 20px;
-        }
-        
-        .auth-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            text-align: center;
-        }
-        
-        .auth-section h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 1rem;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border-radius: 30px;
-            border: none;
-            background: #ffd700;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn i {
-            font-size: 1.2rem;
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: #ff4d4d;
-            color: white;
-        }
-        
-        .btn-success {
-            background: #4dff4d;
-            color: #000;
-        }
-        
-        .btn-warning {
-            background: #ff9900;
-            color: #000;
-        }
-        
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-        
-        .cameras-section {
-            display: none;
-        }
-        
-        .section-title {
-            color: #ffd700;
-            margin: 25px 0 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .camera-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .camera-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: transform 0.3s ease;
-            cursor: move;
-        }
-        
-        .camera-card: hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        }
-        
-        .camera-card.dragging {
-            opacity: 0.5;
-            transform: scale(0.98);
-        }
-        
-        .camera-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .camera-iframe {
-            width: 100%;
-            height: 180px;
-            border-radius: 8px;
-            border: none;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
-        .camera-details {
-            margin: 15px 0;
-        }
-        
-        .camera-details p {
-            margin: 8px 0;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .camera-details strong {
-            min-width: 100px;
-            display: inline-block;
-        }
-        
-        .camera-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .camera-actions .btn {
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #ffd700;
-        }
-        
-        .modal h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .status-connected {
-            background-color: #4dff4d;
-            box-shadow: 0 0 8px #4dff4d;
-        }
-        
-        .status-disconnected {
-            background-color: #ff4d4d;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.8);
-            border-left: 4px solid #4dff4d;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            z-index: 2000;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-        
-        .notification.error {
-            border-left-color: #ff4d4d;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-            }
-            
-            .camera-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-        }
-        
-        .stats-container {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ffd700;
-            margin: 10px 0;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        .position-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .position-input {
-            flex: 1;
-        }
-        
-        .search-container {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .search-container input {
-            flex: 1;
-        }
-        
-        .position-warning {
-            color: #ff9900;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        .suggestion-list {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            width: 100%;
-            z-index: 100;
-            display: none;
-        }
-        
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-        
-        .suggestion-item:hover {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        /* Drag and drop styles */
-        .drag-over {
-            border: 2px dashed #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-        }
-        
-        .drag-handle {
-            cursor: move;
-            padding: 5px;
-            margin-right: 10px;
-            color: #ffd700;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:linear-gradient(rgba(0,0,0,.8),rgba(0,0,0,.8)),url(https://img1.wsimg.com/isteam/getty/2154404610) no-repeat center center fixed;background-size:cover;color:#fff;min-height:100vh;padding:20px;overflow-x:hidden}
+        .container{max-width:1400px;margin:0 auto}
+        header{text-align:center;padding:20px 0;margin-bottom:20px;background:rgba(0,0,0,.6);border-radius:15px;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18)}
+        .logo-container{display:flex;align-items:center;justify-content:center;gap:15px;margin-bottom:10px}
+        .logo{width:80px;height:80px;background:linear-gradient(45deg,#ffd700,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,215,0,.5)}
+        .logo i{font-size:40px;color:#8b0000}
+        h1{font-size:2.8rem;text-shadow:0 2px 4px rgba(0,0,0,.5);margin-bottom:5px}
+        .subtitle{font-size:1.2rem;opacity:.9;max-width:600px;margin:0 auto 20px}
+        .auth-section{background:rgba(255,255,255,.1);border-radius:15px;padding:25px;margin:20px 0;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);text-align:center}
+        .auth-section h2{color:#ffd700;margin-bottom:20px}
+        .form-group{margin-bottom:20px;text-align:left}
+        .form-group label{display:block;margin-bottom:8px;font-weight:bold}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:1rem}
+        .btn{padding:12px 25px;border-radius:30px;border:none;background:#ffd700;color:#000;font-weight:bold;cursor:pointer;transition:all .3s ease;display:inline-flex;align-items:center;gap:8px}
+        .btn:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,.3)}
+        .btn i{font-size:1.2rem}
+        .btn-secondary{background:rgba(255,255,255,.1);color:#fff}
+        .btn-danger{background:#ff4d4d;color:#fff}
+        .btn-success{background:#4dff4d;color:#000}
+        .btn-warning{background:#ff9900;color:#000}
+        .btn-info{background:#17a2b8;color:#fff}
+        .cameras-section{display:none}
+        .section-title{color:#ffd700;margin:25px 0 15px;display:flex;align-items:center;gap:10px}
+        .camera-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:20px}
+        .camera-card{background:rgba(255,255,255,.1);border-radius:15px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);transition:transform .3s ease;cursor:move}
+        .camera-card:hover{transform:translateY(-5px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+        .camera-card.dragging{opacity:.5;transform:scale(.98)}
+        .camera-title{font-size:1.2rem;margin-bottom:15px;color:#ffd700;display:flex;align-items:center;gap:10px}
+        .camera-iframe{width:100%;height:180px;border-radius:8px;border:none;margin:10px 0;background:rgba(0,0,0,.3)}
+        .camera-details{margin:15px 0}
+        .camera-details p{margin:8px 0;display:flex;gap:10px}
+        .camera-details strong{min-width:100px;display:inline-block}
+        .camera-actions{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
+        .camera-actions .btn{flex:1;min-width:120px;justify-content:center}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}
+        .modal-content{background:rgba(0,0,0,.9);border-radius:15px;padding:30px;width:90%;max-width:600px;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);position:relative;max-height:90vh;overflow-y:auto}
+        .close-modal{position:absolute;top:20px;right:20px;font-size:1.5rem;cursor:pointer;color:#ffd700}
+        .modal h2{color:#ffd700;margin-bottom:20px;text-align:center}
+        .form-row{display:flex;gap:15px;margin-bottom:20px}
+        .form-row .form-group{flex:1}
+        .status-indicator{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px}
+        .status-connected{background-color:#4dff4d;box-shadow:0 0 8px #4dff4d}
+        .status-disconnected{background-color:#ff4d4d}
+        .notification{position:fixed;top:20px;right:20px;padding:15px 25px;border-radius:8px;background:rgba(0,0,0,.8);border-left:4px solid #4dff4d;box-shadow:0 5px 15px rgba(0,0,0,.3);z-index:2000;display:none;animation:slideIn .3s ease}
+        .notification.error{border-left-color:#ff4d4d}
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+        footer{text-align:center;padding:20px;margin-top:30px;font-size:.9rem;opacity:.8;background:rgba(0,0,0,.6);border-radius:15px;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18)}
+        @media(max-width:768px){.form-row{flex-direction:column}.camera-grid{grid-template-columns:1fr}h1{font-size:2.2rem}}
+        .stats-container{display:flex;gap:20px;margin:20px 0;flex-wrap:wrap}
+        .stat-card{background:rgba(255,255,255,.1);border-radius:10px;padding:15px;text-align:center;flex:1;min-width:120px}
+        .stat-value{font-size:1.8rem;font-weight:bold;color:#ffd700;margin:10px 0}
+        .stat-label{font-size:.9rem;opacity:.8}
+        .position-container{display:flex;gap:10px;align-items:center}
+        .position-input{flex:1}
+        .search-container{margin:20px 0;display:flex;gap:10px}
+        .search-container input{flex:1}
+        .position-warning{color:#ff9900;font-size:.9rem;margin-top:5px}
+        .suggestion-list{position:absolute;background:rgba(0,0,0,.9);border:1px solid rgba(255,255,255,.3);border-radius:8px;max-height:200px;overflow-y:auto;width:100%;z-index:100;display:none}
+        .suggestion-item{padding:10px;cursor:pointer}
+        .suggestion-item:hover{background:rgba(255,215,0,.2)}
+        .drag-over{border:2px dashed #ffd700;background:rgba(255,215,0,.1)}
+        .drag-handle{cursor:move;padding:5px;margin-right:10px;color:#ffd700}
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="logo-container">
-                <div class="logo">
-                    <i class="fas fa-car"></i>
-                </div>
-                <div>
-                    <h1>Staff Panel</h1>
-                    <p class="subtitle">Manage Live Camera Feeds for Macau Traffic Monitor</p>
-                </div>
+                <div class="logo"><i class="fas fa-car"></i></div>
+                <div><h1>Staff Panel</h1><p class="subtitle">Manage Live Camera Feeds for Macau Traffic Monitor</p></div>
             </div>
         </header>
-        
+
         <div class="auth-section" id="authSection">
             <h2><i class="fas fa-lock"></i> Staff Login</h2>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your staff email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password">
-            </div>
-            <button class="btn" id="loginBtn">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-            <p style="margin-top: 15px; color: #ffd700;">
-                <i class="fas fa-info-circle"></i> Get away and go lost if you're not staff
-            </p>
+            <div class="form-group"><label for="email">Email</label><input type="email" id="email" placeholder="Enter your staff email"></div>
+            <div class="form-group"><label for="password">Password</label><input type="password" id="password" placeholder="Enter your password"></div>
+            <button class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <p style="margin-top:15px;color:#ffd700"><i class="fas fa-info-circle"></i> Get away and go lost if you're not staff</p>
         </div>
-        
+
         <div class="cameras-section" id="camerasSection">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display:flex;justify-content:space-between;align-items:center">
                 <h2 class="section-title"><i class="fas fa-video"></i> Live Camera Management</h2>
-                <div>
-                    <span class="status-indicator" id="statusIndicator"></span>
-                    <span id="statusText">Connected to Firebase</span>
-                </div>
+                <div><span class="status-indicator" id="statusIndicator"></span><span id="statusText">Connected to Firebase</span></div>
             </div>
-            
-            <div class="search-container">
-                <input type="text" id="searchCamera" placeholder="Search camera by ID...">
-                <button class="btn" id="searchBtn">
-                    <i class="fas fa-search"></i> Search
-                </button>
+            <div class="search-container"><input type="text" id="searchCamera" placeholder="Search camera by ID..."><button class="btn" id="searchBtn"><i class="fas fa-search"></i> Search</button></div>
+            <div style="display:flex;gap:15px;margin:20px 0;flex-wrap:wrap">
+                <button class="btn" id="addCameraBtn"><i class="fas fa-plus"></i> Add New Camera</button>
+                <button class="btn btn-secondary" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+                <button class="btn btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
-            
-            <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
-                <button class="btn" id="addCameraBtn">
-                    <i class="fas fa-plus"></i> Add New Camera
-                </button>
-                <button class="btn btn-secondary" id="refreshBtn">
-                    <i class="fas fa-sync-alt"></i> Refresh Data
-                </button>
-                <button class="btn btn-danger" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-label">Total Cameras</div>
-                    <div class="stat-value" id="totalCameras">0</div>
-                </div>
-            </div>
-            
-            <div class="camera-grid" id="cameraGrid">
-                <!-- Camera cards will be dynamically inserted here -->
-            </div>
+            <div class="stats-container"><div class="stat-card"><div class="stat-label">Total Cameras</div><div class="stat-value" id="totalCameras">0</div></div></div>
+            <div class="camera-grid" id="cameraGrid"></div>
         </div>
-        
+
         <div class="modal" id="cameraModal">
             <div class="modal-content">
                 <span class="close-modal" id="closeModal">×</span>
                 <h2 id="modalTitle">Add New Camera</h2>
-                
-                <div class="form-group">
-                    <label for="cameraId">Camera ID</label>
-                    <div style="position: relative;">
-                        <input type="text" id="cameraId" placeholder="Unique identifier (e.g., camera-001)">
-                        <div class="suggestion-list" id="suggestionList"></div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="englishTitle">English Title</label>
-                        <input type="text" id="englishTitle" placeholder="Camera title in English">
-                    </div>
-                    <div class="form-group">
-                        <label for="chineseTitle">Chinese Title</label>
-                        <input type="text" id="chineseTitle" placeholder="Camera title in Chinese">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="portugueseTitle">Portuguese Title</label>
-                        <input type="text" id="portugueseTitle" placeholder="Camera title in Portuguese">
-                    </div>
-                    <div class="form-group">
-                        <label for="japaneseTitle">Japanese Title</label>
-                        <input type="text" id="japaneseTitle" placeholder="Camera title in Japanese">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="embedUrl">Embed URL</label>
-                    <input type="text" id="embedUrl" placeholder="Live stream URL (e.g., https://...)">
-                </div>
-                
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <select id="location" class="form-control">
-                        <option value="macau-city">Macau City</option>
-                        <option value="taipa">Taipa</option>
-                        <option value="bridges">Cross-Sea Bridges</option>
-                        <option value="border">Border Crossings</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="position">Position</label>
-                    <div class="position-container">
-                        <input type="number" id="position" class="position-input" min="1" placeholder="Position number">
-                        <span id="positionExample" style="opacity: 0.7;">e.g. Macau City - 1</span>
-                    </div>
-                    <div id="positionWarning" class="position-warning" style="display: none;"></div>
-                </div>
-                
-                <div style="display: flex; gap: 15px; margin-top: 25px;">
-                    <button class="btn" id="saveCameraBtn">
-                        <i class="fas fa-save"></i> Save Camera
-                    </button>
-                    <button class="btn btn-secondary" id="cancelBtn">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
+                <div class="form-group"><label for="cameraId">Camera ID</label><div style="position:relative"><input type="text" id="cameraId" placeholder="Unique identifier (e.g., camera-001)"><div class="suggestion-list" id="suggestionList"></div></div></div>
+                <div class="form-row"><div class="form-group"><label for="englishTitle">English Title</label><input type="text" id="englishTitle" placeholder="Camera title in English"></div><div class="form-group"><label for="chineseTitle">Chinese Title</label><input type="text" id="chineseTitle" placeholder="Camera title in Chinese"></div></div>
+                <div class="form-row"><div class="form-group"><label for="portugueseTitle">Portuguese Title</label><input type="text" id="portugueseTitle" placeholder="Camera title in Portuguese"></div><div class="form-group"><label for="japaneseTitle">Japanese Title</label><input type="text" id="japaneseTitle" placeholder="Camera title in Japanese"></div></div>
+                <div class="form-group"><label for="embedUrl">Embed URL</label><input type="text" id="embedUrl" placeholder="Live stream URL (e.g., https://...)"></div>
+                <div class="form-group"><label for="location">Location</label><select id="location" class="form-control"><option value="macau-city">Macau City</option><option value="taipa">Taipa</option><option value="bridges">Cross-Sea Bridges</option><option value="border">Border Crossings</option></select></div>
+                <div class="form-group"><label for="position">Position</label><div class="position-container"><input type="number" id="position" class="position-input" min="1" placeholder="Position number"><span id="positionExample" style="opacity:.7">e.g. Macau City - 1</span></div><div id="positionWarning" class="position-warning" style="display:none"></div></div>
+                <div style="display:flex;gap:15px;margin-top:25px"><button class="btn" id="saveCameraBtn"><i class="fas fa-save"></i> Save Camera</button><button class="btn btn-secondary" id="cancelBtn"><i class="fas fa-times"></i> Cancel</button></div>
             </div>
         </div>
-        
-        <div class="notification" id="notification">
-            <p id="notificationMessage">Operation completed successfully!</p>
-        </div>
-        
-        <footer>
-            <p>Macau Traffic Monitor Staff Panel © 2026</p>
-            <p>Data Source: Firebase Realtime Database</p>
-        </footer>
+
+        <div class="notification" id="notification"><p id="notificationMessage">Operation completed successfully!</p></div>
+        <footer><p>Macau Traffic Monitor Staff Panel © 2026</p><p>Data Source: Firebase Realtime Database</p></footer>
     </div>
 
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",         
-            authDomain: "macau-traffic-501cb.firebaseapp.com",         
-            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",         
-            projectId: "macau-traffic-501cb",         
-            storageBucket: "macau-traffic-501cb.appspot.com",         
-            messagingSenderId: "123456789012",         
-            appId: "1:123456789012:web:abcdef1234567890abcdef"
+        const firebaseConfig={
+            apiKey:"AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",
+            authDomain:"macau-traffic-501cb.firebaseapp.com",
+            databaseURL:"https://macau-traffic-501cb-default-rtdb.firebaseio.com",
+            projectId:"macau-traffic-501cb",
+            storageBucket:"macau-traffic-501cb.appspot.com",
+            messagingSenderId:"123456789012",
+            appId:"1:123456789012:web:abcdef1234567890abcdef"
         };
-
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const database=firebase.database();
 
-        // DOM Elements
-        const authSection = document.getElementById('authSection');
-        const camerasSection = document.getElementById('camerasSection');
-        const cameraGrid = document.getElementById('cameraGrid');
-        const cameraModal = document.getElementById('cameraModal');
-        const notification = document.getElementById('notification');
-        const statusIndicator = document.getElementById('statusIndicator');
-        const statusText = document.getElementById('statusText');
+        const authSection=document.getElementById('authSection');
+        const camerasSection=document.getElementById('camerasSection');
+        const cameraGrid=document.getElementById('cameraGrid');
+        const cameraModal=document.getElementById('cameraModal');
+        const notification=document.getElementById('notification');
+        const statusIndicator=document.getElementById('statusIndicator');
+        const statusText=document.getElementById('statusText');
+        const totalCamerasEl=document.getElementById('totalCameras');
 
-        // Stats elements
-        const totalCamerasEl = document.getElementById('totalCameras');
+        const loginBtn=document.getElementById('loginBtn');
+        const addCameraBtn=document.getElementById('addCameraBtn');
+        const refreshBtn=document.getElementById('refreshBtn');
+        const logoutBtn=document.getElementById('logoutBtn');
+        const saveCameraBtn=document.getElementById('saveCameraBtn');
+        const cancelBtn=document.getElementById('cancelBtn');
+        const closeModal=document.getElementById('closeModal');
+        const searchBtn=document.getElementById('searchBtn');
 
-        // Buttons
-        const loginBtn = document.getElementById('loginBtn');
-        const addCameraBtn = document.getElementById('addCameraBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const saveCameraBtn = document.getElementById('saveCameraBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const closeModal = document.getElementById('closeModal');
-        const searchBtn = document.getElementById('searchBtn');
+        const emailInput=document.getElementById('email');
+        const passwordInput=document.getElementById('password');
+        const cameraIdInput=document.getElementById('cameraId');
+        const englishTitleInput=document.getElementById('englishTitle');
+        const chineseTitleInput=document.getElementById('chineseTitle');
+        const portugueseTitleInput=document.getElementById('portugueseTitle');
+        const japaneseTitleInput=document.getElementById('japaneseTitle');
+        const embedUrlInput=document.getElementById('embedUrl');
+        const locationSelect=document.getElementById('location');
+        const positionInput=document.getElementById('position');
+        const searchCameraInput=document.getElementById('searchCamera');
+        const positionWarning=document.getElementById('positionWarning');
+        const suggestionList=document.getElementById('suggestionList');
 
-        // Form fields
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const cameraIdInput = document.getElementById('cameraId');
-        const englishTitleInput = document.getElementById('englishTitle');
-        const chineseTitleInput = document.getElementById('chineseTitle');
-        const portugueseTitleInput = document.getElementById('portugueseTitle');
-        const japaneseTitleInput = document.getElementById('japaneseTitle');
-        const embedUrlInput = document.getElementById('embedUrl');
-        const locationSelect = document.getElementById('location');
-        const positionInput = document.getElementById('position');
-        const searchCameraInput = document.getElementById('searchCamera');
-        const positionWarning = document.getElementById('positionWarning');
-        const suggestionList = document.getElementById('suggestionList');
+        let currentEditingCameraId=null;
+        let isAuthenticated=false;
+        let allCameras={};
+        let draggedItem=null;
 
-        // Current editing camera ID
-        let currentEditingCameraId = null;
-
-        // Authentication state
-        let isAuthenticated = false;
-
-        // All cameras data
-        let allCameras = {};
-
-        // Drag and drop variables
-        let draggedItem = null;
-
-        // Initialize the application
-        function init() {
+        function init(){
             updateConnectionStatus(true);
             loadCameras();
-            
-            // Update position example when location changes
-            locationSelect.addEventListener('change', updatePositionExample);
-            
-            // Add position validation
-            positionInput.addEventListener('input', validatePosition);
-            
-            // Add event listener for camera ID input to show suggestions
-            cameraIdInput.addEventListener('input', showSuggestions);
-            
-            // Close suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('#cameraId')) {
-                    suggestionList.style.display = 'none';
-                }
-            });
+            locationSelect.addEventListener('change',updatePositionExample);
+            positionInput.addEventListener('input',validatePosition);
+            cameraIdInput.addEventListener('input',showSuggestions);
+            document.addEventListener('click',e=>{if(!e.target.closest('#cameraId'))suggestionList.style.display='none'});
         }
-
-        // Show suggestions for camera ID
-        function showSuggestions() {
-            const input = cameraIdInput.value.toLowerCase();
-            suggestionList.innerHTML = '';
-            
-            if (input.length < 2) {
-                suggestionList.style.display = 'none';
-                return;
-            }
-            
-            const suggestions = Object.keys(allCameras).filter(id => 
-                id.toLowerCase().includes(input)
-            ).slice(0, 5);
-            
-            if (suggestions.length > 0) {
-                suggestions.forEach(id => {
-                    const item = document.createElement('div');
-                    item.className = 'suggestion-item';
-                    item.textContent = id;
-                    item.addEventListener('click', () => {
-                        cameraIdInput.value = id;
-                        suggestionList.style.display = 'none';
-                        // Auto-fill form with existing camera data
-                        fillFormWithCameraData(id);
-                    });
+        function showSuggestions(){
+            const input=cameraIdInput.value.toLowerCase();
+            suggestionList.innerHTML='';
+            if(input.length<2){suggestionList.style.display='none';return}
+            const suggestions=Object.keys(allCameras).filter(id=>id.toLowerCase().includes(input)).slice(0,5);
+            if(suggestions.length>0){
+                suggestions.forEach(id=>{
+                    const item=document.createElement('div');item.className='suggestion-item';item.textContent=id;
+                    item.addEventListener('click',()=>{cameraIdInput.value=id;suggestionList.style.display='none';fillFormWithCameraData(id)});
                     suggestionList.appendChild(item);
-                });
-                suggestionList.style.display = 'block';
-            } else {
-                suggestionList.style.display = 'none';
+                });suggestionList.style.display='block';
+            }else{suggestionList.style.display='none'}
+        }
+        function fillFormWithCameraData(cameraId){
+            const camera=allCameras[cameraId];
+            if(camera){
+                englishTitleInput.value=camera.titles.en||'';
+                chineseTitleInput.value=camera.titles.zh||'';
+                portugueseTitleInput.value=camera.titles.pt||'';
+                japaneseTitleInput.value=camera.titles.ja||'';
+                embedUrlInput.value=camera.embedUrl||'';
+                locationSelect.value=camera.location||'macau-city';
+                positionInput.value=camera.position||'';
+                updatePositionExample();validatePosition();
             }
         }
-
-        // Fill form with existing camera data
-        function fillFormWithCameraData(cameraId) {
-            const camera = allCameras[cameraId];
-            if (camera) {
-                englishTitleInput.value = camera.titles.en || '';
-                chineseTitleInput.value = camera.titles.zh || '';
-                portugueseTitleInput.value = camera.titles.pt || '';
-                japaneseTitleInput.value = camera.titles.ja || '';
-                embedUrlInput.value = camera.embedUrl || '';
-                locationSelect.value = camera.location || 'macau-city';
-                positionInput.value = camera.position || '';
-                updatePositionExample();
-                validatePosition();
-            }
+        function updatePositionExample(){
+            const locationText=locationSelect.options[locationSelect.selectedIndex].text;
+            document.getElementById('positionExample').textContent=`e.g. ${locationText} - 1`;
         }
-
-        // Update position example text
-        function updatePositionExample() {
-            const locationText = locationSelect.options[locationSelect.selectedIndex].text;
-            document.getElementById('positionExample').textContent = `e.g. ${locationText} - 1`;
-        }
-
-        // Validate position to check for conflicts
-        function validatePosition() {
-            const position = positionInput.value.trim();
-            const location = locationSelect.value;
-            
-            if (!position) {
-                positionWarning.style.display = 'none';
-                return;
-            }
-            
-            const positionNum = parseInt(position);
-            let conflictCameraId = null;
-            
-            // Check if position is already occupied
-            Object.keys(allCameras).forEach(cameraId => {
-                const camera = allCameras[cameraId];
-                if (camera.location === location && 
-                    camera.position === positionNum && 
-                    cameraId !== currentEditingCameraId) {
-                    conflictCameraId = cameraId;
-                }
+        function validatePosition(){
+            const position=positionInput.value.trim();
+            const location=locationSelect.value;
+            if(!position){positionWarning.style.display='none';return}
+            const positionNum=parseInt(position);
+            let conflictCameraId=null;
+            Object.keys(allCameras).forEach(cameraId=>{
+                const camera=allCameras[cameraId];
+                if(camera.location===location&&camera.position===positionNum&&cameraId!==currentEditingCameraId)conflictCameraId=cameraId;
             });
-            
-            if (conflictCameraId) {
-                positionWarning.textContent = `Position ${positionNum} is already occupied by camera ID: ${conflictCameraId}. Saving will move that camera to the back.`;
-                positionWarning.style.display = 'block';
-            } else {
-                positionWarning.style.display = 'none';
-            }
+            if(conflictCameraId){
+                positionWarning.textContent=`Position ${positionNum} is already occupied by camera ID: ${conflictCameraId}. Saving will move that camera to the back.`;
+                positionWarning.style.display='block';
+            }else{positionWarning.style.display='none'}
         }
-
-        // Update connection status indicator
-        function updateConnectionStatus(connected) {
-            if (connected) {
-                statusIndicator.className = 'status-indicator status-connected';
-                statusText.textContent = 'Connected to Firebase';
-            } else {
-                statusIndicator.className = 'status-indicator status-disconnected';
-                statusText.textContent = 'Disconnected from Firebase';
-            }
+        function updateConnectionStatus(connected){
+            statusIndicator.className=connected?'status-indicator status-connected':'status-indicator status-disconnected';
+            statusText.textContent=connected?'Connected to Firebase':'Disconnected from Firebase';
         }
-
-        // Show notification
-        function showNotification(message, isError = false) {
-            const notificationMessage = document.getElementById('notificationMessage');
-            notificationMessage.textContent = message;
-            
-            if (isError) {
-                notification.className = 'notification error';
-            } else {
-                notification.className = 'notification';
-            }
-            
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+        function showNotification(message,isError=false){
+            document.getElementById('notificationMessage').textContent=message;
+            notification.className=isError?'notification error':'notification';
+            notification.style.display='block';
+            setTimeout(()=>notification.style.display='none',3000);
         }
-
-        // Login function
-        function login() {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            
-            if (!email || !password) {
-                showNotification('Please enter both email and password', true);
-                return;
-            }
-            
-            // In a real app, this would be a Firebase authentication call
-            // For demo purposes, we'll use a simple check
-            if (email === 'admin@macautraffic.com' && password === 'Admin123') {
-                isAuthenticated = true;
-                authSection.style.display = 'none';
-                camerasSection.style.display = 'block';
+        function login(){
+            const email=emailInput.value.trim();
+            const password=passwordInput.value.trim();
+            if(!email||!password){showNotification('Please enter both email and password',true);return}
+            if(email==='admin@macautraffic.com'&&password==='Admin123'){
+                isAuthenticated=true;
+                authSection.remove(); // ✅ login panel completely removed
+                camerasSection.style.display='block';
                 showNotification('Login successful!');
-            } else {
-                showNotification('Invalid credentials. Please try again.', true);
-            }
+            }else{showNotification('Invalid credentials. Please try again.',true)}
         }
-
-        // Logout function
-        function logout() {
-            isAuthenticated = false;
-            authSection.style.display = 'block';
-            camerasSection.style.display = 'none';
-            emailInput.value = '';
-            passwordInput.value = '';
+        function logout(){
+            isAuthenticated=false;
+            camerasSection.style.display='none';
+            emailInput.value='';passwordInput.value='';
             showNotification('You have been logged out');
+            location.reload(); // simple way back to login
         }
-
-        // Search camera by ID
-        function searchCamera() {
-            const searchTerm = searchCameraInput.value.trim().toLowerCase();
-            
-            if (!searchTerm) {
-                showNotification('Please enter a camera ID to search', true);
-                return;
-            }
-            
-            const foundCameraId = Object.keys(allCameras).find(id => 
-                id.toLowerCase().includes(searchTerm)
-            );
-            
-            if (foundCameraId) {
-                editCamera(foundCameraId);
-            } else {
-                showNotification('Camera not found', true);
-            }
+        function searchCamera(){
+            const searchTerm=searchCameraInput.value.trim().toLowerCase();
+            if(!searchTerm){showNotification('Please enter a camera ID to search',true);return}
+            const foundCameraId=Object.keys(allCameras).find(id=>id.toLowerCase().includes(searchTerm));
+            foundCameraId?editCamera(foundCameraId):showNotification('Camera not found',true);
         }
-
-        // Load cameras from Firebase
-        function loadCameras() {
-            cameraGrid.innerHTML = '<p style="text-align: center; width: 100%;"><i class="fas fa-spinner fa-spin"></i> Loading cameras...</p>';
-            
-            const camerasRef = database.ref('cameras');
-            camerasRef.once('value')
-                .then((snapshot) => {
-                    const cameras = snapshot.val();
-                    if (cameras) {
-                        allCameras = cameras;
-                        displayCameras(cameras);
-                        updateStats();
-                    } else {
-                        cameraGrid.innerHTML = '<p style="text-align: center; width: 100%;">No cameras found</p>';
-                        allCameras = {};
-                        updateStats();
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading cameras: ', error);
-                    cameraGrid.innerHTML = '<p style="text-align: center; width: 100%; color: #ff4d4d;">Error loading cameras. Please try again.</p>';
-                    showNotification('Failed to load cameras', true);
-                });
+        function loadCameras(){
+            cameraGrid.innerHTML='<p style="text-align:center;width:100%"><i class="fas fa-spinner fa-spin"></i> Loading cameras...</p>';
+            database.ref('cameras').once('value').then(snapshot=>{
+                const cameras=snapshot.val();
+                if(cameras){allCameras=cameras;displayCameras(cameras);updateStats()}
+                else{cameraGrid.innerHTML='<p style="text-align:center;width:100%">No cameras found</p>';allCameras={};updateStats()}
+            }).catch(err=>{console.error(err);cameraGrid.innerHTML='<p style="text-align:center;width:100%;color:#ff4d4d">Error loading cameras.</p>';showNotification('Failed to load cameras',true)});
         }
-
-        // Update statistics
-        function updateStats() {
-            totalCamerasEl.textContent = Object.keys(allCameras).length;
-        }
-
-        // Display cameras in the grid with drag and drop
-        function displayCameras(cameras) {
-            cameraGrid.innerHTML = '';
-            
-            // Convert to array and sort by position
-            const camerasArray = Object.keys(cameras).map(id => ({
-                id, 
-                ...cameras[id]
-            }));
-            
-            // Sort by position (nulls last)
-            camerasArray.sort((a, b) => {
-                if (a.position === null || a.position === undefined) return 1;
-                if (b.position === null || b.position === undefined) return -1;
-                return a.position - b.position;
-            });
-            
-            camerasArray.forEach(camera => {
-                const cameraCard = document.createElement('div');
-                cameraCard.className = 'camera-card';
-                cameraCard.setAttribute('data-id', camera.id);
-                cameraCard.setAttribute('draggable', true);
-                cameraCard.innerHTML = `
-                    <div class="camera-title">
-                        <i class="fas fa-grip-vertical drag-handle"></i>
-                        <i class="fas fa-video"></i> ${camera.titles.en}
-                    </div>
-                    <div class="camera-details">
-                        <p><strong>ID: </strong> ${camera.id}</p>
-                        <p><strong>Location: </strong> ${camera.location}</p>
-                        <p><strong>Position: </strong> ${camera.position || 'Not set'}</p>
-                        <p><strong>URL: </strong> ${camera.embedUrl}</p>
-                    </div>
+        function updateStats(){totalCamerasEl.textContent=Object.keys(allCameras).length}
+        function displayCameras(cameras){
+            cameraGrid.innerHTML='';
+            const camerasArray=Object.keys(cameras).map(id=>({id,...cameras[id]}));
+            camerasArray.sort((a,b)=>{if(a.position==null)return 1;if(b.position==null)return -1;return a.position-b.position});
+            camerasArray.forEach(camera=>{
+                const card=document.createElement('div');card.className='camera-card';card.setAttribute('data-id',camera.id);card.setAttribute('draggable',true);
+                card.innerHTML=`
+                    <div class="camera-title"><i class="fas fa-grip-vertical drag-handle"></i><i class="fas fa-video"></i> ${camera.titles.en}</div>
+                    <div class="camera-details"><p><strong>ID:</strong> ${camera.id}</p><p><strong>Location:</strong> ${camera.location}</p><p><strong>Position:</strong> ${camera.position||'Not set'}</p><p><strong>URL:</strong> ${camera.embedUrl}</p></div>
                     <iframe class="camera-iframe" src="${camera.embedUrl}" allowfullscreen></iframe>
-                    <div class="camera-actions">
-                        <button class="btn btn-secondary edit-btn" data-id="${camera.id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn btn-danger delete-btn" data-id="${camera.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                `;
-                cameraGrid.appendChild(cameraCard);
-                
-                // Add drag events
-                cameraCard.addEventListener('dragstart', handleDragStart);
-                cameraCard.addEventListener('dragover', handleDragOver);
-                cameraCard.addEventListener('dragenter', handleDragEnter);
-                cameraCard.addEventListener('dragleave', handleDragLeave);
-                cameraCard.addEventListener('drop', handleDrop);
-                cameraCard.addEventListener('dragend', handleDragEnd);
+                    <div class="camera-actions"><button class="btn btn-secondary edit-btn" data-id="${camera.id}"><i class="fas fa-edit"></i> Edit</button><button class="btn btn-danger delete-btn" data-id="${camera.id}"><i class="fas fa-trash"></i> Delete</button></div>`;
+                cameraGrid.appendChild(card);
+                card.addEventListener('dragstart',handleDragStart);card.addEventListener('dragover',handleDragOver);card.addEventListener('dragenter',handleDragEnter);card.addEventListener('dragleave',handleDragLeave);card.addEventListener('drop',handleDrop);card.addEventListener('dragend',handleDragEnd);
             });
-            
-            // Add event listeners to edit and delete buttons
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => editCamera(btn.dataset.id));
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteCamera(btn.dataset.id));
-            });
+            document.querySelectorAll('.edit-btn').forEach(btn=>btn.addEventListener('click',()=>editCamera(btn.dataset.id)));
+            document.querySelectorAll('.delete-btn').forEach(btn=>btn.addEventListener('click',()=>deleteCamera(btn.dataset.id)));
         }
-
-        // Drag and drop functions
-        function handleDragStart(e) {
-            draggedItem = this;
-            setTimeout(() => {
-                this.classList.add('dragging');
-            }, 0);
+        function handleDragStart(){draggedItem=this;setTimeout(()=>this.classList.add('dragging'),0)}
+        function handleDragOver(e){e.preventDefault()}
+        function handleDragEnter(e){e.preventDefault();this.classList.add('drag-over')}
+        function handleDragLeave(){this.classList.remove('drag-over')}
+        function handleDrop(e){e.preventDefault();this.classList.remove('drag-over');if(draggedItem!==this){const allItems=Array.from(cameraGrid.querySelectorAll('.camera-card'));const draggedIndex=allItems.indexOf(draggedItem);const targetIndex=allItems.indexOf(this);if(draggedIndex<targetIndex)cameraGrid.insertBefore(draggedItem,this.nextSibling);else cameraGrid.insertBefore(draggedItem,this);updateCameraPositions()}}
+        function handleDragEnd(){this.classList.remove('dragging');draggedItem=null}
+        function updateCameraPositions(){
+            const updates={};
+            cameraGrid.querySelectorAll('.camera-card').forEach((card,index)=>updates[`cameras/${card.dataset.id}/position`]=index+1);
+            database.ref().update(updates).then(()=>{showNotification('Camera positions updated!');loadCameras()}).catch(err=>{console.error(err);showNotification('Failed to update positions',true)})
         }
-
-        function handleDragOver(e) {
-            e.preventDefault();
+        function openAddCameraModal(){
+            currentEditingCameraId=null;document.getElementById('modalTitle').textContent='Add New Camera';cameraIdInput.value='';cameraIdInput.disabled=false;englishTitleInput.value='';chineseTitleInput.value='';portugueseTitleInput.value='';japaneseTitleInput.value='';embedUrlInput.value='';locationSelect.value='macau-city';positionInput.value='';positionWarning.style.display='none';updatePositionExample();cameraModal.style.display='flex';
         }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('drag-over');
+        function editCamera(cameraId){
+            currentEditingCameraId=cameraId;document.getElementById('modalTitle').textContent='Edit Camera';
+            database.ref('cameras/'+cameraId).once('value').then(snapshot=>{
+                const camera=snapshot.val();
+                if(camera){
+                    cameraIdInput.value=cameraId;cameraIdInput.disabled=true;englishTitleInput.value=camera.titles.en;chineseTitleInput.value=camera.titles.zh;portugueseTitleInput.value=camera.titles.pt;japaneseTitleInput.value=camera.titles.ja;embedUrlInput.value=camera.embedUrl;locationSelect.value=camera.location;positionInput.value=camera.position||'';positionWarning.style.display='none';updatePositionExample();validatePosition();cameraModal.style.display='flex';
+                }else{showNotification('Camera not found',true)}
+            }).catch(err=>{console.error(err);showNotification('Failed to load camera',true)})
         }
-
-        function handleDragLeave() {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (draggedItem !== this) {
-                // Get the index of the dragged item and the drop target
-                const allItems = Array.from(cameraGrid.querySelectorAll('.camera-card'));
-                const draggedIndex = allItems.indexOf(draggedItem);
-                const targetIndex = allItems.indexOf(this);
-                
-                // Reorder the items in the DOM
-                if (draggedIndex < targetIndex) {
-                    cameraGrid.insertBefore(draggedItem, this.nextSibling);
-                } else {
-                    cameraGrid.insertBefore(draggedItem, this);
-                }
-                
-                // Update positions in Firebase
-                updateCameraPositions();
+        function saveCamera(){
+            const cameraId=cameraIdInput.value.trim();
+            const englishTitle=englishTitleInput.value.trim();
+            const chineseTitle=chineseTitleInput.value.trim();
+            const portugueseTitle=portugueseTitleInput.value.trim();
+            const japaneseTitle=japaneseTitleInput.value.trim();
+            const embedUrl=embedUrlInput.value.trim();
+            const location=locationSelect.value;
+            const position=positionInput.value.trim();
+            if(!cameraId||!englishTitle||!embedUrl){showNotification('Please fill in all required fields',true);return}
+            const cameraData={titles:{en:englishTitle,zh:chineseTitle,pt:portugueseTitle,ja:japaneseTitle},embedUrl:embedUrl,location:location,position:position?parseInt(position):null};
+            const positionNum=position?parseInt(position):null;let conflictCameraId=null;
+            if(positionNum){Object.keys(allCameras).forEach(id=>{const camera=allCameras[id];if(camera.location===location&&camera.position===positionNum&&id!==cameraId)conflictCameraId=id})}
+            if(conflictCameraId){
+                const camerasInLocation=Object.values(allCameras).filter(cam=>cam.location===location&&cam.position!==null);
+                const maxPosition=camerasInLocation.length>0?Math.max(...camerasInLocation.map(cam=>cam.position)):0;
+                const newPositionForConflicting=maxPosition+1;
+                const updates={};updates[`cameras/${conflictCameraId}/position`]=newPositionForConflicting;updates[`cameras/${cameraId}`]=cameraData;
+                database.ref().update(updates).then(()=>{showNotification(`Camera saved! Moved conflicting camera to position ${newPositionForConflicting}`);cameraModal.style.display='none';loadCameras()}).catch(err=>{console.error(err);showNotification('Failed to save camera',true)})
+            }else{
+                database.ref('cameras/'+cameraId).set(cameraData).then(()=>{showNotification(`Camera ${currentEditingCameraId?'updated':'added'} successfully!`);cameraModal.style.display='none';loadCameras()}).catch(err=>{console.error(err);showNotification('Failed to save camera',true)})
             }
         }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            draggedItem = null;
-        }
-
-        // Update camera positions in Firebase based on their order in the DOM
-        function updateCameraPositions() {
-            const cameraCards = cameraGrid.querySelectorAll('.camera-card');
-            const updates = {};
-            
-            cameraCards.forEach((card, index) => {
-                const cameraId = card.getAttribute('data-id');
-                updates[`cameras/${cameraId}/position`] = index + 1;
-            });
-            
-            database.ref().update(updates)
-                .then(() => {
-                    showNotification('Camera positions updated successfully!');
-                    loadCameras(); // Reload to reflect changes
-                })
-                .catch((error) => {
-                    console.error('Error updating positions: ', error);
-                    showNotification('Failed to update camera positions', true);
-                });
-        }
-
-        // Open modal for adding new camera
-        function openAddCameraModal() {
-            currentEditingCameraId = null;
-            document.getElementById('modalTitle').textContent = 'Add New Camera';
-            cameraIdInput.value = '';
-            cameraIdInput.disabled = false;
-            englishTitleInput.value = '';
-            chineseTitleInput.value = '';
-            portugueseTitleInput.value = '';
-            japaneseTitleInput.value = '';
-            embedUrlInput.value = '';
-            locationSelect.value = 'macau-city';
-            positionInput.value = '';
-            positionWarning.style.display = 'none';
-            updatePositionExample();
-            cameraModal.style.display = 'flex';
-        }
-
-        // Edit existing camera
-        function editCamera(cameraId) {
-            currentEditingCameraId = cameraId;
-            document.getElementById('modalTitle').textContent = 'Edit Camera';
-            
-            const camerasRef = database.ref('cameras/' + cameraId);
-            camerasRef.once('value')
-                .then((snapshot) => {
-                    const camera = snapshot.val();
-                    if (camera) {
-                        cameraIdInput.value = cameraId;
-                        cameraIdInput.disabled = true;
-                        englishTitleInput.value = camera.titles.en;
-                        chineseTitleInput.value = camera.titles.zh;
-                        portugueseTitleInput.value = camera.titles.pt;
-                        japaneseTitleInput.value = camera.titles.ja;
-                        embedUrlInput.value = camera.embedUrl;
-                        locationSelect.value = camera.location;
-                        positionInput.value = camera.position || '';
-                        positionWarning.style.display = 'none';
-                        updatePositionExample();
-                        validatePosition();
-                        cameraModal.style.display = 'flex';
-                    } else {
-                        showNotification('Camera not found', true);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading camera: ', error);
-                    showNotification('Failed to load camera data', true);
-                });
-        }
-
-        // Save camera (add or update) with position conflict handling
-        function saveCamera() {
-            const cameraId = cameraIdInput.value.trim();
-            const englishTitle = englishTitleInput.value.trim();
-            const chineseTitle = chineseTitleInput.value.trim();
-            const portugueseTitle = portugueseTitleInput.value.trim();
-            const japaneseTitle = japaneseTitleInput.value.trim();
-            const embedUrl = embedUrlInput.value.trim();
-            const location = locationSelect.value;
-            const position = positionInput.value.trim();
-            
-            if (!cameraId || !englishTitle || !embedUrl) {
-                showNotification('Please fill in all required fields', true);
-                return;
-            }
-            
-            const cameraData = {
-                titles: {
-                    en: englishTitle, 
-                    zh: chineseTitle, 
-                    pt: portugueseTitle, 
-                    ja: japaneseTitle
-                }, 
-                embedUrl: embedUrl, 
-                location: location, 
-                position: position ? parseInt(position) : null
-            };
-            
-            // Check if position is already occupied
-            const positionNum = position ? parseInt(position) : null;
-            let conflictCameraId = null;
-            
-            if (positionNum) {
-                Object.keys(allCameras).forEach(id => {
-                    const camera = allCameras[id];
-                    if (camera.location === location && 
-                        camera.position === positionNum && 
-                        id !== cameraId) {
-                        conflictCameraId = id;
-                    }
-                });
-            }
-            
-            // If there's a conflict, move the existing camera to the back
-            if (conflictCameraId) {
-                // Find the maximum position in the same location
-                const camerasInLocation = Object.values(allCameras).filter(cam => 
-                    cam.location === location && cam.position !== null
-                );
-                
-                let maxPosition = 0;
-                if (camerasInLocation.length > 0) {
-                    maxPosition = Math.max(...camerasInLocation.map(cam => cam.position));
-                }
-                
-                // Move the conflicting camera to the back (maxPosition + 1)
-                const newPositionForConflicting = maxPosition + 1;
-                
-                // Update both cameras in a single transaction
-                const updates = {};
-                updates[`cameras/${conflictCameraId}/position`] = newPositionForConflicting;
-                updates[`cameras/${cameraId}`] = cameraData;
-                
-                database.ref().update(updates)
-                    .then(() => {
-                        showNotification(`Camera saved successfully! Moved conflicting camera to position ${newPositionForConflicting}`);
-                        cameraModal.style.display = 'none';
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving camera: ', error);
-                        showNotification('Failed to save camera', true);
-                    });
-            } else {
-                // No conflict, save normally
-                const camerasRef = database.ref('cameras/' + cameraId);
-                camerasRef.set(cameraData)
-                    .then(() => {
-                        showNotification(`Camera ${currentEditingCameraId ? 'updated' : 'added'} successfully!`);
-                        cameraModal.style.display = 'none';
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving camera: ', error);
-                        showNotification('Failed to save camera', true);
-                    });
+        function deleteCamera(cameraId){
+            if(confirm('Are you sure you want to delete this camera? This action cannot be undone.')){
+                database.ref('cameras/'+cameraId).remove().then(()=>{showNotification('Camera deleted successfully!');loadCameras()}).catch(err=>{console.error(err);showNotification('Failed to delete camera',true)})
             }
         }
-
-        // Delete camera
-        function deleteCamera(cameraId) {
-            if (confirm('Are you sure you want to delete this camera? This action cannot be undone.')) {
-                const camerasRef = database.ref('cameras/' + cameraId);
-                camerasRef.remove()
-                    .then(() => {
-                        showNotification('Camera deleted successfully!');
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting camera: ', error);
-                        showNotification('Failed to delete camera', true);
-                    });
-            }
-        }
-
-        // Close modal
-        function closeCameraModal() {
-            cameraModal.style.display = 'none';
-            cameraIdInput.disabled = false;
-            suggestionList.style.display = 'none';
-        }
-
-        // Event Listeners
-        loginBtn.addEventListener('click', login);
-        addCameraBtn.addEventListener('click', openAddCameraModal);
-        refreshBtn.addEventListener('click', loadCameras);
-        logoutBtn.addEventListener('click', logout);
-        saveCameraBtn.addEventListener('click', saveCamera);
-        cancelBtn.addEventListener('click', closeCameraModal);
-        closeModal.addEventListener('click', closeCameraModal);
-        searchBtn.addEventListener('click', searchCamera);
-        
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === cameraModal) {
-                closeCameraModal();
-            }
-        });
-
-        // Initialize the app
-        init();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Panel - Macau Traffic Monitor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
-                        url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #ffd700, #ff8c00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-        
-        .logo i {
-            font-size: 40px;
-            color: #8b0000;
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 5px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 20px;
-        }
-        
-        .auth-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            text-align: center;
-        }
-        
-        .auth-section h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 1rem;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border-radius: 30px;
-            border: none;
-            background: #ffd700;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn i {
-            font-size: 1.2rem;
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: #ff4d4d;
-            color: white;
-        }
-        
-        .btn-success {
-            background: #4dff4d;
-            color: #000;
-        }
-        
-        .btn-warning {
-            background: #ff9900;
-            color: #000;
-        }
-        
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-        
-        .cameras-section {
-            display: none;
-        }
-        
-        .section-title {
-            color: #ffd700;
-            margin: 25px 0 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .camera-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .camera-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: transform 0.3s ease;
-            cursor: move;
-        }
-        
-        .camera-card: hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        }
-        
-        .camera-card.dragging {
-            opacity: 0.5;
-            transform: scale(0.98);
-        }
-        
-        .camera-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .camera-iframe {
-            width: 100%;
-            height: 180px;
-            border-radius: 8px;
-            border: none;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
-        .camera-details {
-            margin: 15px 0;
-        }
-        
-        .camera-details p {
-            margin: 8px 0;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .camera-details strong {
-            min-width: 100px;
-            display: inline-block;
-        }
-        
-        .camera-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .camera-actions .btn {
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #ffd700;
-        }
-        
-        .modal h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .status-connected {
-            background-color: #4dff4d;
-            box-shadow: 0 0 8px #4dff4d;
-        }
-        
-        .status-disconnected {
-            background-color: #ff4d4d;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.8);
-            border-left: 4px solid #4dff4d;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            z-index: 2000;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-        
-        .notification.error {
-            border-left-color: #ff4d4d;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-            }
-            
-            .camera-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-        }
-        
-        .stats-container {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ffd700;
-            margin: 10px 0;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        .position-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .position-input {
-            flex: 1;
-        }
-        
-        .search-container {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .search-container input {
-            flex: 1;
-        }
-        
-        .position-warning {
-            color: #ff9900;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        .suggestion-list {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            width: 100%;
-            z-index: 100;
-            display: none;
-        }
-        
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-        
-        .suggestion-item:hover {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        /* Drag and drop styles */
-        .drag-over {
-            border: 2px dashed #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-        }
-        
-        .drag-handle {
-            cursor: move;
-            padding: 5px;
-            margin-right: 10px;
-            color: #ffd700;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <div class="logo-container">
-                <div class="logo">
-                    <i class="fas fa-car"></i>
-                </div>
-                <div>
-                    <h1>Staff Panel</h1>
-                    <p class="subtitle">Manage Live Camera Feeds for Macau Traffic Monitor</p>
-                </div>
-            </div>
-        </header>
-        
-        <div class="auth-section" id="authSection">
-            <h2><i class="fas fa-lock"></i> Staff Login</h2>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your staff email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password">
-            </div>
-            <button class="btn" id="loginBtn">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-            <p style="margin-top: 15px; color: #ffd700;">
-                <i class="fas fa-info-circle"></i> Get away and go lost if you're not staff
-            </p>
-        </div>
-        
-        <div class="cameras-section" id="camerasSection">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="section-title"><i class="fas fa-video"></i> Live Camera Management</h2>
-                <div>
-                    <span class="status-indicator" id="statusIndicator"></span>
-                    <span id="statusText">Connected to Firebase</span>
-                </div>
-            </div>
-            
-            <div class="search-container">
-                <input type="text" id="searchCamera" placeholder="Search camera by ID...">
-                <button class="btn" id="searchBtn">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </div>
-            
-            <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
-                <button class="btn" id="addCameraBtn">
-                    <i class="fas fa-plus"></i> Add New Camera
-                </button>
-                <button class="btn btn-secondary" id="refreshBtn">
-                    <i class="fas fa-sync-alt"></i> Refresh Data
-                </button>
-                <button class="btn btn-danger" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-label">Total Cameras</div>
-                    <div class="stat-value" id="totalCameras">0</div>
-                </div>
-            </div>
-            
-            <div class="camera-grid" id="cameraGrid">
-                <!-- Camera cards will be dynamically inserted here -->
-            </div>
-        </div>
-        
-        <div class="modal" id="cameraModal">
-            <div class="modal-content">
-                <span class="close-modal" id="closeModal">×</span>
-                <h2 id="modalTitle">Add New Camera</h2>
-                
-                <div class="form-group">
-                    <label for="cameraId">Camera ID</label>
-                    <div style="position: relative;">
-                        <input type="text" id="cameraId" placeholder="Unique identifier (e.g., camera-001)">
-                        <div class="suggestion-list" id="suggestionList"></div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="englishTitle">English Title</label>
-                        <input type="text" id="englishTitle" placeholder="Camera title in English">
-                    </div>
-                    <div class="form-group">
-                        <label for="chineseTitle">Chinese Title</label>
-                        <input type="text" id="chineseTitle" placeholder="Camera title in Chinese">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="portugueseTitle">Portuguese Title</label>
-                        <input type="text" id="portugueseTitle" placeholder="Camera title in Portuguese">
-                    </div>
-                    <div class="form-group">
-                        <label for="japaneseTitle">Japanese Title</label>
-                        <input type="text" id="japaneseTitle" placeholder="Camera title in Japanese">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="embedUrl">Embed URL</label>
-                    <input type="text" id="embedUrl" placeholder="Live stream URL (e.g., https://...)">
-                </div>
-                
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <select id="location" class="form-control">
-                        <option value="macau-city">Macau City</option>
-                        <option value="taipa">Taipa</option>
-                        <option value="bridges">Cross-Sea Bridges</option>
-                        <option value="border">Border Crossings</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="position">Position</label>
-                    <div class="position-container">
-                        <input type="number" id="position" class="position-input" min="1" placeholder="Position number">
-                        <span id="positionExample" style="opacity: 0.7;">e.g. Macau City - 1</span>
-                    </div>
-                    <div id="positionWarning" class="position-warning" style="display: none;"></div>
-                </div>
-                
-                <div style="display: flex; gap: 15px; margin-top: 25px;">
-                    <button class="btn" id="saveCameraBtn">
-                        <i class="fas fa-save"></i> Save Camera
-                    </button>
-                    <button class="btn btn-secondary" id="cancelBtn">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="notification" id="notification">
-            <p id="notificationMessage">Operation completed successfully!</p>
-        </div>
-        
-        <footer>
-            <p>Macau Traffic Monitor Staff Panel © 2026</p>
-            <p>Data Source: Firebase Realtime Database</p>
-        </footer>
-    </div>
-
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",         
-            authDomain: "macau-traffic-501cb.firebaseapp.com",         
-            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",         
-            projectId: "macau-traffic-501cb",         
-            storageBucket: "macau-traffic-501cb.appspot.com",         
-            messagingSenderId: "123456789012",         
-            appId: "1:123456789012:web:abcdef1234567890abcdef"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // DOM Elements
-        const authSection = document.getElementById('authSection');
-        const camerasSection = document.getElementById('camerasSection');
-        const cameraGrid = document.getElementById('cameraGrid');
-        const cameraModal = document.getElementById('cameraModal');
-        const notification = document.getElementById('notification');
-        const statusIndicator = document.getElementById('statusIndicator');
-        const statusText = document.getElementById('statusText');
-
-        // Stats elements
-        const totalCamerasEl = document.getElementById('totalCameras');
-
-        // Buttons
-        const loginBtn = document.getElementById('loginBtn');
-        const addCameraBtn = document.getElementById('addCameraBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const saveCameraBtn = document.getElementById('saveCameraBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const closeModal = document.getElementById('closeModal');
-        const searchBtn = document.getElementById('searchBtn');
-
-        // Form fields
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const cameraIdInput = document.getElementById('cameraId');
-        const englishTitleInput = document.getElementById('englishTitle');
-        const chineseTitleInput = document.getElementById('chineseTitle');
-        const portugueseTitleInput = document.getElementById('portugueseTitle');
-        const japaneseTitleInput = document.getElementById('japaneseTitle');
-        const embedUrlInput = document.getElementById('embedUrl');
-        const locationSelect = document.getElementById('location');
-        const positionInput = document.getElementById('position');
-        const searchCameraInput = document.getElementById('searchCamera');
-        const positionWarning = document.getElementById('positionWarning');
-        const suggestionList = document.getElementById('suggestionList');
-
-        // Current editing camera ID
-        let currentEditingCameraId = null;
-
-        // Authentication state
-        let isAuthenticated = false;
-
-        // All cameras data
-        let allCameras = {};
-
-        // Drag and drop variables
-        let draggedItem = null;
-
-        // Initialize the application
-        function init() {
-            updateConnectionStatus(true);
-            loadCameras();
-            
-            // Update position example when location changes
-            locationSelect.addEventListener('change', updatePositionExample);
-            
-            // Add position validation
-            positionInput.addEventListener('input', validatePosition);
-            
-            // Add event listener for camera ID input to show suggestions
-            cameraIdInput.addEventListener('input', showSuggestions);
-            
-            // Close suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('#cameraId')) {
-                    suggestionList.style.display = 'none';
-                }
-            });
-        }
-
-        // Show suggestions for camera ID
-        function showSuggestions() {
-            const input = cameraIdInput.value.toLowerCase();
-            suggestionList.innerHTML = '';
-            
-            if (input.length < 2) {
-                suggestionList.style.display = 'none';
-                return;
-            }
-            
-            const suggestions = Object.keys(allCameras).filter(id => 
-                id.toLowerCase().includes(input)
-            ).slice(0, 5);
-            
-            if (suggestions.length > 0) {
-                suggestions.forEach(id => {
-                    const item = document.createElement('div');
-                    item.className = 'suggestion-item';
-                    item.textContent = id;
-                    item.addEventListener('click', () => {
-                        cameraIdInput.value = id;
-                        suggestionList.style.display = 'none';
-                        // Auto-fill form with existing camera data
-                        fillFormWithCameraData(id);
-                    });
-                    suggestionList.appendChild(item);
-                });
-                suggestionList.style.display = 'block';
-            } else {
-                suggestionList.style.display = 'none';
-            }
-        }
-
-        // Fill form with existing camera data
-        function fillFormWithCameraData(cameraId) {
-            const camera = allCameras[cameraId];
-            if (camera) {
-                englishTitleInput.value = camera.titles.en || '';
-                chineseTitleInput.value = camera.titles.zh || '';
-                portugueseTitleInput.value = camera.titles.pt || '';
-                japaneseTitleInput.value = camera.titles.ja || '';
-                embedUrlInput.value = camera.embedUrl || '';
-                locationSelect.value = camera.location || 'macau-city';
-                positionInput.value = camera.position || '';
-                updatePositionExample();
-                validatePosition();
-            }
-        }
-
-        // Update position example text
-        function updatePositionExample() {
-            const locationText = locationSelect.options[locationSelect.selectedIndex].text;
-            document.getElementById('positionExample').textContent = `e.g. ${locationText} - 1`;
-        }
-
-        // Validate position to check for conflicts
-        function validatePosition() {
-            const position = positionInput.value.trim();
-            const location = locationSelect.value;
-            
-            if (!position) {
-                positionWarning.style.display = 'none';
-                return;
-            }
-            
-            const positionNum = parseInt(position);
-            let conflictCameraId = null;
-            
-            // Check if position is already occupied
-            Object.keys(allCameras).forEach(cameraId => {
-                const camera = allCameras[cameraId];
-                if (camera.location === location && 
-                    camera.position === positionNum && 
-                    cameraId !== currentEditingCameraId) {
-                    conflictCameraId = cameraId;
-                }
-            });
-            
-            if (conflictCameraId) {
-                positionWarning.textContent = `Position ${positionNum} is already occupied by camera ID: ${conflictCameraId}. Saving will move that camera to the back.`;
-                positionWarning.style.display = 'block';
-            } else {
-                positionWarning.style.display = 'none';
-            }
-        }
-
-        // Update connection status indicator
-        function updateConnectionStatus(connected) {
-            if (connected) {
-                statusIndicator.className = 'status-indicator status-connected';
-                statusText.textContent = 'Connected to Firebase';
-            } else {
-                statusIndicator.className = 'status-indicator status-disconnected';
-                statusText.textContent = 'Disconnected from Firebase';
-            }
-        }
-
-        // Show notification
-        function showNotification(message, isError = false) {
-            const notificationMessage = document.getElementById('notificationMessage');
-            notificationMessage.textContent = message;
-            
-            if (isError) {
-                notification.className = 'notification error';
-            } else {
-                notification.className = 'notification';
-            }
-            
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        // Login function
-        function login() {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            
-            if (!email || !password) {
-                showNotification('Please enter both email and password', true);
-                return;
-            }
-            
-            // In a real app, this would be a Firebase authentication call
-            // For demo purposes, we'll use a simple check
-            if (email === 'admin@macautraffic.com' && password === 'Admin123') {
-                isAuthenticated = true;
-                authSection.style.display = 'none';
-                camerasSection.style.display = 'block';
-                showNotification('Login successful!');
-            } else {
-                showNotification('Invalid credentials. Please try again.', true);
-            }
-        }
-
-        // Logout function
-        function logout() {
-            isAuthenticated = false;
-            authSection.style.display = 'block';
-            camerasSection.style.display = 'none';
-            emailInput.value = '';
-            passwordInput.value = '';
-            showNotification('You have been logged out');
-        }
-
-        // Search camera by ID
-        function searchCamera() {
-            const searchTerm = searchCameraInput.value.trim().toLowerCase();
-            
-            if (!searchTerm) {
-                showNotification('Please enter a camera ID to search', true);
-                return;
-            }
-            
-            const foundCameraId = Object.keys(allCameras).find(id => 
-                id.toLowerCase().includes(searchTerm)
-            );
-            
-            if (foundCameraId) {
-                editCamera(foundCameraId);
-            } else {
-                showNotification('Camera not found', true);
-            }
-        }
-
-        // Load cameras from Firebase
-        function loadCameras() {
-            cameraGrid.innerHTML = '<p style="text-align: center; width: 100%;"><i class="fas fa-spinner fa-spin"></i> Loading cameras...</p>';
-            
-            const camerasRef = database.ref('cameras');
-            camerasRef.once('value')
-                .then((snapshot) => {
-                    const cameras = snapshot.val();
-                    if (cameras) {
-                        allCameras = cameras;
-                        displayCameras(cameras);
-                        updateStats();
-                    } else {
-                        cameraGrid.innerHTML = '<p style="text-align: center; width: 100%;">No cameras found</p>';
-                        allCameras = {};
-                        updateStats();
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading cameras: ', error);
-                    cameraGrid.innerHTML = '<p style="text-align: center; width: 100%; color: #ff4d4d;">Error loading cameras. Please try again.</p>';
-                    showNotification('Failed to load cameras', true);
-                });
-        }
-
-        // Update statistics
-        function updateStats() {
-            totalCamerasEl.textContent = Object.keys(allCameras).length;
-        }
-
-        // Display cameras in the grid with drag and drop
-        function displayCameras(cameras) {
-            cameraGrid.innerHTML = '';
-            
-            // Convert to array and sort by position
-            const camerasArray = Object.keys(cameras).map(id => ({
-                id, 
-                ...cameras[id]
-            }));
-            
-            // Sort by position (nulls last)
-            camerasArray.sort((a, b) => {
-                if (a.position === null || a.position === undefined) return 1;
-                if (b.position === null || b.position === undefined) return -1;
-                return a.position - b.position;
-            });
-            
-            camerasArray.forEach(camera => {
-                const cameraCard = document.createElement('div');
-                cameraCard.className = 'camera-card';
-                cameraCard.setAttribute('data-id', camera.id);
-                cameraCard.setAttribute('draggable', true);
-                cameraCard.innerHTML = `
-                    <div class="camera-title">
-                        <i class="fas fa-grip-vertical drag-handle"></i>
-                        <i class="fas fa-video"></i> ${camera.titles.en}
-                    </div>
-                    <div class="camera-details">
-                        <p><strong>ID: </strong> ${camera.id}</p>
-                        <p><strong>Location: </strong> ${camera.location}</p>
-                        <p><strong>Position: </strong> ${camera.position || 'Not set'}</p>
-                        <p><strong>URL: </strong> ${camera.embedUrl}</p>
-                    </div>
-                    <iframe class="camera-iframe" src="${camera.embedUrl}" allowfullscreen></iframe>
-                    <div class="camera-actions">
-                        <button class="btn btn-secondary edit-btn" data-id="${camera.id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn btn-danger delete-btn" data-id="${camera.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                `;
-                cameraGrid.appendChild(cameraCard);
-                
-                // Add drag events
-                cameraCard.addEventListener('dragstart', handleDragStart);
-                cameraCard.addEventListener('dragover', handleDragOver);
-                cameraCard.addEventListener('dragenter', handleDragEnter);
-                cameraCard.addEventListener('dragleave', handleDragLeave);
-                cameraCard.addEventListener('drop', handleDrop);
-                cameraCard.addEventListener('dragend', handleDragEnd);
-            });
-            
-            // Add event listeners to edit and delete buttons
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => editCamera(btn.dataset.id));
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteCamera(btn.dataset.id));
-            });
-        }
-
-        // Drag and drop functions
-        function handleDragStart(e) {
-            draggedItem = this;
-            setTimeout(() => {
-                this.classList.add('dragging');
-            }, 0);
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('drag-over');
-        }
-
-        function handleDragLeave() {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (draggedItem !== this) {
-                // Get the index of the dragged item and the drop target
-                const allItems = Array.from(cameraGrid.querySelectorAll('.camera-card'));
-                const draggedIndex = allItems.indexOf(draggedItem);
-                const targetIndex = allItems.indexOf(this);
-                
-                // Reorder the items in the DOM
-                if (draggedIndex < targetIndex) {
-                    cameraGrid.insertBefore(draggedItem, this.nextSibling);
-                } else {
-                    cameraGrid.insertBefore(draggedItem, this);
-                }
-                
-                // Update positions in Firebase
-                updateCameraPositions();
-            }
-        }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            draggedItem = null;
-        }
-
-        // Update camera positions in Firebase based on their order in the DOM
-        function updateCameraPositions() {
-            const cameraCards = cameraGrid.querySelectorAll('.camera-card');
-            const updates = {};
-            
-            cameraCards.forEach((card, index) => {
-                const cameraId = card.getAttribute('data-id');
-                updates[`cameras/${cameraId}/position`] = index + 1;
-            });
-            
-            database.ref().update(updates)
-                .then(() => {
-                    showNotification('Camera positions updated successfully!');
-                    loadCameras(); // Reload to reflect changes
-                })
-                .catch((error) => {
-                    console.error('Error updating positions: ', error);
-                    showNotification('Failed to update camera positions', true);
-                });
-        }
-
-        // Open modal for adding new camera
-        function openAddCameraModal() {
-            currentEditingCameraId = null;
-            document.getElementById('modalTitle').textContent = 'Add New Camera';
-            cameraIdInput.value = '';
-            cameraIdInput.disabled = false;
-            englishTitleInput.value = '';
-            chineseTitleInput.value = '';
-            portugueseTitleInput.value = '';
-            japaneseTitleInput.value = '';
-            embedUrlInput.value = '';
-            locationSelect.value = 'macau-city';
-            positionInput.value = '';
-            positionWarning.style.display = 'none';
-            updatePositionExample();
-            cameraModal.style.display = 'flex';
-        }
-
-        // Edit existing camera
-        function editCamera(cameraId) {
-            currentEditingCameraId = cameraId;
-            document.getElementById('modalTitle').textContent = 'Edit Camera';
-            
-            const camerasRef = database.ref('cameras/' + cameraId);
-            camerasRef.once('value')
-                .then((snapshot) => {
-                    const camera = snapshot.val();
-                    if (camera) {
-                        cameraIdInput.value = cameraId;
-                        cameraIdInput.disabled = true;
-                        englishTitleInput.value = camera.titles.en;
-                        chineseTitleInput.value = camera.titles.zh;
-                        portugueseTitleInput.value = camera.titles.pt;
-                        japaneseTitleInput.value = camera.titles.ja;
-                        embedUrlInput.value = camera.embedUrl;
-                        locationSelect.value = camera.location;
-                        positionInput.value = camera.position || '';
-                        positionWarning.style.display = 'none';
-                        updatePositionExample();
-                        validatePosition();
-                        cameraModal.style.display = 'flex';
-                    } else {
-                        showNotification('Camera not found', true);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading camera: ', error);
-                    showNotification('Failed to load camera data', true);
-                });
-        }
-
-        // Save camera (add or update) with position conflict handling
-        function saveCamera() {
-            const cameraId = cameraIdInput.value.trim();
-            const englishTitle = englishTitleInput.value.trim();
-            const chineseTitle = chineseTitleInput.value.trim();
-            const portugueseTitle = portugueseTitleInput.value.trim();
-            const japaneseTitle = japaneseTitleInput.value.trim();
-            const embedUrl = embedUrlInput.value.trim();
-            const location = locationSelect.value;
-            const position = positionInput.value.trim();
-            
-            if (!cameraId || !englishTitle || !embedUrl) {
-                showNotification('Please fill in all required fields', true);
-                return;
-            }
-            
-            const cameraData = {
-                titles: {
-                    en: englishTitle, 
-                    zh: chineseTitle, 
-                    pt: portugueseTitle, 
-                    ja: japaneseTitle
-                }, 
-                embedUrl: embedUrl, 
-                location: location, 
-                position: position ? parseInt(position) : null
-            };
-            
-            // Check if position is already occupied
-            const positionNum = position ? parseInt(position) : null;
-            let conflictCameraId = null;
-            
-            if (positionNum) {
-                Object.keys(allCameras).forEach(id => {
-                    const camera = allCameras[id];
-                    if (camera.location === location && 
-                        camera.position === positionNum && 
-                        id !== cameraId) {
-                        conflictCameraId = id;
-                    }
-                });
-            }
-            
-            // If there's a conflict, move the existing camera to the back
-            if (conflictCameraId) {
-                // Find the maximum position in the same location
-                const camerasInLocation = Object.values(allCameras).filter(cam => 
-                    cam.location === location && cam.position !== null
-                );
-                
-                let maxPosition = 0;
-                if (camerasInLocation.length > 0) {
-                    maxPosition = Math.max(...camerasInLocation.map(cam => cam.position));
-                }
-                
-                // Move the conflicting camera to the back (maxPosition + 1)
-                const newPositionForConflicting = maxPosition + 1;
-                
-                // Update both cameras in a single transaction
-                const updates = {};
-                updates[`cameras/${conflictCameraId}/position`] = newPositionForConflicting;
-                updates[`cameras/${cameraId}`] = cameraData;
-                
-                database.ref().update(updates)
-                    .then(() => {
-                        showNotification(`Camera saved successfully! Moved conflicting camera to position ${newPositionForConflicting}`);
-                        cameraModal.style.display = 'none';
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving camera: ', error);
-                        showNotification('Failed to save camera', true);
-                    });
-            } else {
-                // No conflict, save normally
-                const camerasRef = database.ref('cameras/' + cameraId);
-                camerasRef.set(cameraData)
-                    .then(() => {
-                        showNotification(`Camera ${currentEditingCameraId ? 'updated' : 'added'} successfully!`);
-                        cameraModal.style.display = 'none';
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving camera: ', error);
-                        showNotification('Failed to save camera', true);
-                    });
-            }
-        }
-
-        // Delete camera
-        function deleteCamera(cameraId) {
-            if (confirm('Are you sure you want to delete this camera? This action cannot be undone.')) {
-                const camerasRef = database.ref('cameras/' + cameraId);
-                camerasRef.remove()
-                    .then(() => {
-                        showNotification('Camera deleted successfully!');
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting camera: ', error);
-                        showNotification('Failed to delete camera', true);
-                    });
-            }
-        }
-
-        // Close modal
-        function closeCameraModal() {
-            cameraModal.style.display = 'none';
-            cameraIdInput.disabled = false;
-            suggestionList.style.display = 'none';
-        }
-
-        // Event Listeners
-        loginBtn.addEventListener('click', login);
-        addCameraBtn.addEventListener('click', openAddCameraModal);
-        refreshBtn.addEventListener('click', loadCameras);
-        logoutBtn.addEventListener('click', logout);
-        saveCameraBtn.addEventListener('click', saveCamera);
-        cancelBtn.addEventListener('click', closeCameraModal);
-        closeModal.addEventListener('click', closeCameraModal);
-        searchBtn.addEventListener('click', searchCamera);
-        
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === cameraModal) {
-                closeCameraModal();
-            }
-        });
-
-        // Initialize the app
+        function closeCameraModal(){cameraModal.style.display='none';cameraIdInput.disabled=false;suggestionList.style.display='none'}
+        loginBtn.addEventListener('click',login);
+        addCameraBtn.addEventListener('click',openAddCameraModal);
+        refreshBtn.addEventListener('click',loadCameras);
+        logoutBtn.addEventListener('click',logout);
+        saveCameraBtn.addEventListener('click',saveCamera);
+        cancelBtn.addEventListener('click',closeCameraModal);
+        closeModal.addEventListener('click',closeCameraModal);
+        searchBtn.addEventListener('click',searchCamera);
+        window.addEventListener('click',e=>{if(e.target===cameraModal)closeCameraModal()});
         init();
     </script>
 </body>
