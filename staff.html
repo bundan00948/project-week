@@ -2,502 +2,691 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,  initial-scale=1.0">
     <title>Staff Panel - Macau Traffic Monitor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https: //cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https: //www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https: //www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin:  0;
+            padding:  0;
+            box-sizing:  border-box;
+            font-family:  'Segoe UI',  Tahoma,  Geneva,  Verdana,  sans-serif;
         }
         
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
-                        url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
+            background:  linear-gradient(rgba(0,  0,  0,  0.8),  rgba(0,  0,  0,  0.8)),  
+                        url('https: //img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
+            background-size:  cover;
+            color:  #fff;
+            min-height:  100vh;
+            padding:  20px;
+            overflow-x:  hidden;
         }
         
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width:  1400px;
+            margin:  0 auto;
         }
         
         header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
+            text-align:  center;
+            padding:  20px 0;
+            margin-bottom:  20px;
+            background:  rgba(0,  0,  0,  0.6);
+            border-radius:  15px;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
+            position:  relative;
         }
         
         .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            display:  flex;
+            align-items:  center;
+            justify-content:  center;
+            gap:  15px;
+            margin-bottom:  10px;
         }
         
         .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #ffd700, #ff8c00);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            width:  80px;
+            height:  80px;
+            background:  linear-gradient(45deg,  #ffd700,  #ff8c00);
+            border-radius:  50%;
+            display:  flex;
+            align-items:  center;
+            justify-content:  center;
+            box-shadow:  0 0 20px rgba(255,  215,  0,  0.5);
         }
         
         .logo i {
-            font-size: 40px;
-            color: #8b0000;
+            font-size:  40px;
+            color:  #8b0000;
         }
         
         h1 {
-            font-size: 2.8rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 5px;
+            font-size:  2.8rem;
+            text-shadow:  0 2px 4px rgba(0,  0,  0,  0.5);
+            margin-bottom:  5px;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 20px;
+            font-size:  1.2rem;
+            opacity:  0.9;
+            max-width:  600px;
+            margin:  0 auto 20px;
         }
         
         .auth-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            text-align: center;
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            padding:  25px;
+            margin:  20px 0;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
+            text-align:  center;
         }
         
         .auth-section h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
+            color:  #ffd700;
+            margin-bottom:  20px;
         }
         
         .form-group {
-            margin-bottom: 20px;
-            text-align: left;
+            margin-bottom:  20px;
+            text-align:  left;
         }
         
         .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+            display:  block;
+            margin-bottom:  8px;
+            font-weight:  bold;
         }
         
-        .form-group input, 
-        .form-group select, 
+        .form-group input,  
+        .form-group select,  
         .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 1rem;
+            width:  100%;
+            padding:  12px;
+            border-radius:  8px;
+            border:  1px solid rgba(255,  255,  255,  0.3);
+            background:  rgba(0,  0,  0,  0.3);
+            color:  white;
+            font-size:  1rem;
         }
         
         .btn {
-            padding: 12px 25px;
-            border-radius: 30px;
-            border: none;
-            background: #ffd700;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            padding:  12px 25px;
+            border-radius:  30px;
+            border:  none;
+            background:  #ffd700;
+            color:  #000;
+            font-weight:  bold;
+            cursor:  pointer;
+            transition:  all 0.3s ease;
+            display:  inline-flex;
+            align-items:  center;
+            gap:  8px;
         }
         
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .btn: hover {
+            transform:  translateY(-3px);
+            box-shadow:  0 5px 15px rgba(0,  0,  0,  0.3);
         }
         
         .btn i {
-            font-size: 1.2rem;
+            font-size:  1.2rem;
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background:  rgba(255,  255,  255,  0.1);
+            color:  white;
         }
         
         .btn-danger {
-            background: #ff4d4d;
-            color: white;
+            background:  #ff4d4d;
+            color:  white;
         }
         
         .btn-success {
-            background: #4dff4d;
-            color: #000;
+            background:  #4dff4d;
+            color:  #000;
         }
         
         .btn-warning {
-            background: #ff9900;
-            color: #000;
+            background:  #ff9900;
+            color:  #000;
         }
         
         .btn-info {
-            background: #17a2b8;
-            color: white;
+            background:  #17a2b8;
+            color:  white;
         }
         
-        .cameras-section, .news-section {
-            display: none;
+        .cameras-section {
+            display:  none;
         }
         
         .section-title {
-            color: #ffd700;
-            margin: 25px 0 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color:  #ffd700;
+            margin:  25px 0 15px;
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
         }
         
-        .camera-grid, .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        .camera-grid {
+            display:  grid;
+            grid-template-columns:  repeat(auto-fill,  minmax(300px,  1fr));
+            gap:  20px;
+            margin-top:  20px;
         }
         
-        .camera-card, .news-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: transform 0.3s ease;
-            cursor: move;
+        .camera-card {
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            padding:  20px;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
+            transition:  transform 0.3s ease;
         }
         
-        .camera-card:hover, .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        .camera-card: hover {
+            transform:  translateY(-5px);
+            box-shadow:  0 12px 40px rgba(0,  0,  0,  0.4);
         }
         
-        .camera-card.dragging, .news-card.dragging {
-            opacity: 0.5;
-            transform: scale(0.98);
-        }
-        
-        .camera-title, .news-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .camera-title {
+            font-size:  1.2rem;
+            margin-bottom:  15px;
+            color:  #ffd700;
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
         }
         
         .camera-iframe {
-            width: 100%;
-            height: 180px;
-            border-radius: 8px;
-            border: none;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.3);
+            width:  100%;
+            height:  180px;
+            border-radius:  8px;
+            border:  none;
+            margin:  10px 0;
+            background:  rgba(0,  0,  0,  0.3);
         }
         
-        .camera-details, .news-details {
-            margin: 15px 0;
+        .camera-details {
+            margin:  15px 0;
         }
         
-        .camera-details p, .news-details p {
-            margin: 8px 0;
-            display: flex;
-            gap: 10px;
+        .camera-details p {
+            margin:  8px 0;
+            display:  flex;
+            gap:  10px;
         }
         
-        .camera-details strong, .news-details strong {
-            min-width: 100px;
-            display: inline-block;
+        .camera-details strong {
+            min-width:  100px;
+            display:  inline-block;
         }
         
-        .camera-actions, .news-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
+        .camera-actions {
+            display:  flex;
+            gap:  10px;
+            margin-top:  15px;
+            flex-wrap:  wrap;
         }
         
-        .camera-actions .btn, .news-actions .btn {
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
+        .camera-actions .btn {
+            flex:  1;
+            min-width:  120px;
+            justify-content:  center;
         }
         
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
+            display:  none;
+            position:  fixed;
+            top:  0;
+            left:  0;
+            width:  100%;
+            height:  100%;
+            background:  rgba(0,  0,  0,  0.8);
+            z-index:  1000;
+            align-items:  center;
+            justify-content:  center;
         }
         
         .modal-content {
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
+            background:  rgba(0,  0,  0,  0.9);
+            border-radius:  15px;
+            padding:  30px;
+            width:  90%;
+            max-width:  600px;
+            box-shadow:  0 10px 30px rgba(0,  0,  0,  0.5);
+            border:  1px solid rgba(255,  255,  255,  0.18);
+            position:  relative;
+            max-height:  90vh;
+            overflow-y:  auto;
         }
         
         .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #ffd700;
+            position:  absolute;
+            top:  20px;
+            right:  20px;
+            font-size:  1.5rem;
+            cursor:  pointer;
+            color:  #ffd700;
         }
         
         .modal h2 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            text-align: center;
+            color:  #ffd700;
+            margin-bottom:  20px;
+            text-align:  center;
         }
         
         .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            display:  flex;
+            gap:  15px;
+            margin-bottom:  20px;
         }
         
         .form-row .form-group {
-            flex: 1;
+            flex:  1;
         }
         
         .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
+            display:  inline-block;
+            width:  12px;
+            height:  12px;
+            border-radius:  50%;
+            margin-right:  8px;
         }
         
         .status-connected {
-            background-color: #4dff4d;
-            box-shadow: 0 0 8px #4dff4d;
+            background-color:  #4dff4d;
+            box-shadow:  0 0 8px #4dff4d;
         }
         
         .status-disconnected {
-            background-color: #ff4d4d;
+            background-color:  #ff4d4d;
         }
         
         .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.8);
-            border-left: 4px solid #4dff4d;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            z-index: 2000;
-            display: none;
-            animation: slideIn 0.3s ease;
+            position:  fixed;
+            top:  20px;
+            right:  20px;
+            padding:  15px 25px;
+            border-radius:  8px;
+            background:  rgba(0,  0,  0,  0.8);
+            border-left:  4px solid #4dff4d;
+            box-shadow:  0 5px 15px rgba(0,  0,  0,  0.3);
+            z-index:  2000;
+            display:  none;
+            animation:  slideIn 0.3s ease;
         }
         
         .notification.error {
-            border-left-color: #ff4d4d;
+            border-left-color:  #ff4d4d;
         }
         
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from { transform:  translateX(100%); opacity:  0; }
+            to { transform:  translateX(0); opacity:  1; }
         }
         
         footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align:  center;
+            padding:  20px;
+            margin-top:  30px;
+            font-size:  0.9rem;
+            opacity:  0.8;
+            background:  rgba(0,  0,  0,  0.6);
+            border-radius:  15px;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
         }
         
-        @media (max-width: 768px) {
+        @media (max-width:  768px) {
             .form-row {
-                flex-direction: column;
+                flex-direction:  column;
             }
             
-            .camera-grid, .news-grid {
-                grid-template-columns: 1fr;
+            .camera-grid {
+                grid-template-columns:  1fr;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size:  2.2rem;
             }
         }
         
+        /* Bulk Update Styles */
+        .bulk-section {
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            padding:  20px;
+            margin:  20px 0;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
+        }
+        
+        .bulk-section h3 {
+            color:  #ffd700;
+            margin-bottom:  15px;
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
+        }
+        
+        .bulk-controls {
+            display:  flex;
+            gap:  15px;
+            margin-bottom:  20px;
+            flex-wrap:  wrap;
+        }
+        
+        .bulk-controls .btn {
+            flex:  1;
+            min-width:  150px;
+            justify-content:  center;
+        }
+        
+        .bulk-form {
+            display:  none;
+            background:  rgba(0,  0,  0,  0.3);
+            border-radius:  10px;
+            padding:  20px;
+            margin-top:  20px;
+        }
+        
+        .bulk-form.active {
+            display:  block;
+        }
+        
+        .bulk-form .form-group {
+            margin-bottom:  15px;
+        }
+        
+        .bulk-form .form-group label {
+            display:  block;
+            margin-bottom:  5px;
+        }
+        
+        .bulk-actions {
+            display:  flex;
+            gap:  10px;
+            margin-top:  15px;
+        }
+        
+        .bulk-actions .btn {
+            flex:  1;
+        }
+        
+        .camera-selection {
+            display:  flex;
+            flex-wrap:  wrap;
+            gap:  10px;
+            margin-top:  10px;
+            max-height:  150px;
+            overflow-y:  auto;
+            padding:  10px;
+            background:  rgba(0,  0,  0,  0.2);
+            border-radius:  8px;
+        }
+        
+        .camera-selection-item {
+            background:  rgba(255,  215,  0,  0.2);
+            border:  1px solid rgba(255,  215,  0,  0.5);
+            border-radius:  5px;
+            padding:  5px 10px;
+            display:  flex;
+            align-items:  center;
+            gap:  5px;
+            font-size:  0.9rem;
+        }
+        
+        .camera-selection-item .remove-btn {
+            background:  none;
+            border:  none;
+            color:  #ff4d4d;
+            cursor:  pointer;
+            font-size:  1rem;
+        }
+        
+        .select-all-container {
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
+            margin:  10px 0;
+        }
+        
+        .select-all-container input {
+            width:  auto;
+        }
+        
+        .progress-container {
+            margin-top:  15px;
+            display:  none;
+        }
+        
+        .progress-bar {
+            height:  10px;
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  5px;
+            overflow:  hidden;
+        }
+        
+        .progress-fill {
+            height:  100%;
+            background:  #4dff4d;
+            width:  0%;
+            transition:  width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align:  center;
+            margin-top:  5px;
+            font-size:  0.9rem;
+        }
+        
         .stats-container {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+            display:  flex;
+            gap:  20px;
+            margin:  20px 0;
+            flex-wrap:  wrap;
         }
         
         .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  10px;
+            padding:  15px;
+            text-align:  center;
+            flex:  1;
+            min-width:  120px;
         }
         
         .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ffd700;
-            margin: 10px 0;
+            font-size:  1.8rem;
+            font-weight:  bold;
+            color:  #ffd700;
+            margin:  10px 0;
         }
         
         .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size:  0.9rem;
+            opacity:  0.8;
         }
         
-        .position-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+        /* Upload Section */
+        .upload-section {
+            background:  rgba(255,  255,  255,  0.1);
+            border-radius:  15px;
+            padding:  20px;
+            margin:  20px 0;
+            box-shadow:  0 8px 32px rgba(0,  0,  0,  0.3);
+            backdrop-filter:  blur(10px);
+            border:  1px solid rgba(255,  255,  255,  0.18);
         }
         
-        .position-input {
-            flex: 1;
+        .upload-section h3 {
+            color:  #ffd700;
+            margin-bottom:  15px;
+            display:  flex;
+            align-items:  center;
+            gap:  10px;
         }
         
-        .search-container {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
+        .upload-form {
+            background:  rgba(0,  0,  0,  0.3);
+            border-radius:  10px;
+            padding:  20px;
+            margin-top:  20px;
         }
         
-        .search-container input {
-            flex: 1;
+        .file-upload {
+            border:  2px dashed rgba(255,  215,  0,  0.5);
+            border-radius:  10px;
+            padding:  30px;
+            text-align:  center;
+            margin-bottom:  20px;
+            cursor:  pointer;
+            transition:  all 0.3s ease;
         }
         
-        .position-warning {
-            color: #ff9900;
-            font-size: 0.9rem;
-            margin-top: 5px;
+        .file-upload: hover {
+            background:  rgba(255,  215,  0,  0.1);
+            border-color:  #ffd700;
         }
         
-        .suggestion-list {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            width: 100%;
-            z-index: 100;
-            display: none;
+        .file-upload i {
+            font-size:  3rem;
+            color:  #ffd700;
+            margin-bottom:  15px;
         }
         
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
+        .file-upload p {
+            margin:  10px 0;
         }
         
-        .suggestion-item:hover {
-            background: rgba(255, 215, 0, 0.2);
+        .file-input {
+            display:  none;
         }
         
-        /* Drag and drop styles */
-        .drag-over {
-            border: 2px dashed #ffd700;
-            background: rgba(255, 215, 0, 0.1);
+        .file-info {
+            background:  rgba(0,  0,  0,  0.3);
+            border-radius:  8px;
+            padding:  15px;
+            margin-top:  15px;
+            display:  none;
         }
         
-        .drag-handle {
-            cursor: move;
-            padding: 5px;
-            margin-right: 10px;
-            color: #ffd700;
+        .file-info.active {
+            display:  block;
         }
         
-        /* News specific styles */
-        .news-content {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 10px;
-            margin: 10px 0;
-            max-height: 100px;
-            overflow-y: auto;
+        .preview-table {
+            width:  100%;
+            border-collapse:  collapse;
+            margin-top:  15px;
+            font-size:  0.9rem;
         }
         
-        .news-date {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-top: 5px;
+        .preview-table th,  
+        .preview-table td {
+            border:  1px solid rgba(255,  255,  255,  0.2);
+            padding:  8px;
+            text-align:  left;
         }
         
-        .section-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .preview-table th {
+            background:  rgba(255,  215,  0,  0.2);
         }
         
-        .section-tab {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .preview-table tr: nth-child(even) {
+            background:  rgba(255,  255,  255,  0.05);
         }
         
-        .section-tab:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .upload-actions {
+            display:  flex;
+            gap:  10px;
+            margin-top:  15px;
         }
         
-        .section-tab.active {
-            background: #ffd700;
-            color: #000;
+        .upload-actions .btn {
+            flex:  1;
+        }
+        
+        .upload-progress {
+            margin-top:  20px;
+            display:  none;
+        }
+        
+        .upload-progress.active {
+            display:  block;
+        }
+        
+        .upload-status {
+            margin-top:  10px;
+            text-align:  center;
+            font-weight:  bold;
+        }
+        
+        .upload-status.processing {
+            color:  #ffd700;
+        }
+        
+        .upload-status.completed {
+            color:  #4dff4d;
+        }
+        
+        .upload-status.error {
+            color:  #ff4d4d;
+        }
+        
+        .template-link {
+            display:  inline-block;
+            margin-top:  10px;
+            color:  #ffd700;
+            text-decoration:  none;
+        }
+        
+        .template-link: hover {
+            text-decoration:  underline;
+        }
+        
+        .tabs {
+            display:  flex;
+            gap:  10px;
+            margin-bottom:  20px;
+            border-bottom:  1px solid rgba(255,  255,  255,  0.2);
+            padding-bottom:  10px;
+        }
+        
+        .tab {
+            padding:  10px 20px;
+            border-radius:  30px;
+            cursor:  pointer;
+            background:  rgba(255,  255,  255,  0.1);
+            transition:  all 0.3s ease;
+        }
+        
+        .tab.active {
+            background:  #ffd700;
+            color:  #000;
+            font-weight:  bold;
+        }
+        
+        .tab-content {
+            display:  none;
+        }
+        
+        .tab-content.active {
+            display:  block;
         }
     </style>
 </head>
@@ -528,13 +717,13 @@
             <button class="btn" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i> Login
             </button>
-            <p style="margin-top: 15px; color: #ffd700;">
-                <i class="fas fa-info-circle"></i> Get away and go lost if you're not staff
+            <p style="margin-top:  15px; color:  #ffd700;">
+                <i class="fas fa-info-circle"></i> Demo credentials:  admin@macautraffic.com / password123
             </p>
         </div>
         
         <div class="cameras-section" id="camerasSection">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display:  flex; justify-content:  space-between; align-items:  center;">
                 <h2 class="section-title"><i class="fas fa-video"></i> Live Camera Management</h2>
                 <div>
                     <span class="status-indicator" id="statusIndicator"></span>
@@ -542,24 +731,18 @@
                 </div>
             </div>
             
-            <div class="section-tabs">
-                <div class="section-tab active" data-section="cameras">Cameras</div>
-                <div class="section-tab" data-section="news">News</div>
-            </div>
-            
-            <div class="search-container">
-                <input type="text" id="searchCamera" placeholder="Search camera by ID...">
-                <button class="btn" id="searchBtn">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </div>
-            
-            <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+            <div style="display:  flex; gap:  15px; margin:  20px 0; flex-wrap:  wrap;">
                 <button class="btn" id="addCameraBtn">
                     <i class="fas fa-plus"></i> Add New Camera
                 </button>
                 <button class="btn btn-secondary" id="refreshBtn">
                     <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <button class="btn btn-warning" id="bulkUpdateBtn">
+                    <i class="fas fa-edit"></i> Bulk Update
+                </button>
+                <button class="btn btn-info" id="bulkUploadBtn">
+                    <i class="fas fa-upload"></i> Bulk Upload
                 </button>
                 <button class="btn btn-danger" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -571,48 +754,149 @@
                     <div class="stat-label">Total Cameras</div>
                     <div class="stat-value" id="totalCameras">0</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-label">Selected</div>
+                    <div class="stat-value" id="selectedCameras">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Updated</div>
+                    <div class="stat-value" id="updatedCameras">0</div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="bulk-update">Bulk Update</div>
+                <div class="tab" data-tab="bulk-upload">Bulk Upload</div>
+            </div>
+            
+            <!-- Bulk Update Section -->
+            <div class="tab-content active" id="bulkUpdateTab">
+                <div class="bulk-section">
+                    <h3><i class="fas fa-edit"></i> Bulk Update Cameras</h3>
+                    <p>Select cameras below and update their properties in bulk.</p>
+                    
+                    <div class="bulk-controls">
+                        <button class="btn btn-secondary" id="selectAllBtn">
+                            <i class="fas fa-check-square"></i> Select All
+                        </button>
+                        <button class="btn btn-secondary" id="deselectAllBtn">
+                            <i class="fas fa-square"></i> Deselect All
+                        </button>
+                    </div>
+                    
+                    <div class="camera-selection" id="cameraSelection">
+                        <p>No cameras selected</p>
+                    </div>
+                    
+                    <button class="btn btn-warning" id="openBulkFormBtn">
+                        <i class="fas fa-edit"></i> Update Selected Cameras
+                    </button>
+                    
+                    <div class="bulk-form" id="bulkUpdateForm">
+                        <h3>Update Properties</h3>
+                        <div class="form-group">
+                            <label for="bulkLocation">Location</label>
+                            <select id="bulkLocation">
+                                <option value="">-- Keep Current --</option>
+                                <option value="macau-city">Macau City</option>
+                                <option value="taipa">Taipa</option>
+                                <option value="bridges">Cross-Sea Bridges</option>
+                                <option value="border">Border Crossings</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bulkEmbedUrl">Embed URL (applies to all selected)</label>
+                            <input type="text" id="bulkEmbedUrl" placeholder="New embed URL (leave blank to keep current)">
+                        </div>
+                        
+                        <div class="bulk-actions">
+                            <button class="btn btn-warning" id="applyBulkUpdateBtn">
+                                <i class="fas fa-sync-alt"></i> Apply Updates
+                            </button>
+                            <button class="btn btn-secondary" id="cancelBulkUpdateBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                        
+                        <div class="progress-container" id="progressContainer">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">0% Complete</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bulk Upload Section -->
+            <div class="tab-content" id="bulkUploadTab">
+                <div class="upload-section">
+                    <h3><i class="fas fa-upload"></i> Bulk Upload Cameras</h3>
+                    <p>Upload a CSV file to add multiple cameras at once.</p>
+                    <a href="#" class="template-link" id="downloadTemplate">
+                        <i class="fas fa-download"></i> Download CSV Template
+                    </a>
+                    
+                    <div class="upload-form">
+                        <div class="file-upload" id="fileUploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & Drop your CSV file here</p>
+                            <p>or</p>
+                            <button class="btn btn-info" id="browseFileBtn">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </button>
+                            <input type="file" id="fileInput" class="file-input" accept=".csv">
+                        </div>
+                        
+                        <div class="file-info" id="fileInfo">
+                            <h4>File Information</h4>
+                            <p><strong>File Name: </strong> <span id="fileName">-</span></p>
+                            <p><strong>Size: </strong> <span id="fileSize">-</span></p>
+                            
+                            <div class="preview-table-container">
+                                <h4>Preview</h4>
+                                <table class="preview-table" id="previewTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Camera ID</th>
+                                            <th>English Title</th>
+                                            <th>Chinese Title</th>
+                                            <th>Portuguese Title</th>
+                                            <th>Japanese Title</th>
+                                            <th>Embed URL</th>
+                                            <th>Location</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="previewTableBody">
+                                        <!-- Preview data will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-actions">
+                            <button class="btn btn-success" id="uploadBtn" disabled>
+                                <i class="fas fa-upload"></i> Upload Cameras
+                            </button>
+                            <button class="btn btn-secondary" id="resetUploadBtn">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                        </div>
+                        
+                        <div class="upload-progress" id="uploadProgress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="uploadProgressFill"></div>
+                            </div>
+                            <div class="progress-text" id="uploadProgressText">0% Complete</div>
+                            <div class="upload-status" id="uploadStatus">Ready to upload</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="camera-grid" id="cameraGrid">
                 <!-- Camera cards will be dynamically inserted here -->
-            </div>
-        </div>
-        
-        <div class="news-section" id="newsSection">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="section-title"><i class="fas fa-newspaper"></i> News Management</h2>
-                <div>
-                    <span class="status-indicator" id="newsStatusIndicator"></span>
-                    <span id="newsStatusText">Connected to Firebase</span>
-                </div>
-            </div>
-            
-            <div class="section-tabs">
-                <div class="section-tab" data-section="cameras">Cameras</div>
-                <div class="section-tab active" data-section="news">News</div>
-            </div>
-            
-            <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
-                <button class="btn" id="addNewsBtn">
-                    <i class="fas fa-plus"></i> Add New News
-                </button>
-                <button class="btn btn-secondary" id="refreshNewsBtn">
-                    <i class="fas fa-sync-alt"></i> Refresh Data
-                </button>
-                <button class="btn btn-danger" id="logoutNewsBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-label">Total News</div>
-                    <div class="stat-value" id="totalNews">0</div>
-                </div>
-            </div>
-            
-            <div class="news-grid" id="newsGrid">
-                <!-- News cards will be dynamically inserted here -->
             </div>
         </div>
         
@@ -623,10 +907,7 @@
                 
                 <div class="form-group">
                     <label for="cameraId">Camera ID</label>
-                    <div style="position: relative;">
-                        <input type="text" id="cameraId" placeholder="Unique identifier (e.g., camera-001)">
-                        <div class="suggestion-list" id="suggestionList"></div>
-                    </div>
+                    <input type="text" id="cameraId" placeholder="Unique identifier (e.g.,  camera-001)">
                 </div>
                 
                 <div class="form-row">
@@ -653,7 +934,7 @@
                 
                 <div class="form-group">
                     <label for="embedUrl">Embed URL</label>
-                    <input type="text" id="embedUrl" placeholder="Live stream URL (e.g., https://...)">
+                    <input type="text" id="embedUrl" placeholder="Live stream URL (e.g.,  https: //...)">
                 </div>
                 
                 <div class="form-group">
@@ -666,56 +947,11 @@
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="position">Position</label>
-                    <div class="position-container">
-                        <input type="number" id="position" class="position-input" min="1" placeholder="Position number">
-                        <span id="positionExample" style="opacity: 0.7;">e.g. Macau City - 1</span>
-                    </div>
-                    <div id="positionWarning" class="position-warning" style="display: none;"></div>
-                </div>
-                
-                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <div style="display:  flex; gap:  15px; margin-top:  25px;">
                     <button class="btn" id="saveCameraBtn">
                         <i class="fas fa-save"></i> Save Camera
                     </button>
                     <button class="btn btn-secondary" id="cancelBtn">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="modal" id="newsModal">
-            <div class="modal-content">
-                <span class="close-modal" id="closeNewsModal">×</span>
-                <h2 id="newsModalTitle">Add New News</h2>
-                
-                <div class="form-group">
-                    <label for="newsId">News ID</label>
-                    <input type="text" id="newsId" placeholder="Unique identifier (e.g., news-001)" disabled>
-                </div>
-                
-                <div class="form-group">
-                    <label for="newsTitle">Title</label>
-                    <input type="text" id="newsTitle" placeholder="News title">
-                </div>
-                
-                <div class="form-group">
-                    <label for="newsContent">Content</label>
-                    <textarea id="newsContent" rows="5" placeholder="News content"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="newsDate">Date</label>
-                    <input type="date" id="newsDate">
-                </div>
-                
-                <div style="display: flex; gap: 15px; margin-top: 25px;">
-                    <button class="btn" id="saveNewsBtn">
-                        <i class="fas fa-save"></i> Save News
-                    </button>
-                    <button class="btn btn-secondary" id="cancelNewsBtn">
                         <i class="fas fa-times"></i> Cancel
                     </button>
                 </div>
@@ -728,20 +964,20 @@
         
         <footer>
             <p>Macau Traffic Monitor Staff Panel © 2026</p>
-            <p>Data Source: Firebase Realtime Database</p>
+            <p>Data Source:  Firebase Realtime Database</p>
         </footer>
     </div>
 
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",          
-            authDomain: "macau-traffic-501cb.firebaseapp.com",          
-            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",          
-            projectId: "macau-traffic-501cb",          
-            storageBucket: "macau-traffic-501cb.appspot.com",          
-            messagingSenderId: "123456789012",          
-            appId: "1:123456789012:web:abcdef1234567890abcdef"
+            apiKey:  "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",   
+            authDomain:  "macau-traffic-501cb.firebaseapp.com",   
+            databaseURL:  "https: //macau-traffic-501cb-default-rtdb.firebaseio.com",   
+            projectId:  "macau-traffic-501cb",   
+            storageBucket:  "macau-traffic-501cb.appspot.com",   
+            messagingSenderId:  "123456789012",   
+            appId:  "1: 123456789012: web: abcdef1234567890abcdef"
         };
 
         // Initialize Firebase
@@ -751,20 +987,30 @@
         // DOM Elements
         const authSection = document.getElementById('authSection');
         const camerasSection = document.getElementById('camerasSection');
-        const newsSection = document.getElementById('newsSection');
         const cameraGrid = document.getElementById('cameraGrid');
-        const newsGrid = document.getElementById('newsGrid');
         const cameraModal = document.getElementById('cameraModal');
-        const newsModal = document.getElementById('newsModal');
         const notification = document.getElementById('notification');
         const statusIndicator = document.getElementById('statusIndicator');
         const statusText = document.getElementById('statusText');
-        const newsStatusIndicator = document.getElementById('newsStatusIndicator');
-        const newsStatusText = document.getElementById('newsStatusText');
+        const cameraSelection = document.getElementById('cameraSelection');
+        const bulkUpdateForm = document.getElementById('bulkUpdateForm');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const previewTableBody = document.getElementById('previewTableBody');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const uploadProgressFill = document.getElementById('uploadProgressFill');
+        const uploadProgressText = document.getElementById('uploadProgressText');
+        const uploadStatus = document.getElementById('uploadStatus');
 
         // Stats elements
         const totalCamerasEl = document.getElementById('totalCameras');
-        const totalNewsEl = document.getElementById('totalNews');
+        const selectedCamerasEl = document.getElementById('selectedCameras');
+        const updatedCamerasEl = document.getElementById('updatedCameras');
 
         // Buttons
         const loginBtn = document.getElementById('loginBtn');
@@ -774,13 +1020,19 @@
         const saveCameraBtn = document.getElementById('saveCameraBtn');
         const cancelBtn = document.getElementById('cancelBtn');
         const closeModal = document.getElementById('closeModal');
-        const searchBtn = document.getElementById('searchBtn');
-        const addNewsBtn = document.getElementById('addNewsBtn');
-        const refreshNewsBtn = document.getElementById('refreshNewsBtn');
-        const logoutNewsBtn = document.getElementById('logoutNewsBtn');
-        const saveNewsBtn = document.getElementById('saveNewsBtn');
-        const cancelNewsBtn = document.getElementById('cancelNewsBtn');
-        const closeNewsModal = document.getElementById('closeNewsModal');
+        const bulkUpdateBtn = document.getElementById('bulkUpdateBtn');
+        const bulkUploadBtn = document.getElementById('bulkUploadBtn');
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const deselectAllBtn = document.getElementById('deselectAllBtn');
+        const openBulkFormBtn = document.getElementById('openBulkFormBtn');
+        const applyBulkUpdateBtn = document.getElementById('applyBulkUpdateBtn');
+        const cancelBulkUpdateBtn = document.getElementById('cancelBulkUpdateBtn');
+        const browseFileBtn = document.getElementById('browseFileBtn');
+        const fileInput = document.getElementById('fileInput');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const resetUploadBtn = document.getElementById('resetUploadBtn');
+        const downloadTemplate = document.getElementById('downloadTemplate');
+        const tabs = document.querySelectorAll('.tab');
 
         // Form fields
         const emailInput = document.getElementById('email');
@@ -792,167 +1044,28 @@
         const japaneseTitleInput = document.getElementById('japaneseTitle');
         const embedUrlInput = document.getElementById('embedUrl');
         const locationSelect = document.getElementById('location');
-        const positionInput = document.getElementById('position');
-        const searchCameraInput = document.getElementById('searchCamera');
-        const positionWarning = document.getElementById('positionWarning');
-        const suggestionList = document.getElementById('suggestionList');
-        
-        // News form fields
-        const newsIdInput = document.getElementById('newsId');
-        const newsTitleInput = document.getElementById('newsTitle');
-        const newsContentInput = document.getElementById('newsContent');
-        const newsDateInput = document.getElementById('newsDate');
+        const bulkLocationSelect = document.getElementById('bulkLocation');
+        const bulkEmbedUrlInput = document.getElementById('bulkEmbedUrl');
 
         // Current editing camera ID
         let currentEditingCameraId = null;
-        let currentEditingNewsId = null;
 
         // Authentication state
         let isAuthenticated = false;
 
+        // Selected cameras for bulk update
+        let selectedCameras = [];
+
         // All cameras data
         let allCameras = {};
-        let allNews = {};
 
-        // Drag and drop variables
-        let draggedItem = null;
-
-        // Section tabs
-        const sectionTabs = document.querySelectorAll('.section-tab');
+        // CSV data for upload
+        let csvData = [];
 
         // Initialize the application
         function init() {
             updateConnectionStatus(true);
             loadCameras();
-            
-            // Set today's date as default for news
-            const today = new Date().toISOString().split('T')[0];
-            newsDateInput.value = today;
-            
-            // Update position example when location changes
-            locationSelect.addEventListener('change', updatePositionExample);
-            
-            // Add position validation
-            positionInput.addEventListener('input', validatePosition);
-            
-            // Add event listener for camera ID input to show suggestions
-            cameraIdInput.addEventListener('input', showSuggestions);
-            
-            // Close suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('#cameraId')) {
-                    suggestionList.style.display = 'none';
-                }
-            });
-            
-            // Section tab switching
-            sectionTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    
-                    // Update active tab
-                    document.querySelectorAll('.section-tab').forEach(t => {
-                        t.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    
-                    // Show appropriate section
-                    if (section === 'cameras') {
-                        camerasSection.style.display = 'block';
-                        newsSection.style.display = 'none';
-                    } else {
-                        camerasSection.style.display = 'none';
-                        newsSection.style.display = 'block';
-                        loadNews();
-                    }
-                });
-            });
-        }
-
-        // Show suggestions for camera ID
-        function showSuggestions() {
-            const input = cameraIdInput.value.toLowerCase();
-            suggestionList.innerHTML = '';
-            
-            if (input.length < 2) {
-                suggestionList.style.display = 'none';
-                return;
-            }
-            
-            const suggestions = Object.keys(allCameras).filter(id => 
-                id.toLowerCase().includes(input)
-            ).slice(0, 5);
-            
-            if (suggestions.length > 0) {
-                suggestions.forEach(id => {
-                    const item = document.createElement('div');
-                    item.className = 'suggestion-item';
-                    item.textContent = id;
-                    item.addEventListener('click', () => {
-                        cameraIdInput.value = id;
-                        suggestionList.style.display = 'none';
-                        // Auto-fill form with existing camera data
-                        fillFormWithCameraData(id);
-                    });
-                    suggestionList.appendChild(item);
-                });
-                suggestionList.style.display = 'block';
-            } else {
-                suggestionList.style.display = 'none';
-            }
-        }
-
-        // Fill form with existing camera data
-        function fillFormWithCameraData(cameraId) {
-            const camera = allCameras[cameraId];
-            if (camera) {
-                englishTitleInput.value = camera.titles.en || '';
-                chineseTitleInput.value = camera.titles.zh || '';
-                portugueseTitleInput.value = camera.titles.pt || '';
-                japaneseTitleInput.value = camera.titles.ja || '';
-                embedUrlInput.value = camera.embedUrl || '';
-                locationSelect.value = camera.location || 'macau-city';
-                positionInput.value = camera.position || '';
-                updatePositionExample();
-                validatePosition();
-            }
-        }
-
-        // Update position example text
-        function updatePositionExample() {
-            const locationText = locationSelect.options[locationSelect.selectedIndex].text;
-            document.getElementById('positionExample').textContent = `e.g. ${locationText} - 1`;
-        }
-
-        // Validate position to check for conflicts
-        function validatePosition() {
-            const position = positionInput.value.trim();
-            const location = locationSelect.value;
-            
-            if (!position) {
-                positionWarning.style.display = 'none';
-                return;
-            }
-            
-            const positionNum = parseInt(position);
-            let conflictCameraId = null;
-            
-            // Check if position is already occupied
-            Object.keys(allCameras).forEach(cameraId => {
-                const camera = allCameras[cameraId];
-                if (camera.location === location && 
-                    camera.position === positionNum && 
-                    cameraId !== currentEditingCameraId) {
-                    conflictCameraId = cameraId;
-                }
-            });
-            
-            if (conflictCameraId) {
-                positionWarning.textContent = `Position ${positionNum} is already occupied by camera ID: ${conflictCameraId}. Saving will move that camera to the back.`;
-                positionWarning.style.display = 'block';
-            } else {
-                positionWarning.style.display = 'none';
-            }
         }
 
         // Update connection status indicator
@@ -960,18 +1073,14 @@
             if (connected) {
                 statusIndicator.className = 'status-indicator status-connected';
                 statusText.textContent = 'Connected to Firebase';
-                newsStatusIndicator.className = 'status-indicator status-connected';
-                newsStatusText.textContent = 'Connected to Firebase';
             } else {
                 statusIndicator.className = 'status-indicator status-disconnected';
                 statusText.textContent = 'Disconnected from Firebase';
-                newsStatusIndicator.className = 'status-indicator status-disconnected';
-                newsStatusText.textContent = 'Disconnected from Firebase';
             }
         }
 
         // Show notification
-        function showNotification(message, isError = false) {
+        function showNotification(message,  isError = false) {
             const notificationMessage = document.getElementById('notificationMessage');
             notificationMessage.textContent = message;
             
@@ -985,34 +1094,28 @@
             
             setTimeout(() => {
                 notification.style.display = 'none';
-            }, 3000);
+            },  3000);
         }
 
-        // Login function - FIXED DUPLICATE BUG
+        // Login function
         function login() {
-            // Prevent duplicate login attempts
-            if (isAuthenticated) {
-                showNotification('You are already logged in!', true);
-                return;
-            }
-            
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
             
             if (!email || !password) {
-                showNotification('Please enter both email and password', true);
+                showNotification('Please enter both email and password',  true);
                 return;
             }
             
-            // In a real app, this would be a Firebase authentication call
-            // For demo purposes, we'll use a simple check
-            if (email === 'admin@macautraffic.com' && password === 'Admin123') {
+            // In a real app,  this would be a Firebase authentication call
+            // For demo purposes,  we'll use a simple check
+            if (email === 'admmin@macautraffic.com' && password === 'Admin123') {
                 isAuthenticated = true;
                 authSection.style.display = 'none';
                 camerasSection.style.display = 'block';
                 showNotification('Login successful!');
             } else {
-                showNotification('Invalid credentials. Please try again.', true);
+                showNotification('Invalid credentials. Please try again.',  true);
             }
         }
 
@@ -1021,35 +1124,14 @@
             isAuthenticated = false;
             authSection.style.display = 'block';
             camerasSection.style.display = 'none';
-            newsSection.style.display = 'none';
             emailInput.value = '';
             passwordInput.value = '';
             showNotification('You have been logged out');
         }
 
-        // Search camera by ID
-        function searchCamera() {
-            const searchTerm = searchCameraInput.value.trim().toLowerCase();
-            
-            if (!searchTerm) {
-                showNotification('Please enter a camera ID to search', true);
-                return;
-            }
-            
-            const foundCameraId = Object.keys(allCameras).find(id => 
-                id.toLowerCase().includes(searchTerm)
-            );
-            
-            if (foundCameraId) {
-                editCamera(foundCameraId);
-            } else {
-                showNotification('Camera not found', true);
-            }
-        }
-
         // Load cameras from Firebase
         function loadCameras() {
-            cameraGrid.innerHTML = '<p style="text-align: center; width: 100%;"><i class="fas fa-spinner fa-spin"></i> Loading cameras...</p>';
+            cameraGrid.innerHTML = '<p style="text-align:  center; width:  100%;"><i class="fas fa-spinner fa-spin"></i> Loading cameras...</p>';
             
             const camerasRef = database.ref('cameras');
             camerasRef.once('value')
@@ -1060,229 +1142,222 @@
                         displayCameras(cameras);
                         updateStats();
                     } else {
-                        cameraGrid.innerHTML = '<p style="text-align: center; width: 100%;">No cameras found</p>';
+                        cameraGrid.innerHTML = '<p style="text-align:  center; width:  100%;">No cameras found</p>';
                         allCameras = {};
                         updateStats();
                     }
                 })
                 .catch((error) => {
-                    console.error('Error loading cameras: ', error);
-                    cameraGrid.innerHTML = '<p style="text-align: center; width: 100%; color: #ff4d4d;">Error loading cameras. Please try again.</p>';
-                    showNotification('Failed to load cameras', true);
-                });
-        }
-
-        // Load news from Firebase
-        function loadNews() {
-            newsGrid.innerHTML = '<p style="text-align: center; width: 100%;"><i class="fas fa-spinner fa-spin"></i> Loading news...</p>';
-            
-            const newsRef = database.ref('news');
-            newsRef.once('value')
-                .then((snapshot) => {
-                    const news = snapshot.val();
-                    if (news) {
-                        allNews = news;
-                        displayNews(news);
-                        updateNewsStats();
-                    } else {
-                        newsGrid.innerHTML = '<p style="text-align: center; width: 100%;">No news found</p>';
-                        allNews = {};
-                        updateNewsStats();
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading news: ', error);
-                    newsGrid.innerHTML = '<p style="text-align: center; width: 100%; color: #ff4d4d;">Error loading news. Please try again.</p>';
-                    showNotification('Failed to load news', true);
+                    console.error('Error loading cameras:  ',  error);
+                    cameraGrid.innerHTML = '<p style="text-align:  center; width:  100%; color:  #ff4d4d;">Error loading cameras. Please try again.</p>';
+                    showNotification('Failed to load cameras',  true);
                 });
         }
 
         // Update statistics
         function updateStats() {
             totalCamerasEl.textContent = Object.keys(allCameras).length;
+            selectedCamerasEl.textContent = selectedCameras.length;
+            updatedCamerasEl.textContent = '0';
         }
 
-        // Update news statistics
-        function updateNewsStats() {
-            totalNewsEl.textContent = Object.keys(allNews).length;
-        }
-
-        // Display cameras in the grid with drag and drop
+        // Display cameras in the grid
         function displayCameras(cameras) {
             cameraGrid.innerHTML = '';
             
-            // Convert to array and sort by position
-            const camerasArray = Object.keys(cameras).map(id => ({
-                id, 
-                ...cameras[id]
-            }));
-            
-            // Sort by position (nulls last)
-            camerasArray.sort((a, b) => {
-                if (a.position === null || a.position === undefined) return 1;
-                if (b.position === null || b.position === undefined) return -1;
-                return a.position - b.position;
-            });
-            
-            camerasArray.forEach(camera => {
+            Object.keys(cameras).forEach(cameraId => {
+                const camera = cameras[cameraId];
                 const cameraCard = document.createElement('div');
                 cameraCard.className = 'camera-card';
-                cameraCard.setAttribute('data-id', camera.id);
-                cameraCard.setAttribute('draggable', true);
                 cameraCard.innerHTML = `
                     <div class="camera-title">
-                        <i class="fas fa-grip-vertical drag-handle"></i>
                         <i class="fas fa-video"></i> ${camera.titles.en}
                     </div>
                     <div class="camera-details">
-                        <p><strong>ID: </strong> ${camera.id}</p>
-                        <p><strong>Location: </strong> ${camera.location}</p>
-                        <p><strong>Position: </strong> ${camera.position || 'Not set'}</p>
-                        <p><strong>URL: </strong> ${camera.embedUrl}</p>
+                        <p><strong>ID:  </strong> ${cameraId}</p>
+                        <p><strong>Location:  </strong> ${camera.location}</p>
+                        <p><strong>URL:  </strong> ${camera.embedUrl}</p>
                     </div>
                     <iframe class="camera-iframe" src="${camera.embedUrl}" allowfullscreen></iframe>
                     <div class="camera-actions">
-                        <button class="btn btn-secondary edit-btn" data-id="${camera.id}">
+                        <button class="btn btn-secondary edit-btn" data-id="${cameraId}">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button class="btn btn-danger delete-btn" data-id="${camera.id}">
+                        <button class="btn btn-danger delete-btn" data-id="${cameraId}">
                             <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-warning select-btn" data-id="${cameraId}">
+                            <i class="fas fa-check-circle"></i> Select
                         </button>
                     </div>
                 `;
                 cameraGrid.appendChild(cameraCard);
-                
-                // Add drag events
-                cameraCard.addEventListener('dragstart', handleDragStart);
-                cameraCard.addEventListener('dragover', handleDragOver);
-                cameraCard.addEventListener('dragenter', handleDragEnter);
-                cameraCard.addEventListener('dragleave', handleDragLeave);
-                cameraCard.addEventListener('drop', handleDrop);
-                cameraCard.addEventListener('dragend', handleDragEnd);
             });
             
             // Add event listeners to edit and delete buttons
             document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => editCamera(btn.dataset.id));
+                btn.addEventListener('click',  () => editCamera(btn.dataset.id));
             });
             
             document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteCamera(btn.dataset.id));
+                btn.addEventListener('click',  () => deleteCamera(btn.dataset.id));
+            });
+            
+            // Add event listeners to select buttons
+            document.querySelectorAll('.select-btn').forEach(btn => {
+                btn.addEventListener('click',  () => toggleCameraSelection(btn.dataset.id));
             });
         }
 
-        // Display news in the grid
-        function displayNews(news) {
-            newsGrid.innerHTML = '';
+        // Toggle camera selection for bulk update
+        function toggleCameraSelection(cameraId) {
+            const index = selectedCameras.indexOf(cameraId);
+            if (index === -1) {
+                selectedCameras.push(cameraId);
+            } else {
+                selectedCameras.splice(index,  1);
+            }
+            updateCameraSelectionDisplay();
+            updateStats();
+        }
+
+        // Update camera selection display
+        function updateCameraSelectionDisplay() {
+            if (selectedCameras.length === 0) {
+                cameraSelection.innerHTML = '<p>No cameras selected</p>';
+                openBulkFormBtn.disabled = true;
+                return;
+            }
             
-            // Convert to array and sort by date (newest first)
-            const newsArray = Object.keys(news).map(id => ({
-                id, 
-                ...news[id]
-            })).sort((a, b) => new Date(b.date) - new Date(a.date));
+            openBulkFormBtn.disabled = false;
+            cameraSelection.innerHTML = '';
             
-            newsArray.forEach(item => {
-                const newsCard = document.createElement('div');
-                newsCard.className = 'news-card';
-                newsCard.setAttribute('data-id', item.id);
-                newsCard.innerHTML = `
-                    <div class="news-title">
-                        <i class="fas fa-newspaper"></i> ${item.title}
-                    </div>
-                    <div class="news-details">
-                        <p><strong>ID: </strong> ${item.id}</p>
-                        <p><strong>Date: </strong> ${item.date}</p>
-                        <div class="news-content">${item.content}</div>
-                    </div>
-                    <div class="news-actions">
-                        <button class="btn btn-secondary edit-news-btn" data-id="${item.id}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn btn-danger delete-news-btn" data-id="${item.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                `;
-                newsGrid.appendChild(newsCard);
+            selectedCameras.forEach(cameraId => {
+                const camera = allCameras[cameraId];
+                if (camera) {
+                    const item = document.createElement('div');
+                    item.className = 'camera-selection-item';
+                    item.innerHTML = `
+                        <span>${camera.titles.en}</span>
+                        <button class="remove-btn" data-id="${cameraId}">×</button>
+                    `;
+                    cameraSelection.appendChild(item);
+                }
             });
             
-            // Add event listeners to edit and delete buttons
-            document.querySelectorAll('.edit-news-btn').forEach(btn => {
-                btn.addEventListener('click', () => editNews(btn.dataset.id));
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click',  () => {
+                    const cameraId = btn.dataset.id;
+                    const index = selectedCameras.indexOf(cameraId);
+                    if (index !== -1) {
+                        selectedCameras.splice(index,  1);
+                        updateCameraSelectionDisplay();
+                        updateStats();
+                    }
+                });
             });
+        }
+
+        // Select all cameras
+        function selectAllCameras() {
+            selectedCameras = Object.keys(allCameras);
+            updateCameraSelectionDisplay();
+            updateStats();
+        }
+
+        // Deselect all cameras
+        function deselectAllCameras() {
+            selectedCameras = [];
+            updateCameraSelectionDisplay();
+            updateStats();
+        }
+
+        // Open bulk update form
+        function openBulkUpdateForm() {
+            if (selectedCameras.length === 0) {
+                showNotification('Please select at least one camera',  true);
+                return;
+            }
+            bulkUpdateForm.classList.add('active');
+        }
+
+        // Apply bulk update
+        async function applyBulkUpdate() {
+            const location = bulkLocationSelect.value;
+            const embedUrl = bulkEmbedUrlInput.value.trim();
             
-            document.querySelectorAll('.delete-news-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteNews(btn.dataset.id));
-            });
-        }
-
-        // Drag and drop functions
-        function handleDragStart(e) {
-            draggedItem = this;
-            setTimeout(() => {
-                this.classList.add('dragging');
-            }, 0);
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('drag-over');
-        }
-
-        function handleDragLeave() {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
+            if (!location && !embedUrl) {
+                showNotification('Please specify at least one property to update',  true);
+                return;
+            }
             
-            if (draggedItem !== this) {
-                // Get the index of the dragged item and the drop target
-                const allItems = Array.from(cameraGrid.querySelectorAll('.camera-card'));
-                const draggedIndex = allItems.indexOf(draggedItem);
-                const targetIndex = allItems.indexOf(this);
+            // Show progress
+            progressContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            progressText.textContent = '0% Complete';
+            
+            // Disable buttons during update
+            applyBulkUpdateBtn.disabled = true;
+            cancelBulkUpdateBtn.disabled = true;
+            
+            try {
+                const total = selectedCameras.length;
+                let completed = 0;
+                updatedCamerasEl.textContent = '0';
                 
-                // Reorder the items in the DOM
-                if (draggedIndex < targetIndex) {
-                    cameraGrid.insertBefore(draggedItem, this.nextSibling);
-                } else {
-                    cameraGrid.insertBefore(draggedItem, this);
+                // Update each selected camera
+                for (const cameraId of selectedCameras) {
+                    const cameraRef = database.ref('cameras/' + cameraId);
+                    const snapshot = await cameraRef.once('value');
+                    const cameraData = snapshot.val();
+                    
+                    if (cameraData) {
+                        // Update only the specified properties
+                        if (location) {
+                            cameraData.location = location;
+                        }
+                        if (embedUrl) {
+                            cameraData.embedUrl = embedUrl;
+                        }
+                        
+                        // Save updated data
+                        await cameraRef.set(cameraData);
+                    }
+                    
+                    // Update progress
+                    completed++;
+                    const progress = Math.round((completed / total) * 100);
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = `${progress}% Complete`;
+                    updatedCamerasEl.textContent = completed;
                 }
                 
-                // Update positions in Firebase
-                updateCameraPositions();
+                // Reset form and selection
+                bulkLocationSelect.value = '';
+                bulkEmbedUrlInput.value = '';
+                selectedCameras = [];
+                updateCameraSelectionDisplay();
+                bulkUpdateForm.classList.remove('active');
+                updateStats();
+                
+                // Reload cameras
+                loadCameras();
+                
+                showNotification(`Successfully updated ${total} cameras!`);
+            } catch (error) {
+                console.error('Error during bulk update:  ',  error);
+                showNotification('Failed to update cameras',  true);
+            } finally {
+                // Re-enable buttons
+                applyBulkUpdateBtn.disabled = false;
+                cancelBulkUpdateBtn.disabled = false;
+                
+                // Hide progress after delay
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                },  2000);
             }
-        }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            draggedItem = null;
-        }
-
-        // Update camera positions in Firebase based on their order in the DOM
-        function updateCameraPositions() {
-            const cameraCards = cameraGrid.querySelectorAll('.camera-card');
-            const updates = {};
-            
-            cameraCards.forEach((card, index) => {
-                const cameraId = card.getAttribute('data-id');
-                updates[`cameras/${cameraId}/position`] = index + 1;
-            });
-            
-            database.ref().update(updates)
-                .then(() => {
-                    showNotification('Camera positions updated successfully!');
-                    loadCameras(); // Reload to reflect changes
-                })
-                .catch((error) => {
-                    console.error('Error updating positions: ', error);
-                    showNotification('Failed to update camera positions', true);
-                });
         }
 
         // Open modal for adding new camera
@@ -1290,16 +1365,12 @@
             currentEditingCameraId = null;
             document.getElementById('modalTitle').textContent = 'Add New Camera';
             cameraIdInput.value = '';
-            cameraIdInput.disabled = false;
             englishTitleInput.value = '';
             chineseTitleInput.value = '';
             portugueseTitleInput.value = '';
             japaneseTitleInput.value = '';
             embedUrlInput.value = '';
             locationSelect.value = 'macau-city';
-            positionInput.value = '';
-            positionWarning.style.display = 'none';
-            updatePositionExample();
             cameraModal.style.display = 'flex';
         }
 
@@ -1321,22 +1392,18 @@
                         japaneseTitleInput.value = camera.titles.ja;
                         embedUrlInput.value = camera.embedUrl;
                         locationSelect.value = camera.location;
-                        positionInput.value = camera.position || '';
-                        positionWarning.style.display = 'none';
-                        updatePositionExample();
-                        validatePosition();
                         cameraModal.style.display = 'flex';
                     } else {
-                        showNotification('Camera not found', true);
+                        showNotification('Camera not found',  true);
                     }
                 })
                 .catch((error) => {
-                    console.error('Error loading camera: ', error);
-                    showNotification('Failed to load camera data', true);
+                    console.error('Error loading camera:  ',  error);
+                    showNotification('Failed to load camera data',  true);
                 });
         }
 
-        // Save camera (add or update) with position conflict handling
+        // Save camera (add or update)
         function saveCamera() {
             const cameraId = cameraIdInput.value.trim();
             const englishTitle = englishTitleInput.value.trim();
@@ -1345,84 +1412,34 @@
             const japaneseTitle = japaneseTitleInput.value.trim();
             const embedUrl = embedUrlInput.value.trim();
             const location = locationSelect.value;
-            const position = positionInput.value.trim();
             
             if (!cameraId || !englishTitle || !embedUrl) {
-                showNotification('Please fill in all required fields', true);
+                showNotification('Please fill in all required fields',  true);
                 return;
             }
             
             const cameraData = {
-                titles: {
-                    en: englishTitle, 
-                    zh: chineseTitle, 
-                    pt: portugueseTitle, 
-                    ja: japaneseTitle
-                }, 
-                embedUrl: embedUrl, 
-                location: location, 
-                position: position ? parseInt(position) : null
+                titles:  {
+                    en:  englishTitle,  
+                    zh:  chineseTitle,  
+                    pt:  portugueseTitle,  
+                    ja:  japaneseTitle
+                },  
+                embedUrl:  embedUrl,  
+                location:  location
             };
             
-            // Check if position is already occupied
-            const positionNum = position ? parseInt(position) : null;
-            let conflictCameraId = null;
-            
-            if (positionNum) {
-                Object.keys(allCameras).forEach(id => {
-                    const camera = allCameras[id];
-                    if (camera.location === location && 
-                        camera.position === positionNum && 
-                        id !== cameraId) {
-                        conflictCameraId = id;
-                    }
+            const camerasRef = database.ref('cameras/' + cameraId);
+            camerasRef.set(cameraData)
+                .then(() => {
+                    showNotification(`Camera ${currentEditingCameraId ? 'updated' :  'added'} successfully!`);
+                    cameraModal.style.display = 'none';
+                    loadCameras();
+                })
+                .catch((error) => {
+                    console.error('Error saving camera:  ',  error);
+                    showNotification('Failed to save camera',  true);
                 });
-            }
-            
-            // If there's a conflict, move the existing camera to the back
-            if (conflictCameraId) {
-                // Find the maximum position in the same location
-                const camerasInLocation = Object.values(allCameras).filter(cam => 
-                    cam.location === location && cam.position !== null
-                );
-                
-                let maxPosition = 0;
-                if (camerasInLocation.length > 0) {
-                    maxPosition = Math.max(...camerasInLocation.map(cam => cam.position));
-                }
-                
-                // Move the conflicting camera to the back (maxPosition + 1)
-                const newPositionForConflicting = maxPosition + 1;
-                
-                // Update both cameras in a single transaction
-                const updates = {};
-                updates[`cameras/${conflictCameraId}/position`] = newPositionForConflicting;
-                updates[`cameras/${cameraId}`] = cameraData;
-                
-                database.ref().update(updates)
-                    .then(() => {
-                        showNotification(`Camera saved successfully! Moved conflicting camera to position ${newPositionForConflicting}`);
-                        cameraModal.style.display = 'none';
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving camera: ', error);
-                        showNotification('Failed to save camera', true);
-                    });
-            } else {
-                // No conflict, save normally
-                const camerasRef = database.ref('cameras/' + cameraId);
-                camerasRef.set(cameraData)
-                    .then(() => {
-                        showNotification(`Camera ${currentEditingCameraId ? 'updated' : 'added'} successfully!`);
-                        cameraModal.style.display = 'none';
-                        loadCameras();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving camera: ', error);
-                        showNotification('Failed to save camera', true);
-                    });
-            }
         }
 
         // Delete camera
@@ -1435,149 +1452,277 @@
                         loadCameras();
                     })
                     .catch((error) => {
-                        console.error('Error deleting camera: ', error);
-                        showNotification('Failed to delete camera', true);
+                        console.error('Error deleting camera:  ',  error);
+                        showNotification('Failed to delete camera',  true);
                     });
             }
         }
 
-        // Open modal for adding new news
-        function openAddNewsModal() {
-            currentEditingNewsId = null;
-            document.getElementById('newsModalTitle').textContent = 'Add New News';
-            newsIdInput.value = '';
-            newsTitleInput.value = '';
-            newsContentInput.value = '';
-            const today = new Date().toISOString().split('T')[0];
-            newsDateInput.value = today;
-            newsIdInput.disabled = true;
-            newsModal.style.display = 'flex';
-        }
-
-        // Edit existing news
-        function editNews(newsId) {
-            currentEditingNewsId = newsId;
-            document.getElementById('newsModalTitle').textContent = 'Edit News';
-            
-            const newsRef = database.ref('news/' + newsId);
-            newsRef.once('value')
-                .then((snapshot) => {
-                    const news = snapshot.val();
-                    if (news) {
-                        newsIdInput.value = newsId;
-                        newsTitleInput.value = news.title;
-                        newsContentInput.value = news.content;
-                        newsDateInput.value = news.date;
-                        newsIdInput.disabled = true;
-                        newsModal.style.display = 'flex';
-                    } else {
-                        showNotification('News not found', true);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading news: ', error);
-                    showNotification('Failed to load news data', true);
-                });
-        }
-
-        // Save news (add or update)
-        function saveNews() {
-            const title = newsTitleInput.value.trim();
-            const content = newsContentInput.value.trim();
-            const date = newsDateInput.value;
-            
-            if (!title || !content || !date) {
-                showNotification('Please fill in all required fields', true);
-                return;
-            }
-            
-            const newsData = {
-                title: title,
-                content: content,
-                date: date
-            };
-            
-            if (currentEditingNewsId) {
-                // Update existing news
-                const newsRef = database.ref('news/' + currentEditingNewsId);
-                newsRef.update(newsData)
-                    .then(() => {
-                        showNotification('News updated successfully!');
-                        newsModal.style.display = 'none';
-                        loadNews();
-                    })
-                    .catch((error) => {
-                        console.error('Error updating news: ', error);
-                        showNotification('Failed to update news', true);
-                    });
-            } else {
-                // Add new news
-                const newsRef = database.ref('news');
-                const newNewsRef = newsRef.push();
-                newNewsRef.set(newsData)
-                    .then(() => {
-                        showNotification('News added successfully!');
-                        newsModal.style.display = 'none';
-                        loadNews();
-                    })
-                    .catch((error) => {
-                        console.error('Error adding news: ', error);
-                        showNotification('Failed to add news', true);
-                    });
-            }
-        }
-
-        // Delete news
-        function deleteNews(newsId) {
-            if (confirm('Are you sure you want to delete this news? This action cannot be undone.')) {
-                const newsRef = database.ref('news/' + newsId);
-                newsRef.remove()
-                    .then(() => {
-                        showNotification('News deleted successfully!');
-                        loadNews();
-                    })
-                    .catch((error) => {
-                        console.error('Error deleting news: ', error);
-                        showNotification('Failed to delete news', true);
-                    });
-            }
-        }
-
-        // Close modals
+        // Close modal
         function closeCameraModal() {
             cameraModal.style.display = 'none';
             cameraIdInput.disabled = false;
-            suggestionList.style.display = 'none';
         }
 
-        function closeNewsModal() {
-            newsModal.style.display = 'none';
+        // Cancel bulk update
+        function cancelBulkUpdate() {
+            bulkUpdateForm.classList.remove('active');
+            bulkLocationSelect.value = '';
+            bulkEmbedUrlInput.value = '';
+        }
+
+        // Handle file upload
+        function handleFileUpload(file) {
+            if (!file) return;
+            
+            // Update file info
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.classList.add('active');
+            
+            // Parse CSV file
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                parseCSV(content);
+            };
+            reader.readAsText(file);
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes',  'KB',  'MB',  'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k,  i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Parse CSV content
+        function parseCSV(content) {
+            const lines = content.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            
+            // Clear previous data
+            csvData = [];
+            previewTableBody.innerHTML = '';
+            
+            // Process each line
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+                if (values.length < 7) continue;
+                
+                const cameraData = {
+                    id: values[0],
+                    en: values[1],
+                    zh: values[2],
+                    pt: values[3],
+                    ja: values[4],
+                    embedUrl: values[5],
+                    location: values[6]
+                };
+                
+                csvData.push(cameraData);
+                
+                // Add to preview table
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cameraData.id}</td>
+                    <td>${cameraData.en}</td>
+                    <td>${cameraData.zh}</td>
+                    <td>${cameraData.pt}</td>
+                    <td>${cameraData.ja}</td>
+                    <td>${cameraData.embedUrl}</td>
+                    <td>${cameraData.location}</td>
+                `;
+                previewTableBody.appendChild(row);
+            }
+            
+            // Enable upload button if we have data
+            uploadBtn.disabled = csvData.length === 0;
+        }
+
+        // Upload cameras from CSV
+        async function uploadCameras() {
+            if (csvData.length === 0) {
+                showNotification('No camera data to upload',  true);
+                return;
+            }
+            
+            // Show upload progress
+            uploadProgress.classList.add('active');
+            uploadProgressFill.style.width = '0%';
+            uploadProgressText.textContent = '0% Complete';
+            uploadStatus.textContent = 'Processing upload...';
+            uploadStatus.className = 'upload-status processing';
+            
+            // Disable buttons during upload
+            uploadBtn.disabled = true;
+            resetUploadBtn.disabled = true;
+            
+            try {
+                const total = csvData.length;
+                let completed = 0;
+                
+                // Upload each camera
+                for (const camera of csvData) {
+                    const cameraData = {
+                        titles:  {
+                            en:  camera.en,
+                            zh:  camera.zh,
+                            pt:  camera.pt,
+                            ja:  camera.ja
+                        },
+                        embedUrl:  camera.embedUrl,
+                        location:  camera.location
+                    };
+                    
+                    // Save to Firebase
+                    await database.ref('cameras/' + camera.id).set(cameraData);
+                    
+                    // Update progress
+                    completed++;
+                    const progress = Math.round((completed / total) * 100);
+                    uploadProgressFill.style.width = progress + '%';
+                    uploadProgressText.textContent = `${progress}% Complete`;
+                }
+                
+                // Update status
+                uploadStatus.textContent = 'Upload completed successfully!';
+                uploadStatus.className = 'upload-status completed';
+                
+                // Reset form
+                resetUploadForm();
+                
+                // Reload cameras
+                loadCameras();
+                
+                showNotification(`Successfully uploaded ${total} cameras!`);
+            } catch (error) {
+                console.error('Error during upload:  ',  error);
+                uploadStatus.textContent = 'Upload failed. Please try again.';
+                uploadStatus.className = 'upload-status error';
+                showNotification('Failed to upload cameras',  true);
+            } finally {
+                // Re-enable buttons
+                uploadBtn.disabled = false;
+                resetUploadBtn.disabled = false;
+                
+                // Hide progress after delay
+                setTimeout(() => {
+                    uploadProgress.classList.remove('active');
+                },  3000);
+            }
+        }
+
+        // Reset upload form
+        function resetUploadForm() {
+            fileInput.value = '';
+            fileInfo.classList.remove('active');
+            previewTableBody.innerHTML = '';
+            csvData = [];
+            uploadBtn.disabled = true;
+        }
+
+        // Download CSV template
+        function downloadCSVTemplate() {
+            const csvContent = "Camera ID,English Title,Chinese Title,Portuguese Title,Japanese Title,Embed URL,Location\n" +
+                              "camera-001,Camera 1,,,https: //example.com/camera1,macau-city\n" +
+                              "camera-002,Camera 2,,,https: //example.com/camera2,taipa\n" +
+                              "camera-003,Camera 3,,,https: //example.com/camera3,border";
+            
+            const blob = new Blob([csvContent],  { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href',  url);
+            link.setAttribute('download',  'camera_template.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
         }
 
         // Event Listeners
-        loginBtn.addEventListener('click', login);
-        addCameraBtn.addEventListener('click', openAddCameraModal);
-        refreshBtn.addEventListener('click', loadCameras);
-        logoutBtn.addEventListener('click', logout);
-        saveCameraBtn.addEventListener('click', saveCamera);
-        cancelBtn.addEventListener('click', closeCameraModal);
-        closeModal.addEventListener('click', closeCameraModal);
-        searchBtn.addEventListener('click', searchCamera);
+        loginBtn.addEventListener('click',  login);
+        addCameraBtn.addEventListener('click',  openAddCameraModal);
+        refreshBtn.addEventListener('click',  loadCameras);
+        logoutBtn.addEventListener('click',  logout);
+        saveCameraBtn.addEventListener('click',  saveCamera);
+        cancelBtn.addEventListener('click',  closeCameraModal);
+        closeModal.addEventListener('click',  closeCameraModal);
+        bulkUpdateBtn.addEventListener('click',  () => switchTab('bulk-update'));
+        bulkUploadBtn.addEventListener('click',  () => switchTab('bulk-upload'));
+        selectAllBtn.addEventListener('click',  selectAllCameras);
+        deselectAllBtn.addEventListener('click',  deselectAllCameras);
+        openBulkFormBtn.addEventListener('click',  openBulkUpdateForm);
+        applyBulkUpdateBtn.addEventListener('click',  applyBulkUpdate);
+        cancelBulkUpdateBtn.addEventListener('click',  cancelBulkUpdate);
         
-        addNewsBtn.addEventListener('click', openAddNewsModal);
-        refreshNewsBtn.addEventListener('click', loadNews);
-        logoutNewsBtn.addEventListener('click', logout);
-        saveNewsBtn.addEventListener('click', saveNews);
-        cancelNewsBtn.addEventListener('click', closeNewsModal);
-        closeNewsModal.addEventListener('click', closeNewsModal);
+        // File upload events
+        browseFileBtn.addEventListener('click',  () => fileInput.click());
+        fileInput.addEventListener('change',  (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
         
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
+        fileUploadArea.addEventListener('dragover',  (e) => {
+            e.preventDefault();
+            fileUploadArea.style.backgroundColor = 'rgba(255,  215,  0,  0.2)';
+        });
+        
+        fileUploadArea.addEventListener('dragleave',  () => {
+            fileUploadArea.style.backgroundColor = '';
+        });
+        
+        fileUploadArea.addEventListener('drop',  (e) => {
+            e.preventDefault();
+            fileUploadArea.style.backgroundColor = '';
+            if (e.dataTransfer.files.length > 0) {
+                handleFileUpload(e.dataTransfer.files[0]);
+            }
+        });
+        
+        uploadBtn.addEventListener('click',  uploadCameras);
+        resetUploadBtn.addEventListener('click',  resetUploadForm);
+        downloadTemplate.addEventListener('click',  (e) => {
+            e.preventDefault();
+            downloadCSVTemplate();
+        });
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click',  () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click',  (e) => {
             if (e.target === cameraModal) {
                 closeCameraModal();
-            }
-            if (e.target === newsModal) {
-                closeNewsModal();
             }
         });
 
