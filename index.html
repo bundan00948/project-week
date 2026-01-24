@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <!-- Elfsight Popup | Untitled Popup -->
-    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <script src="https://elfsightcdn.com/platform.js " async></script>
     <div class="elfsight-app-c9616ffe-955b-4c76-816a-7e105b98b486" data-elfsight-app-lazy></div>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Macau Traffic Monitor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="https://i.postimg.cc/XNyP9t3q/Screenshot-2026-01-21-at-23-44-24-removebg-preview.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+    <link rel="icon" href="https://i.postimg.cc/XNyP9t3q/Screenshot-2026-01-21-at-23-44-24-removebg-preview.png " type="image/x-icon">
     
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js "></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js "></script>
     
     <style>
         * {
@@ -25,7 +25,7 @@
         
         body {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
+                        url('https://img1.wsimg.com/isteam/getty/2154404610 ') no-repeat center center fixed;
             background-size: cover;
             color: #fff;
             min-height: 100vh;
@@ -789,7 +789,7 @@
 
         .news-popup-content {
             background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), 
-                        url('https://files.elfsightcdn.com/eafe4a4d-3436-495d-b748-5bdce62d911d/99ba84f1-f60b-46a6-a705-85a12f6be6b2/macau-transito-veiculo-carro-car-%E4%BA%A4%E9%80%9A-%E8%BB%8A-credit-by-conselho-executivo.jpg') no-repeat center center fixed;
+                        url('https://files.elfsightcdn.com/eafe4a4d-3436-495d-b748-5bdce62d911d/99ba84f1-f60b-46a6-a705-85a12f6be6b2/macau-transito-veiculo-carro-car-%E4%BA%A4%E9%80%9A-%E8%BB%8A-credit-by-conselho-executivo.jpg ') no-repeat center center fixed;
             background-size: cover;
             margin: 5% auto;
             padding: 30px;
@@ -925,7 +925,7 @@
                         <i class="fas fa-hand-pointer"></i> <span id="map-instruction">Drag to navigate the map</span>
                     </div>
                     <iframe 
-                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="100%" height="100%" style="border: 0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                     src="https://www.google.com/maps/embed?pb= !1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="100%" height="100%" style="border: 0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
 
                 <div class="info-panel">
@@ -1109,7 +1109,7 @@
             <div class="chat-box">
                 <h2><i class="fas fa-comments"></i> <span id="community-chat-title">Community Chat</span></h2>
                 <div class="elfsight-container">
-                    <iframe src="https://deadsimplechat.com/oJ199RRBK" width="100%" height="600px"></iframe>
+                    <iframe src="https://deadsimplechat.com/oJ199RRBK " width="100%" height="600px"></iframe>
                 </div>
             </div>
             
@@ -1228,7 +1228,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",  
             authDomain: "macau-traffic-501cb.firebaseapp.com",  
-            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",  
+            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com ",  
             projectId: "macau-traffic-501cb",  
             storageBucket: "macau-traffic-501cb.appspot.com",  
             messagingSenderId: "123456789012",  
@@ -2160,13 +2160,37 @@
                 'border': []
             };
             
-            // Categorize cameras
+            // Categorize cameras and extract camera numbers
             Object.keys(cameras).forEach(cameraId => {
                 const camera = cameras[cameraId];
+                // Extract camera number from the ID (e.g., "camera-1" -> 1, "camera-45" -> 45)
+                let cameraNum = 0;
+                
+                // Try to extract number from cameraId
+                const match = cameraId.match(/camera-(\d+)/i);
+                if (match) {
+                    cameraNum = parseInt(match[1]);
+                } else if (camera.number) {
+                    // Fallback to camera.number field if exists
+                    cameraNum = parseInt(camera.number);
+                } else {
+                    // Last resort: try to extract from any numeric part of the ID
+                    const numMatch = cameraId.match(/\d+/);
+                    if (numMatch) {
+                        cameraNum = parseInt(numMatch[0]);
+                    }
+                }
+                
                 groupedCameras[camera.location].push({
-                    id: cameraId,  
+                    id: cameraId,
+                    cameraNumber: cameraNum,
                     ...camera
                 });
+            });
+            
+            // Sort cameras by number within each group
+            Object.keys(groupedCameras).forEach(location => {
+                groupedCameras[location].sort((a, b) => a.cameraNumber - b.cameraNumber);
             });
             
             // Display cameras in their respective sections
@@ -2182,19 +2206,27 @@
                 let html = '<div class="camera-grid">';
                 
                 camerasList.forEach(camera => {
-                    // Get translated title based on current language from Firebase data
-                    let cameraTitle = camera.titles.en; // default to English
-                    if (currentLang === 'zh' && camera.titles.zh) {
+                    // Get translated title based on current language from translation keys
+                    const translationKey = `camera-title-${camera.cameraNumber}`;
+                    let cameraTitle = camera.titles?.en || camera.title || `Camera ${camera.cameraNumber}`;
+                    
+                    // Use translations if available
+                    if (window.translations && window.translations[currentLang] && window.translations[currentLang][translationKey]) {
+                        cameraTitle = window.translations[currentLang][translationKey];
+                    } else if (currentLang === 'zh' && camera.titles?.zh) {
                         cameraTitle = camera.titles.zh;
-                    } else if (currentLang === 'pt' && camera.titles.pt) {
+                    } else if (currentLang === 'pt' && camera.titles?.pt) {
                         cameraTitle = camera.titles.pt;
-                    } else if (currentLang === 'ja' && camera.titles.ja) {
+                    } else if (currentLang === 'ja' && camera.titles?.ja) {
                         cameraTitle = camera.titles.ja;
                     }
                     
+                    // Add camera number to the title
+                    const displayTitle = `${camera.cameraNumber}. ${cameraTitle}`;
+                    
                     html += `
-                        <div class="camera-item">
-                            <div class="camera-title">${cameraTitle}</div>
+                        <div class="camera-item" data-camera-id="${camera.id}">
+                            <div class="camera-title">${displayTitle}</div>
                             <div class="camera-container">
                                 <iframe src="${camera.embedUrl}" allowfullscreen></iframe>
                             </div>
@@ -2306,8 +2338,200 @@
             
             container.innerHTML = html;
         }
+        
+        // Make translations available globally for displayCameras function
+        window.translations = {
+            en: {
+                "camera-title-1": "1. Tunnel da Penha towards Largo do Governor Vasco Rocha Vieira (Reservoir)",            
+                "camera-title-2": "2. Tunnel da Penha towards Rua do Campo",            
+                "camera-title-3": "3. Mercado da Rua do Aljube",            
+                "camera-title-4": "4. Avenida do Conselheiro Borja and Rua do Campo Intersection",            
+                "camera-title-5": "5. Avenida do Conselheiro Borja",            
+                "camera-title-6": "6. Avenida de Venceslau de Morais",            
+                "camera-title-7": "7. Inner Harbour",            
+                "camera-title-8": "8. Rua Nova da Areia Preta",            
+                "camera-title-9": "9. Praça de Tap Seac",            
+                "camera-title-10": "10. Praça do Vasco Rocha Vieira",            
+                "camera-title-11": "11. Blood Donation Centre",            
+                "camera-title-12": "12. Praça da Nave Desportiva",            
+                "camera-title-13": "13. Praça de Ferreira do Amaral",            
+                "camera-title-14": "14. Avenida do Infante D. Henrique and Avenida do Dr. Rodrigo Rodrigues Intersection",            
+                "camera-title-15": "15. Rua dos Mercadores / Avenida da Praia Grande Intersection",            
+                "camera-title-16": "16. Rua dos Mercadores",            
+                "camera-title-17": "17. Haiwan Garden",            
+                "camera-title-18": "18. Macau International Airport",            
+                "camera-title-19": "19. Estrada do Istmo Circular Intersection",            
+                "camera-title-20": "20. Cotai Strip",            
+                "camera-title-21": "21. Cotai Strip 2 / Estrada do Istmo",            
+                "camera-title-22": "22. Avenida da Amizade",            
+                "camera-title-23": "23. Ponte da Amizade near North Bay Entrance Intersection",            
+                "camera-title-24": "24. Ponte da Amizade towards Taipa",            
+                "camera-title-25": "25. Ponte da Amizade towards Macau",            
+                "camera-title-26": "26. Ponte de Sai Van towards Macau",            
+                "camera-title-27": "27. Ponte de Sai Van towards Taipa (High)",            
+                "camera-title-28": "28. Ponte de Sai Van towards Macau (High)",            
+                "camera-title-29": "29. Macau Bridge Entrance (Macau)",            
+                "camera-title-30": "30. Macau Bridge towards Taipa",            
+                "camera-title-31": "31. Macau Bridge towards Macau",            
+                "camera-title-32": "32. Tunnel da Portas do Cerco",            
+                "camera-title-33": "33. Avenida da Portas do Cerco",            
+                "camera-title-34": "34. Qingmao Port (A)",            
+                "camera-title-35": "35. Qingmao Port (B)",            
+                "camera-title-36": "36. Outer Harbour Ferry Terminal (A)",            
+                "camera-title-37": "37. Outer Harbour Ferry Terminal (B)",            
+                "camera-title-38": "38. Hengqin Port (A)",            
+                "camera-title-39": "39. Hengqin Port (B)",            
+                "camera-title-40": "40. Hengqin Port (C)",            
+                "camera-title-41": "41. Hengqin Port (D)",            
+                "camera-title-42": "42. Hong Kong-Zhuhai-Macau Bridge to Zhuhai",            
+                "camera-title-43": "43. Hong Kong-Zhuhai-Macau Bridge to Macau",            
+                "camera-title-44": "44. Hong Kong-Zhuhai-Macau Bridge to Passenger Drop-off Platform",            
+                "camera-title-45": "45. Hong Kong-Zhuhai-Macau Bridge (Macau Entry)"
+            },
+            zh: {
+                "camera-title-1": "1. 松山隧道向羅理基（水塘）",            
+                "camera-title-2": "2. 松山隧道向高士德",            
+                "camera-title-3": "3. 紅街市",            
+                "camera-title-4": "4. 提督馬路與高士德大馬路交界",            
+                "camera-title-5": "5. 提督馬路",            
+                "camera-title-6": "6. 慕拉士大馬路",            
+                "camera-title-7": "7. 內港",            
+                "camera-title-8": "8. 黑沙環新街",            
+                "camera-title-9": "9. 塔石廣場",            
+                "camera-title-10": "10. 宋玉生廣場",            
+                "camera-title-11": "11. 捐血中心",            
+                "camera-title-12": "12. 南灣湖廣場",            
+                "camera-title-13": "13. 亚马喇前地",            
+                "camera-title-14": "14. 殷皇子大馬路與葡京路交界",            
+                "camera-title-15": "15. 新马路 / 南湾马路交界",            
+                "camera-title-16": "16. 新馬路",            
+                "camera-title-17": "17. 海灣花園",            
+                "camera-title-18": "18. 澳門國際機場",            
+                "camera-title-19": "19. 路氹連貫公路圓形地",            
+                "camera-title-20": "20. 金光大道",            
+                "camera-title-21": "21. 金光大道 2 / 路氹連貫公路",            
+                "camera-title-22": "22. 友誼馬路",            
+                "camera-title-23": "23. 友誼大橋近北安入口交匯處",            
+                "camera-title-24": "24. 友谊大桥向氹仔",            
+                "camera-title-25": "25. 友誼大橋向澳门",            
+                "camera-title-26": "26. 西灣大橋向澳门",            
+                "camera-title-27": "27. 西灣大橋向氹仔（高处）",            
+                "camera-title-28": "28. 西灣大橋向澳门（高处）",            
+                "camera-title-29": "29. 澳門大橋入口（澳门）",            
+                "camera-title-30": "30. 澳門大橋向氹仔",            
+                "camera-title-31": "31. 澳門大橋向澳门",            
+                "camera-title-32": "32. 關閘隧道",            
+                "camera-title-33": "33. 關閘大馬路",            
+                "camera-title-34": "34. 青茂口岸（A）",            
+                "camera-title-35": "35. 青茂口岸（B）",            
+                "camera-title-36": "36. 外港客運碼頭（A）",            
+                "camera-title-37": "37. 外港客運碼頭（B）",            
+                "camera-title-38": "38. 橫琴口岸（A）",            
+                "camera-title-39": "39. 橫琴口岸（B）",            
+                "camera-title-40": "40. 橫琴口岸（C）",            
+                "camera-title-41": "41. 橫琴口岸（D）",            
+                "camera-title-42": "42. 港珠澳大橋往珠海",            
+                "camera-title-43": "43. 港珠澳大橋往澳門",            
+                "camera-title-44": "44. 港珠澳大橋往送客平台",            
+                "camera-title-45": "45. 港珠澳大橋（澳門入境）"
+            },
+            pt: {
+                "camera-title-1": "1. Túnel da Penha em direção ao Largo do Governador Vasco Rocha Vieira (Reservatório)",            
+                "camera-title-2": "2. Túnel da Penha em direção à Rua do Campo",            
+                "camera-title-3": "3. Mercado da Rua do Aljube",            
+                "camera-title-4": "4. Interseção da Avenida do Conselheiro Borja e Rua do Campo",            
+                "camera-title-5": "5. Avenida do Conselheiro Borja",            
+                "camera-title-6": "6. Avenida de Venceslau de Morais",            
+                "camera-title-7": "7. Porto Interior",            
+                "camera-title-8": "8. Rua Nova da Areia Preta",            
+                "camera-title-9": "9. Praça de Tap Seac",            
+                "camera-title-10": "10. Praça do Vasco Rocha Vieira",            
+                "camera-title-11": "11. Centro de Doação de Sangue",            
+                "camera-title-12": "12. Praça da Nave Desportiva",            
+                "camera-title-13": "13. Praça de Ferreira do Amaral",            
+                "camera-title-14": "14. Interseção da Avenida do Infante D. Henrique e Avenida do Dr. Rodrigo Rodrigues",            
+                "camera-title-15": "15. Interseção da Rua dos Mercadores / Avenida da Praia Grande",            
+                "camera-title-16": "16. Rua dos Mercadores",            
+                "camera-title-17": "17. Jardim Haiwan",            
+                "camera-title-18": "18. Aeroporto Internacional de Macau",            
+                "camera-title-19": "19. Interseção Circular da Estrada do Istmo",            
+                "camera-title-20": "20. Faixa de Cotai",            
+                "camera-title-21": "21. Faixa de Cotai 2 / Estrada do Istmo",            
+                "camera-title-22": "22. Avenida da Amizade",            
+                "camera-title-23": "23. Ponte da Amizade perto da Interseção da Entrada da Baía Norte",            
+                "camera-title-24": "24. Ponte da Amizade em direção a Taipa",            
+                "camera-title-25": "25. Ponte da Amizade em direção a Macau",            
+                "camera-title-26": "26. Ponte de Sai Van em direção a Macau",            
+                "camera-title-27": "27. Ponte de Sai Van em direção a Taipa (Alto)",            
+                "camera-title-28": "28. Ponte de Sai Van em direção a Macau (Alto)",            
+                "camera-title-29": "29. Entrada da Ponte de Macau (Macau)",            
+                "camera-title-30": "30. Ponte de Macau em direção a Taipa",            
+                "camera-title-31": "31. Ponte de Macau em direção a Macau",            
+                "camera-title-32": "32. Túnel da Portas do Cerco",            
+                "camera-title-33": "33. Avenida da Portas do Cerco",            
+                "camera-title-34": "34. Porto Qingmao (A)",            
+                "camera-title-35": "35. Porto Qingmao (B)",            
+                "camera-title-36": "36. Terminal de Ferry do Porto Exterior (A)",            
+                "camera-title-37": "37. Terminal de Ferry do Porto Exterior (B)",            
+                "camera-title-38": "38. Porto de Hengqin (A)",            
+                "camera-title-39": "39. Porto de Hengqin (B)",            
+                "camera-title-40": "40. Porto de Hengqin (C)",            
+                "camera-title-41": "41. Porto de Hengqin (D)",            
+                "camera-title-42": "42. Ponte Hong Kong-Zhuhai-Macau para Zhuhai",            
+                "camera-title-43": "43. Ponte Hong Kong-Zhuhai-Macau para Macau",            
+                "camera-title-44": "44. Ponte Hong Kong-Zhuhai-Macau para Plataforma de Entrega de Passageiros",            
+                "camera-title-45": "45. Ponte Hong Kong-Zhuhai-Macau (Entrada Macau)"
+            },
+            ja: {
+                "camera-title-1": "1. ペニャトンネル ヴァスコ・ロチャ・ヴィエイラ知事広場方面（貯水池）",            
+                "camera-title-2": "2. ペニャトンネル ルア・ド・カンプ方面",            
+                "camera-title-3": "3. アルジュベ通り市場",            
+                "camera-title-4": "4. コンセレイロ・ボルジャ大通りとルア・ド・カンプの交差点",            
+                "camera-title-5": "5. コンセレイロ・ボルジャ大通り",            
+                "camera-title-6": "6. ベンセスラウ・デ・モライス大通り",            
+                "camera-title-7": "7. 内港",            
+                "camera-title-8": "8. アレイア・プレタ新街",            
+                "camera-title-9": "9. タップ・セアック広場",            
+                "camera-title-10": "10. ヴァスコ・ロチャ・ヴィエイラ広場",            
+                "camera-title-11": "11. 献血センター",            
+                "camera-title-12": "12. ナヴェ・デスポーティヴァ広場",            
+                "camera-title-13": "13. フェレイラ・ド・アマラル広場",            
+                "camera-title-14": "14. インファンテ・ドン・エンリケ大通りとロドリゴ・ロドリゲス医師大通りの交差点",            
+                "camera-title-15": "15. ルア・ドス・メルカドーレスとプラヤ・グランデ大通りの交差点",            
+                "camera-title-16": "16. ルア・ドス・メルカドーレス",            
+                "camera-title-17": "17. ハイワン・ガーデン",            
+                "camera-title-18": "18. マカオ国際空港",            
+                "camera-title-19": "19. イストモ環状道路交差点",            
+                "camera-title-20": "20. コータイ・ストリップ",            
+                "camera-title-21": "21. コータイ・ストリップ2 / イストモ道路",            
+                "camera-title-22": "22. アミザデ大通り",            
+                "camera-title-23": "23. 北湾入口交差点付近のアミザデ橋",            
+                "camera-title-24": "24. タージャ方面のアミザデ橋",            
+                "camera-title-25": "25. マカオ方面のアミザデ橋",            
+                "camera-title-26": "26. マカオ方面のサイヴァン橋",            
+                "camera-title-27": "27. タージャ方面のサイヴァン橋（高所）",            
+                "camera-title-28": "28. マカオ方面のサイヴァン橋（高所）",            
+                "camera-title-29": "29. マカオ橋入口（マカオ）",            
+                "camera-title-30": "30. タージャ方面のマカオ橋",            
+                "camera-title-31": "31. マカオ方面のマカオ橋",            
+                "camera-title-32": "32. ポルタス・ド・セルコトンネル",            
+                "camera-title-33": "33. ポルタス・ド・セルコ大通り",            
+                "camera-title-34": "34. 青茂ポート（A）",            
+                "camera-title-35": "35. 青茂ポート（B）",            
+                "camera-title-36": "36. 外港フェリー乗り場（A）",            
+                "camera-title-37": "37. 外港フェリー乗り場（B）",            
+                "camera-title-38": "38. 横琴ポート（A）",            
+                "camera-title-39": "39. 横琴ポート（B）",            
+                "camera-title-40": "40. 横琴ポート（C）",            
+                "camera-title-41": "41. 横琴ポート（D）",            
+                "camera-title-42": "42. 香港・珠海・マカオ橋 珠海行き",            
+                "camera-title-43": "43. 香港・珠海・マカオ橋 マカオ行き",            
+                "camera-title-44": "44. 香港・珠海・マカオ橋 送客プラットフォーム行き",            
+                "camera-title-45": "45. 香港・珠海・マカオ橋（マカオ入国）"
+            }
+        };
     </script>
     
-    <script async src="https://iframely.net/embed.js"></script>
+    <script async src="https://iframely.net/embed.js "></script>
 </body>
 </html>
