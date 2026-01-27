@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,    initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,   initial-scale=1.0">
     <title>Macau Traffic Monitor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://i.postimg.cc/XNyP9t3q/Screenshot-2026-01-21-at-23-44-24-removebg-preview.png" type="image/x-icon">
@@ -14,911 +14,911 @@
     <style>
         /* All existing CSS styles remain unchanged */
         * {
-            margin:    0;
-            padding:    0;
-            box-sizing:    border-box;
-            font-family:    'Segoe UI',    Tahoma,    Geneva,    Verdana,    sans-serif;
+            margin:   0;
+            padding:   0;
+            box-sizing:   border-box;
+            font-family:   'Segoe UI',   Tahoma,   Geneva,   Verdana,   sans-serif;
         }
         
         body {
-            background:    linear-gradient(rgba(0,    0,    0,    0.7),    rgba(0,    0,    0,    0.7)),    
+            background:   linear-gradient(rgba(0,   0,   0,   0.7),   rgba(0,   0,   0,   0.7)),   
                         url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
-            background-size:    cover;
-            color:    #fff;
-            min-height:    100vh;
-            padding:    20px;
-            overflow-x:    hidden;
+            background-size:   cover;
+            color:   #fff;
+            min-height:   100vh;
+            padding:   20px;
+            overflow-x:   hidden;
         }
         
         .container {
-            max-width:    1400px;
-            margin:    0 auto;
+            max-width:   1400px;
+            margin:   0 auto;
         }
         
         header {
-            text-align:    center;
-            padding:    20px 0;
-            margin-bottom:    20px;
-            background:    rgba(0,    0,    0,    0.6);
-            border-radius:    15px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
-            position:    relative;
+            text-align:   center;
+            padding:   20px 0;
+            margin-bottom:   20px;
+            background:   rgba(0,   0,   0,   0.6);
+            border-radius:   15px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
+            position:   relative;
         }
         
         /* Language Selector Styles */
         .language-selector {
-            position:    absolute;
-            top:    20px;
-            right:    20px;
-            z-index:    1000;
+            position:   absolute;
+            top:   20px;
+            right:   20px;
+            z-index:   1000;
         }
         
         .lang-btn {
-            background:    rgba(255,    215,    0,    0.8);
-            color:    #000;
-            border:    none;
-            padding:    8px 15px;
-            border-radius:    20px;
-            cursor:    pointer;
-            font-weight:    bold;
-            display:    flex;
-            align-items:    center;
-            gap:    5px;
-            transition:    all 0.3s ease;
+            background:   rgba(255,   215,   0,   0.8);
+            color:   #000;
+            border:   none;
+            padding:   8px 15px;
+            border-radius:   20px;
+            cursor:   pointer;
+            font-weight:   bold;
+            display:   flex;
+            align-items:   center;
+            gap:   5px;
+            transition:   all 0.3s ease;
         }
         
-        .lang-btn:   hover {
-            background:    rgba(255,    215,    0,    1);
-            transform:    translateY(-2px);
+        .lang-btn:  hover {
+            background:   rgba(255,   215,   0,   1);
+            transform:   translateY(-2px);
         }
         
         .lang-dropdown {
-            position:    absolute;
-            top:    100%;
-            right:    0;
-            background:    rgba(0,    0,    0,    0.9);
-            border-radius:    10px;
-            padding:    10px;
-            margin-top:    5px;
-            display:    none;
-            min-width:    150px;
-            box-shadow:    0 5px 15px rgba(0,    0,    0,    0.3);
+            position:   absolute;
+            top:   100%;
+            right:   0;
+            background:   rgba(0,   0,   0,   0.9);
+            border-radius:   10px;
+            padding:   10px;
+            margin-top:   5px;
+            display:   none;
+            min-width:   150px;
+            box-shadow:   0 5px 15px rgba(0,   0,   0,   0.3);
         }
         
         .lang-dropdown.show {
-            display:    block;
+            display:   block;
         }
         
         .lang-option {
-            padding:    8px 12px;
-            color:    #fff;
-            text-decoration:    none;
-            display:    block;
-            border-radius:    5px;
-            transition:    background 0.3s;
+            padding:   8px 12px;
+            color:   #fff;
+            text-decoration:   none;
+            display:   block;
+            border-radius:   5px;
+            transition:   background 0.3s;
         }
         
-        .lang-option:   hover {
-            background:    rgba(255,    215,    0,    0.3);
+        .lang-option:  hover {
+            background:   rgba(255,   215,   0,   0.3);
         }
         
         .logo-container {
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            gap:    15px;
-            margin-bottom:    10px;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            gap:   15px;
+            margin-bottom:   10px;
         }
         
         .logo {
-            width:    80px;
-            height:    80px;
-            background:    linear-gradient(45deg,    #ffd700,    #ff8c00);
-            border-radius:    50%;
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            box-shadow:    0 0 20px rgba(255,    215,    0,    0.5);
+            width:   80px;
+            height:   80px;
+            background:   linear-gradient(45deg,   #ffd700,   #ff8c00);
+            border-radius:   50%;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            box-shadow:   0 0 20px rgba(255,   215,   0,   0.5);
         }
         
         .logo i {
-            font-size:    40px;
-            color:    #8b0000;
+            font-size:   40px;
+            color:   #8b0000;
         }
         
         h1 {
-            font-size:    2.8rem;
-            text-shadow:    0 2px 4px rgba(0,    0,    0,    0.5);
-            margin-bottom:    5px;
+            font-size:   2.8rem;
+            text-shadow:   0 2px 4px rgba(0,   0,   0,   0.5);
+            margin-bottom:   5px;
         }
         
         .subtitle {
-            font-size:    1.2rem;
-            opacity:    0.9;
-            max-width:    600px;
-            margin:    0 auto 20px;
+            font-size:   1.2rem;
+            opacity:   0.9;
+            max-width:   600px;
+            margin:   0 auto 20px;
         }
         
         .nav-tabs {
-            display:    flex;
-            justify-content:    center;
-            gap:    10px;
-            margin:    20px 0;
-            flex-wrap:    wrap;
+            display:   flex;
+            justify-content:   center;
+            gap:   10px;
+            margin:   20px 0;
+            flex-wrap:   wrap;
         }
         
         .nav-tab {
-            padding:    12px 25px;
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    30px;
-            cursor:    pointer;
-            transition:    all 0.3s ease;
-            font-weight:    bold;
-            border:    1px solid rgba(255,    255,    255,    0.2);
+            padding:   12px 25px;
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   30px;
+            cursor:   pointer;
+            transition:   all 0.3s ease;
+            font-weight:   bold;
+            border:   1px solid rgba(255,   255,   255,   0.2);
         }
         
-        .nav-tab:   hover {
-            background:    rgba(255,    255,    255,    0.2);
-            transform:    translateY(-3px);
+        .nav-tab:  hover {
+            background:   rgba(255,   255,   255,   0.2);
+            transform:   translateY(-3px);
         }
         
         .nav-tab.active {
-            background:    #ffd700;
-            color:    #000;
+            background:   #ffd700;
+            color:   #000;
         }
         
         .page {
-            display:    none;
-            animation:    fadeIn 0.5s ease;
+            display:   none;
+            animation:   fadeIn 0.5s ease;
         }
         
         .page.active {
-            display:    block;
+            display:   block;
         }
         
         @keyframes fadeIn {
-            from { opacity:    0; transform:    translateY(20px); }
-            to { opacity:    1; transform:    translateY(0); }
+            from { opacity:   0; transform:   translateY(20px); }
+            to { opacity:   1; transform:   translateY(0); }
         }
         
         .dashboard {
-            display:    flex;
-            flex-wrap:    wrap;
-            gap:    20px;
-            margin-bottom:    30px;
+            display:   flex;
+            flex-wrap:   wrap;
+            gap:   20px;
+            margin-bottom:   30px;
         }
         
         .map-container {
-            flex:    3;
-            min-width:    300px;
-            height:    700px;
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            overflow:    hidden;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
-            position:    relative;
+            flex:   3;
+            min-width:   300px;
+            height:   700px;
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            overflow:   hidden;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
+            position:   relative;
         }
         
         #map {
-            width:    100%;
-            height:    100%;
-            border-radius:    15px;
-            border:    none;
+            width:   100%;
+            height:   100%;
+            border-radius:   15px;
+            border:   none;
         }
         
         .info-panel {
-            flex:    1;
-            min-width:    250px;
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            padding:    20px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            flex:   1;
+            min-width:   250px;
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            padding:   20px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .panel-title {
-            font-size:    1.5rem;
-            margin-bottom:    20px;
-            text-align:    center;
-            color:    #ffd700;
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            gap:    10px;
+            font-size:   1.5rem;
+            margin-bottom:   20px;
+            text-align:   center;
+            color:   #ffd700;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            gap:   10px;
         }
         
         .traffic-status {
-            display:    flex;
-            justify-content:    space-between;
-            margin-bottom:    25px;
-            padding:    15px;
-            background:    rgba(0,    0,    0,    0.2);
-            border-radius:    10px;
+            display:   flex;
+            justify-content:   space-between;
+            margin-bottom:   25px;
+            padding:   15px;
+            background:   rgba(0,   0,   0,   0.2);
+            border-radius:   10px;
         }
         
         .status-item {
-            text-align:    center;
+            text-align:   center;
         }
         
         .status-value {
-            font-size:    1.8rem;
-            font-weight:    bold;
-            margin:    5px 0;
+            font-size:   1.8rem;
+            font-weight:   bold;
+            margin:   5px 0;
         }
         
         .status-label {
-            font-size:    0.9rem;
-            opacity:    0.8;
+            font-size:   0.9rem;
+            opacity:   0.8;
         }
         
-        .congestion-high { color:    #ff4d4d; }
-        .congestion-medium { color:    #ffcc00; }
-        .congestion-low { color:    #4dff4d; }
+        .congestion-high { color:   #ff4d4d; }
+        .congestion-medium { color:   #ffcc00; }
+        .congestion-low { color:   #4dff4d; }
         
         .waiting-times {
-            margin-top:    20px;
+            margin-top:   20px;
         }
         
         .waiting-time-item {
-            display:    flex;
-            justify-content:    space-between;
-            padding:    12px 0;
-            border-bottom:    1px solid rgba(255,    255,    255,    0.1);
-            transition:    all 0.3s ease;
+            display:   flex;
+            justify-content:   space-between;
+            padding:   12px 0;
+            border-bottom:   1px solid rgba(255,   255,   255,   0.1);
+            transition:   all 0.3s ease;
         }
         
-        .waiting-time-item:   hover {
-            background:    rgba(255,    255,    255,    0.1);
-            padding-left:    10px;
+        .waiting-time-item:  hover {
+            background:   rgba(255,   255,   255,   0.1);
+            padding-left:   10px;
         }
         
-        .waiting-time-item:   last-child {
-            border-bottom:    none;
+        .waiting-time-item:  last-child {
+            border-bottom:   none;
         }
         
         .location-name {
-            display:    flex;
-            align-items:    center;
-            gap:    10px;
+            display:   flex;
+            align-items:   center;
+            gap:   10px;
         }
         
         .time-display {
-            font-weight:    bold;
+            font-weight:   bold;
         }
         
-        .time-low { color:    #4dff4d; }
-        .time-medium { color:    #ffcc00; }
-        .time-high { color:    #ff4d4d; }
-        .time-severe { color:    #9932cc; }
-        .time-closed { color:    #808080; }
+        .time-low { color:   #4dff4d; }
+        .time-medium { color:   #ffcc00; }
+        .time-high { color:   #ff4d4d; }
+        .time-severe { color:   #9932cc; }
+        .time-closed { color:   #808080; }
         
         .legend {
-            background:    rgba(0,    0,    0,    0.7);
-            padding:    10px;
-            border-radius:    8px;
-            margin-top:    20px;
+            background:   rgba(0,   0,   0,   0.7);
+            padding:   10px;
+            border-radius:   8px;
+            margin-top:   20px;
         }
         
         .legend-title {
-            font-weight:    bold;
-            margin-bottom:    8px;
-            color:    #ffd700;
+            font-weight:   bold;
+            margin-bottom:   8px;
+            color:   #ffd700;
         }
         
         .legend-item {
-            display:    flex;
-            align-items:    center;
-            margin-bottom:    5px;
-            font-size:    0.9rem;
+            display:   flex;
+            align-items:   center;
+            margin-bottom:   5px;
+            font-size:   0.9rem;
         }
         
         .legend-color {
-            width:    20px;
-            height:    20px;
-            border-radius:    3px;
-            margin-right:    10px;
+            width:   20px;
+            height:   20px;
+            border-radius:   3px;
+            margin-right:   10px;
         }
         
-        .legend-severe { background-color:    #9932cc; }
-        .legend-high { background-color:    #ff4d4d; }
-        .legend-medium { background-color:    #ffcc00; }
-        .legend-low { background-color:    #4dff4d; }
-        .legend-closed { background-color:    #808080; }
+        .legend-severe { background-color:   #9932cc; }
+        .legend-high { background-color:   #ff4d4d; }
+        .legend-medium { background-color:   #ffcc00; }
+        .legend-low { background-color:   #4dff4d; }
+        .legend-closed { background-color:   #808080; }
         
         .app-promo {
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            padding:    20px;
-            margin-top:    20px;
-            text-align:    center;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            padding:   20px;
+            margin-top:   20px;
+            text-align:   center;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .app-promo h2 {
-            color:    #ffd700;
-            margin-bottom:    15px;
+            color:   #ffd700;
+            margin-bottom:   15px;
         }
         
         .app-features {
-            display:    flex;
-            justify-content:    center;
-            gap:    20px;
-            margin:    20px 0;
-            flex-wrap:    wrap;
+            display:   flex;
+            justify-content:   center;
+            gap:   20px;
+            margin:   20px 0;
+            flex-wrap:   wrap;
         }
         
         .feature {
-            flex:    1;
-            min-width:    150px;
-            text-align:    center;
+            flex:   1;
+            min-width:   150px;
+            text-align:   center;
         }
         
         .feature i {
-            font-size:    2rem;
-            color:    #ffd700;
-            margin-bottom:    10px;
+            font-size:   2rem;
+            color:   #ffd700;
+            margin-bottom:   10px;
         }
         
         .app-buttons {
-            display:    flex;
-            justify-content:    center;
-            gap:    15px;
-            margin-top:    20px;
-            flex-wrap:    wrap;
+            display:   flex;
+            justify-content:   center;
+            gap:   15px;
+            margin-top:   20px;
+            flex-wrap:   wrap;
         }
         
         .app-btn {
-            display:    flex;
-            align-items:    center;
-            gap:    10px;
-            padding:    10px 20px;
-            border-radius:    30px;
-            background:    #000;
-            color:    #fff;
-            text-decoration:    none;
-            font-weight:    bold;
-            transition:    all 0.3s ease;
+            display:   flex;
+            align-items:   center;
+            gap:   10px;
+            padding:   10px 20px;
+            border-radius:   30px;
+            background:   #000;
+            color:   #fff;
+            text-decoration:   none;
+            font-weight:   bold;
+            transition:   all 0.3s ease;
         }
         
-        .app-btn:   hover {
-            transform:    translateY(-3px);
-            box-shadow:    0 5px 15px rgba(0,    0,    0,    0.3);
+        .app-btn:  hover {
+            transform:   translateY(-3px);
+            box-shadow:   0 5px 15px rgba(0,   0,   0,   0.3);
         }
         
         .app-btn.apple {
-            background:    #000;
+            background:   #000;
         }
         
         .app-btn.google {
-            background:    #34A853;
+            background:   #34A853;
         }
         
         footer {
-            text-align:    center;
-            padding:    20px;
-            margin-top:    20px;
-            font-size:    0.9rem;
-            opacity:    0.8;
-            background:    rgba(0,    0,    0,    0.6);
-            border-radius:    15px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            text-align:   center;
+            padding:   20px;
+            margin-top:   20px;
+            font-size:   0.9rem;
+            opacity:   0.8;
+            background:   rgba(0,   0,   0,   0.6);
+            border-radius:   15px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .map-instructions {
-            position:    absolute;
-            top:    10px;
-            right:    10px;
-            background:    rgba(0,    0,    0,    0.7);
-            padding:    10px;
-            border-radius:    5px;
-            font-size:    0.9rem;
-            z-index:    1000;
-            animation:    fadeOut 5s forwards;
+            position:   absolute;
+            top:   10px;
+            right:   10px;
+            background:   rgba(0,   0,   0,   0.7);
+            padding:   10px;
+            border-radius:   5px;
+            font-size:   0.9rem;
+            z-index:   1000;
+            animation:   fadeOut 5s forwards;
         }
         
         @keyframes fadeOut {
-            0% { opacity:    1; }
-            80% { opacity:    1; }
-            100% { opacity:    0; visibility:    hidden; }
+            0% { opacity:   1; }
+            80% { opacity:   1; }
+            100% { opacity:   0; visibility:   hidden; }
         }
         
-        @media (max-width:    768px) {
+        @media (max-width:   768px) {
             .dashboard {
-                flex-direction:    column;
+                flex-direction:   column;
             }
             
             h1 {
-                font-size:    2.2rem;
+                font-size:   2.2rem;
             }
             
             .map-container {
-                height:    400px;
-                min-width:    100%;
+                height:   400px;
+                min-width:   100%;
             }
             
             .nav-tabs {
-                flex-direction:    column;
-                align-items:    center;
+                flex-direction:   column;
+                align-items:   center;
             }
             
             .nav-tab {
-                width:    80%;
-                text-align:    center;
+                width:   80%;
+                text-align:   center;
             }
             
             .language-selector {
-                top:    10px;
-                right:    10px;
+                top:   10px;
+                right:   10px;
             }
             
             .traffic-status {
-                flex-direction:    column;
-                gap:    15px;
+                flex-direction:   column;
+                gap:   15px;
             }
         }
         
         .data-source {
-            display:    flex;
-            align-items:    center;
-            gap:    5px;
-            font-size:    0.8rem;
-            opacity:    0.7;
-            margin-top:    5px;
+            display:   flex;
+            align-items:   center;
+            gap:   5px;
+            font-size:   0.8rem;
+            opacity:   0.7;
+            margin-top:   5px;
         }
         
         .data-source i {
-            font-size:    0.7rem;
+            font-size:   0.7rem;
         }
         
         .loading {
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            gap:    10px;
-            padding:    10px;
-            color:    #ffd700;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            gap:   10px;
+            padding:   10px;
+            color:   #ffd700;
         }
         
         .spinner {
-            border:    2px solid rgba(255,    255,    255,    0.3);
-            border-radius:    50%;
-            border-top:    2px solid #ffd700;
-            width:    16px;
-            height:    16px;
-            animation:    spin 1s linear infinite;
+            border:   2px solid rgba(255,   255,   255,   0.3);
+            border-radius:   50%;
+            border-top:   2px solid #ffd700;
+            width:   16px;
+            height:   16px;
+            animation:   spin 1s linear infinite;
         }
         
         @keyframes spin {
-            0% { transform:    rotate(0deg); }
-            100% { transform:    rotate(360deg); }
+            0% { transform:   rotate(0deg); }
+            100% { transform:   rotate(360deg); }
         }
         
         .status-indicator {
-            display:    inline-block;
-            width:    10px;
-            height:    10px;
-            border-radius:    50%;
-            margin-left:    5px;
+            display:   inline-block;
+            width:   10px;
+            height:   10px;
+            border-radius:   50%;
+            margin-left:   5px;
         }
         
         .status-live {
-            background-color:    #4dff4d;
-            box-shadow:    0 0 5px #4dff4d;
+            background-color:   #4dff4d;
+            box-shadow:   0 0 5px #4dff4d;
         }
         
         .status-offline {
-            background-color:    #ff4d4d;
+            background-color:   #ff4d4d;
         }
         
         .current-time {
-            text-align:    center;
-            padding:    10px;
-            background:    rgba(0,    0,    0,    0.3);
-            border-radius:    8px;
-            margin-bottom:    15px;
-            font-size:    1.1rem;
+            text-align:   center;
+            padding:   10px;
+            background:   rgba(0,   0,   0,   0.3);
+            border-radius:   8px;
+            margin-bottom:   15px;
+            font-size:   1.1rem;
         }
         
         .median-time {
-            text-align:    center;
-            padding:    10px;
-            background:    rgba(0,    0,    0,    0.3);
-            border-radius:    8px;
-            margin-top:    15px;
-            font-size:    1.1rem;
-            font-weight:    bold;
+            text-align:   center;
+            padding:   10px;
+            background:   rgba(0,   0,   0,   0.3);
+            border-radius:   8px;
+            margin-top:   15px;
+            font-size:   1.1rem;
+            font-weight:   bold;
         }
         
         .median-value {
-            font-size:    1.3rem;
+            font-size:   1.3rem;
         }
         
         .additional-info {
-            display:    flex;
-            gap:    20px;
-            margin-top:    20px;
-            flex-wrap:    wrap;
+            display:   flex;
+            gap:   20px;
+            margin-top:   20px;
+            flex-wrap:   wrap;
         }
         
         .info-box {
-            flex:    1;
-            min-width:    250px;
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            padding:    20px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            flex:   1;
+            min-width:   250px;
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            padding:   20px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .info-box h3 {
-            color:    #ffd700;
-            margin-bottom:    15px;
-            display:    flex;
-            align-items:    center;
-            gap:    10px;
+            color:   #ffd700;
+            margin-bottom:   15px;
+            display:   flex;
+            align-items:   center;
+            gap:   10px;
         }
         
         .info-content {
-            line-height:    1.6;
+            line-height:   1.6;
         }
         
         .info-content ul {
-            padding-left:    20px;
+            padding-left:   20px;
         }
         
         .info-content li {
-            margin-bottom:    10px;
+            margin-bottom:   10px;
         }
         
         .camera-feeds {
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            padding:    20px;
-            margin-top:    20px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            padding:   20px;
+            margin-top:   20px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .camera-feeds h2 {
-            color:    #ffd700;
-            margin-bottom:    20px;
-            text-align:    center;
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            gap:    10px;
+            color:   #ffd700;
+            margin-bottom:   20px;
+            text-align:   center;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            gap:   10px;
         }
         
         .camera-grid {
-            display:    grid;
-            grid-template-columns:    repeat(auto-fill,    minmax(300px,    1fr));
-            gap:    20px;
+            display:   grid;
+            grid-template-columns:   repeat(auto-fill,   minmax(300px,   1fr));
+            gap:   20px;
         }
         
         .camera-item {
-            background:    rgba(0,    0,    0,    0.3);
-            border-radius:    10px;
-            padding:    15px;
+            background:   rgba(0,   0,   0,   0.3);
+            border-radius:   10px;
+            padding:   15px;
         }
         
         .camera-title {
-            font-size:    1.1rem;
-            margin-bottom:    10px;
-            text-align:    center;
-            color:    #ffd700;
+            font-size:   1.1rem;
+            margin-bottom:   10px;
+            text-align:   center;
+            color:   #ffd700;
         }
         
         .camera-container {
-            height:    200px;
-            border-radius:    8px;
-            overflow:    hidden;
+            height:   200px;
+            border-radius:   8px;
+            overflow:   hidden;
         }
         
         .camera-container iframe {
-            width:    100%;
-            height:    100%;
-            border:    none;
+            width:   100%;
+            height:   100%;
+            border:   none;
         }
         
-        @media (max-width:    768px) {
+        @media (max-width:   768px) {
             .camera-grid {
-                grid-template-columns:    1fr;
+                grid-template-columns:   1fr;
             }
         }
         
         .chat-box {
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            padding:    20px;
-            margin-top:    20px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            padding:   20px;
+            margin-top:   20px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
 
         .chat-box h2 {
-            color:    #ffd700;
-            margin-bottom:    20px;
-            text-align:    center;
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            gap:    10px;
+            color:   #ffd700;
+            margin-bottom:   20px;
+            text-align:   center;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            gap:   10px;
         }
         
         .content-section {
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    15px;
-            padding:    25px;
-            margin:    20px 0;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   15px;
+            padding:   25px;
+            margin:   20px 0;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .content-section h2 {
-            color:    #ffd700;
-            margin-bottom:    20px;
-            text-align:    center;
+            color:   #ffd700;
+            margin-bottom:   20px;
+            text-align:   center;
         }
         
         .content-section p {
-            margin-bottom:    15px;
-            line-height:    1.6;
+            margin-bottom:   15px;
+            line-height:   1.6;
         }
         
         /* Camera Tabs Styles */
         .camera-tabs {
-            display:    flex;
-            justify-content:    center;
-            gap:    10px;
-            margin:    20px 0;
-            flex-wrap:    wrap;
+            display:   flex;
+            justify-content:   center;
+            gap:   10px;
+            margin:   20px 0;
+            flex-wrap:   wrap;
         }
         
         .camera-tab {
-            padding:    10px 20px;
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    30px;
-            cursor:    pointer;
-            transition:    all 0.3s ease;
-            font-weight:    bold;
-            border:    1px solid rgba(255,    255,    255,    0.2);
+            padding:   10px 20px;
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   30px;
+            cursor:   pointer;
+            transition:   all 0.3s ease;
+            font-weight:   bold;
+            border:   1px solid rgba(255,   255,   255,   0.2);
         }
         
-        .camera-tab:   hover {
-            background:    rgba(255,    255,    255,    0.2);
-            transform:    translateY(-3px);
+        .camera-tab:  hover {
+            background:   rgba(255,   255,   255,   0.2);
+            transform:   translateY(-3px);
         }
         
         .camera-tab.active {
-            background:    #ffd700;
-            color:    #000;
+            background:   #ffd700;
+            color:   #000;
         }
         
         .camera-content {
-            display:    none;
+            display:   none;
         }
         
         .camera-content.active {
-            display:    block;
-            animation:    fadeIn 0.5s ease;
+            display:   block;
+            animation:   fadeIn 0.5s ease;
         }
         
         .camera-grid {
-            display:    grid;
-            grid-template-columns:    repeat(auto-fill,    minmax(300px,    1fr));
-            gap:    20px;
+            display:   grid;
+            grid-template-columns:   repeat(auto-fill,   minmax(300px,   1fr));
+            gap:   20px;
         }
         
         .camera-item {
-            background:    rgba(0,    0,    0,    0.3);
-            border-radius:    10px;
-            padding:    15px;
-            transition:    transform 0.3s ease;
+            background:   rgba(0,   0,   0,   0.3);
+            border-radius:   10px;
+            padding:   15px;
+            transition:   transform 0.3s ease;
         }
         
-        .camera-item:   hover {
-            transform:    translateY(-5px);
-            box-shadow:    0 5px 15px rgba(0,    0,    0,    0.3);
+        .camera-item:  hover {
+            transform:   translateY(-5px);
+            box-shadow:   0 5px 15px rgba(0,   0,   0,   0.3);
         }
         
         /* Bug fix indicator */
         .bug-fix-note {
-            background:    rgba(255,    215,    0,    0.2);
-            border:    1px solid rgba(255,    215,    0,    0.5);
-            border-radius:    8px;
-            padding:    15px;
-            margin:    20px 0;
-            text-align:    center;
-            font-size:    0.9rem;
+            background:   rgba(255,   215,   0,   0.2);
+            border:   1px solid rgba(255,   215,   0,   0.5);
+            border-radius:   8px;
+            padding:   15px;
+            margin:   20px 0;
+            text-align:   center;
+            font-size:   0.9rem;
         }
         
         /* Firebase status indicator */
         .firebase-status {
-            position:    fixed;
-            bottom:    20px;
-            right:    20px;
-            background:    rgba(0,    0,    0,    0.7);
-            padding:    10px 15px;
-            border-radius:    20px;
-            display:    flex;
-            align-items:    center;
-            gap:    8px;
-            font-size:    0.9rem;
-            z-index:    1000;
+            position:   fixed;
+            bottom:   20px;
+            right:   20px;
+            background:   rgba(0,   0,   0,   0.7);
+            padding:   10px 15px;
+            border-radius:   20px;
+            display:   flex;
+            align-items:   center;
+            gap:   8px;
+            font-size:   0.9rem;
+            z-index:   1000;
         }
         
         .status-dot {
-            width:    10px;
-            height:    10px;
-            border-radius:    50%;
-            background-color:    #ff4d4d;
+            width:   10px;
+            height:   10px;
+            border-radius:   50%;
+            background-color:   #ff4d4d;
         }
         
         .status-dot.connected {
-            background-color:    #4dff4d;
-            box-shadow:    0 0 8px #4dff4d;
+            background-color:   #4dff4d;
+            box-shadow:   0 0 8px #4dff4d;
         }
         
         /* News Styles */
         .news-popup {
-            display:    none;
-            position:    fixed;
-            z-index:    1001;
-            left:    0;
-            top:    0;
-            width:    100%;
-            height:    100%;
-            background-color:    rgba(0,    0,    0,    0.8);
+            display:   none;
+            position:   fixed;
+            z-index:   1001;
+            left:   0;
+            top:   0;
+            width:   100%;
+            height:   100%;
+            background-color:   rgba(0,   0,   0,   0.8);
         }
 
         .news-popup-content {
-            background:    linear-gradient(rgba(0,    0,    0,    0.9),    rgba(0,    0,    0,    0.9)),    
+            background:   linear-gradient(rgba(0,   0,   0,   0.9),   rgba(0,   0,   0,   0.9)),   
                         url('https://files.elfsightcdn.com/eafe4a4d-3436-495d-b748-5bdce62d911d/99ba84f1-f60b-46a6-a705-85a12f6be6b2/macau-transito-veiculo-carro-car-%E4%BA%A4%E9%80%9A-%E8%BB%8A-credit-by-conselho-executivo.jpg') no-repeat center center fixed;
-            background-size:    cover;
-            margin:    5% auto;
-            padding:    30px;
-            border-radius:    15px;
-            width:    80%;
-            max-width:    700px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.5);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
-            color:    #fff;
-            position:    relative;
+            background-size:   cover;
+            margin:   5% auto;
+            padding:   30px;
+            border-radius:   15px;
+            width:   80%;
+            max-width:   700px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.5);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
+            color:   #fff;
+            position:   relative;
         }
 
         .news-popup-content h2 {
-            color:    #ffd700;
-            margin-bottom:    20px;
-            text-align:    center;
+            color:   #ffd700;
+            margin-bottom:   20px;
+            text-align:   center;
         }
 
         .news-close {
-            color:    #aaa;
-            float:    right;
-            font-size:    28px;
-            font-weight:    bold;
-            cursor:    pointer;
-            position:    absolute;
-            right:    20px;
-            top:    15px;
+            color:   #aaa;
+            float:   right;
+            font-size:   28px;
+            font-weight:   bold;
+            cursor:   pointer;
+            position:   absolute;
+            right:   20px;
+            top:   15px;
         }
 
-        .news-close:   hover {
-            color:    #fff;
+        .news-close:  hover {
+            color:   #fff;
         }
 
         #popup-news-content {
-            margin:    20px 0;
-            line-height:    1.6;
-            max-height:    60vh;
-            overflow-y:    auto;
+            margin:   20px 0;
+            line-height:   1.6;
+            max-height:   60vh;
+            overflow-y:   auto;
         }
 
         #close-news-popup {
-            display:    block;
-            margin:    20px auto 0;
-            background:    #ffd700;
-            color:    #000;
-            border:    none;
-            padding:    10px 25px;
-            border-radius:    30px;
-            font-weight:    bold;
-            cursor:    pointer;
+            display:   block;
+            margin:   20px auto 0;
+            background:   #ffd700;
+            color:   #000;
+            border:   none;
+            padding:   10px 25px;
+            border-radius:   30px;
+            font-weight:   bold;
+            cursor:   pointer;
         }
 
         .news-item {
-            background:    rgba(255,    255,    255,    0.1);
-            border-radius:    10px;
-            padding:    20px;
-            margin-bottom:    20px;
-            box-shadow:    0 4px 15px rgba(0,    0,    0,    0.2);
+            background:   rgba(255,   255,   255,   0.1);
+            border-radius:   10px;
+            padding:   20px;
+            margin-bottom:   20px;
+            box-shadow:   0 4px 15px rgba(0,   0,   0,   0.2);
         }
 
         .news-item h3 {
-            color:    #ffd700;
-            margin-bottom:    10px;
-            display:    flex;
-            align-items:    center;
-            gap:    10px;
+            color:   #ffd700;
+            margin-bottom:   10px;
+            display:   flex;
+            align-items:   center;
+            gap:   10px;
         }
 
         .news-item .news-date {
-            font-size:    0.9rem;
-            opacity:    0.8;
-            margin-bottom:    15px;
-            display:    block;
+            font-size:   0.9rem;
+            opacity:   0.8;
+            margin-bottom:   15px;
+            display:   block;
         }
 
         .news-item .news-content {
-            line-height:    1.6;
+            line-height:   1.6;
         }
         
         /* Add this CSS for the urgent tag */
         .urgent-tag {
-            background-color:    #ff4d4d;
-            color:    white;
-            padding:    2px 8px;
-            border-radius:    4px;
-            font-size:    0.8em;
-            margin-left:    10px;
-            vertical-align:    middle;
+            background-color:   #ff4d4d;
+            color:   white;
+            padding:   2px 8px;
+            border-radius:   4px;
+            font-size:   0.8em;
+            margin-left:   10px;
+            vertical-align:   middle;
         }
         
         /* IP Ban Styles */
         .banned-message {
-            background:    rgba(255,    0,    0,    0.2);
-            padding:    30px;
-            border-radius:    15px;
-            text-align:    center;
-            margin:    30px auto;
-            max-width:    600px;
-            box-shadow:    0 8px 32px rgba(0,    0,    0,    0.3);
-            backdrop-filter:    blur(10px);
-            border:    1px solid rgba(255,    255,    255,    0.18);
+            background:   rgba(255,   0,   0,   0.2);
+            padding:   30px;
+            border-radius:   15px;
+            text-align:   center;
+            margin:   30px auto;
+            max-width:   600px;
+            box-shadow:   0 8px 32px rgba(0,   0,   0,   0.3);
+            backdrop-filter:   blur(10px);
+            border:   1px solid rgba(255,   255,   255,   0.18);
         }
         
         .banned-message h2 {
-            color:    #ff4d4d;
-            margin-bottom:    20px;
+            color:   #ff4d4d;
+            margin-bottom:   20px;
         }
         
         .banned-message p {
-            margin:    15px 0;
-            font-size:    1.1rem;
+            margin:   15px 0;
+            font-size:   1.1rem;
         }
         
         .banned-message i {
-            font-size:    3rem;
-            margin-bottom:    20px;
-            color:    #ff4d4d;
+            font-size:   3rem;
+            margin-bottom:   20px;
+            color:   #ff4d4d;
         }
         
         .ip-checking {
-            display:    flex;
-            align-items:    center;
-            justify-content:    center;
-            gap:    10px;
-            padding:    20px;
-            font-size:    1.2rem;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            gap:   10px;
+            padding:   20px;
+            font-size:   1.2rem;
         }
         
         .ip-checking .spinner {
-            width:    24px;
-            height:    24px;
+            width:   24px;
+            height:   24px;
         }
         /* ... (all other CSS styles remain the same) ... */
     </style>
@@ -969,7 +969,7 @@
         </div>
         
         <!-- Banned Message -->
-        <div class="banned-message" id="bannedMessage" style="display:    none;">
+        <div class="banned-message" id="bannedMessage" style="display:   none;">
             <i class="fas fa-ban"></i>
             <h2>Access Denied</h2>
             <p>Your IP address has been banned from one of our administrators.</p>
@@ -985,14 +985,14 @@
                         <i class="fas fa-hand-pointer"></i> <span id="map-instruction">Drag to navigate the map</span>
                     </div>
                     <iframe 
-                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="100%" height="100%" style="border:    0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="100%" height="100%" style="border:   0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
 
                 <div class="info-panel">
                     <h2 class="panel-title"><i class="fas fa-info-circle"></i> <span id="traffic-overview">Traffic Overview</span></h2>
                     
                     <div class="current-time">
-                        <span id="current-time-label">Current Time:    </span> <span id="current-time-display">--:    --:    --</span>
+                        <span id="current-time-label">Current Time:   </span> <span id="current-time-display">--:   --:   --</span>
                     </div>
                     
                     <div class="traffic-status">
@@ -1110,8 +1110,8 @@
                     <h3><i class="fas fa-exclamation-triangle"></i> <span id="travel-tips-title">Travel Tips</span></h3>
                     <div class="info-content">
                         <ul>
-                            <li id="tip-1">Avoid peak hours (7:   00-9:   30 and 17:   00-19:   00) when possible</li>
-                            <li id="tip-2">Please note that Macau's maximum speed in normal roads is 50 km/h,    whole bridges are 80 km/h.</li>
+                            <li id="tip-1">Avoid peak hours (7:  00-9:  30 and 17:  00-19:  00) when possible</li>
+                            <li id="tip-2">Please note that Macau's maximum speed in normal roads is 50 km/h,   whole bridges are 80 km/h.</li>
                             <li id="tip-3">Consider using public transportation during heavy traffic periods</li>
                             <li id="tip-4">Check border crossing times before traveling</li>
                             <li id="tip-5">Plan extra time for important appointments</li>
@@ -1125,7 +1125,7 @@
         <!-- Live Cameras Page -->
         <div class="page" id="cameras-page">
             <div class="bug-fix-note">
-                <strong>Bug Fix Note:    </strong> The language switching bug has been resolved. 
+                <strong>Bug Fix Note:   </strong> The language switching bug has been resolved. 
             </div>
             
             <div class="camera-feeds">
@@ -1174,14 +1174,14 @@
             
             <div class="content-section">
                 <h2 id="community-guidelines-title">Community Guidelines</h2>
-                <p id="community-guidelines-desc">Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates,    road conditions,    and travel tips with fellow Macau residents and visitors.</p>
-                <p id="guidelines-intro">Please follow these guidelines to keep our community helpful and respectful:    </p>
+                <p id="community-guidelines-desc">Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates,   road conditions,   and travel tips with fellow Macau residents and visitors.</p>
+                <p id="guidelines-intro">Please follow these guidelines to keep our community helpful and respectful:   </p>
                 <ul>
-                    <li id="guideline-1">Share accurate,    current traffic information</li>
+                    <li id="guideline-1">Share accurate,   current traffic information</li>
                     <li id="guideline-2">Be respectful and courteous to all users</li>
-                    <li id="guideline-3">Report road incidents,    accidents,    or construction</li>
+                    <li id="guideline-3">Report road incidents,   accidents,   or construction</li>
                     <li id="guideline-4">Ask questions about traffic patterns or road conditions</li>
-                    <li id="guideline-5">Avoid spam,    advertisements,    or off-topic discussions</li>
+                    <li id="guideline-5">Avoid spam,   advertisements,   or off-topic discussions</li>
                     <li id="guideline-6">Use appropriate language - no offensive content</li>
                 </ul>
                 <p id="moderation-note">Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.</p>
@@ -1193,13 +1193,13 @@
             <div class="content-section">
                 <h2 id="about-title">About Macau Traffic Monitor</h2>
                 
-                <p id="about-desc">Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions,    estimated crossing times,    and live camera feeds for major roads and border crossings.</p>
+                <p id="about-desc">Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions,   estimated crossing times,   and live camera feeds for major roads and border crossings.</p>
                 
                 <h3 id="mission-title">Our Mission</h3>
-                <p id="mission-desc">We aim to reduce travel time and improve road safety in Macau by providing accurate,    real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.</p>
+                <p id="mission-desc">We aim to reduce travel time and improve road safety in Macau by providing accurate,   real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.</p>
                 
                 <h3 id="data-sources-title">Data Sources</h3>
-                <p id="data-sources-desc">Our traffic data is sourced from multiple official channels:    </p>
+                <p id="data-sources-desc">Our traffic data is sourced from multiple official channels:   </p>
                 <ul>
                     <li id="source-1">DSAT (Direcção de Serviços de Trânsito) - Official traffic data</li>
                     <li id="source-2">Google Maps API - Traffic flow and incident reports</li>
@@ -1272,7 +1272,7 @@
         
         <footer>
             <p>Macau Traffic Monitor © 2026 | Traffic data for Macau Special Administrative Region</p>
-            <p>Data Sources:    Google Maps API | DSAT (Direcção de Serviços de Trânsito)</p>
+            <p>Data Sources:   Google Maps API | DSAT (Direcção de Serviços de Trânsito)</p>
         </footer>
         
         <!-- Firebase Status Indicator -->
@@ -1285,13 +1285,13 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey:    "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",          
-            authDomain:    "macau-traffic-501cb.firebaseapp.com",          
-            databaseURL:    "https://macau-traffic-501cb-default-rtdb.firebaseio.com",          
-            projectId:    "macau-traffic-501cb",          
-            storageBucket:    "macau-traffic-501cb.appspot.com",          
-            messagingSenderId:    "123456789012",          
-            appId:    "1:   123456789012:   web:   abcdef1234567890abcdef"
+            apiKey:   "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",         
+            authDomain:   "macau-traffic-501cb.firebaseapp.com",         
+            databaseURL:   "https://macau-traffic-501cb-default-rtdb.firebaseio.com",         
+            projectId:   "macau-traffic-501cb",         
+            storageBucket:   "macau-traffic-501cb.appspot.com",         
+            messagingSenderId:   "123456789012",         
+            appId:   "1:  123456789012:  web:  abcdef1234567890abcdef"
         };
 
         // Initialize Firebase
@@ -1319,7 +1319,7 @@
         
         // Tab navigation
         document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click',    () => {
+            tab.addEventListener('click',   () => {
                 // Remove active class from all tabs and pages
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1345,7 +1345,7 @@
         
         // Camera tab navigation
         document.querySelectorAll('.camera-tab').forEach(tab => {
-            tab.addEventListener('click',    () => {
+            tab.addEventListener('click',   () => {
                 // Remove active class from all camera tabs and contents
                 document.querySelectorAll('.camera-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.camera-content').forEach(c => c.classList.remove('active'));
@@ -1360,20 +1360,20 @@
         });
         
         // Language selector functionality
-        document.addEventListener('DOMContentLoaded',    function() {
+        document.addEventListener('DOMContentLoaded',   function() {
             const langButton = document.getElementById('langButton');
             const langDropdown = document.getElementById('langDropdown');
             const langOptions = document.querySelectorAll('.lang-option');
             const currentLangSpan = document.getElementById('currentLang');
             
             // Toggle language dropdown
-            langButton.addEventListener('click',    function(e) {
+            langButton.addEventListener('click',   function(e) {
                 e.stopPropagation();
                 langDropdown.classList.toggle('show');
             });
             
             // Close dropdown when clicking outside
-            document.addEventListener('click',    function(e) {
+            document.addEventListener('click',   function(e) {
                 if (!langButton.contains(e.target)) {
                     langDropdown.classList.remove('show');
                 }
@@ -1381,7 +1381,7 @@
             
             // Change language
             langOptions.forEach(option => {
-                option.addEventListener('click',    function(e) {
+                option.addEventListener('click',   function(e) {
                     e.preventDefault();
                     const lang = this.getAttribute('data-lang');
                     changeLanguage(lang);
@@ -1391,521 +1391,521 @@
             
             // Translation data - ALL translations now in one place
             const translations = {
-                en:    {
-                    "header-title":    "Macau Traffic Monitor",                    
-                    "welcome-message":    "Hello! Welcome to visit our website!",                    
-                    "header-subtitle":    "Real-time traffic conditions and waiting times for Macau's major roads and border crossings",                    
-                    "nav-dashboard":    "Dashboard",                    
-                    "nav-cameras":    "Live Cameras",                    
-                    "nav-news":    "News",         
-                    "nav-chat":    "Community Chat",                    
-                    "nav-about":    "About",                    
-                    "map-instruction":    "Drag to navigate the map",                    
-                    "traffic-overview":    "Traffic Overview",                    
-                    "current-time-label":    "Current Time:    ",                    
-                    "overall-traffic":    "Overall Traffic",                    
-                    "traffic-status-value":    "LIGHT",                    
-                    "average-delay-label":    "Average Delay",                    
-                    "crossing-duration":    "Estimated Crossing Duration",                    
-                    "friendship-bridge":    "Friendship Bridge",                    
-                    "sai-van-bridge":    "Sai Van Bridge",                    
-                    "horta-costa":    "Avenida de Horta e Costa",                    
-                    "san-ma-lou":    "San Ma Lou",                    
-                    "praca-amaral":    "Praca de Ferreira do Amaral",                    
-                    "portas-cerco":    "Portas do Cerco",                    
-                    "cotai-strip":    "Cotai Strip",                    
-                    "median-traffic-label":    "Median Traffic Time:    ",                    
-                    "traffic-legend-title":    "Traffic Legend",                    
-                    "severe-traffic":    "Severe Traffic (40+ min delay)",                    
-                    "heavy-traffic":    "Heavy Traffic (20-40 min delay)",                    
-                    "moderate-traffic":    "Moderate Traffic (10-20 min delay)",                    
-                    "light-traffic":    "Light Traffic (<10 min delay)",                    
-                    "closed-traffic":    "Closed/Blocked",                    
-                    "website-info-title":    "Website Traffic Information",                    
-                    "website-info-desc":    "This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.",                    
-                    "info-point-1":    "Times are updated every 30 seconds based on current traffic conditions",                    
-                    "info-point-2":    "Colors indicate traffic severity levels",                    
-                    "info-point-3":    "Data is simulated for demonstration purposes",                    
-                    "info-point-4":    "Actual travel times may vary",                    
-                    "travel-tips-title":    "Travel Tips",                    
-                    "tip-1":    "Avoid peak hours (7:   00-9:   30 and 17:   00-19:   00) when possible",                    
-                    "tip-2":    "Please note that Macau's maximum speed in normal roads is 50 km/h,    whole bridges are 80 km/h.",                    
-                    "tip-3":    "Consider using public transportation during heavy traffic periods",                    
-                    "tip-4":    "Check border crossing times before traveling",                    
-                    "tip-5":    "Plan extra time for important appointments",                    
-                    "tip-6":    "Use alternative routes when main roads show heavy congestion",                    
-                    "live-cameras-title":    "Live Traffic Cameras",                    
-                    "tab-macau-city":    "Macau City",                   
-                    "tab-taipa":    "Taipa",                   
-                    "tab-bridges":    "Cross-Sea Bridges",                   
-                    "tab-border":    "Border Crossings",                   
-                    "community-chat-title":    "Community Chat",                    
-                    "community-guidelines-title":    "Community Guidelines",                    
-                    "community-guidelines-desc":    "Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates,    road conditions,    and travel tips with fellow Macau residents and visitors.",                    
-                    "guidelines-intro":    "Please follow these guidelines to keep our community helpful and respectful:    ",                    
-                    "guideline-1":    "Share accurate,    current traffic information",                    
-                    "guideline-2":    "Be respectful and courteous to all users",                    
-                    "guideline-3":    "Report road incidents,    accidents,    or construction",                    
-                    "guideline-4":    "Ask questions about traffic patterns or road conditions",                    
-                    "guideline-5":    "Avoid spam,    advertisements,    or off-topic discussions",                    
-                    "guideline-6":    "Use appropriate language - no offensive content",                    
-                    "moderation-note":    "Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.",                    
-                    "about-title":    "About Macau Traffic Monitor",                    
-                    "about-desc":    "Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions,    estimated crossing times,    and live camera feeds for major roads and border crossings.",                    
-                    "mission-title":    "Our Mission",                    
-                    "mission-desc":    "We aim to reduce travel time and improve road safety in Macau by providing accurate,    real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.",                    
-                    "data-sources-title":    "Data Sources",                    
-                    "data-sources-desc":    "Our traffic data is sourced from multiple official channels:    ",                    
-                    "source-1":    "DSAT (Direcção de Serviços de Trânsito) - Official traffic data",                    
-                    "source-2":    "Google Maps API - Traffic flow and incident reports",                    
-                    "source-3":    "Live traffic cameras operated by DSAT",                    
-                    "source-4":    "Community reports from our users",                    
-                    "features-title":    "Features",                    
-                    "feature-1":    "Real-time traffic conditions visualization",                    
-                    "feature-2":    "Estimated waiting times for border crossings",                    
-                    "feature-3":    "Live traffic camera feeds",                    
-                    "feature-4":    "Community chat for real-time updates",                    
-                    "feature-5":    "Mobile app for on-the-go traffic updates",                    
-                    "feature-6":    "Historical traffic pattern analysis",                    
-                    "mobile-app-title":    "Get Traffic Updates on the Go",                    
-                    "mobile-app-desc":    "Download our mobile app for traffic alerts and navigation assistance",                    
-                    "feature-alerts":    "Instant Alerts",                    
-                    "feature-routing":    "Smart Routing",                    
-                    "feature-history":    "Traffic History",                    
-                    "feature-maps":    "Offline Maps",               
+                en:   {
+                    "header-title":   "Macau Traffic Monitor",                   
+                    "welcome-message":   "Hello! Welcome to visit our website!",                   
+                    "header-subtitle":   "Real-time traffic conditions and waiting times for Macau's major roads and border crossings",                   
+                    "nav-dashboard":   "Dashboard",                   
+                    "nav-cameras":   "Live Cameras",                   
+                    "nav-news":   "News",        
+                    "nav-chat":   "Community Chat",                   
+                    "nav-about":   "About",                   
+                    "map-instruction":   "Drag to navigate the map",                   
+                    "traffic-overview":   "Traffic Overview",                   
+                    "current-time-label":   "Current Time:   ",                   
+                    "overall-traffic":   "Overall Traffic",                   
+                    "traffic-status-value":   "LIGHT",                   
+                    "average-delay-label":   "Average Delay",                   
+                    "crossing-duration":   "Estimated Crossing Duration",                   
+                    "friendship-bridge":   "Friendship Bridge",                   
+                    "sai-van-bridge":   "Sai Van Bridge",                   
+                    "horta-costa":   "Avenida de Horta e Costa",                   
+                    "san-ma-lou":   "San Ma Lou",                   
+                    "praca-amaral":   "Praca de Ferreira do Amaral",                   
+                    "portas-cerco":   "Portas do Cerco",                   
+                    "cotai-strip":   "Cotai Strip",                   
+                    "median-traffic-label":   "Median Traffic Time:   ",                   
+                    "traffic-legend-title":   "Traffic Legend",                   
+                    "severe-traffic":   "Severe Traffic (40+ min delay)",                   
+                    "heavy-traffic":   "Heavy Traffic (20-40 min delay)",                   
+                    "moderate-traffic":   "Moderate Traffic (10-20 min delay)",                   
+                    "light-traffic":   "Light Traffic (<10 min delay)",                   
+                    "closed-traffic":   "Closed/Blocked",                   
+                    "website-info-title":   "Website Traffic Information",                   
+                    "website-info-desc":   "This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.",                   
+                    "info-point-1":   "Times are updated every 30 seconds based on current traffic conditions",                   
+                    "info-point-2":   "Colors indicate traffic severity levels",                   
+                    "info-point-3":   "Data is simulated for demonstration purposes",                   
+                    "info-point-4":   "Actual travel times may vary",                   
+                    "travel-tips-title":   "Travel Tips",                   
+                    "tip-1":   "Avoid peak hours (7:  00-9:  30 and 17:  00-19:  00) when possible",                   
+                    "tip-2":   "Please note that Macau's maximum speed in normal roads is 50 km/h,   whole bridges are 80 km/h.",                   
+                    "tip-3":   "Consider using public transportation during heavy traffic periods",                   
+                    "tip-4":   "Check border crossing times before traveling",                   
+                    "tip-5":   "Plan extra time for important appointments",                   
+                    "tip-6":   "Use alternative routes when main roads show heavy congestion",                   
+                    "live-cameras-title":   "Live Traffic Cameras",                   
+                    "tab-macau-city":   "Macau City",                  
+                    "tab-taipa":   "Taipa",                  
+                    "tab-bridges":   "Cross-Sea Bridges",                  
+                    "tab-border":   "Border Crossings",                  
+                    "community-chat-title":   "Community Chat",                   
+                    "community-guidelines-title":   "Community Guidelines",                   
+                    "community-guidelines-desc":   "Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates,   road conditions,   and travel tips with fellow Macau residents and visitors.",                   
+                    "guidelines-intro":   "Please follow these guidelines to keep our community helpful and respectful:   ",                   
+                    "guideline-1":   "Share accurate,   current traffic information",                   
+                    "guideline-2":   "Be respectful and courteous to all users",                   
+                    "guideline-3":   "Report road incidents,   accidents,   or construction",                   
+                    "guideline-4":   "Ask questions about traffic patterns or road conditions",                   
+                    "guideline-5":   "Avoid spam,   advertisements,   or off-topic discussions",                   
+                    "guideline-6":   "Use appropriate language - no offensive content",                   
+                    "moderation-note":   "Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.",                   
+                    "about-title":   "About Macau Traffic Monitor",                   
+                    "about-desc":   "Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions,   estimated crossing times,   and live camera feeds for major roads and border crossings.",                   
+                    "mission-title":   "Our Mission",                   
+                    "mission-desc":   "We aim to reduce travel time and improve road safety in Macau by providing accurate,   real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.",                   
+                    "data-sources-title":   "Data Sources",                   
+                    "data-sources-desc":   "Our traffic data is sourced from multiple official channels:   ",                   
+                    "source-1":   "DSAT (Direcção de Serviços de Trânsito) - Official traffic data",                   
+                    "source-2":   "Google Maps API - Traffic flow and incident reports",                   
+                    "source-3":   "Live traffic cameras operated by DSAT",                   
+                    "source-4":   "Community reports from our users",                   
+                    "features-title":   "Features",                   
+                    "feature-1":   "Real-time traffic conditions visualization",                   
+                    "feature-2":   "Estimated waiting times for border crossings",                   
+                    "feature-3":   "Live traffic camera feeds",                   
+                    "feature-4":   "Community chat for real-time updates",                   
+                    "feature-5":   "Mobile app for on-the-go traffic updates",                   
+                    "feature-6":   "Historical traffic pattern analysis",                   
+                    "mobile-app-title":   "Get Traffic Updates on the Go",                   
+                    "mobile-app-desc":   "Download our mobile app for traffic alerts and navigation assistance",                   
+                    "feature-alerts":   "Instant Alerts",                   
+                    "feature-routing":   "Smart Routing",                   
+                    "feature-history":   "Traffic History",                   
+                    "feature-maps":   "Offline Maps",              
                     // Camera titles
-                    "camera-title-1":    "Tunnel da Penha towards Largo do Governor Vasco Rocha Vieira (Reservoir)",                    
-                    "camera-title-2":    "Tunnel da Penha towards Rua do Campo",                    
-                    "camera-title-3":    "Mercado da Rua do Aljube",                    
-                    "camera-title-4":    "Avenida do Conselheiro Borja and Rua do Campo Intersection",                    
-                    "camera-title-5":    "Avenida do Conselheiro Borja",                    
-                    "camera-title-6":    "Avenida de Venceslau de Morais",                    
-                    "camera-title-7":    "Inner Harbour",                    
-                    "camera-title-8":    "Rua Nova da Areia Preta",                    
-                    "camera-title-9":    "Praça de Tap Seac",                    
-                    "camera-title-10":    "Praça do Vasco Rocha Vieira",                    
-                    "camera-title-11":    "Blood Donation Centre",                    
-                    "camera-title-12":    "Praça da Nave Desportiva",                    
-                    "camera-title-13":    "Praça de Ferreira do Amaral",                    
-                    "camera-title-14":    "Avenida do Infante D. Henrique and Avenida do Dr. Rodrigo Rodrigues Intersection",                    
-                    "camera-title-15":    "Rua dos Mercadores / Avenida da Praia Grande Intersection",                    
-                    "camera-title-16":    "Rua dos Mercadores",                    
-                    "camera-title-17":    "Haiwan Garden",                    
-                    "camera-title-18":    "Macau International Airport",                    
-                    "camera-title-19":    "Estrada do Istmo Circular Intersection",                    
-                    "camera-title-20":    "Cotai Strip",                    
-                    "camera-title-21":    "Cotai Strip 2 / Estrada do Istmo",                    
-                    "camera-title-22":    "Avenida da Amizade",                    
-                    "camera-title-23":    "Ponte da Amizade near North Bay Entrance Intersection",                    
-                    "camera-title-24":    "Ponte da Amizade towards Taipa",                    
-                    "camera-title-25":    "Ponte da Amizade towards Macau",                    
-                    "camera-title-26":    "Ponte de Sai Van towards Macau",                    
-                    "camera-title-27":    "Ponte de Sai Van towards Taipa (High)",                    
-                    "camera-title-28":    "Ponte de Sai Van towards Macau (High)",                    
-                    "camera-title-29":    "Macau Bridge Entrance (Macau)",                    
-                    "camera-title-30":    "Macau Bridge towards Taipa",                    
-                    "camera-title-31":    "Macau Bridge towards Macau",                    
-                    "camera-title-32":    "Tunnel da Portas do Cerco",                    
-                    "camera-title-33":    "Avenida da Portas do Cerco",                    
-                    "camera-title-34":    "Qingmao Port (A)",                    
-                    "camera-title-35":    "Qingmao Port (B)",                    
-                    "camera-title-36":    "Outer Harbour Ferry Terminal (A)",                    
-                    "camera-title-37":    "Outer Harbour Ferry Terminal (B)",                    
-                    "camera-title-38":    "Hengqin Port (A)",                    
-                    "camera-title-39":    "Hengqin Port (B)",                    
-                    "camera-title-40":    "Hengqin Port (C)",                    
-                    "camera-title-41":    "Hengqin Port (D)",                    
-                    "camera-title-42":    "Hong Kong-Zhuhai-Macau Bridge to Zhuhai",                    
-                    "camera-title-43":    "Hong Kong-Zhuhai-Macau Bridge to Macau",                    
-                    "camera-title-44":    "Hong Kong-Zhuhai-Macau Bridge to Passenger Drop-off Platform",                    
-                    "camera-title-45":    "Hong Kong-Zhuhai-Macau Bridge (Macau Entry)"
-                },                    
-                zh:    {
-                    "header-title":    "澳門交通監控",                    
-                    "welcome-message":    "您好！歡迎訪問我們的網站！",                    
-                    "header-subtitle":    "澳門主要道路和邊境口岸的實時交通狀況和等待時間",                    
-                    "nav-dashboard":    "儀表板",                    
-                    "nav-cameras":    "實時攝像頭",                    
-                    "nav-news":    "新聞",         
-                    "nav-chat":    "社區聊天",                    
-                    "nav-about":    "關於",                    
-                    "map-instruction":    "拖動以導航地圖",                    
-                    "traffic-overview":    "交通概覽",                    
-                    "current-time-label":    "當前時間：",                    
-                    "overall-traffic":    "整體交通",                    
-                    "traffic-status-value":    "輕鬆",                    
-                    "average-delay-label":    "平均延遲",                    
-                    "crossing-duration":    "預計過境時間",                    
-                    "friendship-bridge":    "友誼大橋",                    
-                    "sai-van-bridge":    "西灣大橋",                    
-                    "horta-costa":    "荷蘭園大馬路",                    
-                    "san-ma-lou":    "新馬路",                    
-                    "praca-amaral":    "亞馬喇前地",                    
-                    "portas-cerco":    "关闸边检大楼",                    
-                    "cotai-strip":    "路氹城",                    
-                    "median-traffic-label":    "中位交通時間：",                    
-                    "traffic-legend-title":    "交通圖例",                    
-                    "severe-traffic":    "嚴重交通（延遲40分鐘以上）",                    
-                    "heavy-traffic":    "嚴重交通（延遲20-40分鐘）",                    
-                    "moderate-traffic":    "中等交通（延遲10-20分鐘）",                    
-                    "light-traffic":    "輕鬆交通（延遲少於10分鐘）",                    
-                    "closed-traffic":    "關閉/封閉",                    
-                    "website-info-title":    "網站交通信息",                    
-                    "website-info-desc":    "此實時交通監控提供澳門主要道路和邊境口岸的預計等待時間。",                    
-                    "info-point-1":    "時間每30秒根據當前交通狀況更新一次",                    
-                    "info-point-2":    "顏色表示交通嚴重程度",                    
-                    "info-point-3":    "數據僅供演示用途",                    
-                    "info-point-4":    "實際旅行時間可能有所不同",                    
-                    "travel-tips-title":    "旅行提示",                    
-                    "tip-1":    "盡可能避免高峰時間（早上7:   00-9:   30和下午5:   00-7:   00）",                    
-                    "tip-2":    "請注意，澳門一般道路的最高速度為50公里/小時，橋樑為80公里/小時。",                    
-                    "tip-3":    "在交通繁忙時段考慮使用公共交通工具",                    
-                    "tip-4":    "出行前檢查邊境口岸時間",                    
-                    "tip-5":    "為重要會議預留額外時間",                    
-                    "tip-6":    "當主要道路出現嚴重擁堵時使用替代路線",                    
-                    "live-cameras-title":    "實時交通攝像頭",                    
-                    "tab-macau-city":    "澳門市區",                   
-                    "tab-taipa":    "氹仔",                   
-                    "tab-bridges":    "跨海大橋",                   
-                    "tab-border":    "口岸",                   
-                    "community-chat-title":    "社區聊天",                    
-                    "community-guidelines-title":    "社區指南",                    
-                    "community-guidelines-desc":    "歡迎來到澳門交通監控社區聊天！此空間用於與澳門居民和遊客分享實時交通更新、道路狀況和旅行提示。",                    
-                    "guidelines-intro":    "請遵守以下指南以保持我們社區的幫助性和尊重性：",                    
-                    "guideline-1":    "分享準確、當前的交通信息",                    
-                    "guideline-2":    "對所有用戶保持尊重和禮貌",                    
-                    "guideline-3":    "報告道路事件、事故或施工",                    
-                    "guideline-4":    "詢問交通模式或道路狀況問題",                    
-                    "guideline-5":    "避免垃圾郵件、廣告或離題討論",                    
-                    "guideline-6":    "使用適當的語言 - 無 offensive 內容",                    
-                    "moderation-note":    "我們的管理員監控聊天以確保每個人都有積極的體驗。違反這些指南可能導致暫時或永久禁止聊天。",                    
-                    "about-title":    "關於澳門交通監控",                    
-                    "about-desc":    "澳門交通監控是一個實時交通信息平台，旨在幫助居民和遊客高效地導航澳門的道路網絡。我們的服務提供最新的交通狀況、預計過境時間和主要道路及邊境口岸的實時攝像頭饋送。",                    
-                    "mission-title":    "我們的使命",                    
-                    "mission-desc":    "我們旨在通過提供準確、實時的交通信息來減少澳門的旅行時間並改善道路安全。我們的平台幫助用戶對旅行路線和時間做出明智的決定。",                    
-                    "data-sources-title":    "數據來源",                    
-                    "data-sources-desc":    "我們的交通數據來自多個官方渠道：",                    
-                    "source-1":    "交通事務局 - 官方交通數據",                    
-                    "source-2":    "Google Maps API - 交通流量和事件報告",                    
-                    "source-3":    "交通事務局運營的實時交通攝像頭",                    
-                    "source-4":    "我們用戶的社區報告",                    
-                    "features-title":    "功能",                    
-                    "feature-1":    "實時交通狀況可視化",                    
-                    "feature-2":    "邊境口岸預計等待時間",                    
-                    "feature-3":    "實時交通攝像頭饋送",                    
-                    "feature-4":    "社區聊天實時更新",                    
-                    "feature-5":    "移動應用程序用於路上交通更新",                    
-                    "feature-6":    "歷史交通模式分析",                    
-                    "mobile-app-title":    "隨時隨地獲取交通更新",                    
-                    "mobile-app-desc":    "下載我們的移動應用程序以獲取交通警報和導航協助",                    
-                    "feature-alerts":    "即時警報",                    
-                    "feature-routing":    "智能路線規劃",                    
-                    "feature-history":    "交通歷史",                    
-                    "feature-maps":    "離線地圖",               
+                    "camera-title-1":   "Tunnel da Penha towards Largo do Governor Vasco Rocha Vieira (Reservoir)",                   
+                    "camera-title-2":   "Tunnel da Penha towards Rua do Campo",                   
+                    "camera-title-3":   "Mercado da Rua do Aljube",                   
+                    "camera-title-4":   "Avenida do Conselheiro Borja and Rua do Campo Intersection",                   
+                    "camera-title-5":   "Avenida do Conselheiro Borja",                   
+                    "camera-title-6":   "Avenida de Venceslau de Morais",                   
+                    "camera-title-7":   "Inner Harbour",                   
+                    "camera-title-8":   "Rua Nova da Areia Preta",                   
+                    "camera-title-9":   "Praça de Tap Seac",                   
+                    "camera-title-10":   "Praça do Vasco Rocha Vieira",                   
+                    "camera-title-11":   "Blood Donation Centre",                   
+                    "camera-title-12":   "Praça da Nave Desportiva",                   
+                    "camera-title-13":   "Praça de Ferreira do Amaral",                   
+                    "camera-title-14":   "Avenida do Infante D. Henrique and Avenida do Dr. Rodrigo Rodrigues Intersection",                   
+                    "camera-title-15":   "Rua dos Mercadores / Avenida da Praia Grande Intersection",                   
+                    "camera-title-16":   "Rua dos Mercadores",                   
+                    "camera-title-17":   "Haiwan Garden",                   
+                    "camera-title-18":   "Macau International Airport",                   
+                    "camera-title-19":   "Estrada do Istmo Circular Intersection",                   
+                    "camera-title-20":   "Cotai Strip",                   
+                    "camera-title-21":   "Cotai Strip 2 / Estrada do Istmo",                   
+                    "camera-title-22":   "Avenida da Amizade",                   
+                    "camera-title-23":   "Ponte da Amizade near North Bay Entrance Intersection",                   
+                    "camera-title-24":   "Ponte da Amizade towards Taipa",                   
+                    "camera-title-25":   "Ponte da Amizade towards Macau",                   
+                    "camera-title-26":   "Ponte de Sai Van towards Macau",                   
+                    "camera-title-27":   "Ponte de Sai Van towards Taipa (High)",                   
+                    "camera-title-28":   "Ponte de Sai Van towards Macau (High)",                   
+                    "camera-title-29":   "Macau Bridge Entrance (Macau)",                   
+                    "camera-title-30":   "Macau Bridge towards Taipa",                   
+                    "camera-title-31":   "Macau Bridge towards Macau",                   
+                    "camera-title-32":   "Tunnel da Portas do Cerco",                   
+                    "camera-title-33":   "Avenida da Portas do Cerco",                   
+                    "camera-title-34":   "Qingmao Port (A)",                   
+                    "camera-title-35":   "Qingmao Port (B)",                   
+                    "camera-title-36":   "Outer Harbour Ferry Terminal (A)",                   
+                    "camera-title-37":   "Outer Harbour Ferry Terminal (B)",                   
+                    "camera-title-38":   "Hengqin Port (A)",                   
+                    "camera-title-39":   "Hengqin Port (B)",                   
+                    "camera-title-40":   "Hengqin Port (C)",                   
+                    "camera-title-41":   "Hengqin Port (D)",                   
+                    "camera-title-42":   "Hong Kong-Zhuhai-Macau Bridge to Zhuhai",                   
+                    "camera-title-43":   "Hong Kong-Zhuhai-Macau Bridge to Macau",                   
+                    "camera-title-44":   "Hong Kong-Zhuhai-Macau Bridge to Passenger Drop-off Platform",                   
+                    "camera-title-45":   "Hong Kong-Zhuhai-Macau Bridge (Macau Entry)"
+                },                   
+                zh:   {
+                    "header-title":   "澳門交通監控",                   
+                    "welcome-message":   "您好！歡迎訪問我們的網站！",                   
+                    "header-subtitle":   "澳門主要道路和邊境口岸的實時交通狀況和等待時間",                   
+                    "nav-dashboard":   "儀表板",                   
+                    "nav-cameras":   "實時攝像頭",                   
+                    "nav-news":   "新聞",        
+                    "nav-chat":   "社區聊天",                   
+                    "nav-about":   "關於",                   
+                    "map-instruction":   "拖動以導航地圖",                   
+                    "traffic-overview":   "交通概覽",                   
+                    "current-time-label":   "當前時間：",                   
+                    "overall-traffic":   "整體交通",                   
+                    "traffic-status-value":   "輕鬆",                   
+                    "average-delay-label":   "平均延遲",                   
+                    "crossing-duration":   "預計過境時間",                   
+                    "friendship-bridge":   "友誼大橋",                   
+                    "sai-van-bridge":   "西灣大橋",                   
+                    "horta-costa":   "荷蘭園大馬路",                   
+                    "san-ma-lou":   "新馬路",                   
+                    "praca-amaral":   "亞馬喇前地",                   
+                    "portas-cerco":   "关闸边检大楼",                   
+                    "cotai-strip":   "路氹城",                   
+                    "median-traffic-label":   "中位交通時間：",                   
+                    "traffic-legend-title":   "交通圖例",                   
+                    "severe-traffic":   "嚴重交通（延遲40分鐘以上）",                   
+                    "heavy-traffic":   "嚴重交通（延遲20-40分鐘）",                   
+                    "moderate-traffic":   "中等交通（延遲10-20分鐘）",                   
+                    "light-traffic":   "輕鬆交通（延遲少於10分鐘）",                   
+                    "closed-traffic":   "關閉/封閉",                   
+                    "website-info-title":   "網站交通信息",                   
+                    "website-info-desc":   "此實時交通監控提供澳門主要道路和邊境口岸的預計等待時間。",                   
+                    "info-point-1":   "時間每30秒根據當前交通狀況更新一次",                   
+                    "info-point-2":   "顏色表示交通嚴重程度",                   
+                    "info-point-3":   "數據僅供演示用途",                   
+                    "info-point-4":   "實際旅行時間可能有所不同",                   
+                    "travel-tips-title":   "旅行提示",                   
+                    "tip-1":   "盡可能避免高峰時間（早上7:  00-9:  30和下午5:  00-7:  00）",                   
+                    "tip-2":   "請注意，澳門一般道路的最高速度為50公里/小時，橋樑為80公里/小時。",                   
+                    "tip-3":   "在交通繁忙時段考慮使用公共交通工具",                   
+                    "tip-4":   "出行前檢查邊境口岸時間",                   
+                    "tip-5":   "為重要會議預留額外時間",                   
+                    "tip-6":   "當主要道路出現嚴重擁堵時使用替代路線",                   
+                    "live-cameras-title":   "實時交通攝像頭",                   
+                    "tab-macau-city":   "澳門市區",                  
+                    "tab-taipa":   "氹仔",                  
+                    "tab-bridges":   "跨海大橋",                  
+                    "tab-border":   "口岸",                  
+                    "community-chat-title":   "社區聊天",                   
+                    "community-guidelines-title":   "社區指南",                   
+                    "community-guidelines-desc":   "歡迎來到澳門交通監控社區聊天！此空間用於與澳門居民和遊客分享實時交通更新、道路狀況和旅行提示。",                   
+                    "guidelines-intro":   "請遵守以下指南以保持我們社區的幫助性和尊重性：",                   
+                    "guideline-1":   "分享準確、當前的交通信息",                   
+                    "guideline-2":   "對所有用戶保持尊重和禮貌",                   
+                    "guideline-3":   "報告道路事件、事故或施工",                   
+                    "guideline-4":   "詢問交通模式或道路狀況問題",                   
+                    "guideline-5":   "避免垃圾郵件、廣告或離題討論",                   
+                    "guideline-6":   "使用適當的語言 - 無 offensive 內容",                   
+                    "moderation-note":   "我們的管理員監控聊天以確保每個人都有積極的體驗。違反這些指南可能導致暫時或永久禁止聊天。",                   
+                    "about-title":   "關於澳門交通監控",                   
+                    "about-desc":   "澳門交通監控是一個實時交通信息平台，旨在幫助居民和遊客高效地導航澳門的道路網絡。我們的服務提供最新的交通狀況、預計過境時間和主要道路及邊境口岸的實時攝像頭饋送。",                   
+                    "mission-title":   "我們的使命",                   
+                    "mission-desc":   "我們旨在通過提供準確、實時的交通信息來減少澳門的旅行時間並改善道路安全。我們的平台幫助用戶對旅行路線和時間做出明智的決定。",                   
+                    "data-sources-title":   "數據來源",                   
+                    "data-sources-desc":   "我們的交通數據來自多個官方渠道：",                   
+                    "source-1":   "交通事務局 - 官方交通數據",                   
+                    "source-2":   "Google Maps API - 交通流量和事件報告",                   
+                    "source-3":   "交通事務局運營的實時交通攝像頭",                   
+                    "source-4":   "我們用戶的社區報告",                   
+                    "features-title":   "功能",                   
+                    "feature-1":   "實時交通狀況可視化",                   
+                    "feature-2":   "邊境口岸預計等待時間",                   
+                    "feature-3":   "實時交通攝像頭饋送",                   
+                    "feature-4":   "社區聊天實時更新",                   
+                    "feature-5":   "移動應用程序用於路上交通更新",                   
+                    "feature-6":   "歷史交通模式分析",                   
+                    "mobile-app-title":   "隨時隨地獲取交通更新",                   
+                    "mobile-app-desc":   "下載我們的移動應用程序以獲取交通警報和導航協助",                   
+                    "feature-alerts":   "即時警報",                   
+                    "feature-routing":   "智能路線規劃",                   
+                    "feature-history":   "交通歷史",                   
+                    "feature-maps":   "離線地圖",              
                     // Camera titles
-                    "camera-title-1":    "松山隧道向羅理基（水塘）",                    
-                    "camera-title-2":    "松山隧道向高士德",                    
-                    "camera-title-3":    "紅街市",                    
-                    "camera-title-4":    "提督馬路與高士德大馬路交界",                    
-                    "camera-title-5":    "提督馬路",                    
-                    "camera-title-6":    "慕拉士大馬路",                    
-                    "camera-title-7":    "內港",                    
-                    "camera-title-8":    "黑沙環新街",                    
-                    "camera-title-9":    "塔石廣場",                    
-                    "camera-title-10":    "宋玉生廣場",                    
-                    "camera-title-11":    "捐血中心",                    
-                    "camera-title-12":    "南灣湖廣場",                    
-                    "camera-title-13":    "亚马喇前地",                    
-                    "camera-title-14":    "殷皇子大馬路與葡京路交界",                    
-                    "camera-title-15":    "新马路 / 南湾马路交界",                    
-                    "camera-title-16":    "新馬路",                    
-                    "camera-title-17":    "海灣花園",                    
-                    "camera-title-18":    "澳門國際機場",                    
-                    "camera-title-19":    "路氹連貫公路圓形地",                    
-                    "camera-title-20":    "金光大道",                    
-                    "camera-title-21":    "金光大道 2 / 路氹連貫公路",                    
-                    "camera-title-22":    "友誼馬路",                    
-                    "camera-title-23":    "友誼大橋近北安入口交匯處",                    
-                    "camera-title-24":    "友谊大桥向氹仔",                    
-                    "camera-title-25":    "友誼大橋向澳门",                    
-                    "camera-title-26":    "西灣大橋向澳门",                    
-                    "camera-title-27":    "西灣大橋向氹仔（高处）",                    
-                    "camera-title-28":    "西灣大橋向澳门（高处）",                    
-                    "camera-title-29":    "澳門大橋入口（澳门）",                    
-                    "camera-title-30":    "澳門大橋向氹仔",                    
-                    "camera-title-31":    "澳門大橋向澳门",                    
-                    "camera-title-32":    "關閘隧道",                    
-                    "camera-title-33":    "關閘大馬路",                    
-                    "camera-title-34":    "青茂口岸（A）",                    
-                    "camera-title-35":    "青茂口岸（B）",                    
-                    "camera-title-36":    "外港客運碼頭（A）",                    
-                    "camera-title-37":    "外港客運碼頭（B）",                    
-                    "camera-title-38":    "橫琴口岸（A）",                    
-                    "camera-title-39":    "橫琴口岸（B）",                    
-                    "camera-title-40":    "橫琴口岸（C）",                    
-                    "camera-title-41":    "橫琴口岸（D）",                    
-                    "camera-title-42":    "港珠澳大橋往珠海",                    
-                    "camera-title-43":    "港珠澳大橋往澳門",                    
-                    "camera-title-44":    "港珠澳大橋往送客平台",                    
-                    "camera-title-45":    "港珠澳大橋（澳門入境）"
-                },                    
-                pt:    {
-                    "header-title":    "Monitor de Trânsito de Macau",                    
-                    "welcome-message":    "Olá! Bem-vindo ao nosso website!",                    
-                    "header-subtitle":    "Condições de trânsito em tempo real e tempos de espera para as principais estradas e travessias fronteiriças de Macau",                    
-                    "nav-dashboard":    "Painel",                    
-                    "nav-cameras":    "Câmaras ao Vivo",                    
-                    "nav-news":    "Notícias",         
-                    "nav-chat":    "Chat Comunitário",                    
-                    "nav-about":    "Sobre",                    
-                    "map-instruction":    "Arraste para navegar no mapa",                    
-                    "traffic-overview":    "Visão Geral do Trânsito",                    
-                    "current-time-label":    "Hora Atual:    ",                    
-                    "overall-traffic":    "Trânsito Geral",                    
-                    "traffic-status-value":    "LEVE",                    
-                    "average-delay-label":    "Atraso Médio",                    
-                    "crossing-duration":    "Duração Estimada da Travessia",                    
-                    "friendship-bridge":    "Ponte da Amizade",                    
-                    "sai-van-bridge":    "Ponte de Sai Van",                    
-                    "horta-costa":    "Avenida de Horta e Costa",                    
-                    "san-ma-lou":    "San Ma Lou",                    
-                    "praca-amaral":    "Praça de Ferreira do Amaral",                    
-                    "portas-cerco":    "Portas do Cerco",                    
-                    "cotai-strip":    "Faixa de Cotai",                    
-                    "median-traffic-label":    "Tempo Médio de Trânsito:    ",                    
-                    "traffic-legend-title":    "Legenda de Trânsito",                    
-                    "severe-traffic":    "Trânsito Severo (40+ min de atraso)",                    
-                    "heavy-traffic":    "Trânsito Pesado (20-40 min de atraso)",                    
-                    "moderate-traffic":    "Trânsito Moderado (10-20 min de atraso)",                    
-                    "light-traffic":    "Trânsito Leve (<10 min de atraso)",                    
-                    "closed-traffic":    "Fechado/Bloqueado",                    
-                    "website-info-title":    "Informações de Trânsito do Website",                    
-                    "website-info-desc":    "Este monitor de trânsito em tempo real fornece tempos de espera estimados para estradas principais e travessias fronteiriças em Macau.",                    
-                    "info-point-1":    "Os tempos são atualizados a cada 30 segundos com base nas condições atuais de trânsito",                    
-                    "info-point-2":    "As cores indicam níveis de gravidade do trânsito",                    
-                    "info-point-3":    "Os dados são simulados para fins de demonstração",                    
-                    "info-point-4":    "Os tempos reais de viagem podem variar",                    
-                    "travel-tips-title":    "Dicas de Viagem",                    
-                    "tip-1":    "Evite horas de pico (7:   00-9:   30 e 17:   00-19:   00) quando possível",                    
-                    "tip-2":    "Note que a velocidade máxima em estradas normais em Macau é 50 km/h,    e nas pontes é 80 km/h.",                    
-                    "tip-3":    "Considere usar transporte público durante períodos de trânsito pesado",                    
-                    "tip-4":    "Verifique os horários de travessia fronteiriça antes de viajar",                    
-                    "tip-5":    "Planeje tempo extra para compromissos importantes",                    
-                    "tip-6":    "Use rotas alternativas quando estradas principais mostrarem congestionamento pesado",                    
-                    "live-cameras-title":    "Câmaras de Trânsito ao Vivo",                    
-                    "tab-macau-city":    "Cidade de Macau",                   
-                    "tab-taipa":    "Taipa",                   
-                    "tab-bridges":    "Pontes Transoceânicas",                   
-                    "tab-border":    "Passagens Fronteiriças",                   
-                    "community-chat-title":    "Chat Comunitário",                    
-                    "community-guidelines-title":    "Diretrizes Comunitárias",                    
-                    "community-guidelines-desc":    "Bem-vindo ao chat comunitário do Monitor de Trânsito de Macau! Este espaço é para compartilhar atualizações de trânsito em tempo real,    condições rodoviárias e dicas de viagem com residentes e visitantes de Macau.",                    
-                    "guidelines-intro":    "Por favor,    siga estas diretrizes para manter nossa comunidade útil e respeitosa:    ",                    
-                    "guideline-1":    "Compartilhe informações de trânsito precisas e atuais",                    
-                    "guideline-2":    "Seja respeitoso e cortês com todos os usuários",                    
-                    "guideline-3":    "Informe sobre incidentes rodoviários,    acidentes ou obras",                    
-                    "guideline-4":    "Faça perguntas sobre padrões de trânsito ou condições rodoviárias",                    
-                    "guideline-5":    "Evite spam,    anúncios ou discussões fora de tópico",                    
-                    "guideline-6":    "Use linguagem apropriada - sem conteúdo ofensivo",                    
-                    "moderation-note":    "Nossos moderadores monitoram o chat para garantir uma experiência positiva para todos. Violação destas diretrizes pode resultar em banimento temporário ou permanente do chat.",                    
-                    "about-title":    "Sobre o Monitor de Trânsito de Macau",                    
-                    "about-desc":    "O Monitor de Trânsito de Macau é uma plataforma de informações de trânsito em tempo real projetada para ajudar residentes e visitantes a navegar eficientemente pela rede rodoviária de Macau. Nosso serviço fornece condições de trânsito atualizadas,    tempos de travessia estimados e feeds de câmaras ao vivo para estradas principais e travessias fronteiriças.",                    
-                    "mission-title":    "Nossa Missão",                    
-                    "mission-desc":    "Nosso objetivo é reduzir o tempo de viagem e melhorar a segurança rodoviária em Macau fornecendo informações de trânsito precisas e em tempo real. Nossa plataforma ajuda os usuários a tomar decisões informadas sobre rotas e horários de viagem.",                    
-                    "data-sources-title":    "Fontes de Dados",                    
-                    "data-sources-desc":    "Nossos dados de trânsito são obtidos de múltiplos canais oficiais:    ",                    
-                    "source-1":    "DSAT (Direção de Serviços de Trânsito) - Dados de trânsito oficiais",                    
-                    "source-2":    "API do Google Maps - Relatórios de fluxo de trânsito e incidentes",                    
-                    "source-3":    "Câmaras de trânsito ao vivo operadas pela DSAT",                    
-                    "source-4":    "Relatórios comunitários de nossos usuários",                    
-                    "features-title":    "Recursos",                    
-                    "feature-1":    "Visualização de condições de trânsito em tempo real",                    
-                    "feature-2":    "Tempos de espera estimados para travessias fronteiriças",                    
-                    "feature-3":    "Feeds de câmaras de trânsito ao vivo",                    
-                    "feature-4":    "Chat comunitário para atualizações em tempo real",                    
-                    "feature-5":    "Aplicativo móvel para atualizações de trânsito em movimento",                    
-                    "feature-6":    "Análise de padrões históricos de trânsito",                    
-                    "mobile-app-title":    "Receba Atualizações de Trânsito em Movimento",                    
-                    "mobile-app-desc":    "Baixe nosso aplicativo móvel para alertas de trânsito e assistência de navegação",                    
-                    "feature-alerts":    "Alertas Instantâneos",                    
-                    "feature-routing":    "Roteamento Inteligente",                    
-                    "feature-history":    "Histórico de Trânsito",                    
-                    "feature-maps":    "Mapas Offline",               
+                    "camera-title-1":   "松山隧道向羅理基（水塘）",                   
+                    "camera-title-2":   "松山隧道向高士德",                   
+                    "camera-title-3":   "紅街市",                   
+                    "camera-title-4":   "提督馬路與高士德大馬路交界",                   
+                    "camera-title-5":   "提督馬路",                   
+                    "camera-title-6":   "慕拉士大馬路",                   
+                    "camera-title-7":   "內港",                   
+                    "camera-title-8":   "黑沙環新街",                   
+                    "camera-title-9":   "塔石廣場",                   
+                    "camera-title-10":   "宋玉生廣場",                   
+                    "camera-title-11":   "捐血中心",                   
+                    "camera-title-12":   "南灣湖廣場",                   
+                    "camera-title-13":   "亚马喇前地",                   
+                    "camera-title-14":   "殷皇子大馬路與葡京路交界",                   
+                    "camera-title-15":   "新马路 / 南湾马路交界",                   
+                    "camera-title-16":   "新馬路",                   
+                    "camera-title-17":   "海灣花園",                   
+                    "camera-title-18":   "澳門國際機場",                   
+                    "camera-title-19":   "路氹連貫公路圓形地",                   
+                    "camera-title-20":   "金光大道",                   
+                    "camera-title-21":   "金光大道 2 / 路氹連貫公路",                   
+                    "camera-title-22":   "友誼馬路",                   
+                    "camera-title-23":   "友誼大橋近北安入口交匯處",                   
+                    "camera-title-24":   "友谊大桥向氹仔",                   
+                    "camera-title-25":   "友誼大橋向澳门",                   
+                    "camera-title-26":   "西灣大橋向澳门",                   
+                    "camera-title-27":   "西灣大橋向氹仔（高处）",                   
+                    "camera-title-28":   "西灣大橋向澳门（高处）",                   
+                    "camera-title-29":   "澳門大橋入口（澳门）",                   
+                    "camera-title-30":   "澳門大橋向氹仔",                   
+                    "camera-title-31":   "澳門大橋向澳门",                   
+                    "camera-title-32":   "關閘隧道",                   
+                    "camera-title-33":   "關閘大馬路",                   
+                    "camera-title-34":   "青茂口岸（A）",                   
+                    "camera-title-35":   "青茂口岸（B）",                   
+                    "camera-title-36":   "外港客運碼頭（A）",                   
+                    "camera-title-37":   "外港客運碼頭（B）",                   
+                    "camera-title-38":   "橫琴口岸（A）",                   
+                    "camera-title-39":   "橫琴口岸（B）",                   
+                    "camera-title-40":   "橫琴口岸（C）",                   
+                    "camera-title-41":   "橫琴口岸（D）",                   
+                    "camera-title-42":   "港珠澳大橋往珠海",                   
+                    "camera-title-43":   "港珠澳大橋往澳門",                   
+                    "camera-title-44":   "港珠澳大橋往送客平台",                   
+                    "camera-title-45":   "港珠澳大橋（澳門入境）"
+                },                   
+                pt:   {
+                    "header-title":   "Monitor de Trânsito de Macau",                   
+                    "welcome-message":   "Olá! Bem-vindo ao nosso website!",                   
+                    "header-subtitle":   "Condições de trânsito em tempo real e tempos de espera para as principais estradas e travessias fronteiriças de Macau",                   
+                    "nav-dashboard":   "Painel",                   
+                    "nav-cameras":   "Câmaras ao Vivo",                   
+                    "nav-news":   "Notícias",        
+                    "nav-chat":   "Chat Comunitário",                   
+                    "nav-about":   "Sobre",                   
+                    "map-instruction":   "Arraste para navegar no mapa",                   
+                    "traffic-overview":   "Visão Geral do Trânsito",                   
+                    "current-time-label":   "Hora Atual:   ",                   
+                    "overall-traffic":   "Trânsito Geral",                   
+                    "traffic-status-value":   "LEVE",                   
+                    "average-delay-label":   "Atraso Médio",                   
+                    "crossing-duration":   "Duração Estimada da Travessia",                   
+                    "friendship-bridge":   "Ponte da Amizade",                   
+                    "sai-van-bridge":   "Ponte de Sai Van",                   
+                    "horta-costa":   "Avenida de Horta e Costa",                   
+                    "san-ma-lou":   "San Ma Lou",                   
+                    "praca-amaral":   "Praça de Ferreira do Amaral",                   
+                    "portas-cerco":   "Portas do Cerco",                   
+                    "cotai-strip":   "Faixa de Cotai",                   
+                    "median-traffic-label":   "Tempo Médio de Trânsito:   ",                   
+                    "traffic-legend-title":   "Legenda de Trânsito",                   
+                    "severe-traffic":   "Trânsito Severo (40+ min de atraso)",                   
+                    "heavy-traffic":   "Trânsito Pesado (20-40 min de atraso)",                   
+                    "moderate-traffic":   "Trânsito Moderado (10-20 min de atraso)",                   
+                    "light-traffic":   "Trânsito Leve (<10 min de atraso)",                   
+                    "closed-traffic":   "Fechado/Bloqueado",                   
+                    "website-info-title":   "Informações de Trânsito do Website",                   
+                    "website-info-desc":   "Este monitor de trânsito em tempo real fornece tempos de espera estimados para estradas principais e travessias fronteiriças em Macau.",                   
+                    "info-point-1":   "Os tempos são atualizados a cada 30 segundos com base nas condições atuais de trânsito",                   
+                    "info-point-2":   "As cores indicam níveis de gravidade do trânsito",                   
+                    "info-point-3":   "Os dados são simulados para fins de demonstração",                   
+                    "info-point-4":   "Os tempos reais de viagem podem variar",                   
+                    "travel-tips-title":   "Dicas de Viagem",                   
+                    "tip-1":   "Evite horas de pico (7:  00-9:  30 e 17:  00-19:  00) quando possível",                   
+                    "tip-2":   "Note que a velocidade máxima em estradas normais em Macau é 50 km/h,   e nas pontes é 80 km/h.",                   
+                    "tip-3":   "Considere usar transporte público durante períodos de trânsito pesado",                   
+                    "tip-4":   "Verifique os horários de travessia fronteiriça antes de viajar",                   
+                    "tip-5":   "Planeje tempo extra para compromissos importantes",                   
+                    "tip-6":   "Use rotas alternativas quando estradas principais mostrarem congestionamento pesado",                   
+                    "live-cameras-title":   "Câmaras de Trânsito ao Vivo",                   
+                    "tab-macau-city":   "Cidade de Macau",                  
+                    "tab-taipa":   "Taipa",                  
+                    "tab-bridges":   "Pontes Transoceânicas",                  
+                    "tab-border":   "Passagens Fronteiriças",                  
+                    "community-chat-title":   "Chat Comunitário",                   
+                    "community-guidelines-title":   "Diretrizes Comunitárias",                   
+                    "community-guidelines-desc":   "Bem-vindo ao chat comunitário do Monitor de Trânsito de Macau! Este espaço é para compartilhar atualizações de trânsito em tempo real,   condições rodoviárias e dicas de viagem com residentes e visitantes de Macau.",                   
+                    "guidelines-intro":   "Por favor,   siga estas diretrizes para manter nossa comunidade útil e respeitosa:   ",                   
+                    "guideline-1":   "Compartilhe informações de trânsito precisas e atuais",                   
+                    "guideline-2":   "Seja respeitoso e cortês com todos os usuários",                   
+                    "guideline-3":   "Informe sobre incidentes rodoviários,   acidentes ou obras",                   
+                    "guideline-4":   "Faça perguntas sobre padrões de trânsito ou condições rodoviárias",                   
+                    "guideline-5":   "Evite spam,   anúncios ou discussões fora de tópico",                   
+                    "guideline-6":   "Use linguagem apropriada - sem conteúdo ofensivo",                   
+                    "moderation-note":   "Nossos moderadores monitoram o chat para garantir uma experiência positiva para todos. Violação destas diretrizes pode resultar em banimento temporário ou permanente do chat.",                   
+                    "about-title":   "Sobre o Monitor de Trânsito de Macau",                   
+                    "about-desc":   "O Monitor de Trânsito de Macau é uma plataforma de informações de trânsito em tempo real projetada para ajudar residentes e visitantes a navegar eficientemente pela rede rodoviária de Macau. Nosso serviço fornece condições de trânsito atualizadas,   tempos de travessia estimados e feeds de câmaras ao vivo para estradas principais e travessias fronteiriças.",                   
+                    "mission-title":   "Nossa Missão",                   
+                    "mission-desc":   "Nosso objetivo é reduzir o tempo de viagem e melhorar a segurança rodoviária em Macau fornecendo informações de trânsito precisas e em tempo real. Nossa plataforma ajuda os usuários a tomar decisões informadas sobre rotas e horários de viagem.",                   
+                    "data-sources-title":   "Fontes de Dados",                   
+                    "data-sources-desc":   "Nossos dados de trânsito são obtidos de múltiplos canais oficiais:   ",                   
+                    "source-1":   "DSAT (Direção de Serviços de Trânsito) - Dados de trânsito oficiais",                   
+                    "source-2":   "API do Google Maps - Relatórios de fluxo de trânsito e incidentes",                   
+                    "source-3":   "Câmaras de trânsito ao vivo operadas pela DSAT",                   
+                    "source-4":   "Relatórios comunitários de nossos usuários",                   
+                    "features-title":   "Recursos",                   
+                    "feature-1":   "Visualização de condições de trânsito em tempo real",                   
+                    "feature-2":   "Tempos de espera estimados para travessias fronteiriças",                   
+                    "feature-3":   "Feeds de câmaras de trânsito ao vivo",                   
+                    "feature-4":   "Chat comunitário para atualizações em tempo real",                   
+                    "feature-5":   "Aplicativo móvel para atualizações de trânsito em movimento",                   
+                    "feature-6":   "Análise de padrões históricos de trânsito",                   
+                    "mobile-app-title":   "Receba Atualizações de Trânsito em Movimento",                   
+                    "mobile-app-desc":   "Baixe nosso aplicativo móvel para alertas de trânsito e assistência de navegação",                   
+                    "feature-alerts":   "Alertas Instantâneos",                   
+                    "feature-routing":   "Roteamento Inteligente",                   
+                    "feature-history":   "Histórico de Trânsito",                   
+                    "feature-maps":   "Mapas Offline",              
                     // Camera titles
-                    "camera-title-1":    "Túnel da Penha em direção ao Largo do Governador Vasco Rocha Vieira (Reservatório)",                    
-                    "camera-title-2":    "Túnel da Penha em direção à Rua do Campo",                    
-                    "camera-title-3":    "Mercado da Rua do Aljube",                    
-                    "camera-title-4":    "Interseção da Avenida do Conselheiro Borja e Rua do Campo",                    
-                    "camera-title-5":    "Avenida do Conselheiro Borja",                    
-                    "camera-title-6":    "Avenida de Venceslau de Morais",                    
-                    "camera-title-7":    "Porto Interior",                    
-                    "camera-title-8":    "Rua Nova da Areia Preta",                    
-                    "camera-title-9":    "Praça de Tap Seac",                    
-                    "camera-title-10":    "Praça do Vasco Rocha Vieira",                    
-                    "camera-title-11":    "Centro de Doação de Sangue",                    
-                    "camera-title-12":    "Praça da Nave Desportiva",                    
-                    "camera-title-13":    "Praça de Ferreira do Amaral",                    
-                    "camera-title-14":    "Interseção da Avenida do Infante D. Henrique e Avenida do Dr. Rodrigo Rodrigues",                    
-                    "camera-title-15":    "Interseção da Rua dos Mercadores / Avenida da Praia Grande",                    
-                    "camera-title-16":    "Rua dos Mercadores",                    
-                    "camera-title-17":    "Jardim Haiwan",                    
-                    "camera-title-18":    "Aeroporto Internacional de Macau",                    
-                    "camera-title-19":    "Interseção Circular da Estrada do Istmo",                    
-                    "camera-title-20":    "Faixa de Cotai",                    
-                    "camera-title-21":    "Faixa de Cotai 2 / Estrada do Istmo",                    
-                    "camera-title-22":    "Avenida da Amizade",                    
-                    "camera-title-23":    "Ponte da Amizade perto da Interseção da Entrada da Baía Norte",                    
-                    "camera-title-24":    "Ponte da Amizade em direção a Taipa",                    
-                    "camera-title-25":    "Ponte da Amizade em direção a Macau",                    
-                    "camera-title-26":    "Ponte de Sai Van em direção a Macau",                    
-                    "camera-title-27":    "Ponte de Sai Van em direção a Taipa (Alto)",                    
-                    "camera-title-28":    "Ponte de Sai Van em direção a Macau (Alto)",                    
-                    "camera-title-29":    "Entrada da Ponte de Macau (Macau)",                    
-                    "camera-title-30":    "Ponte de Macau em direção a Taipa",                    
-                    "camera-title-31":    "Ponte de Macau em direção a Macau",                    
-                    "camera-title-32":    "Túnel da Portas do Cerco",                    
-                    "camera-title-33":    "Avenida da Portas do Cerco",                    
-                    "camera-title-34":    "Porto Qingmao (A)",                    
-                    "camera-title-35":    "Porto Qingmao (B)",                    
-                    "camera-title-36":    "Terminal de Ferry do Porto Exterior (A)",                    
-                    "camera-title-37":    "Terminal de Ferry do Porto Exterior (B)",                    
-                    "camera-title-38":    "Porto de Hengqin (A)",                    
-                    "camera-title-39":    "Porto de Hengqin (B)",                    
-                    "camera-title-40":    "Porto de Hengqin (C)",                    
-                    "camera-title-41":    "Porto de Hengqin (D)",                    
-                    "camera-title-42":    "Ponte Hong Kong-Zhuhai-Macau para Zhuhai",                    
-                    "camera-title-43":    "Ponte Hong Kong-Zhuhai-Macau para Macau",                    
-                    "camera-title-44":    "Ponte Hong Kong-Zhuhai-Macau para Plataforma de Entrega de Passageiros",                    
-                    "camera-title-45":    "Ponte Hong Kong-Zhuhai-Macau (Entrada Macau)"
-                },                    
-                ja:    {
-                    "header-title":    "マカオ交通モニター",                    
-                    "welcome-message":    "こんにちは！当サイトへようこそ！",                    
-                    "header-subtitle":    "マカオの主要道路と国境横断地点のリアルタイム交通状況と待ち時間",                    
-                    "nav-dashboard":    "ダッシュボード",                    
-                    "nav-cameras":    "ライブカメラ",                    
-                    "nav-news":    "ニュース",         
-                    "nav-chat":    "コミュニティチャット",                    
-                    "nav-about":    "概要",                    
-                    "map-instruction":    "ドラッグして地図を操作",                    
-                    "traffic-overview":    "交通概況",                    
-                    "current-time-label":    "現在時刻：",                    
-                    "overall-traffic":    "全体の交通状況",                    
-                    "traffic-status-value":    "軽度",                    
-                    "average-delay-label":    "平均遅延",                    
-                    "crossing-duration":    "推定通過時間",                    
-                    "friendship-bridge":    "友誼大橋",                    
-                    "sai-van-bridge":    "西湾大橋",                    
-                    "horta-costa":    "ホテラ・エ・コスタ大通り",                    
-                    "san-ma-lou":    "新馬路",                    
-                    "praca-amaral":    "アマラル広場",                    
-                    "portas-cerco":    "关闸边检大楼",                    
-                    "cotai-strip":    "コータイストリップ",                    
-                    "median-traffic-label":    "中央値交通時間：",                    
-                    "traffic-legend-title":    "交通凡例",                    
-                    "severe-traffic":    "深刻な交通（40分以上遅延）",                    
-                    "heavy-traffic":    "重い交通（20-40分遅延）",                    
-                    "moderate-traffic":    "中程度の交通（10-20分遅延）",                    
-                    "light-traffic":    "軽度の交通（10分未満遅延）",                    
-                    "closed-traffic":    "閉鎖/遮断",                    
-                    "website-info-title":    "ウェブサイト交通情報",                    
-                    "website-info-desc":    "このリアルタイム交通モニターは、マカオの主要道路と国境横断地点の推定待ち時間を提供します。",                    
-                    "info-point-1":    "時間は現在の交通状況に基づいて30秒ごとに更新されます",                    
-                    "info-point-2":    "色は交通の深刻度を示します",                    
-                    "info-point-3":    "データはデモンストレーション目的でシミュレートされています",                    
-                    "info-point-4":    "実際の旅行時間は異なる場合があります",                    
-                    "travel-tips-title":    "旅行のヒント",                    
-                    "tip-1":    "可能であればラッシュアワー（午前7時から9時30分、午後5時から7時）を避けてください",                    
-                    "tip-2":    "マカオの一般道路の最高速度は50km/h、橋は80km/hであることに注意してください。",                    
-                    "tip-3":    "交通混雑時に公共交通機関の利用を検討してください",                    
-                    "tip-4":    "旅行前に国境横断の時間を確認してください",                    
-                    "tip-5":    "重要な予定には余裕を持って時間を計画してください",                    
-                    "tip-6":    "主要道路が重い混雑を示している場合は代替ルートを使用してください",                    
-                    "live-cameras-title":    "ライブ交通カメラ",                    
-                    "tab-macau-city":    "澳門市區",                   
-                    "tab-taipa":    "氹仔",                   
-                    "tab-bridges":    "跨海大橋",                   
-                    "tab-border":    "口岸",                   
-                    "community-chat-title":    "コミュニティチャット",                    
-                    "community-guidelines-title":    "コミュニティガイドライン",                    
-                    "community-guidelines-desc":    "マカオ交通モニターのコミュニティチャットへようこそ！このスペースは、マカオの住民や訪問者とリアルタイムの交通更新、道路状況、旅行のヒントを共有するためのものです。",                    
-                    "guidelines-intro":    "コミュニティを助け合い、敬意のある場所にするために、以下のガイドラインに従ってください：",                    
-                    "guideline-1":    "正確で最新の交通情報を共有してください",                    
-                    "guideline-2":    "すべてのユーザーに対して敬意と礼儀を払ってください",                    
-                    "guideline-3":    "道路の事件、事故、工事を報告してください",                    
-                    "guideline-4":    "交通パターンや道路状況について質問してください",                    
-                    "guideline-5":    "スパム、広告、話題外の議論を避けてください",                    
-                    "guideline-6":    "適切な言葉遣いをしてください - 攻撃的な内容は禁止です",                    
-                    "moderation-note":    "私たちのモデレーターはチャットを監視し、すべての人がポジティブな体験ができるようにしています。これらのガイドラインに違反すると、チャットから一時的または永続的に禁止されることがあります。",                    
-                    "about-title":    "マカオ交通モニターについて",                    
-                    "about-desc":    "マカオ交通モニターは、住民と訪問者がマカオの道路網を効率的にナビゲートきように設計されたリアルタイム交通情報プラットフォームです。当社のサービスは、最新の交通状況、推定通過時間、主要道路と国境横断地点のライブカメラフィードを提供します。",                    
-                    "mission-title":    "私たちの使命",                    
-                    "mission-desc":    "正確でリアルタイムの交通情報を提供することで、マカオの旅行時間を短縮し、道路の安全性を向上させることを目指しています。当社のプラットフォームは、ユーザーが旅行ルートとタイミングについて情報に基づいた決定をできるようにします。",                    
-                    "data-sources-title":    "データソース",                    
-                    "data-sources-desc":    "私たちの交通データは複数の公式チャネルから取得されます：",                    
-                    "source-1":    "交通事務局 - 公式交通データ",                    
-                    "source-2":    "Google Maps API - 交通流と事件報告",                    
-                    "source-3":    "交通事務局が運営するライブ交通カメラ",                    
-                    "source-4":    "私たちのユーザーからのコミュニティ報告",                    
-                    "features-title":    "機能",                    
-                    "feature-1":    "リアルタイム交通状況の可視化",                    
-                    "feature-2":    "国境横断の推定待ち時間",                    
-                    "feature-3":    "ライブ交通カメラフィード",                    
-                    "feature-4":    "リアルタイム更新のためのコミュニティチャット",                    
-                    "feature-5":    "移動中の交通更新のためのモバイルアプリ",                    
-                    "feature-6":    "歴史的交通パターン分析",                    
-                    "mobile-app-title":    "外出先で交通情報を取得",                    
-                    "mobile-app-desc":    "交通アラートとナビゲーション支援のためのモバイルアプリをダウンロード",                    
-                    "feature-alerts":    "即時アラート",                    
-                    "feature-routing":    "スマートルーティング",                    
-                    "feature-history":    "交通履歴",                    
-                    "feature-maps":    "オフライン地図",               
+                    "camera-title-1":   "Túnel da Penha em direção ao Largo do Governador Vasco Rocha Vieira (Reservatório)",                   
+                    "camera-title-2":   "Túnel da Penha em direção à Rua do Campo",                   
+                    "camera-title-3":   "Mercado da Rua do Aljube",                   
+                    "camera-title-4":   "Interseção da Avenida do Conselheiro Borja e Rua do Campo",                   
+                    "camera-title-5":   "Avenida do Conselheiro Borja",                   
+                    "camera-title-6":   "Avenida de Venceslau de Morais",                   
+                    "camera-title-7":   "Porto Interior",                   
+                    "camera-title-8":   "Rua Nova da Areia Preta",                   
+                    "camera-title-9":   "Praça de Tap Seac",                   
+                    "camera-title-10":   "Praça do Vasco Rocha Vieira",                   
+                    "camera-title-11":   "Centro de Doação de Sangue",                   
+                    "camera-title-12":   "Praça da Nave Desportiva",                   
+                    "camera-title-13":   "Praça de Ferreira do Amaral",                   
+                    "camera-title-14":   "Interseção da Avenida do Infante D. Henrique e Avenida do Dr. Rodrigo Rodrigues",                   
+                    "camera-title-15":   "Interseção da Rua dos Mercadores / Avenida da Praia Grande",                   
+                    "camera-title-16":   "Rua dos Mercadores",                   
+                    "camera-title-17":   "Jardim Haiwan",                   
+                    "camera-title-18":   "Aeroporto Internacional de Macau",                   
+                    "camera-title-19":   "Interseção Circular da Estrada do Istmo",                   
+                    "camera-title-20":   "Faixa de Cotai",                   
+                    "camera-title-21":   "Faixa de Cotai 2 / Estrada do Istmo",                   
+                    "camera-title-22":   "Avenida da Amizade",                   
+                    "camera-title-23":   "Ponte da Amizade perto da Interseção da Entrada da Baía Norte",                   
+                    "camera-title-24":   "Ponte da Amizade em direção a Taipa",                   
+                    "camera-title-25":   "Ponte da Amizade em direção a Macau",                   
+                    "camera-title-26":   "Ponte de Sai Van em direção a Macau",                   
+                    "camera-title-27":   "Ponte de Sai Van em direção a Taipa (Alto)",                   
+                    "camera-title-28":   "Ponte de Sai Van em direção a Macau (Alto)",                   
+                    "camera-title-29":   "Entrada da Ponte de Macau (Macau)",                   
+                    "camera-title-30":   "Ponte de Macau em direção a Taipa",                   
+                    "camera-title-31":   "Ponte de Macau em direção a Macau",                   
+                    "camera-title-32":   "Túnel da Portas do Cerco",                   
+                    "camera-title-33":   "Avenida da Portas do Cerco",                   
+                    "camera-title-34":   "Porto Qingmao (A)",                   
+                    "camera-title-35":   "Porto Qingmao (B)",                   
+                    "camera-title-36":   "Terminal de Ferry do Porto Exterior (A)",                   
+                    "camera-title-37":   "Terminal de Ferry do Porto Exterior (B)",                   
+                    "camera-title-38":   "Porto de Hengqin (A)",                   
+                    "camera-title-39":   "Porto de Hengqin (B)",                   
+                    "camera-title-40":   "Porto de Hengqin (C)",                   
+                    "camera-title-41":   "Porto de Hengqin (D)",                   
+                    "camera-title-42":   "Ponte Hong Kong-Zhuhai-Macau para Zhuhai",                   
+                    "camera-title-43":   "Ponte Hong Kong-Zhuhai-Macau para Macau",                   
+                    "camera-title-44":   "Ponte Hong Kong-Zhuhai-Macau para Plataforma de Entrega de Passageiros",                   
+                    "camera-title-45":   "Ponte Hong Kong-Zhuhai-Macau (Entrada Macau)"
+                },                   
+                ja:   {
+                    "header-title":   "マカオ交通モニター",                   
+                    "welcome-message":   "こんにちは！当サイトへようこそ！",                   
+                    "header-subtitle":   "マカオの主要道路と国境横断地点のリアルタイム交通状況と待ち時間",                   
+                    "nav-dashboard":   "ダッシュボード",                   
+                    "nav-cameras":   "ライブカメラ",                   
+                    "nav-news":   "ニュース",        
+                    "nav-chat":   "コミュニティチャット",                   
+                    "nav-about":   "概要",                   
+                    "map-instruction":   "ドラッグして地図を操作",                   
+                    "traffic-overview":   "交通概況",                   
+                    "current-time-label":   "現在時刻：",                   
+                    "overall-traffic":   "全体の交通状況",                   
+                    "traffic-status-value":   "軽度",                   
+                    "average-delay-label":   "平均遅延",                   
+                    "crossing-duration":   "推定通過時間",                   
+                    "friendship-bridge":   "友誼大橋",                   
+                    "sai-van-bridge":   "西湾大橋",                   
+                    "horta-costa":   "ホテラ・エ・コスタ大通り",                   
+                    "san-ma-lou":   "新馬路",                   
+                    "praca-amaral":   "アマラル広場",                   
+                    "portas-cerco":   "关闸边检大楼",                   
+                    "cotai-strip":   "コータイストリップ",                   
+                    "median-traffic-label":   "中央値交通時間：",                   
+                    "traffic-legend-title":   "交通凡例",                   
+                    "severe-traffic":   "深刻な交通（40分以上遅延）",                   
+                    "heavy-traffic":   "重い交通（20-40分遅延）",                   
+                    "moderate-traffic":   "中程度の交通（10-20分遅延）",                   
+                    "light-traffic":   "軽度の交通（10分未満遅延）",                   
+                    "closed-traffic":   "閉鎖/遮断",                   
+                    "website-info-title":   "ウェブサイト交通情報",                   
+                    "website-info-desc":   "このリアルタイム交通モニターは、マカオの主要道路と国境横断地点の推定待ち時間を提供します。",                   
+                    "info-point-1":   "時間は現在の交通状況に基づいて30秒ごとに更新されます",                   
+                    "info-point-2":   "色は交通の深刻度を示します",                   
+                    "info-point-3":   "データはデモンストレーション目的でシミュレートされています",                   
+                    "info-point-4":   "実際の旅行時間は異なる場合があります",                   
+                    "travel-tips-title":   "旅行のヒント",                   
+                    "tip-1":   "可能であればラッシュアワー（午前7時から9時30分、午後5時から7時）を避けてください",                   
+                    "tip-2":   "マカオの一般道路の最高速度は50km/h、橋は80km/hであることに注意してください。",                   
+                    "tip-3":   "交通混雑時に公共交通機関の利用を検討してください",                   
+                    "tip-4":   "旅行前に国境横断の時間を確認してください",                   
+                    "tip-5":   "重要な予定には余裕を持って時間を計画してください",                   
+                    "tip-6":   "主要道路が重い混雑を示している場合は代替ルートを使用してください",                   
+                    "live-cameras-title":   "ライブ交通カメラ",                   
+                    "tab-macau-city":   "澳門市區",                  
+                    "tab-taipa":   "氹仔",                  
+                    "tab-bridges":   "跨海大橋",                  
+                    "tab-border":   "口岸",                  
+                    "community-chat-title":   "コミュニティチャット",                   
+                    "community-guidelines-title":   "コミュニティガイドライン",                   
+                    "community-guidelines-desc":   "マカオ交通モニターのコミュニティチャットへようこそ！このスペースは、マカオの住民や訪問者とリアルタイムの交通更新、道路状況、旅行のヒントを共有するためのものです。",                   
+                    "guidelines-intro":   "コミュニティを助け合い、敬意のある場所にするために、以下のガイドラインに従ってください：",                   
+                    "guideline-1":   "正確で最新の交通情報を共有してください",                   
+                    "guideline-2":   "すべてのユーザーに対して敬意と礼儀を払ってください",                   
+                    "guideline-3":   "道路の事件、事故、工事を報告してください",                   
+                    "guideline-4":   "交通パターンや道路状況について質問してください",                   
+                    "guideline-5":   "スパム、広告、話題外の議論を避けてください",                   
+                    "guideline-6":   "適切な言葉遣いをしてください - 攻撃的な内容は禁止です",                   
+                    "moderation-note":   "私たちのモデレーターはチャットを監視し、すべての人がポジティブな体験ができるようにしています。これらのガイドラインに違反すると、チャットから一時的または永続的に禁止されることがあります。",                   
+                    "about-title":   "マカオ交通モニターについて",                   
+                    "about-desc":   "マカオ交通モニターは、住民と訪問者がマカオの道路網を効率的にナビゲートきように設計されたリアルタイム交通情報プラットフォームです。当社のサービスは、最新の交通状況、推定通過時間、主要道路と国境横断地点のライブカメラフィードを提供します。",                   
+                    "mission-title":   "私たちの使命",                   
+                    "mission-desc":   "正確でリアルタイムの交通情報を提供することで、マカオの旅行時間を短縮し、道路の安全性を向上させることを目指しています。当社のプラットフォームは、ユーザーが旅行ルートとタイミングについて情報に基づいた決定をできるようにします。",                   
+                    "data-sources-title":   "データソース",                   
+                    "data-sources-desc":   "私たちの交通データは複数の公式チャネルから取得されます：",                   
+                    "source-1":   "交通事務局 - 公式交通データ",                   
+                    "source-2":   "Google Maps API - 交通流と事件報告",                   
+                    "source-3":   "交通事務局が運営するライブ交通カメラ",                   
+                    "source-4":   "私たちのユーザーからのコミュニティ報告",                   
+                    "features-title":   "機能",                   
+                    "feature-1":   "リアルタイム交通状況の可視化",                   
+                    "feature-2":   "国境横断の推定待ち時間",                   
+                    "feature-3":   "ライブ交通カメラフィード",                   
+                    "feature-4":   "リアルタイム更新のためのコミュニティチャット",                   
+                    "feature-5":   "移動中の交通更新のためのモバイルアプリ",                   
+                    "feature-6":   "歴史的交通パターン分析",                   
+                    "mobile-app-title":   "外出先で交通情報を取得",                   
+                    "mobile-app-desc":   "交通アラートとナビゲーション支援のためのモバイルアプリをダウンロード",                   
+                    "feature-alerts":   "即時アラート",                   
+                    "feature-routing":   "スマートルーティング",                   
+                    "feature-history":   "交通履歴",                   
+                    "feature-maps":   "オフライン地図",              
                     // Camera titles
-                    "camera-title-1":    "ペニャトンネル ヴァスコ・ロチャ・ヴィエイラ知事広場方面（貯水池）",                    
-                    "camera-title-2":    "ペニャトンネル ルア・ド・カンプ方面",                    
-                    "camera-title-3":    "アルジュベ通り市場",                    
-                    "camera-title-4":    "コンセレイロ・ボルジャ大通りとルア・ド・カンプの交差点",                    
-                    "camera-title-5":    "コンセレイロ・ボルジャ大通り",                    
-                    "camera-title-6":    "ベンセスラウ・デ・モライス大通り",                    
-                    "camera-title-7":    "内港",                    
-                    "camera-title-8":    "アレイア・プレタ新街",                    
-                    "camera-title-9":    "タップ・セアック広場",                    
-                    "camera-title-10":    "ヴァスコ・ロチャ・ヴィエイラ広場",                    
-                    "camera-title-11":    "献血センター",                    
-                    "camera-title-12":    "ナヴェ・デスポーティヴァ広場",                    
-                    "camera-title-13":    "フェレイラ・ド・アマラル広場",                    
-                    "camera-title-14":    "インファンテ・ドン・エンリケ大通りとロドリゴ・ロドリゲス医師大通りの交差点",                    
-                    "camera-title-15":    "ルア・ドス・メルカドーレスとプラヤ・グランデ大通りの交差点",                    
-                    "camera-title-16":    "ルア・ドス・メルカドーレス",                    
-                    "camera-title-17":    "ハイワン・ガーデン",                    
-                    "camera-title-18":    "マカオ国際空港",                    
-                    "camera-title-19":    "イストモ環状道路交差点",                    
-                    "camera-title-20":    "コータイ・ストリップ",                    
-                    "camera-title-21":    "コータイ・ストリップ2 / イストモ道路",                    
-                    "camera-title-22":    "アミザデ大通り",                    
-                    "camera-title-23":    "北湾入口交差点付近のアミザデ橋",                    
-                    "camera-title-24":    "タージャ方面のアミザデ橋",                    
-                    "camera-title-25":    "マカオ方面のアミザデ橋",                    
-                    "camera-title-26":    "マカオ方面のサイヴァン橋",                    
-                    "camera-title-27":    "タージャ方面のサイヴァン橋（高所）",                    
-                    "camera-title-28":    "マカオ方面のサイヴァン橋（高所）",                    
-                    "camera-title-29":    "マカオ橋入口（マカオ）",                    
-                    "camera-title-30":    "タージャ方面のマカオ橋",                    
-                    "camera-title-31":    "マカオ方面のマカオ橋",                    
-                    "camera-title-32":    "ポルタス・ド・セルコトンネル",                    
-                    "camera-title-33":    "ポルタス・ド・セルコ大通り",                    
-                    "camera-title-34":    "青茂ポート（A）",                    
-                    "camera-title-35":    "青茂ポート（B）",                    
-                    "camera-title-36":    "外港フェリー乗り場（A）",                    
-                    "camera-title-37":    "外港フェリー乗り場（B）",                    
-                    "camera-title-38":    "横琴ポート（A）",                    
-                    "camera-title-39":    "横琴ポート（B）",                    
-                    "camera-title-40":    "横琴ポート（C）",                    
-                    "camera-title-41":    "横琴ポート（D）",                    
-                    "camera-title-42":    "香港・珠海・マカオ橋 珠海行き",                    
-                    "camera-title-43":    "香港・珠海・マカオ橋 マカオ行き",                    
-                    "camera-title-44":    "香港・珠海・マカオ橋 送客プラットフォーム行き",                    
-                    "camera-title-45":    "香港・珠海・マカオ橋（マカオ入国）"
+                    "camera-title-1":   "ペニャトンネル ヴァスコ・ロチャ・ヴィエイラ知事広場方面（貯水池）",                   
+                    "camera-title-2":   "ペニャトンネル ルア・ド・カンプ方面",                   
+                    "camera-title-3":   "アルジュベ通り市場",                   
+                    "camera-title-4":   "コンセレイロ・ボルジャ大通りとルア・ド・カンプの交差点",                   
+                    "camera-title-5":   "コンセレイロ・ボルジャ大通り",                   
+                    "camera-title-6":   "ベンセスラウ・デ・モライス大通り",                   
+                    "camera-title-7":   "内港",                   
+                    "camera-title-8":   "アレイア・プレタ新街",                   
+                    "camera-title-9":   "タップ・セアック広場",                   
+                    "camera-title-10":   "ヴァスコ・ロチャ・ヴィエイラ広場",                   
+                    "camera-title-11":   "献血センター",                   
+                    "camera-title-12":   "ナヴェ・デスポーティヴァ広場",                   
+                    "camera-title-13":   "フェレイラ・ド・アマラル広場",                   
+                    "camera-title-14":   "インファンテ・ドン・エンリケ大通りとロドリゴ・ロドリゲス医師大通りの交差点",                   
+                    "camera-title-15":   "ルア・ドス・メルカドーレスとプラヤ・グランデ大通りの交差点",                   
+                    "camera-title-16":   "ルア・ドス・メルカドーレス",                   
+                    "camera-title-17":   "ハイワン・ガーデン",                   
+                    "camera-title-18":   "マカオ国際空港",                   
+                    "camera-title-19":   "イストモ環状道路交差点",                   
+                    "camera-title-20":   "コータイ・ストリップ",                   
+                    "camera-title-21":   "コータイ・ストリップ2 / イストモ道路",                   
+                    "camera-title-22":   "アミザデ大通り",                   
+                    "camera-title-23":   "北湾入口交差点付近のアミザデ橋",                   
+                    "camera-title-24":   "タージャ方面のアミザデ橋",                   
+                    "camera-title-25":   "マカオ方面のアミザデ橋",                   
+                    "camera-title-26":   "マカオ方面のサイヴァン橋",                   
+                    "camera-title-27":   "タージャ方面のサイヴァン橋（高所）",                   
+                    "camera-title-28":   "マカオ方面のサイヴァン橋（高所）",                   
+                    "camera-title-29":   "マカオ橋入口（マカオ）",                   
+                    "camera-title-30":   "タージャ方面のマカオ橋",                   
+                    "camera-title-31":   "マカオ方面のマカオ橋",                   
+                    "camera-title-32":   "ポルタス・ド・セルコトンネル",                   
+                    "camera-title-33":   "ポルタス・ド・セルコ大通り",                   
+                    "camera-title-34":   "青茂ポート（A）",                   
+                    "camera-title-35":   "青茂ポート（B）",                   
+                    "camera-title-36":   "外港フェリー乗り場（A）",                   
+                    "camera-title-37":   "外港フェリー乗り場（B）",                   
+                    "camera-title-38":   "横琴ポート（A）",                   
+                    "camera-title-39":   "横琴ポート（B）",                   
+                    "camera-title-40":   "横琴ポート（C）",                   
+                    "camera-title-41":   "横琴ポート（D）",                   
+                    "camera-title-42":   "香港・珠海・マカオ橋 珠海行き",                   
+                    "camera-title-43":   "香港・珠海・マカオ橋 マカオ行き",                   
+                    "camera-title-44":   "香港・珠海・マカオ橋 送客プラットフォーム行き",                   
+                    "camera-title-45":   "香港・珠海・マカオ橋（マカオ入国）"
                 }
             };
             
@@ -1913,15 +1913,15 @@
             function changeLanguage(lang) {
                 // Update current language display
                 const langNames = {
-                    'en':    'English',                    
-                    'zh':    '繁體中文',                    
-                    'pt':    'Português',                    
-                    'ja':    '日本語'
+                    'en':   'English',                   
+                    'zh':   '繁體中文',                   
+                    'pt':   'Português',                   
+                    'ja':   '日本語'
                 };
                 currentLangSpan.textContent = langNames[lang];
                 
                 // Update all translatable elements
-                const elements = document.querySelectorAll('[id^="header-title"],    [id^="welcome-message"],    [id^="header-subtitle"],    [id^="nav-"],    [id^="map-instruction"],    [id^="traffic-overview"],    [id^="current-time-label"],    [id^="overall-traffic"],    [id^="traffic-status-value"],    [id^="average-delay-label"],    [id^="crossing-duration"],    [id^="friendship-bridge"],    [id^="sai-van-bridge"],    [id^="horta-costa"],    [id^="san-ma-lou"],    [id^="praca-amaral"],    [id^="portas-cerco"],    [id^="cotai-strip"],    [id^="median-traffic-label"],    [id^="traffic-legend-title"],    [id^="severe-traffic"],    [id^="heavy-traffic"],    [id^="moderate-traffic"],    [id^="light-traffic"],    [id^="closed-traffic"],    [id^="website-info-title"],    [id^="website-info-desc"],    [id^="info-point-"],    [id^="travel-tips-title"],    [id^="tip-"],    [id^="live-cameras-title"],    [id^="tab-"],    [id^="community-chat-title"],    [id^="community-guidelines-title"],    [id^="community-guidelines-desc"],    [id^="guidelines-intro"],    [id^="guideline-"],    [id^="moderation-note"],    [id^="about-title"],    [id^="about-desc"],    [id^="mission-title"],    [id^="mission-desc"],    [id^="data-sources-title"],    [id^="data-sources-desc"],    [id^="source-"],    [id^="features-title"],    [id^="feature-"],    [id^="mobile-app-title"],    [id^="mobile-app-desc"],    [id^="feature-alerts"],    [id^="feature-routing"],    [id^="feature-history"],    [id^="feature-maps"],    [id^="camera-title-"]');
+                const elements = document.querySelectorAll('[id^="header-title"],   [id^="welcome-message"],   [id^="header-subtitle"],   [id^="nav-"],   [id^="map-instruction"],   [id^="traffic-overview"],   [id^="current-time-label"],   [id^="overall-traffic"],   [id^="traffic-status-value"],   [id^="average-delay-label"],   [id^="crossing-duration"],   [id^="friendship-bridge"],   [id^="sai-van-bridge"],   [id^="horta-costa"],   [id^="san-ma-lou"],   [id^="praca-amaral"],   [id^="portas-cerco"],   [id^="cotai-strip"],   [id^="median-traffic-label"],   [id^="traffic-legend-title"],   [id^="severe-traffic"],   [id^="heavy-traffic"],   [id^="moderate-traffic"],   [id^="light-traffic"],   [id^="closed-traffic"],   [id^="website-info-title"],   [id^="website-info-desc"],   [id^="info-point-"],   [id^="travel-tips-title"],   [id^="tip-"],   [id^="live-cameras-title"],   [id^="tab-"],   [id^="community-chat-title"],   [id^="community-guidelines-title"],   [id^="community-guidelines-desc"],   [id^="guidelines-intro"],   [id^="guideline-"],   [id^="moderation-note"],   [id^="about-title"],   [id^="about-desc"],   [id^="mission-title"],   [id^="mission-desc"],   [id^="data-sources-title"],   [id^="data-sources-desc"],   [id^="source-"],   [id^="features-title"],   [id^="feature-"],   [id^="mobile-app-title"],   [id^="mobile-app-desc"],   [id^="feature-alerts"],   [id^="feature-routing"],   [id^="feature-history"],   [id^="feature-maps"],   [id^="camera-title-"]');
                 
                 elements.forEach(element => {
                     const id = element.id;
@@ -1935,7 +1935,7 @@
                 });
                 
                 // Store selected language in localStorage
-                localStorage.setItem('selectedLanguage',    lang);
+                localStorage.setItem('selectedLanguage',   lang);
                 
                 // Reload cameras if on cameras page to update camera titles
                 const activePage = document.querySelector('.page.active');
@@ -1956,11 +1956,11 @@
             // Check if popup has been shown in this session
             if (!sessionStorage.getItem('newsPopupShown')) {
                 // Show popup after a delay
-                setTimeout(showNewsPopup,    2000);
+                setTimeout(showNewsPopup,   2000);
             }
             
-            closePopup.addEventListener('click',    hideNewsPopup);
-            closeSpan.addEventListener('click',    hideNewsPopup);
+            closePopup.addEventListener('click',   hideNewsPopup);
+            closeSpan.addEventListener('click',   hideNewsPopup);
             
             function showNewsPopup() {
                 // Load latest news for popup
@@ -1972,15 +1972,15 @@
                             const latestNews = Object.values(news)[0];
                             document.getElementById('popup-news-content').innerHTML = `
                                 <h3>${latestNews.title}</h3>
-                                <p><strong>Date:    </strong> ${latestNews.date}</p>
+                                <p><strong>Date:   </strong> ${latestNews.date}</p>
                                 <p>${latestNews.content}</p>
                             `;
                             newsPopup.style.display = 'block';
-                            sessionStorage.setItem('newsPopupShown',    'true');
+                            sessionStorage.setItem('newsPopupShown',   'true');
                         }
                     })
                     .catch((error) => {
-                        console.error('Error loading popup news:    ',    error);
+                        console.error('Error loading popup news:   ',   error);
                         newsPopup.style.display = 'none';
                     });
             }
@@ -1990,7 +1990,7 @@
             }
             
             // Close popup if user clicks outside content
-            window.addEventListener('click',    function(event) {
+            window.addEventListener('click',   function(event) {
                 if (event.target === newsPopup) {
                     hideNewsPopup();
                 }
@@ -1999,48 +1999,48 @@
         
         // Updated traffic data with new time ranges
         const trafficData = {
-            "friendship":    [
-                { start:    7,    end:    9.5,    min:    4,    max:    8 },                                // 7:   00 to 9:   30 = 4-8 mins
-                { start:    9,    end:    15,    min:    6,    max:    7 },                                // 9:   00 - 15:   00 = 5-10 mins
-                { start:    15.01,    end:    20,    min:    8,    max:    10 },                            // 15:   01 - 20:   00 - 8-10 mins
-                { start:    19,    end:    6.99,    min:    2,    max:    4 }    // 19:   00 to 6:   59 - 4-5 mins
-            ],                            
-            "sai-van":    [
-                { start:    7,    end:    9.5,    min:    3,    max:    5 },                                // 7:   00 to 9:   30 = 3-5 mins
-                { start:    9.51,    end:    15,    min:    3,    max:    5 },                             // 9:   31 - 15:   00 = 5-10 mins
-                { start:    15.01,    end:    18.99,    min:    3,    max:    5 },                            // 15:   01 - 18:   59 - 6-15 mins
-                { start:    19,    end:    6.99,    min:    2,    max:    4 }   // 19:   00 to 6:   59 - 4-10 mins
-            ],                            
-            "horta":    [
-                { start:    7,    end:    9.99,    min:    2,    max:    7 },                              // 7:   00 to 9:   59 = 8-18 mins
-                { start:    10,    end:    15,    min:    5,    max:    7 },                               // 10:   00 - 15:   00= 5-10 mins
-                { start:    15.5,    end:    18.99,    min:    15,    max:    20 },                            // 15:   30-18:   59 - 15-30 mins
-                { start:    19,    end:    6.99,    min:    2,    max:    4 }    // 19:   00 to 6:   59 - 4-8 mins
-            ],                            
-            "san-ma":    [
-                { start:    7,    end:    8.99,    min:    6,    max:    10 },                              // 7:   00 to 8:   59 = 6-10 mins
-                { start:    9,    end:    15,    min:    1,    max:    10 },                                // 9:   00- 15:   00 = 1-10 mins
-                { start:    15.01,    end:    18.99,    min:    10,    max:    20 },                            // 15:   01-18:   59 - 10-20 mins
-                { start:    19,    end:    6.99,    min:    2,    max:    4 }   // 19:   00to 6:   59 - 4-10 mins
-            ],                            
-            "praca":    [
-                { start:    7,    end:    8.99,    min:    3,    max:    7 },                              // 7:   00 to 8:   59 =6-15mins
-                { start:    9,    end:    15,    min:    3,    max:    7 },                                // 9:   00 - 15:   00 = 6-15 mins
-                { start:    15.01,    end:    18.99,    min:    3,    max:    5 },                            // 15:   01 - 18:   59 - 6-15mins
-                { start:    19,    end:    6.99,    min:    2,    max:    4 }   // 19:   00 to 6:   59 - 6-15 mins
-            ],                            
-            "portas":    [
-                { start:    7,    end:    8.99,    min:    5,    max:    10 },                              // 7:   00 to 8:   59 = 5 - 10 mins
-                { start:    9,    end:    15,    min:    5,    max:    8 },                               // 9:   00- 15:   00 = 10-15 mins
-                { start:    15.01,    end:    20,    min:    10,    max:    25 },                            // 15:   01 - 20:   00 = 10-25 min
-                { start:    20.01,    end:    23,    min:    5,    max:    13 },                            // 20:   01 - 23:   00 = 10-15 mins
-                { start:    23.01,    end:    6.99,    min:    1,    max:    2 } // 23:   01-6:   59= 1-3 mins
-            ],                            
-            "cotai":    [
-                { start:    7,    end:    8.99,    min:    3,    max:    10 },                              // 7:   00 to 8:   59 =3-10mins
-                { start:    9,    end:    15,    min:    3,    max:    10 },                                // 9:   00 - 15:   00 = 3-10 mins
-                { start:    15.01,    end:    18.99,    min:    10,    max:    15 },                            // 15:   01 - 18:   59 - 10-15mins
-                { start:    19,    end:    6.99,    min:    2,    max:    4 }   // 19:   00 to 6:   59 - 6-10 mins
+            "friendship":   [
+                { start:   7,   end:   9.5,   min:   4,   max:   8 },                               // 7:  00 to 9:  30 = 4-8 mins
+                { start:   9,   end:   15,   min:   6,   max:   7 },                               // 9:  00 - 15:  00 = 5-10 mins
+                { start:   15.01,   end:   20,   min:   8,   max:   10 },                           // 15:  01 - 20:  00 - 8-10 mins
+                { start:   19,   end:   6.99,   min:   2,   max:   4 }    // 19:  00 to 6:  59 - 4-5 mins
+            ],                           
+            "sai-van":   [
+                { start:   7,   end:   9.5,   min:   3,   max:   5 },                               // 7:  00 to 9:  30 = 3-5 mins
+                { start:   9.51,   end:   15,   min:   3,   max:   5 },                            // 9:  31 - 15:  00 = 5-10 mins
+                { start:   15.01,   end:   18.99,   min:   3,   max:   5 },                           // 15:  01 - 18:  59 - 6-15 mins
+                { start:   19,   end:   6.99,   min:   2,   max:   4 }   // 19:  00 to 6:  59 - 4-10 mins
+            ],                           
+            "horta":   [
+                { start:   7,   end:   9.99,   min:   2,   max:   7 },                             // 7:  00 to 9:  59 = 8-18 mins
+                { start:   10,   end:   15,   min:   5,   max:   7 },                              // 10:  00 - 15:  00= 5-10 mins
+                { start:   15.5,   end:   18.99,   min:   15,   max:   20 },                           // 15:  30-18:  59 - 15-30 mins
+                { start:   19,   end:   6.99,   min:   2,   max:   4 }    // 19:  00 to 6:  59 - 4-8 mins
+            ],                           
+            "san-ma":   [
+                { start:   7,   end:   8.99,   min:   6,   max:   10 },                             // 7:  00 to 8:  59 = 6-10 mins
+                { start:   9,   end:   15,   min:   1,   max:   10 },                               // 9:  00- 15:  00 = 1-10 mins
+                { start:   15.01,   end:   18.99,   min:   10,   max:   20 },                           // 15:  01-18:  59 - 10-20 mins
+                { start:   19,   end:   6.99,   min:   2,   max:   4 }   // 19:  00to 6:  59 - 4-10 mins
+            ],                           
+            "praca":   [
+                { start:   7,   end:   8.99,   min:   3,   max:   7 },                             // 7:  00 to 8:  59 =6-15mins
+                { start:   9,   end:   15,   min:   3,   max:   7 },                               // 9:  00 - 15:  00 = 6-15 mins
+                { start:   15.01,   end:   18.99,   min:   3,   max:   5 },                           // 15:  01 - 18:  59 - 6-15mins
+                { start:   19,   end:   6.99,   min:   2,   max:   4 }   // 19:  00 to 6:  59 - 6-15 mins
+            ],                           
+            "portas":   [
+                { start:   7,   end:   8.99,   min:   5,   max:   10 },                             // 7:  00 to 8:  59 = 5 - 10 mins
+                { start:   9,   end:   15,   min:   5,   max:   8 },                              // 9:  00- 15:  00 = 10-15 mins
+                { start:   15.01,   end:   20,   min:   10,   max:   25 },                           // 15:  01 - 20:  00 = 10-25 min
+                { start:   20.01,   end:   23,   min:   5,   max:   13 },                           // 20:  01 - 23:  00 = 10-15 mins
+                { start:   23.01,   end:   6.99,   min:   1,   max:   2 } // 23:  01-6:  59= 1-3 mins
+            ],                           
+            "cotai":   [
+                { start:   7,   end:   8.99,   min:   3,   max:   10 },                             // 7:  00 to 8:  59 =3-10mins
+                { start:   9,   end:   15,   min:   3,   max:   10 },                               // 9:  00 - 15:  00 = 3-10 mins
+                { start:   15.01,   end:   18.99,   min:   10,   max:   15 },                           // 15:  01 - 18:  59 - 10-15mins
+                { start:   19,   end:   6.99,   min:   2,   max:   4 }   // 19:  00 to 6:  59 - 6-10 mins
             ]
         };
 
@@ -2050,18 +2050,18 @@
         let locationCount = 0;
         let lastUpdateTime = 0;
 
-        // Function to get current time in decimal format (e.g.,    14.5 for 2:   30 PM)
+        // Function to get current time in decimal format (e.g.,   14.5 for 2:  30 PM)
         function getCurrentTimeDecimal() {
             const now = new Date();
             return now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
         }
 
-        // Function to format time as HH:   MM:   SS
+        // Function to format time as HH:  MM:  SS
         function formatTime(date) {
-            const hours = String(date.getHours()).padStart(2,    '0');
-            const minutes = String(date.getMinutes()).padStart(2,    '0');
-            const seconds = String(date.getSeconds()).padStart(2,    '0');
-            return `${hours}:   ${minutes}:   ${seconds}`;
+            const hours = String(date.getHours()).padStart(2,   '0');
+            const minutes = String(date.getMinutes()).padStart(2,   '0');
+            const seconds = String(date.getSeconds()).padStart(2,   '0');
+            return `${hours}:  ${minutes}:  ${seconds}`;
         }
 
         // Function to get traffic time for a location based on current time
@@ -2071,7 +2071,7 @@
             
             // Find the appropriate time range
             for (const range of data) {
-                // Handle overnight ranges (e.g.,    19:   00 to 06:   59)
+                // Handle overnight ranges (e.g.,   19:  00 to 06:  59)
                 if (range.start > range.end) {
                     if (currentTime >= range.start || currentTime <= range.end) {
                         // Special handling for Sai Van Bridge with chance
@@ -2083,8 +2083,8 @@
                         // Calculate base time as midpoint of range
                         const baseTime = Math.floor((range.min + range.max) / 2);
                         // Add small fluctuation
-                        const fluctuation = Math.floor(Math.random() * 3) - 1; // -1,    0,    or 1
-                        return Math.max(range.min,    Math.min(range.max,    baseTime + fluctuation));
+                        const fluctuation = Math.floor(Math.random() * 3) - 1; // -1,   0,   or 1
+                        return Math.max(range.min,   Math.min(range.max,   baseTime + fluctuation));
                     }
                 } else {
                     if (currentTime >= range.start && currentTime <= range.end) {
@@ -2097,8 +2097,8 @@
                         // Calculate base time as midpoint of range
                         const baseTime = Math.floor((range.min + range.max) / 2);
                         // Add small fluctuation
-                        const fluctuation = Math.floor(Math.random() * 3) - 1; // -1,    0,    or 1
-                        return Math.max(range.min,    Math.min(range.max,    baseTime + fluctuation));
+                        const fluctuation = Math.floor(Math.random() * 3) - 1; // -1,   0,   or 1
+                        return Math.max(range.min,   Math.min(range.max,   baseTime + fluctuation));
                     }
                 }
             }
@@ -2127,14 +2127,14 @@
                     if (timeElement) {
                         let newTime;
                         
-                        // If this is the first time,    initialize with calculated time
+                        // If this is the first time,   initialize with calculated time
                         if (currentTimes[location] === undefined) {
                             newTime = getTrafficTime(location);
                             currentTimes[location] = newTime;
                         } else {
-                            // For subsequent updates,    adjust by -1,    0,    or +1 minute
-                            const adjustment = Math.floor(Math.random() * 3) - 1; // -1,    0,    or 1
-                            newTime = Math.max(1,    currentTimes[location] + adjustment);
+                            // For subsequent updates,   adjust by -1,   0,   or +1 minute
+                            const adjustment = Math.floor(Math.random() * 3) - 1; // -1,   0,   or 1
+                            newTime = Math.max(1,   currentTimes[location] + adjustment);
                             currentTimes[location] = newTime;
                         }
                         
@@ -2179,9 +2179,6 @@
                 const bannedRef = database.ref('banned_ips');
                 const snapshot = await bannedRef.once('value');
                 
-                // Log the visit (always log to all_visits)
-                logVisit(userIP);
-                
                 if (snapshot.exists()) {
                     const bannedIPs = snapshot.val();
                     let isBanned = false;
@@ -2192,9 +2189,9 @@
                         if (bannedIPs[banId].ip === userIP) {
                             isBanned = true;
                             banInfo = {
-                                banId:    banId,    
-                                reason:    bannedIPs[banId].reason || 'No reason specified',    
-                                timestamp:    bannedIPs[banId].timestamp
+                                banId:   banId,   
+                                reason:   bannedIPs[banId].reason || 'No reason specified',   
+                                timestamp:   bannedIPs[banId].timestamp
                             };
                             break;
                         }
@@ -2204,11 +2201,11 @@
                         ipCheckingMessage.style.display = 'none';
                         bannedMessage.style.display = 'block';
                         banDetails.innerHTML = `
-                            <strong>BAN ID:    </strong> ${banInfo.banId}<br>
-                            <strong>Reason:    </strong> ${banInfo.reason}<br>
-                            <strong>Timestamp:    </strong> ${new Date(banInfo.timestamp).toLocaleString()}
+                            <strong>BAN ID:   </strong> ${banInfo.banId}<br>
+                            <strong>Reason:   </strong> ${banInfo.reason}<br>
+                            <strong>Timestamp:   </strong> ${new Date(banInfo.timestamp).toLocaleString()}
                         `;
-                        logBannedAccess(userIP,    banInfo.banId);
+                        logBannedAccess(userIP,   banInfo.banId);
                         return;
                     }
                 }
@@ -2221,8 +2218,10 @@
                 document.getElementById('dashboard-page').style.display = 'block';
                 document.querySelector('.page.active').style.display = 'block';
                 
+                // Log the visit
+                logVisit(userIP);
             } catch (error) {
-                console.error('Error checking IP ban status:    ',    error);
+                console.error('Error checking IP ban status:   ',   error);
                 ipCheckingMessage.style.display = 'none';
                 document.querySelectorAll('.page').forEach(page => {
                     page.style.display = 'block';
@@ -2239,39 +2238,39 @@
                 const title = `Visit on ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
                 
                 const visitData = {
-                    title:    title,    // Generated title with date/time
-                    ip:    userIP,    
-                    timestamp:    firebase.database.ServerValue.TIMESTAMP,    
-                    userAgent:    navigator.userAgent,    
-                    page:    window.location.href
+                    title:   title,   // Generated title with date/time
+                    ip:   userIP,   
+                    timestamp:   firebase.database.ServerValue.TIMESTAMP,   
+                    userAgent:   navigator.userAgent,   
+                    page:   window.location.href
                 };
                 
                 // Log to Firebase under 'all_visits'
                 const visitRef = database.ref('all_visits').push();
                 visitRef.set(visitData)
                     .then(() => {
-                        console.log('Visit logged successfully with ID:   ',   visitRef.key);
+                        console.log('Visit logged successfully with ID:  ',  visitRef.key);
                     })
                     .catch(error => {
-                        console.error('Error logging visit:    ',    error);
+                        console.error('Error logging visit:   ',   error);
                     });
             } catch (error) {
-                console.error('Error in logVisit:    ',    error);
+                console.error('Error in logVisit:   ',   error);
             }
         }
         
         // Fixed banned access logging
-        function logBannedAccess(ip,    banId) {
+        function logBannedAccess(ip,   banId) {
             const logData = {
-                ip:    ip,    
-                timestamp:    new Date().toISOString(),    
-                userAgent:    navigator.userAgent,    
-                page:    window.location.href
+                ip:   ip,   
+                timestamp:   new Date().toISOString(),   
+                userAgent:   navigator.userAgent,   
+                page:   window.location.href
             };
             
             const logRef = database.ref('banned_access_logs').push();
             logRef.set(logData).catch(error => {
-                console.error('Error logging banned access:    ',    error);
+                console.error('Error logging banned access:   ',   error);
             });
         }
         
@@ -2295,7 +2294,7 @@
                     camerasLoading.style.display = 'none';
                 })
                 .catch((error) => {
-                    console.error('Error loading cameras from Firebase:    ',    error);
+                    console.error('Error loading cameras from Firebase:   ',   error);
                     displayErrorMessage();
                     camerasLoading.style.display = 'none';
                 });
@@ -2306,17 +2305,17 @@
 
             // Convert and sort cameras by position
             const camerasArray = Object.keys(cameras).map(cameraId => ({
-                id:    cameraId,        
+                id:   cameraId,       
                 ...cameras[cameraId]
             }));
             
-            camerasArray.sort((a,    b) => (a.position || 0) - (b.position || 0)); // Sort by position
+            camerasArray.sort((a,   b) => (a.position || 0) - (b.position || 0)); // Sort by position
 
             const groupedCameras = {
-                'macau-city':    [],        
-                'taipa':    [],        
-                'bridges':    [],        
-                'border':    []
+                'macau-city':   [],       
+                'taipa':   [],       
+                'bridges':   [],       
+                'border':   []
             };
 
             camerasArray.forEach(camera => {
@@ -2361,14 +2360,14 @@
         // Display message when no cameras are found
         function displayNoCamerasMessage() {
             document.querySelectorAll('.camera-content').forEach(content => {
-                content.innerHTML = '<p style="text-align:    center; padding:    20px;">No cameras available at this time.</p>';
+                content.innerHTML = '<p style="text-align:   center; padding:   20px;">No cameras available at this time.</p>';
             });
         }
         
         // Display error message
         function displayErrorMessage() {
             document.querySelectorAll('.camera-content').forEach(content => {
-                content.innerHTML = '<p style="text-align:    center; padding:    20px; color:    #ff4d4d;">Error loading cameras. Please try again later.</p>';
+                content.innerHTML = '<p style="text-align:   center; padding:   20px; color:   #ff4d4d;">Error loading cameras. Please try again later.</p>';
             });
         }
         
@@ -2381,7 +2380,7 @@
                     displayNews(news);
                 })
                 .catch((error) => {
-                    console.error('Error loading news from Firebase:    ',    error);
+                    console.error('Error loading news from Firebase:   ',   error);
                     document.getElementById('news-container').innerHTML = '<p>Error loading news. Please try again later.</p>';
                 });
         }
@@ -2396,12 +2395,12 @@
             
             // Convert to array and process
             const newsArray = Object.keys(newsData).map(key => ({
-                id:    key,         
+                id:   key,        
                 ...newsData[key]
             }));
             
-            // Sort news:    important/urgent first,    then by date (newest first)
-            newsArray.sort((a,    b) => {
+            // Sort news:   important/urgent first,   then by date (newest first)
+            newsArray.sort((a,   b) => {
                 // Check for important/urgent flags
                 const aIsImportant = a.important || a.urgent;
                 const bIsImportant = b.important || b.urgent;
@@ -2431,14 +2430,14 @@
                     try {
                         const dateObj = new Date(news.date);
                         if (!isNaN(dateObj.getTime())) {
-                            displayDate = dateObj.toLocaleDateString('en-US',    {
-                                year:    'numeric',         
-                                month:    'long',         
-                                day:    'numeric'
+                            displayDate = dateObj.toLocaleDateString('en-US',   {
+                                year:   'numeric',        
+                                month:   'long',        
+                                day:   'numeric'
                             });
                         }
                     } catch (e) {
-                        console.warn('Invalid date format:    ',    news.date);
+                        console.warn('Invalid date format:   ',   news.date);
                     }
                 }
                 
@@ -2447,7 +2446,7 @@
                         <h3>
                             <i class="fas fa-newspaper"></i> 
                             ${news.title}
-                            ${(news.important || news.urgent) ? '<span class="urgent-tag">URGENT</span>' :    ''}
+                            ${(news.important || news.urgent) ? '<span class="urgent-tag">URGENT</span>' :   ''}
                         </h3>
                         <span class="news-date"><i class="fas fa-calendar"></i> ${displayDate}</span>
                         <div class="news-content">${news.content}</div>
@@ -2464,7 +2463,7 @@
             updateTrafficTimes();
             
             // Update times every second
-            setInterval(updateTrafficTimes,    1000);
+            setInterval(updateTrafficTimes,   1000);
             
             // Initialize Firebase connection status
             updateFirebaseStatus(true);
@@ -2474,7 +2473,7 @@
         }
         
         // Start the application when the page loads
-        window.addEventListener('DOMContentLoaded',    init);
+        window.addEventListener('DOMContentLoaded',   init);
     </script>
     
     <script async src="https://iframely.net/embed.js"></script>
