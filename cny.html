@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Red Packet Group</title>
+    <title>CNY Red Packet Group - Giveaways</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Existing styles remain unchanged */
         * {
             margin: 0;
             padding: 0;
@@ -605,6 +606,131 @@
             color: white;
         }
         
+        /* Giveaway styles */
+        .giveaway-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .giveaway-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .giveaway-header h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .giveaway-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .giveaway-info-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .giveaway-info-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .giveaway-info-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .participants-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .participant-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .participant-item:last-child {
+            border-bottom: none;
+        }
+        
+        .winner-item {
+            background: #d4edda;
+            border-left: 4px solid var(--success);
+            font-weight: bold;
+        }
+        
+        .winner-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f3e9;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .winner-section h3 {
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+        
+        .winner-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .roll-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .roll-btn {
+            background: linear-gradient(to right, var(--accent), #ff9e00);
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .roll-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 158, 0, 0.4);
+        }
+        
+        .roll-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .join-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .join-disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 border-radius: 15px;
@@ -643,6 +769,11 @@
             
             .countdown-box .value {
                 font-size: 16px;
+            }
+            
+            .giveaway-info {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -710,6 +841,7 @@
         <div class="tabs">
             <div class="tab active" data-tab="home">Home</div>
             <div class="tab" data-tab="claim">Claim Red Packets</div>
+            <div class="tab" data-tab="giveaways">Giveaways</div>
             <div class="tab" data-tab="admin">Admin Panel</div>
         </div>
         
@@ -763,6 +895,46 @@
                 </div>
                 
                 <div class="status hidden" id="claim-status"></div>
+            </div>
+            
+            <!-- Giveaways Tab -->
+            <div class="tab-content" id="giveaways-tab">
+                <div class="user-info" id="user-info-giveaways" style="display: none;">
+                    <span>Logged in as: <span id="current-user-giveaways">Not logged in</span></span>
+                    <button class="btn btn-secondary" id="logout-btn-3">Logout</button>
+                </div>
+                
+                <div class="giveaway-container">
+                    <div class="giveaway-header">
+                        <h2><i class="fas fa-gift"></i> Exclusive Giveaways</h2>
+                        <p>Join our giveaways for a chance to win exciting prizes!</p>
+                    </div>
+                    
+                    <div class="giveaway-info">
+                        <div class="giveaway-info-item">
+                            <div class="giveaway-info-value" id="participants-count">0</div>
+                            <div class="giveaway-info-label">Participants</div>
+                        </div>
+                        <div class="giveaway-info-item">
+                            <div class="giveaway-info-value" id="winners-count">0</div>
+                            <div class="giveaway-info-label">Winners</div>
+                        </div>
+                        <div class="giveaway-info-item">
+                            <div class="giveaway-info-value" id="prize-value">MOP 500</div>
+                            <div class="giveaway-info-label">Prize Value</div>
+                        </div>
+                    </div>
+                    
+                    <div class="countdown-container" id="giveaway-countdown">
+                        <!-- Countdown will be rendered here -->
+                    </div>
+                    
+                    <div id="giveaway-content">
+                        <!-- Giveaway content will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="status hidden" id="giveaway-status"></div>
             </div>
             
             <!-- Admin Panel Tab -->
@@ -841,6 +1013,39 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    <!-- Giveaway Admin Section -->
+                    <h3 style="margin-top: 30px;"><i class="fas fa-gift"></i> Giveaway Management</h3>
+                    <div class="admin-controls">
+                        <div>
+                            <div class="form-group">
+                                <label for="giveaway-end-time"><i class="fas fa-clock"></i> Giveaway End Time</label>
+                                <input type="datetime-local" id="giveaway-end-time">
+                            </div>
+                            <div class="form-group">
+                                <label for="giveaway-prize"><i class="fas fa-gift"></i> Prize Value</label>
+                                <input type="text" id="giveaway-prize" placeholder="Enter prize value (e.g. MOP 500)">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="giveaway-winners"><i class="fas fa-trophy"></i> Number of Winners</label>
+                                <input type="number" id="giveaway-winners" placeholder="Enter number of winners" value="3">
+                            </div>
+                            <button class="btn btn-success" id="update-giveaway-btn">Update Giveaway Settings</button>
+                        </div>
+                    </div>
+                    
+                    <div class="roll-section">
+                        <button class="btn roll-btn" id="roll-winners-btn" disabled>
+                            <i class="fas fa-random"></i> Roll Winners
+                        </button>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;"><i class="fas fa-users"></i> Giveaway Participants</h3>
+                    <div id="participants-list-admin">
+                        <!-- Participants will be loaded here -->
+                    </div>
                 </div>
                 
                 <div class="status hidden" id="admin-status"></div>
@@ -854,20 +1059,20 @@
 
     <script type="module">
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { getDatabase, ref, set, push, onValue, update, remove, get, child, query, orderByChild } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getDatabase, ref, set, push, onValue, update, remove, get, child, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyA4fWd7UDZEP5eQpzXWVMd2oUw0GPGaXrE",     
-            authDomain: "macau-traffic-14632.firebaseapp.com",     
-            databaseURL: "https://macau-traffic-14632-default-rtdb.firebaseio.com",     
-            projectId: "macau-traffic-14632",     
-            storageBucket: "macau-traffic-14632.firebasestorage.app",     
-            messagingSenderId: "291609032656",     
-            appId: "1:291609032656:web:8012d700d7c5884a1f6bd5",     
+            apiKey: "AIzaSyA4fWd7UDZEP5eQpzXWVMd2oUw0GPGaXrE",      
+            authDomain: "macau-traffic-14632.firebaseapp.com",      
+            databaseURL: "https://macau-traffic-14632-default-rtdb.firebaseio.com",      
+            projectId: "macau-traffic-14632",      
+            storageBucket: "macau-traffic-14632.firebasestorage.app",      
+            messagingSenderId: "291609032656",      
+            appId: "1:291609032656:web:8012d700d7c5884a1f6bd5",      
             measurementId: "G-DXNNPQ0LT7"
         };
 
@@ -888,6 +1093,7 @@
         const signupBtn = document.getElementById('signup-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const logoutBtn2 = document.getElementById('logout-btn-2');
+        const logoutBtn3 = document.getElementById('logout-btn-3');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         const adminLoginBtn = document.getElementById('admin-login-btn');
@@ -905,8 +1111,18 @@
         const availablePackets = document.getElementById('available-packets');
         const userInfoHome = document.getElementById('user-info-home');
         const userInfoClaim = document.getElementById('user-info-claim');
+        const userInfoGiveaways = document.getElementById('user-info-giveaways');
+        const currentUserGiveaways = document.getElementById('current-user-giveaways');
         const homeContent = document.getElementById('home-content');
         const claimContent = document.getElementById('claim-content');
+        const giveawayContent = document.getElementById('giveaway-content');
+        const participantsCount = document.getElementById('participants-count');
+        const winnersCount = document.getElementById('winners-count');
+        const giveawayStatus = document.getElementById('giveaway-status');
+        const giveawayCountdown = document.getElementById('giveaway-countdown');
+        const rollWinnersBtn = document.getElementById('roll-winners-btn');
+        const updateGiveawayBtn = document.getElementById('update-giveaway-btn');
+        const participantsListAdmin = document.getElementById('participants-list-admin');
 
         // State variables
         let currentUser = null;
@@ -915,6 +1131,11 @@
         let claims = [];
         let userClaims = [];
         let countdownIntervals = {};
+        let participants = [];
+        let winners = [];
+        let giveawayEndTime = new Date().getTime() + 86400000; // 24 hours from now
+        let prizeValue = "MOP 500";
+        let numberOfWinners = 3;
 
         // Authentication Event Listeners
         showSignup.addEventListener('click', (e) => {
@@ -950,6 +1171,7 @@
                         loadUserClaims();
                         renderHomeContent();
                         renderClaimContent();
+                        renderGiveawayContent();
                     }, 1500);
                 })
                 .catch((error) => {
@@ -979,8 +1201,8 @@
                     
                     // Save user data to database
                     set(ref(database, 'users/' + currentUser.uid), {
-                        name: name,     
-                        email: email,     
+                        name: name,      
+                        email: email,      
                         createdAt: new Date().getTime()
                     });
                     
@@ -993,6 +1215,7 @@
                         loadUserClaims();
                         renderHomeContent();
                         renderClaimContent();
+                        renderGiveawayContent();
                     }, 1500);
                 })
                 .catch((error) => {
@@ -1003,6 +1226,7 @@
         // Logout functionality
         logoutBtn.addEventListener('click', logout);
         logoutBtn2.addEventListener('click', logout);
+        logoutBtn3.addEventListener('click', logout);
 
         function logout() {
             signOut(auth).then(() => {
@@ -1031,6 +1255,7 @@
                 updateUserInfo();
                 renderHomeContent();
                 renderClaimContent();
+                renderGiveawayContent();
             }).catch((error) => {
                 showStatus(authStatus, `Logout failed: ${error.message}`, 'error');
             });
@@ -1055,6 +1280,8 @@
                     renderHomeContent();
                 } else if (tabId === 'claim') {
                     renderClaimContent();
+                } else if (tabId === 'giveaways') {
+                    renderGiveawayContent();
                 } else if (tabId === 'admin' && isAdmin) {
                     loadAdminData();
                 }
@@ -1102,13 +1329,13 @@
             
             // Create new red packet
             const newPacket = {
-                title: title,     
-                amount: parseFloat(amount),     
-                total: parseInt(total),     
-                remaining: parseInt(total),     
-                releaseTime: new Date(releaseTime).getTime(),     
-                link: link,     
-                description: description || '',     
+                title: title,      
+                amount: parseFloat(amount),      
+                total: parseInt(total),      
+                remaining: parseInt(total),      
+                releaseTime: new Date(releaseTime).getTime(),      
+                link: link,      
+                description: description || '',      
                 createdAt: new Date().getTime()
             };
             
@@ -1130,6 +1357,73 @@
                 .catch((error) => {
                     showStatus(adminStatus, `Error saving packet: ${error.message}`, 'error');
                 });
+        });
+
+        // Update giveaway settings
+        updateGiveawayBtn.addEventListener('click', () => {
+            if (!isAdmin) {
+                showStatus(adminStatus, 'Access denied. Admin login required', 'error');
+                return;
+            }
+            
+            const endTime = document.getElementById('giveaway-end-time').value;
+            const prize = document.getElementById('giveaway-prize').value;
+            const winnersCount = document.getElementById('giveaway-winners').value;
+            
+            if (!endTime || !prize || !winnersCount) {
+                showStatus(adminStatus, 'Please fill all fields', 'error');
+                return;
+            }
+            
+            // Update giveaway settings in Firebase
+            const giveawayRef = ref(database, 'giveaway_settings');
+            set(giveawayRef, {
+                endTime: new Date(endTime).getTime(),
+                prizeValue: prize,
+                numberOfWinners: parseInt(winnersCount)
+            }).then(() => {
+                showStatus(adminStatus, 'Giveaway settings updated successfully!', 'success');
+                loadGiveawaySettings();
+            }).catch((error) => {
+                showStatus(adminStatus, `Error updating settings: ${error.message}`, 'error');
+            });
+        });
+
+        // Roll winners functionality
+        rollWinnersBtn.addEventListener('click', () => {
+            if (!isAdmin) {
+                showStatus(adminStatus, 'Access denied. Admin login required', 'error');
+                return;
+            }
+            
+            // Check if giveaway has ended
+            const now = new Date().getTime();
+            if (now < giveawayEndTime) {
+                showStatus(adminStatus, 'Giveaway is still active. Wait until it ends to roll winners', 'error');
+                return;
+            }
+            
+            // Check if there are participants
+            if (participants.length === 0) {
+                showStatus(adminStatus, 'No participants to select winners from', 'error');
+                return;
+            }
+            
+            // Select random winners
+            const numWinners = Math.min(numberOfWinners, participants.length);
+            const shuffled = [...participants].sort(() => 0.5 - Math.random());
+            const selectedWinners = shuffled.slice(0, numWinners);
+            
+            // Save winners to Firebase
+            const winnersRef = ref(database, 'giveaway_winners');
+            set(winnersRef, selectedWinners).then(() => {
+                showStatus(adminStatus, 'Winners selected successfully!', 'success');
+                loadWinners();
+                renderGiveawayContent();
+                renderAdminParticipants();
+            }).catch((error) => {
+                showStatus(adminStatus, `Error selecting winners: ${error.message}`, 'error');
+            });
         });
 
         // Helper functions
@@ -1162,6 +1456,7 @@
         function updateUserInfo() {
             if (currentUser) {
                 currentUserSpan.textContent = currentUser.email;
+                currentUserGiveaways.textContent = currentUser.email;
                 userNameSpan.textContent = currentUser.displayName || currentUser.email.split('@')[0];
                 
                 // Get user name from database
@@ -1178,10 +1473,12 @@
                 // Show user info for logged in users
                 userInfoHome.style.display = 'flex';
                 userInfoClaim.style.display = 'flex';
+                userInfoGiveaways.style.display = 'flex';
             } else {
                 // Hide user info for guests
                 userInfoHome.style.display = 'none';
                 userInfoClaim.style.display = 'none';
+                userInfoGiveaways.style.display = 'none';
             }
         }
 
@@ -1245,6 +1542,344 @@
             
             // Load user packets
             loadUserPackets();
+        }
+
+        // Giveaway functions
+        function renderGiveawayContent() {
+            if (!currentUser) {
+                // Show login required message for guests
+                giveawayContent.innerHTML = `
+                    <div class="login-required">
+                        <i class="fas fa-lock"></i>
+                        <h3>Login Required</h3>
+                        <p>You need to be logged in to join giveaways.</p>
+                        <button class="btn btn-primary" onclick="showLoginScreen()">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSignupScreen()">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Check if user has already joined
+            const hasJoined = participants.some(p => p.userId === currentUser.uid);
+            
+            // Check if giveaway has ended
+            const now = new Date().getTime();
+            const hasEnded = now >= giveawayEndTime;
+            
+            // Check if user is admin and winners have been selected
+            const isAdminAndWinnersSelected = isAdmin && winners.length > 0;
+            
+            // Render content based on state
+            if (hasEnded && !isAdminAndWinnersSelected) {
+                giveawayContent.innerHTML = `
+                    <div class="login-required">
+                        <i class="fas fa-clock"></i>
+                        <h3>Giveaway Ended</h3>
+                        <p>This giveaway has ended. Winners will be announced soon.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let content = '';
+            
+            if (hasJoined) {
+                content = `
+                    <div class="login-required">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>You're In!</h3>
+                        <p>You've successfully joined the giveaway. Good luck!</p>
+                    </div>
+                `;
+            } else if (hasEnded) {
+                content = `
+                    <div class="login-required">
+                        <i class="fas fa-clock"></i>
+                        <h3>Giveaway Ended</h3>
+                        <p>This giveaway has ended. Winners will be announced soon.</p>
+                    </div>
+                `;
+            } else {
+                content = `
+                    <button class="btn btn-primary join-btn" id="join-giveaway-btn">
+                        <i class="fas fa-ticket-alt"></i> Join Giveaway
+                    </button>
+                `;
+            }
+            
+            // Show participants list
+            content += `
+                <h3><i class="fas fa-users"></i> Participants (${participants.length})</h3>
+                <div class="participants-list" id="participants-list">
+                    ${renderParticipants()}
+                </div>
+            `;
+            
+            // Show winners if available
+            if (winners.length > 0) {
+                content += `
+                    <div class="winner-section">
+                        <h3><i class="fas fa-trophy"></i> Winners!</h3>
+                        ${renderWinners()}
+                    </div>
+                `;
+            } else if (isAdmin && !hasEnded) {
+                content += `
+                    <div class="roll-section">
+                        <button class="btn roll-btn" id="roll-btn">
+                            <i class="fas fa-random"></i> Roll Winners
+                        </button>
+                    </div>
+                `;
+            }
+            
+            giveawayContent.innerHTML = content;
+            
+            // Add event listeners
+            if (document.getElementById('join-giveaway-btn')) {
+                document.getElementById('join-giveaway-btn').addEventListener('click', joinGiveaway);
+            }
+            
+            if (document.getElementById('roll-btn')) {
+                document.getElementById('roll-btn').addEventListener('click', rollWinners);
+            }
+        }
+
+        function renderParticipants() {
+            if (participants.length === 0) {
+                return '<p>No participants yet. Be the first to join!</p>';
+            }
+            
+            let html = '';
+            participants.forEach(participant => {
+                const isWinner = winners.some(w => w.userId === participant.userId);
+                const className = isWinner ? 'participant-item winner-item' : 'participant-item';
+                html += `<div class="${className}">${participant.userName}</div>`;
+            });
+            return html;
+        }
+
+        function renderWinners() {
+            if (winners.length === 0) return '';
+            
+            let html = '<div>';
+            winners.forEach(winner => {
+                html += `<div class="winner-name">${winner.userName}</div>`;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function joinGiveaway() {
+            if (!currentUser) {
+                showStatus(giveawayStatus, 'Please login first to join giveaway', 'error');
+                return;
+            }
+            
+            // Check if giveaway has ended
+            const now = new Date().getTime();
+            if (now >= giveawayEndTime) {
+                showStatus(giveawayStatus, 'This giveaway has ended', 'error');
+                renderGiveawayContent();
+                return;
+            }
+            
+            // Check if user has already joined
+            const hasJoined = participants.some(p => p.userId === currentUser.uid);
+            if (hasJoined) {
+                showStatus(giveawayStatus, 'You have already joined this giveaway', 'error');
+                return;
+            }
+            
+            // Get user name
+            get(ref(database, 'users/' + currentUser.uid)).then((snapshot) => {
+                const userData = snapshot.val();
+                const userName = userData && userData.name ? userData.name : currentUser.email.split('@')[0];
+                
+                // Add participant to database
+                const participantRef = push(ref(database, 'giveaway_participants'));
+                set(participantRef, {
+                    userId: currentUser.uid, 
+                    userName: userName, 
+                    joinedAt: new Date().getTime()
+                }).then(() => {
+                    showStatus(giveawayStatus, 'Successfully joined the giveaway!', 'success');
+                    loadParticipants();
+                }).catch((error) => {
+                    showStatus(giveawayStatus, `Error joining giveaway: ${error.message}`, 'error');
+                });
+            });
+        }
+
+        function rollWinners() {
+            if (!isAdmin) {
+                showStatus(giveawayStatus, 'Access denied. Admin login required', 'error');
+                return;
+            }
+            
+            // Check if giveaway has ended
+            const now = new Date().getTime();
+            if (now < giveawayEndTime) {
+                showStatus(giveawayStatus, 'Giveaway is still active. Wait until it ends to roll winners', 'error');
+                return;
+            }
+            
+            // Check if there are participants
+            if (participants.length === 0) {
+                showStatus(giveawayStatus, 'No participants to select winners from', 'error');
+                return;
+            }
+            
+            // Select random winners
+            const numWinners = Math.min(numberOfWinners, participants.length);
+            const shuffled = [...participants].sort(() => 0.5 - Math.random());
+            const selectedWinners = shuffled.slice(0, numWinners);
+            
+            // Save winners to database
+            const winnersRef = ref(database, 'giveaway_winners');
+            set(winnersRef, selectedWinners).then(() => {
+                showStatus(giveawayStatus, 'Winners selected successfully!', 'success');
+                loadWinners();
+                renderGiveawayContent();
+                renderAdminParticipants();
+            }).catch((error) => {
+                showStatus(giveawayStatus, `Error selecting winners: ${error.message}`, 'error');
+            });
+        }
+
+        function startGiveawayCountdown() {
+            // Clear any existing interval
+            if (countdownIntervals['giveaway']) {
+                clearInterval(countdownIntervals['giveaway']);
+            }
+            
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = giveawayEndTime - now;
+                
+                if (distance <= 0) {
+                    // Giveaway ended
+                    clearInterval(countdownIntervals['giveaway']);
+                    delete countdownIntervals['giveaway'];
+                    renderGiveawayContent();
+                    return;
+                }
+                
+                // Calculate days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Render countdown
+                giveawayCountdown.innerHTML = `
+                    <div class="countdown-box">
+                        <div class="value">${days}</div>
+                        <div class="label">Days</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="value">${hours}</div>
+                        <div class="label">Hours</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="value">${minutes}</div>
+                        <div class="label">Minutes</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="value">${seconds}</div>
+                        <div class="label">Seconds</div>
+                    </div>
+                `;
+            };
+            
+            // Initial update
+            updateCountdown();
+            
+            // Update every second
+            countdownIntervals['giveaway'] = setInterval(updateCountdown, 1000);
+        }
+
+        function loadParticipants() {
+            const participantsRef = ref(database, 'giveaway_participants');
+            onValue(participantsRef, (snapshot) => {
+                participants = [];
+                snapshot.forEach((childSnapshot) => {
+                    const participant = childSnapshot.val();
+                    participant.id = childSnapshot.key;
+                    participants.push(participant);
+                });
+                
+                participantsCount.textContent = participants.length;
+                renderGiveawayContent();
+                renderAdminParticipants();
+            });
+        }
+
+        function loadWinners() {
+            const winnersRef = ref(database, 'giveaway_winners');
+            onValue(winnersRef, (snapshot) => {
+                winners = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const winner = childSnapshot.val();
+                        winner.id = childSnapshot.key;
+                        winners.push(winner);
+                    });
+                }
+                
+                winnersCount.textContent = winners.length;
+                renderGiveawayContent();
+                renderAdminParticipants();
+            });
+        }
+
+        function loadGiveawaySettings() {
+            const settingsRef = ref(database, 'giveaway_settings');
+            onValue(settingsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const settings = snapshot.val();
+                    giveawayEndTime = settings.endTime;
+                    prizeValue = settings.prizeValue || "MOP 500";
+                    numberOfWinners = settings.numberOfWinners || 3;
+                    
+                    // Update UI
+                    document.getElementById('prize-value').textContent = prizeValue;
+                    document.getElementById('giveaway-prize').value = prizeValue;
+                    document.getElementById('giveaway-winners').value = numberOfWinners;
+                    document.getElementById('giveaway-end-time').value = new Date(giveawayEndTime).toISOString().slice(0, 16);
+                }
+                
+                startGiveawayCountdown();
+            });
+        }
+
+        function renderAdminParticipants() {
+            if (!isAdmin) return;
+            
+            let html = '';
+            
+            if (participants.length === 0) {
+                html = '<p>No participants yet.</p>';
+            } else {
+                html = '<div class="participants-list">';
+                participants.forEach(participant => {
+                    const isWinner = winners.some(w => w.userId === participant.userId);
+                    const className = isWinner ? 'participant-item winner-item' : 'participant-item';
+                    html += `<div class="${className}">${participant.userName} ${isWinner ? '(Winner)' : ''}</div>`;
+                });
+                html += '</div>';
+            }
+            
+            participantsListAdmin.innerHTML = html;
+            
+            // Update roll button state
+            const now = new Date().getTime();
+            rollWinnersBtn.disabled = (now < giveawayEndTime) || (participants.length === 0);
         }
 
         // Firebase functions
@@ -1322,7 +1957,7 @@
                             <!-- Countdown will be rendered here -->
                         </div>
                         <button class="btn btn-secondary" disabled>
-                            <i class="fas fa-clock"></i>  Not Released Yet
+                            <i class="fas fa-clock"></i> Not Released Yet
                         </button>
                     `;
                 } else if (userClaim) {
@@ -1563,12 +2198,12 @@
             // Save claim to Firebase
             const claimRef = push(ref(database, 'claims'));
             set(claimRef, {
-                userId: currentUser.uid,     
-                userEmail: currentUser.email,     
-                userName: currentUser.displayName || currentUser.email.split('@')[0],     
-                packetId: packetId,     
-                packetTitle: packet.title,     
-                code: code,     
+                userId: currentUser.uid,      
+                userEmail: currentUser.email,      
+                userName: currentUser.displayName || currentUser.email.split('@')[0],      
+                packetId: packetId,      
+                packetTitle: packet.title,      
+                code: code,      
                 claimedAt: new Date().getTime()
             }).then(() => {
                 // Update remaining count
@@ -1578,7 +2213,7 @@
                 }).then(() => {
                     // Add to user claims
                     userClaims.push({
-                        packetId: packetId,     
+                        packetId: packetId,      
                         code: code
                     });
                     
@@ -1751,7 +2386,7 @@
                     const claim = childSnapshot.val();
                     if (claim.userId === currentUser.uid) {
                         userClaims.push({
-                            packetId: claim.packetId,     
+                            packetId: claim.packetId,      
                             code: claim.code
                         });
                     }
@@ -1760,6 +2395,7 @@
                 // Update displays if needed
                 renderHomeContent();
                 renderClaimContent();
+                renderGiveawayContent();
             });
         }
 
@@ -1781,9 +2417,20 @@
         // Initialize with some demo data
         document.getElementById('release-time').value = new Date(Date.now() + 86400000).toISOString().slice(0, 16);
         document.getElementById('red-packet-link').value = 'https://mpay.com/redeem';
+        document.getElementById('giveaway-end-time').value = new Date(Date.now() + 86400000).toISOString().slice(0, 16);
+        document.getElementById('giveaway-prize').value = 'MOP 500';
+        document.getElementById('giveaway-winners').value = '3';
 
         // Simulate login for demo purposes
         document.getElementById('admin-password').value = '';
+        
+        // Start giveaway countdown
+        startGiveawayCountdown();
+        
+        // Load participants and winners
+        loadParticipants();
+        loadWinners();
+        loadGiveawaySettings();
         
         // Check if user is already logged in
         onAuthStateChanged(auth, (user) => {
@@ -1795,6 +2442,7 @@
                 loadUserClaims();
                 renderHomeContent();
                 renderClaimContent();
+                renderGiveawayContent();
             } else {
                 // Show main app with login required
                 authScreen.classList.add('hidden');
@@ -1802,6 +2450,7 @@
                 updateUserInfo();
                 renderHomeContent();
                 renderClaimContent();
+                renderGiveawayContent();
             }
         });
     </script>
