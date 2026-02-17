@@ -6,7 +6,6 @@
     <title>CNY Red Packet Group - Giveaways & Polls</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Existing styles remain unchanged */
         * {
             margin: 0;
             padding: 0;
@@ -740,7 +739,7 @@
         }
         
         .giveaway-card {
-            background: white;
+            background: #f8f9fa;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -850,295 +849,6 @@
         .winner-confetti {
             position: relative;
             overflow: hidden;
-        }
-        
-        /* Enhanced Giveaway Graphics */
-        .giveaway-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 25px;
-            transition: all 0.3s ease;
-            border: 3px solid transparent;
-            position: relative;
-            overflow: hidden;
-            color: white;
-        }
-        
-        .giveaway-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
-            transform: rotate(30deg);
-            z-index: 1;
-        }
-        
-        .giveaway-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            border-color: #ffd166;
-        }
-        
-        .giveaway-card.active {
-            border-color: #06d6a0;
-            animation: pulseBorder 2s infinite;
-        }
-        
-        .giveaway-card.ended {
-            border-color: #ef476f;
-            opacity: 0.9;
-        }
-        
-        .giveaway-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .giveaway-card p {
-            margin: 8px 0;
-            position: relative;
-            z-index: 2;
-            font-size: 15px;
-        }
-        
-        .giveaway-card .btn {
-            position: relative;
-            z-index: 2;
-            margin-top: 15px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-        
-        /* Enhanced Giveaway Image Styles */
-        .giveaway-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* Enhanced Winner Message Styles */
-        .winner-message {
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 25px 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            color: white;
-            text-align: center;
-            border: 3px solid #06d6a0;
-            animation: winnerPulse 2s infinite;
-        }
-        
-        .winner-message::before {
-            content: "";
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-        
-        .winner-message::after {
-            content: "";
-            position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-        
-        .winner-message h3 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .winner-message h2 {
-            font-size: 28px;
-            margin: 15px 0;
-            position: relative;
-            z-index: 2;
-            color: #ffd166;
-        }
-        
-        .winner-message p {
-            font-size: 20px;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .winner-message .prize-value {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
-            position: relative;
-            z-index: 2;
-        }
-        
-        @keyframes winnerPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes pulseBorder {
-            0% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(6, 214, 160, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0); }
-        }
-        
-        /* Enhanced Roll Button Styles */
-        .roll-btn-enhanced {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            color: white;
-            font-size: 18px;
-            padding: 15px 30px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(255, 158, 0, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .roll-btn-enhanced:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 158, 0, 0.6);
-        }
-        
-        .roll-btn-enhanced:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        /* Enhanced Winner Section Styles */
-        .winner-section {
-            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 25px 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border: 3px solid #4ecdc4;
-        }
-        
-        .winner-section h3 {
-            color: #1a535c;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-        
-        .winner-name {
-            font-size: 22px;
-            font-weight: bold;
-            color: #ff6b6b;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px 20px;
-            border-radius: 50px;
-            margin: 10px 0;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Enhanced Participants List Styles */
-        .participants-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin: 20px 0;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.7);
-        }
-        
-        .participant-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
-        }
-        
-        .participant-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .participant-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        
-        .winner-item {
-            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
-            border-left: 4px solid #06d6a0;
-            font-weight: bold;
-            color: #1a535c;
-        }
-        
-        /* Enhanced Giveaway Info Styles */
-        .giveaway-info {
-            display: flex;
-            justify-content: space-around;
-            margin: 25px 0;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .giveaway-info-item {
-            text-align: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            flex: 1;
-            min-width: 120px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
-        }
-        
-        .giveaway-info-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #ffd166;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .giveaway-info-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 5px;
         }
         
         /* Poll styles */
@@ -1676,13 +1386,13 @@
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyA4fWd7UDZEP5eQpzXWVMd2oUw0GPGaXrE",   
-            authDomain: "macau-traffic-14632.firebaseapp.com",   
-            databaseURL: "https://macau-traffic-14632-default-rtdb.firebaseio.com",   
-            projectId: "macau-traffic-14632",   
-            storageBucket: "macau-traffic-14632.firebasestorage.app",   
-            messagingSenderId: "291609032656",   
-            appId: "1:291609032656:web:8012d700d7c5884a1f6bd5",   
+            apiKey: "AIzaSyA4fWd7UDZEP5eQpzXWVMd2oUw0GPGaXrE",     
+            authDomain: "macau-traffic-14632.firebaseapp.com",     
+            databaseURL: "https://macau-traffic-14632-default-rtdb.firebaseio.com",     
+            projectId: "macau-traffic-14632",     
+            storageBucket: "macau-traffic-14632.firebasestorage.app",     
+            messagingSenderId: "291609032656",     
+            appId: "1:291609032656:web:8012d700d7c5884a1f6bd5",     
             measurementId: "G-DXNNPQ0LT7"
         };
 
@@ -1814,8 +1524,8 @@
                     
                     // Save user data to database
                     set(ref(database, 'users/' + currentUser.uid), {
-                        name: name,   
-                        email: email,   
+                        name: name,     
+                        email: email,     
                         createdAt: new Date().getTime()
                     });
                     
@@ -1948,13 +1658,13 @@
             
             // Create new red packet
             const newPacket = {
-                title: title,   
-                amount: parseFloat(amount),   
-                total: parseInt(total),   
-                remaining: parseInt(total),   
-                releaseTime: new Date(releaseTime).getTime(),   
-                link: link,   
-                description: description || '',   
+                title: title,     
+                amount: parseFloat(amount),     
+                total: parseInt(total),     
+                remaining: parseInt(total),     
+                releaseTime: new Date(releaseTime).getTime(),     
+                link: link,     
+                description: description || '',     
                 createdAt: new Date().getTime()
             };
             
@@ -1999,13 +1709,13 @@
             
             // Create new giveaway
             const newGiveaway = {
-                title: title,   
-                prizeValue: prize,   
-                numberOfWinners: parseInt(winners),   
-                endTime: new Date(endTime).getTime(),   
-                description: description || '',   
-                image: image || '',   
-                createdAt: new Date().getTime(),   
+                title: title,     
+                prizeValue: prize,     
+                numberOfWinners: parseInt(winners),     
+                endTime: new Date(endTime).getTime(),     
+                description: description || '',     
+                image: image || '',     
+                createdAt: new Date().getTime(),     
                 isActive: true
             };
             
@@ -2086,12 +1796,12 @@
             
             // Create new poll
             const newPoll = {
-                question: question,
-                description: description || '',
-                options: options,
-                endTime: new Date(endTime).getTime(),
-                createdAt: new Date().getTime(),
-                isActive: true,
+                question: question,  
+                description: description || '',  
+                options: options,  
+                endTime: new Date(endTime).getTime(),  
+                createdAt: new Date().getTime(),  
+                isActive: true,  
                 votes: {} // Initialize votes object
             };
             
@@ -2690,8 +2400,8 @@
                 // Add participant to database
                 const participantRef = push(ref(database, `giveaways/${giveawayId}/participants`));
                 set(participantRef, {
-                    userId: currentUser.uid,   
-                    userName: userName,   
+                    userId: currentUser.uid,     
+                    userName: userName,     
                     joinedAt: new Date().getTime()
                 }).then(() => {
                     showStatus(document.getElementById('giveaway-status'), 'Successfully joined the giveaway!', 'success');
@@ -3201,12 +2911,12 @@
             // Save claim to Firebase
             const claimRef = push(ref(database, 'claims'));
             set(claimRef, {
-                userId: currentUser.uid,   
-                userEmail: currentUser.email,   
-                userName: currentUser.displayName || currentUser.email.split('@')[0],   
-                packetId: packetId,   
-                packetTitle: packet.title,   
-                code: code,   
+                userId: currentUser.uid,     
+                userEmail: currentUser.email,     
+                userName: currentUser.displayName || currentUser.email.split('@')[0],     
+                packetId: packetId,     
+                packetTitle: packet.title,     
+                code: code,     
                 claimedAt: new Date().getTime()
             }).then(() => {
                 // Update remaining count
@@ -3216,7 +2926,7 @@
                 }).then(() => {
                     // Add to user claims
                     userClaims.push({
-                        packetId: packetId,   
+                        packetId: packetId,     
                         code: code
                     });
                     
@@ -3602,7 +3312,7 @@
                     const claim = childSnapshot.val();
                     if (claim.userId === currentUser.uid) {
                         userClaims.push({
-                            packetId: claim.packetId,   
+                            packetId: claim.packetId,     
                             code: claim.code
                         });
                     }
