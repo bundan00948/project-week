@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Red Packet Group - Giveaways</title>
+    <title>CNY Red Packet Group - Giveaways & Polls</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Existing styles remain unchanged */
@@ -798,13 +798,15 @@
         }
         
         .winner-message {
-            background: #d4edda;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
             border: 2px solid var(--success);
             border-radius: 10px;
-            padding: 20px;
+            padding: 30px;
             margin: 20px 0;
             text-align: center;
             animation: pulse 2s infinite;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
         
         @keyframes pulse {
@@ -814,13 +816,467 @@
         }
         
         .winner-message h3 {
-            color: var(--success);
-            margin-bottom: 10px;
+            color: white;
+            margin-bottom: 15px;
+            font-size: 28px;
         }
         
         .winner-message p {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .winner-message .prize-value {
+            font-size: 24px;
+            color: var(--accent);
+            margin: 15px 0;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: confetti-fall 5s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .winner-confetti {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Enhanced Giveaway Graphics */
+        .giveaway-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        
+        .giveaway-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            transform: rotate(30deg);
+            z-index: 1;
+        }
+        
+        .giveaway-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: #ffd166;
+        }
+        
+        .giveaway-card.active {
+            border-color: #06d6a0;
+            animation: pulseBorder 2s infinite;
+        }
+        
+        .giveaway-card.ended {
+            border-color: #ef476f;
+            opacity: 0.9;
+        }
+        
+        .giveaway-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .giveaway-card p {
+            margin: 8px 0;
+            position: relative;
+            z-index: 2;
+            font-size: 15px;
+        }
+        
+        .giveaway-card .btn {
+            position: relative;
+            z-index: 2;
+            margin-top: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Enhanced Giveaway Image Styles */
+        .giveaway-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Enhanced Winner Message Styles */
+        .winner-message {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            border: 3px solid #06d6a0;
+            animation: winnerPulse 2s infinite;
+        }
+        
+        .winner-message::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .winner-message::after {
+            content: "";
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .winner-message h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .winner-message h2 {
+            font-size: 28px;
+            margin: 15px 0;
+            position: relative;
+            z-index: 2;
+            color: #ffd166;
+        }
+        
+        .winner-message p {
+            font-size: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .winner-message .prize-value {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes winnerPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(6, 214, 160, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0); }
+        }
+        
+        /* Enhanced Roll Button Styles */
+        .roll-btn-enhanced {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 158, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .roll-btn-enhanced:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 158, 0, 0.6);
+        }
+        
+        .roll-btn-enhanced:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Enhanced Winner Section Styles */
+        .winner-section {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 3px solid #4ecdc4;
+        }
+        
+        .winner-section h3 {
+            color: #1a535c;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .winner-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff6b6b;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 10px 0;
+            display: inline-block;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Enhanced Participants List Styles */
+        .participants-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+        }
+        
+        .participant-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+        
+        .participant-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .participant-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .winner-item {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border-left: 4px solid #06d6a0;
+            font-weight: bold;
+            color: #1a535c;
+        }
+        
+        /* Enhanced Giveaway Info Styles */
+        .giveaway-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .giveaway-info-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .giveaway-info-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd166;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .giveaway-info-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 5px;
+        }
+        
+        /* Poll styles */
+        .poll-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .poll-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .poll-header h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .poll-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .poll-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+            border: 2px solid #eee;
+        }
+        
+        .poll-card.active {
+            border-color: var(--primary);
+        }
+        
+        .poll-card.ended {
+            opacity: 0.7;
+        }
+        
+        .poll-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .poll-option {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f1f1f1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .poll-option:hover {
+            background: #e0e0e0;
+        }
+        
+        .poll-option.selected {
+            background: var(--success);
+            color: white;
+        }
+        
+        .poll-option.ended {
+            cursor: not-allowed;
+        }
+        
+        .poll-results {
+            margin-top: 15px;
+        }
+        
+        .poll-result-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        
+        .poll-result-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .poll-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .create-poll-form {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .poll-options-container {
+            margin: 15px 0;
+        }
+        
+        .poll-option-input {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .poll-option-input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .add-option-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .poll-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
         
         @media (max-width: 768px) {
@@ -869,6 +1325,10 @@
             }
             
             .giveaways-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .poll-list {
                 grid-template-columns: 1fr;
             }
         }
@@ -938,6 +1398,7 @@
             <div class="tab active" data-tab="home">Home</div>
             <div class="tab" data-tab="claim">Claim Red Packets</div>
             <div class="tab" data-tab="giveaways">Giveaways</div>
+            <div class="tab" data-tab="polls">Polls</div>
             <div class="tab" data-tab="admin">Admin Panel</div>
         </div>
         
@@ -1012,6 +1473,27 @@
                 </div>
                 
                 <div class="status hidden" id="giveaway-status"></div>
+            </div>
+            
+            <!-- Polls Tab -->
+            <div class="tab-content" id="polls-tab">
+                <div class="user-info" id="user-info-polls" style="display: none;">
+                    <span>Logged in as: <span id="current-user-polls">Not logged in</span></span>
+                    <button class="btn btn-secondary" id="logout-btn-4">Logout</button>
+                </div>
+                
+                <div class="poll-container">
+                    <div class="poll-header">
+                        <h2><i class="fas fa-poll"></i> Community Polls</h2>
+                        <p>Vote on topics and see what others think!</p>
+                    </div>
+                    
+                    <div id="polls-content">
+                        <!-- Polls content will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="status hidden" id="poll-status"></div>
             </div>
             
             <!-- Admin Panel Tab -->
@@ -1133,6 +1615,47 @@
                     <div id="admin-giveaways-list">
                         <!-- Admin giveaways list will be loaded here -->
                     </div>
+                    
+                    <!-- Poll Admin Section -->
+                    <h3 style="margin-top: 30px;"><i class="fas fa-poll"></i> Poll Management</h3>
+                    
+                    <div class="create-poll-form">
+                        <h3>Create New Poll</h3>
+                        <div class="form-group">
+                            <label for="poll-question"><i class="fas fa-question-circle"></i> Poll Question</label>
+                            <input type="text" id="poll-question" placeholder="Enter poll question">
+                        </div>
+                        <div class="form-group">
+                            <label for="poll-end-time"><i class="fas fa-clock"></i> Poll End Time</label>
+                            <input type="datetime-local" id="poll-end-time">
+                        </div>
+                        <div class="form-group">
+                            <label for="poll-description"><i class="fas fa-align-left"></i> Description</label>
+                            <textarea id="poll-description" placeholder="Enter description" rows="2"></textarea>
+                        </div>
+                        
+                        <h4>Poll Options</h4>
+                        <div class="poll-options-container" id="poll-options-container">
+                            <div class="poll-option-input">
+                                <input type="text" class="poll-option-text" placeholder="Option 1">
+                                <button class="btn btn-danger remove-option-btn" style="display: none;">-</button>
+                            </div>
+                            <div class="poll-option-input">
+                                <input type="text" class="poll-option-text" placeholder="Option 2">
+                                <button class="btn btn-danger remove-option-btn">-</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary add-option-btn" id="add-option-btn">
+                            <i class="fas fa-plus"></i> Add Option
+                        </button>
+                        
+                        <button class="btn btn-success" id="create-poll-btn" style="margin-top: 20px;">Create Poll</button>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;"><i class="fas fa-list"></i> All Polls</h3>
+                    <div id="admin-polls-list">
+                        <!-- Admin polls list will be loaded here -->
+                    </div>
                 </div>
                 
                 <div class="status hidden" id="admin-status"></div>
@@ -1153,13 +1676,13 @@
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyA4fWd7UDZEP5eQpzXWVMd2oUw0GPGaXrE", 
-            authDomain: "macau-traffic-14632.firebaseapp.com", 
-            databaseURL: "https://macau-traffic-14632-default-rtdb.firebaseio.com", 
-            projectId: "macau-traffic-14632", 
-            storageBucket: "macau-traffic-14632.firebasestorage.app", 
-            messagingSenderId: "291609032656", 
-            appId: "1:291609032656:web:8012d700d7c5884a1f6bd5", 
+            apiKey: "AIzaSyA4fWd7UDZEP5eQpzXWVMd2oUw0GPGaXrE",   
+            authDomain: "macau-traffic-14632.firebaseapp.com",   
+            databaseURL: "https://macau-traffic-14632-default-rtdb.firebaseio.com",   
+            projectId: "macau-traffic-14632",   
+            storageBucket: "macau-traffic-14632.firebasestorage.app",   
+            messagingSenderId: "291609032656",   
+            appId: "1:291609032656:web:8012d700d7c5884a1f6bd5",   
             measurementId: "G-DXNNPQ0LT7"
         };
 
@@ -1181,6 +1704,7 @@
         const logoutBtn = document.getElementById('logout-btn');
         const logoutBtn2 = document.getElementById('logout-btn-2');
         const logoutBtn3 = document.getElementById('logout-btn-3');
+        const logoutBtn4 = document.getElementById('logout-btn-4');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         const adminLoginBtn = document.getElementById('admin-login-btn');
@@ -1199,12 +1723,19 @@
         const userInfoHome = document.getElementById('user-info-home');
         const userInfoClaim = document.getElementById('user-info-claim');
         const userInfoGiveaways = document.getElementById('user-info-giveaways');
+        const userInfoPolls = document.getElementById('user-info-polls');
         const currentUserGiveaways = document.getElementById('current-user-giveaways');
+        const currentUserPolls = document.getElementById('current-user-polls');
         const homeContent = document.getElementById('home-content');
         const claimContent = document.getElementById('claim-content');
         const giveawaysContent = document.getElementById('giveaways-content');
+        const pollsContent = document.getElementById('polls-content');
         const adminGiveawaysList = document.getElementById('admin-giveaways-list');
+        const adminPollsList = document.getElementById('admin-polls-list');
         const createGiveawayBtn = document.getElementById('create-giveaway-btn');
+        const createPollBtn = document.getElementById('create-poll-btn');
+        const addOptionBtn = document.getElementById('add-option-btn');
+        const pollOptionsContainer = document.getElementById('poll-options-container');
 
         // State variables
         let currentUser = null;
@@ -1215,6 +1746,8 @@
         let countdownIntervals = {};
         let giveaways = [];
         let activeGiveaway = null;
+        let polls = [];
+        let userVotes = [];
 
         // Authentication Event Listeners
         showSignup.addEventListener('click', (e) => {
@@ -1251,6 +1784,7 @@
                         renderHomeContent();
                         renderClaimContent();
                         renderGiveawaysContent();
+                        renderPollsContent();
                     }, 1500);
                 })
                 .catch((error) => {
@@ -1280,8 +1814,8 @@
                     
                     // Save user data to database
                     set(ref(database, 'users/' + currentUser.uid), {
-                        name: name, 
-                        email: email, 
+                        name: name,   
+                        email: email,   
                         createdAt: new Date().getTime()
                     });
                     
@@ -1295,6 +1829,7 @@
                         renderHomeContent();
                         renderClaimContent();
                         renderGiveawaysContent();
+                        renderPollsContent();
                     }, 1500);
                 })
                 .catch((error) => {
@@ -1306,12 +1841,14 @@
         logoutBtn.addEventListener('click', logout);
         logoutBtn2.addEventListener('click', logout);
         logoutBtn3.addEventListener('click', logout);
+        logoutBtn4.addEventListener('click', logout);
 
         function logout() {
             signOut(auth).then(() => {
                 currentUser = null;
                 isAdmin = false;
                 userClaims = [];
+                userVotes = [];
                 authScreen.classList.remove('hidden');
                 mainApp.classList.add('hidden');
                 loginForm.classList.remove('hidden');
@@ -1335,6 +1872,7 @@
                 renderHomeContent();
                 renderClaimContent();
                 renderGiveawaysContent();
+                renderPollsContent();
             }).catch((error) => {
                 showStatus(authStatus, `Logout failed: ${error.message}`, 'error');
             });
@@ -1361,6 +1899,8 @@
                     renderClaimContent();
                 } else if (tabId === 'giveaways') {
                     renderGiveawaysContent();
+                } else if (tabId === 'polls') {
+                    renderPollsContent();
                 } else if (tabId === 'admin' && isAdmin) {
                     loadAdminData();
                 }
@@ -1408,13 +1948,13 @@
             
             // Create new red packet
             const newPacket = {
-                title: title, 
-                amount: parseFloat(amount), 
-                total: parseInt(total), 
-                remaining: parseInt(total), 
-                releaseTime: new Date(releaseTime).getTime(), 
-                link: link, 
-                description: description || '', 
+                title: title,   
+                amount: parseFloat(amount),   
+                total: parseInt(total),   
+                remaining: parseInt(total),   
+                releaseTime: new Date(releaseTime).getTime(),   
+                link: link,   
+                description: description || '',   
                 createdAt: new Date().getTime()
             };
             
@@ -1459,13 +1999,13 @@
             
             // Create new giveaway
             const newGiveaway = {
-                title: title, 
-                prizeValue: prize, 
-                numberOfWinners: parseInt(winners), 
-                endTime: new Date(endTime).getTime(), 
-                description: description || '', 
-                image: image || '', 
-                createdAt: new Date().getTime(), 
+                title: title,   
+                prizeValue: prize,   
+                numberOfWinners: parseInt(winners),   
+                endTime: new Date(endTime).getTime(),   
+                description: description || '',   
+                image: image || '',   
+                createdAt: new Date().getTime(),   
                 isActive: true
             };
             
@@ -1486,6 +2026,110 @@
                 })
                 .catch((error) => {
                     showStatus(adminStatus, `Error saving giveaway: ${error.message}`, 'error');
+                });
+        });
+
+        // Poll functionality
+        addOptionBtn.addEventListener('click', () => {
+            const optionInput = document.createElement('div');
+            optionInput.className = 'poll-option-input';
+            optionInput.innerHTML = `
+                <input type="text" class="poll-option-text" placeholder="Option ${pollOptionsContainer.children.length + 1}">
+                <button class="btn btn-danger remove-option-btn">-</button>
+            `;
+            pollOptionsContainer.appendChild(optionInput);
+            
+            // Add event listener to remove button
+            optionInput.querySelector('.remove-option-btn').addEventListener('click', function() {
+                if (pollOptionsContainer.children.length > 2) {
+                    pollOptionsContainer.removeChild(optionInput);
+                }
+            });
+        });
+
+        // Add event listeners to existing remove buttons
+        document.querySelectorAll('.remove-option-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (pollOptionsContainer.children.length > 2) {
+                    pollOptionsContainer.removeChild(this.parentElement);
+                }
+            });
+        });
+
+        createPollBtn.addEventListener('click', () => {
+            if (!isAdmin) {
+                showStatus(adminStatus, 'Access denied. Admin login required', 'error');
+                return;
+            }
+            
+            const question = document.getElementById('poll-question').value;
+            const endTime = document.getElementById('poll-end-time').value;
+            const description = document.getElementById('poll-description').value;
+            
+            if (!question || !endTime) {
+                showStatus(adminStatus, 'Please fill all required fields', 'error');
+                return;
+            }
+            
+            // Get poll options
+            const options = [];
+            document.querySelectorAll('.poll-option-text').forEach(input => {
+                if (input.value.trim() !== '') {
+                    options.push(input.value.trim());
+                }
+            });
+            
+            if (options.length < 2) {
+                showStatus(adminStatus, 'Please add at least 2 options', 'error');
+                return;
+            }
+            
+            // Create new poll
+            const newPoll = {
+                question: question,
+                description: description || '',
+                options: options,
+                endTime: new Date(endTime).getTime(),
+                createdAt: new Date().getTime(),
+                isActive: true,
+                votes: {} // Initialize votes object
+            };
+            
+            // Save to Firebase
+            const pollRef = push(ref(database, 'polls'));
+            set(pollRef, newPoll)
+                .then(() => {
+                    showStatus(adminStatus, 'Poll created successfully!', 'success');
+                    loadAdminData();
+                    
+                    // Clear form
+                    document.getElementById('poll-question').value = '';
+                    document.getElementById('poll-end-time').value = '';
+                    document.getElementById('poll-description').value = '';
+                    
+                    // Reset options
+                    pollOptionsContainer.innerHTML = `
+                        <div class="poll-option-input">
+                            <input type="text" class="poll-option-text" placeholder="Option 1">
+                            <button class="btn btn-danger remove-option-btn" style="display: none;">-</button>
+                        </div>
+                        <div class="poll-option-input">
+                            <input type="text" class="poll-option-text" placeholder="Option 2">
+                            <button class="btn btn-danger remove-option-btn">-</button>
+                        </div>
+                    `;
+                    
+                    // Re-add event listeners
+                    document.querySelectorAll('.remove-option-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            if (pollOptionsContainer.children.length > 2) {
+                                pollOptionsContainer.removeChild(this.parentElement);
+                            }
+                        });
+                    });
+                })
+                .catch((error) => {
+                    showStatus(adminStatus, `Error saving poll: ${error.message}`, 'error');
                 });
         });
 
@@ -1520,6 +2164,7 @@
             if (currentUser) {
                 currentUserSpan.textContent = currentUser.email;
                 currentUserGiveaways.textContent = currentUser.email;
+                currentUserPolls.textContent = currentUser.email;
                 userNameSpan.textContent = currentUser.displayName || currentUser.email.split('@')[0];
                 
                 // Get user name from database
@@ -1537,11 +2182,13 @@
                 userInfoHome.style.display = 'flex';
                 userInfoClaim.style.display = 'flex';
                 userInfoGiveaways.style.display = 'flex';
+                userInfoPolls.style.display = 'flex';
             } else {
                 // Hide user info for guests
                 userInfoHome.style.display = 'none';
                 userInfoClaim.style.display = 'none';
                 userInfoGiveaways.style.display = 'none';
+                userInfoPolls.style.display = 'none';
             }
         }
 
@@ -1869,41 +2516,78 @@
             
             const now = new Date().getTime();
             const hasEnded = now >= giveaway.endTime;
+            const detailsContent = document.getElementById('giveaway-details-content');
             
             if (hasEnded && winners.length > 0) {
-                let winnersContent = `
-                    <div class="winner-section">
-                        <h3><i class="fas fa-trophy"></i> Winners!</h3>
-                `;
-                
-                winners.forEach(winner => {
-                    winnersContent += `<div class="winner-name">${winner.userName}</div>`;
-                });
-                
-                winnersContent += `
-                    </div>
-                `;
-                
-                // Add winners section to details content
-                const detailsContent = document.getElementById('giveaway-details-content');
-                if (detailsContent) {
-                    detailsContent.innerHTML += winnersContent;
-                }
-                
                 // Check if current user is a winner
                 const isWinner = winners.some(w => w.userId === currentUser.uid);
+                
                 if (isWinner) {
+                    // Show winner message instead of ended message
                     const winnerMessage = `
-                        <div class="winner-message">
-                            <h3>Congratulations! 🎉</h3>
-                            <p>You won the ${giveaway.title} giveaway!</p>
-                            <p>Please contact admin for your prize.</p>
+                        <div class="winner-confetti">
+                            <div class="winner-message">
+                                <h3>🎉 Congratulations! 🎉</h3>
+                                <p>You won the</p>
+                                <h2>${giveaway.title}</h2>
+                                <div class="prize-value">${giveaway.prizeValue}</div>
+                                <p>Please contact admin for your prize.</p>
+                            </div>
                         </div>
                     `;
+                    
+                    // Replace the ended message with winner message
                     if (detailsContent) {
-                        detailsContent.innerHTML = winnerMessage + detailsContent.innerHTML;
+                        detailsContent.innerHTML = winnerMessage + detailsContent.innerHTML.replace(
+                            /<div class="login-required">[\s\S]*?<\/div>/, ''
+                        );
+                    }
+                    
+                    // Create confetti effect
+                    createConfetti();
+                } else {
+                    // Show winners list for non-winners
+                    let winnersContent = `
+                        <div class="winner-section">
+                            <h3><i class="fas fa-trophy"></i> Winners!</h3>
+                    `;
+                    
+                    winners.forEach(winner => {
+                        winnersContent += `<div class="winner-name">${winner.userName}</div>`;
+                    });
+                    
+                    winnersContent += `
+                        </div>
+                    `;
+                    
+                    // Add winners section to details content
+                    if (detailsContent) {
+                        detailsContent.innerHTML += winnersContent;
                     }
                 }
+            }
+        }
+
+        function createConfetti() {
+            const container = document.querySelector('.winner-confetti');
+            if (!container) return;
+            
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffd166', '#06d6a0', '#ef476f'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = `${Math.random() * 10 + 5}px`;
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                container.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
             }
         }
 
@@ -2006,8 +2690,8 @@
                 // Add participant to database
                 const participantRef = push(ref(database, `giveaways/${giveawayId}/participants`));
                 set(participantRef, {
-                    userId: currentUser.uid, 
-                    userName: userName, 
+                    userId: currentUser.uid,   
+                    userName: userName,   
                     joinedAt: new Date().getTime()
                 }).then(() => {
                     showStatus(document.getElementById('giveaway-status'), 'Successfully joined the giveaway!', 'success');
@@ -2016,6 +2700,189 @@
                     showStatus(document.getElementById('giveaway-status'), `Error joining giveaway: ${error.message}`, 'error');
                 });
             });
+        }
+
+        // Poll functions
+        function renderPollsContent() {
+            if (!currentUser) {
+                // Show login required message for guests
+                pollsContent.innerHTML = `
+                    <div class="login-required">
+                        <i class="fas fa-lock"></i>
+                        <h3>Login Required</h3>
+                        <p>You need to be logged in to view and vote on polls.</p>
+                        <button class="btn btn-primary" onclick="showLoginScreen()">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSignupScreen()">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Show polls for logged in users
+            pollsContent.innerHTML = `
+                <h2>Community Polls</h2>
+                <p>Vote on topics and see what others think!</p>
+                <div class="poll-list" id="polls-list">
+                    <!-- Polls will be loaded here -->
+                </div>
+            `;
+            
+            // Load polls
+            loadPolls();
+        }
+
+        function loadPolls() {
+            const pollsList = document.getElementById('polls-list');
+            if (!pollsList) return;
+            
+            pollsList.innerHTML = '<p>Loading polls...</p>';
+            
+            const pollsRef = ref(database, 'polls');
+            onValue(pollsRef, (snapshot) => {
+                polls = [];
+                snapshot.forEach((childSnapshot) => {
+                    const poll = childSnapshot.val();
+                    poll.id = childSnapshot.key;
+                    polls.push(poll);
+                });
+                
+                // Sort by creation time descending
+                polls.sort((a, b) => b.createdAt - a.createdAt);
+                renderPollsList();
+            }, (error) => {
+                if (pollsList) {
+                    pollsList.innerHTML = `<p>Error loading polls: ${error.message}</p>`;
+                }
+            });
+        }
+
+        function renderPollsList() {
+            const pollsList = document.getElementById('polls-list');
+            if (!pollsList) return;
+            
+            pollsList.innerHTML = '';
+            
+            if (polls.length === 0) {
+                pollsList.innerHTML = '<p>No polls available at the moment.</p>';
+                return;
+            }
+            
+            polls.forEach(poll => {
+                const now = new Date().getTime();
+                const hasEnded = now >= poll.endTime;
+                const isActive = poll.isActive && !hasEnded;
+                
+                const pollElement = document.createElement('div');
+                pollElement.className = `poll-card ${isActive ? 'active' : 'ended'}`;
+                
+                let optionsHtml = '';
+                let totalVotes = 0;
+                
+                // Calculate total votes
+                if (poll.votes) {
+                    for (const option in poll.votes) {
+                        totalVotes += poll.votes[option];
+                    }
+                }
+                
+                // Check if user has voted
+                const userVoted = userVotes.includes(poll.id);
+                
+                // Render options
+                poll.options.forEach((option, index) => {
+                    const optionVotes = poll.votes && poll.votes[option] ? poll.votes[option] : 0;
+                    const percentage = totalVotes > 0 ? Math.round((optionVotes / totalVotes) * 100) : 0;
+                    
+                    if (hasEnded || userVoted) {
+                        // Show results
+                        optionsHtml += `
+                            <div class="poll-option ended">
+                                ${option}
+                                <div class="poll-results">
+                                    <div class="poll-result-bar">
+                                        <div class="poll-result-fill" style="width: ${percentage}%">${percentage}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Show voting option
+                        optionsHtml += `
+                            <div class="poll-option" data-poll-id="${poll.id}" data-option="${option}">
+                                ${option}
+                            </div>
+                        `;
+                    }
+                });
+                
+                pollElement.innerHTML = `
+                    <h3>${poll.question}</h3>
+                    <p>${poll.description || ''}</p>
+                    <div class="poll-options-container">
+                        ${optionsHtml}
+                    </div>
+                    <div class="poll-info">
+                        <span><i class="fas fa-clock"></i> Ends: ${formatDate(poll.endTime)}</span>
+                        <span><i class="fas fa-users"></i> ${totalVotes} votes</span>
+                    </div>
+                `;
+                pollsList.appendChild(pollElement);
+            });
+            
+            // Add event listeners to vote buttons
+            document.querySelectorAll('.poll-option:not(.ended)').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    const pollId = e.target.getAttribute('data-poll-id');
+                    const selectedOption = e.target.getAttribute('data-option');
+                    voteOnPoll(pollId, selectedOption);
+                });
+            });
+        }
+
+        function voteOnPoll(pollId, selectedOption) {
+            if (!currentUser) {
+                showStatus(document.getElementById('poll-status'), 'Please login first to vote', 'error');
+                return;
+            }
+            
+            const poll = polls.find(p => p.id === pollId);
+            if (!poll) {
+                showStatus(document.getElementById('poll-status'), 'Poll not found', 'error');
+                return;
+            }
+            
+            // Check if user has already voted
+            if (userVotes.includes(pollId)) {
+                showStatus(document.getElementById('poll-status'), 'You have already voted on this poll', 'error');
+                return;
+            }
+            
+            // Check if poll has ended
+            const now = new Date().getTime();
+            if (now >= poll.endTime) {
+                showStatus(document.getElementById('poll-status'), 'This poll has ended', 'error');
+                loadPolls();
+                return;
+            }
+            
+            // Update vote count in database
+            const pollRef = ref(database, `polls/${pollId}/votes/${selectedOption}`);
+            const currentVotes = poll.votes && poll.votes[selectedOption] ? poll.votes[selectedOption] : 0;
+            
+            update(pollRef, currentVotes + 1)
+                .then(() => {
+                    // Add to user votes
+                    userVotes.push(pollId);
+                    showStatus(document.getElementById('poll-status'), 'Vote submitted successfully!', 'success');
+                    loadPolls();
+                })
+                .catch((error) => {
+                    showStatus(document.getElementById('poll-status'), `Error submitting vote: ${error.message}`, 'error');
+                });
         }
 
         // Firebase functions
@@ -2334,12 +3201,12 @@
             // Save claim to Firebase
             const claimRef = push(ref(database, 'claims'));
             set(claimRef, {
-                userId: currentUser.uid, 
-                userEmail: currentUser.email, 
-                userName: currentUser.displayName || currentUser.email.split('@')[0], 
-                packetId: packetId, 
-                packetTitle: packet.title, 
-                code: code, 
+                userId: currentUser.uid,   
+                userEmail: currentUser.email,   
+                userName: currentUser.displayName || currentUser.email.split('@')[0],   
+                packetId: packetId,   
+                packetTitle: packet.title,   
+                code: code,   
                 claimedAt: new Date().getTime()
             }).then(() => {
                 // Update remaining count
@@ -2349,7 +3216,7 @@
                 }).then(() => {
                     // Add to user claims
                     userClaims.push({
-                        packetId: packetId, 
+                        packetId: packetId,   
                         code: code
                     });
                     
@@ -2423,6 +3290,21 @@
                 // Sort by creation time descending
                 giveaways.sort((a, b) => b.createdAt - a.createdAt);
                 renderAdminGiveaways();
+            });
+            
+            // Load polls
+            const pollsRef = ref(database, 'polls');
+            onValue(pollsRef, (snapshot) => {
+                polls = [];
+                snapshot.forEach((childSnapshot) => {
+                    const poll = childSnapshot.val();
+                    poll.id = childSnapshot.key;
+                    polls.push(poll);
+                });
+                
+                // Sort by creation time descending
+                polls.sort((a, b) => b.createdAt - a.createdAt);
+                renderAdminPolls();
             });
         }
 
@@ -2511,9 +3393,9 @@
                         <button class="btn btn-danger delete-giveaway-btn" data-id="${giveaway.id}">
                             <i class="fas fa-trash"></i> Delete
                         </button>
-                        ${hasEnded ? `<button class="btn btn-primary roll-winners-btn" data-id="${giveaway.id}">
+                        <button class="btn btn-primary roll-winners-btn" data-id="${giveaway.id}">
                             <i class="fas fa-random"></i> Roll Winners
-                        </button>` : ''}
+                        </button>
                     </div>
                 `;
                 adminGiveawaysList.appendChild(giveawayElement);
@@ -2559,13 +3441,6 @@
                 return;
             }
             
-            // Check if giveaway has ended
-            const now = new Date().getTime();
-            if (now < giveaway.endTime) {
-                showStatus(adminStatus, 'Giveaway is still active. Wait until it ends to roll winners', 'error');
-                return;
-            }
-            
             // Load participants
             const participantsRef = ref(database, `giveaways/${giveawayId}/participants`);
             get(participantsRef).then((snapshot) => {
@@ -2602,6 +3477,69 @@
                     showStatus(adminStatus, `Error selecting winners: ${error.message}`, 'error');
                 });
             });
+        }
+
+        function renderAdminPolls() {
+            adminPollsList.innerHTML = '';
+            
+            if (polls.length === 0) {
+                adminPollsList.innerHTML = '<p>No polls created yet.</p>';
+                return;
+            }
+            
+            polls.forEach(poll => {
+                const now = new Date().getTime();
+                const hasEnded = now >= poll.endTime;
+                const status = hasEnded ? 'Ended' : (poll.isActive ? 'Active' : 'Inactive');
+                
+                // Calculate total votes
+                let totalVotes = 0;
+                if (poll.votes) {
+                    for (const option in poll.votes) {
+                        totalVotes += poll.votes[option];
+                    }
+                }
+                
+                const pollElement = document.createElement('div');
+                pollElement.className = 'red-packet-item';
+                pollElement.innerHTML = `
+                    <h4>${poll.question}</h4>
+                    <p><i class="fas fa-clock"></i> Ends: ${formatDate(poll.endTime)}</p>
+                    <p><i class="fas fa-users"></i> Total Votes: ${totalVotes}</p>
+                    <p><i class="fas fa-info-circle"></i> Status: ${status}</p>
+                    <p>${poll.description || ''}</p>
+                    <div class="packet-actions">
+                        <button class="btn btn-danger delete-poll-btn" data-id="${poll.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                adminPollsList.appendChild(pollElement);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-poll-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const pollId = e.target.closest('.delete-poll-btn').getAttribute('data-id');
+                    deletePoll(pollId);
+                });
+            });
+        }
+
+        function deletePoll(pollId) {
+            if (!confirm('Are you sure you want to delete this poll?')) {
+                return;
+            }
+            
+            const pollRef = ref(database, 'polls/' + pollId);
+            remove(pollRef)
+                .then(() => {
+                    showStatus(adminStatus, 'Poll deleted successfully!', 'success');
+                    loadAdminData();
+                })
+                .catch((error) => {
+                    showStatus(adminStatus, `Error deleting poll: ${error.message}`, 'error');
+                });
         }
 
         function updatePacketFilter() {
@@ -2655,6 +3593,7 @@
             if (!currentUser) return;
             
             userClaims = [];
+            userVotes = [];
             
             const claimsRef = query(ref(database, 'claims'), orderByChild('userId'));
             onValue(claimsRef, (snapshot) => {
@@ -2663,7 +3602,7 @@
                     const claim = childSnapshot.val();
                     if (claim.userId === currentUser.uid) {
                         userClaims.push({
-                            packetId: claim.packetId, 
+                            packetId: claim.packetId,   
                             code: claim.code
                         });
                     }
@@ -2673,6 +3612,18 @@
                 renderHomeContent();
                 renderClaimContent();
                 renderGiveawaysContent();
+                renderPollsContent();
+            });
+            
+            // Load user votes
+            const userVotesRef = ref(database, `user_votes/${currentUser.uid}`);
+            onValue(userVotesRef, (snapshot) => {
+                userVotes = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        userVotes.push(childSnapshot.key);
+                    });
+                }
             });
         }
 
@@ -2695,6 +3646,7 @@
         document.getElementById('release-time').value = new Date(Date.now() + 86400000).toISOString().slice(0, 16);
         document.getElementById('red-packet-link').value = 'https://mpay.com/redeem';
         document.getElementById('giveaway-end-time').value = new Date(Date.now() + 86400000).toISOString().slice(0, 16);
+        document.getElementById('poll-end-time').value = new Date(Date.now() + 86400000).toISOString().slice(0, 16);
 
         // Simulate login for demo purposes
         document.getElementById('admin-password').value = '';
@@ -2710,6 +3662,7 @@
                 renderHomeContent();
                 renderClaimContent();
                 renderGiveawaysContent();
+                renderPollsContent();
             } else {
                 // Show main app with login required
                 authScreen.classList.add('hidden');
@@ -2718,6 +3671,7 @@
                 renderHomeContent();
                 renderClaimContent();
                 renderGiveawaysContent();
+                renderPollsContent();
             }
         });
     </script>
