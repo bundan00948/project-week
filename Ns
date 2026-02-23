@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍬 Switch Gumball · Playtime rarities</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2b1e3c 0%, #1e2b3a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 16px;
+            margin: 0;
+        }
+
+        /* main machine card */
+        .machine {
+            max-width: 800px;
+            width: 100%;
+            background: #e43d3d; /* classic gumball red base */
+            background: radial-gradient(circle at 30% 20%, #f56565, #b22222);
+            border-radius: 80px 80px 60px 60px;
+            box-shadow: 0 30px 25px rgba(0,0,0,0.6), inset 0 2px 10px rgba(255,255,240,0.6);
+            padding: 30px 30px 40px;
+            border: 6px solid #ffcc99;
+            border-top-color: #ffdbb5;
+            position: relative;
+        }
+
+        /* glass globe effect */
+        .globe {
+            background: #d1d9e8;
+            background: radial-gradient(circle at 25% 30%, #ffffff, #b0c4de);
+            border-radius: 120px 120px 60px 60px;
+            padding: 30px 20px 30px;
+            border: 8px solid #fcd5a5;
+            border-top: 5px solid #ffeac5;
+            box-shadow: inset 0 -10px 20px rgba(0,0,20,0.3), inset 0 10px 25px white, 0 10px 15px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gumball-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            margin: 15px 0 10px;
+            perspective: 400px;
+        }
+
+        /* base gumball style */
+        .gumball {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            box-shadow: 0 10px 5px rgba(0,0,0,0.3), inset 0 -5px 8px rgba(0,0,0,0.4), inset 0 5px 12px rgba(255,255,255,0.7);
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            color: #1a1a2e;
+            text-shadow: 0 1px 2px white;
+            padding: 8px;
+            line-height: 1.2;
+            word-break: break-word;
+            border: 2px solid rgba(255,255,255,0.75);
+            cursor: default;
+        }
+
+        .gumball:hover {
+            transform: scale(1.02) rotate(1deg);
+            box-shadow: 0 12px 8px black, inset 0 -4px 6px rgba(0,0,0,0.5), inset 0 6px 10px rgba(255,255,255,0.9);
+        }
+
+        /* rarity color palette */
+        .screentime { background: radial-gradient(circle at 35% 30%, #f9f9f9, #b0b0b0); }       /* common grey */
+        .uncommon   { background: radial-gradient(circle at 40% 35%, #a8e6a8, #2e7d32); }       /* green */
+        .rare       { background: radial-gradient(circle at 30% 25%, #aad0f5, #1565c0); }       /* blue */
+        .epic       { background: radial-gradient(circle at 35% 30%, #d98cf2, #6a1b9a); }       /* purple */
+        .legendary  { background: radial-gradient(circle at 30% 30%, #ffe082, #b8860b); }       /* golden */
+
+        /* small size adjustments for longer text */
+        .gumball.large-text {
+            font-size: 0.75rem;
+            padding: 4px 2px;
+        }
+
+        .screen-lid {
+            background: #5f4b3a;
+            height: 18px;
+            width: 70%;
+            margin: 0 auto 5px;
+            border-radius: 40px 40px 0 0;
+            border-bottom: 5px solid #ab8e6a;
+            box-shadow: inset 0 5px 5px #392e22;
+        }
+
+        .crank-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .crank-handle {
+            background: #ccb79e;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 6px solid #7b5f42;
+            box-shadow: -3px 3px 8px black, inset 0 -5px 5px #3b2e1e, inset 0 5px 10px #ffeecc;
+            cursor: pointer;
+            transition: 0.06s linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            background: #e4c29c;
+            color: #412f1b;
+            transform: rotate(0deg);
+        }
+
+        .crank-handle:active {
+            transform: rotate(20deg) scale(0.95);
+            background: #d6b185;
+            box-shadow: inset 0 5px 8px #4f3e2b;
+        }
+
+        .coin-slot {
+            background: #2f2216;
+            width: 120px;
+            height: 40px;
+            border-radius: 40px;
+            border: 4px solid #ab8b60;
+            box-shadow: inset 0 0 0 4px #2d1d0e;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #f5eace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 1px;
+        }
+
+        .last-draw {
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid gold;
+            display: inline-block;
+            margin-top: 15px;
+            text-align: center;
+            box-shadow: inset 0 2px 8px white;
+            width: fit-content;
+            align-self: center;
+        }
+
+        .last-draw span {
+            color: #ffd966;
+            text-transform: uppercase;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .reset-btn {
+            background: #4f6d7f;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 12px 28px;
+            border-radius: 40px;
+            box-shadow: 0 6px 0 #1e3a4a, 0 8px 10px black;
+            cursor: pointer;
+            transition: 0.05s linear;
+            border: 2px solid #c0d0dc;
+            letter-spacing: 1px;
+        }
+
+        .reset-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #1e3a4a, 0 5px 8px black;
+        }
+
+        .note {
+            color: #fcf0d5;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-shadow: 2px 2px 0 #4d2e1b;
+        }
+    </style>
+</head>
+<body>
+<div class="machine">
+    <!-- glass dome -->
+    <div class="globe">
+        <div class="screen-lid"></div>
+
+        <!-- gumball display (will be filled by js) -->
+        <div id="gumballContainer" class="gumball-grid">
+            <!-- static hardcoded balls? no, we will generate from JS. but placeholder to show structure -->
+        </div>
+
+        <!-- last draw indicator -->
+        <div id="lastDrawDisplay" class="last-draw">
+            🍬 <span id="lastRarity">—</span> · <span id="lastTime">pull the crank</span>
+        </div>
+    </div>
+
+    <!-- bottom panel: crank + reset -->
+    <div class="footer-buttons">
+        <div class="coin-slot">🔴 1 PLAY</div>
+        <div class="crank-area">
+            <button class="crank-handle" id="crankBtn" aria-label="pull crank">↻</button>
+            <span class="note">pull me</span>
+        </div>
+        <button class="reset-btn" id="resetBtn">🔄 REFILL</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- RARITY definitions (ordered) ----------
+        const RARITIES = [
+            { name: 'Screentime',  class: 'screentime', colorLabel: '⚪ Screentime' },
+            { name: 'Uncommon',    class: 'uncommon',   colorLabel: '🟢 Uncommon' },
+            { name: 'Rare',        class: 'rare',       colorLabel: '🔵 Rare' },
+            { name: 'Epic',        class: 'epic',       colorLabel: '🟣 Epic' },
+            { name: 'Legendary',   class: 'legendary',  colorLabel: '🟡 Legendary' }
+        ];
+
+        // ---------- PLAY TIME prizes (ordered exactly as asked) ----------
+        const TIME_PRIZES = [
+            '5 min',
+            '10 min',
+            '20 min',
+            '30 min',
+            '1 hour',
+            '2 hours',
+            'Unlimited (1 day)',
+            '3 days',
+            'One week'
+        ];
+
+        // mapping time -> rarity level (index 0..4)
+        // design:  5min / 10min / 20min → screentime (grey)
+        //          30min / 1h → uncommon (green)
+        //          2h → rare (blue)
+        //          unlimited (1d) / 3d → epic (purple)
+        //          one week → legendary (gold)
+        function getRarityIndexForTime(timeStr) {
+            if (timeStr === '5 min' || timeStr === '10 min' || timeStr === '20 min') return 0; // screentime
+            if (timeStr === '30 min' || timeStr === '1 hour') return 1; // uncommon
+            if (timeStr === '2 hours') return 2; // rare
+            if (timeStr === 'Unlimited (1 day)' || timeStr === '3 days') return 3; // epic
+            if (timeStr === 'One week') return 4; // legendary
+            // fallback (should never happen)
+            return 0;
+        }
+
+        // helper to get a random prize string from TIME_PRIZES
+        function getRandomTime() {
+            const randomIndex = Math.floor(Math.random() * TIME_PRIZES.length);
+            return TIME_PRIZES[randomIndex];
+        }
+
+        // reference to container
+        const container = document.getElementById('gumballContainer');
+        const lastRaritySpan = document.getElementById('lastRarity');
+        const lastTimeSpan = document.getElementById('lastTime');
+
+        // initial default state: create 8 gumballs (as example)
+        function generateRandomGumball() {
+            const time = getRandomTime();
+            const rarityIdx = getRarityIndexForTime(time);
+            const rarity = RARITIES[rarityIdx];
+            return { time, rarity };
+        }
+
+        // fill with 8 random balls on load
+        let currentBalls = [];
+        for (let i = 0; i < 8; i++) {
+            currentBalls.push(generateRandomGumball());
+        }
+
+        // render all gumballs from currentBalls
+        function renderGumballs() {
+            container.innerHTML = ''; 
+            currentBalls.forEach((ball, idx) => {
+                const ballDiv = document.createElement('div');
+                ballDiv.className = `gumball ${ball.rarity.class}`;
+                // if text too long adjust
+                if (ball.time.length > 10) {
+                    ballDiv.classList.add('large-text');
+                }
+                ballDiv.textContent = ball.time;
+                // tiny optional rarity indicator on hover (title)
+                ballDiv.title = `${ball.rarity.colorLabel} playtime`;
+                container.appendChild(ballDiv);
+            });
+        }
+
+        // update last draw display
+        function setLastDraw(ball) {
+            lastRaritySpan.textContent = ball.rarity.colorLabel;
+            lastTimeSpan.textContent = ball.time;
+        }
+
+        // simulate crank pull: remove one gumball, add new random one, show last drawn
+        function pullCrank() {
+            if (currentBalls.length === 0) {
+                // (should never happen, but just in case refill)
+                currentBalls.push(generateRandomGumball());
+            }
+
+            // remove first ball (like dispensing from top) – could also be random pop, but let's shift (FIFO)
+            const drawnBall = currentBalls.shift(); 
+            // create a fresh random ball
+            const newBall = generateRandomGumball();
+            currentBalls.push(newBall);
+
+            // update display
+            renderGumballs();
+            setLastDraw(drawnBall);
+        }
+
+        // reset / refill: set all new random balls
+        function refillMachine() {
+            const newBalls = [];
+            for (let i = 0; i < 8; i++) {
+                newBalls.push(generateRandomGumball());
+            }
+            currentBalls = newBalls;
+            renderGumballs();
+            // keep last draw message reset (optional)
+            lastRaritySpan.textContent = '—';
+            lastTimeSpan.textContent = 'refilled';
+        }
+
+        // attach listeners
+        document.getElementById('crankBtn').addEventListener('click', pullCrank);
+        document.getElementById('resetBtn').addEventListener('click', refillMachine);
+
+        // initial render
+        renderGumballs();
+        // set a welcome last draw
+        lastRaritySpan.textContent = '✨';
+        lastTimeSpan.textContent = 'turn the crank';
+
+        // Bonus: touch of realism — coin slot text animation? not needed.
+        // But ensure that we also show the mapping correctly
+        // also possible to manually trigger a first draw if we want a sample, but not needed.
+        // additionally, press crank with space/enter? button handles it.
+    })();
+</script>
+
+<!-- extra style to handle any overflow -->
+<style>
+    /* make sure machine is responsive */
+    @media (max-width: 550px) {
+        .gumball {
+            width: 70px;
+            height: 70px;
+            font-size: 0.7rem;
+        }
+        .coin-slot { width: 90px; font-size: 0.8rem; }
+        .reset-btn { font-size: 1rem; padding: 8px 18px; }
+    }
+    .gumball.large-text { font-size: 0.65rem; }
+    /* accessibility */
+    .crank-handle { border-style: outset; user-select: none; }
+    .reset-btn { user-select: none; }
+</style>
+</body>
+</html>
