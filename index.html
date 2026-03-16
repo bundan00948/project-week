@@ -1,7 +1,331 @@
-<h1> Website Shutdown</h1>
-<br>
-  We Thank you for your support throughout the months, and gave us a chance to provide free service. However, we are currently struggling from economical issues, these fees include the  website host, database hosting, and development fees. Our team made a hard decision--to shutdown the project permanently. Thank you for your support, and have a good day.
-  <br>
-  <b>Macau Traffic Website Development Team</b>
-  <br>
-  <b>Brendan Liu</b>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel – Macau Traffic Monitor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <style>
+        *{margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        body{background: linear-gradient(rgba(0, 0, 0, .8), rgba(0, 0, 0, .8)), url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;background-size: cover;color: #fff;min-height: 100vh;padding: 20px;overflow-x: hidden}
+        .container{max-width: 1400px;margin: 0 auto}
+        header{text-align: center;padding: 20px 0;margin-bottom: 20px;background: rgba(0, 0, 0, .6);border-radius: 15px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18)}
+        .logo-container{display: flex;align-items: center;justify-content: center;gap: 15px;margin-bottom: 10px}
+        .logo{width: 80px;height: 80px;background: linear-gradient(45deg, #ffd700, #ff8c00);border-radius: 50%;display: flex;align-items: center;justify-content: center;box-shadow: 0 0 20px rgba(255, 215, 0, .5)}
+        .logo i{font-size: 40px;color: #8b0000}
+        h1{font-size: 2.8rem;text-shadow: 0 2px 4px rgba(0, 0, 0, .5);margin-bottom: 5px}
+        .subtitle{font-size: 1.2rem;opacity: .9;max-width: 600px;margin: 0 auto 20px}
+        .auth-section{background: rgba(255, 255, 255, .1);border-radius: 15px;padding: 25px;margin: 20px 0;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18);text-align: left}
+        .auth-section h2{color: #ffd700;margin-bottom: 20px;text-align: center}
+        .form-group{margin-bottom: 20px;text-align: left}
+        .form-group label{display: block;margin-bottom: 8px;font-weight: bold}
+        .form-group input, .form-group select, .form-group textarea{width: 100%;padding: 12px;border-radius: 8px;border: 1px solid rgba(255, 255, 255, .3);background: rgba(0, 0, 0, .3);color: #fff;font-size: 1rem}
+        .btn{padding: 12px 25px;border-radius: 30px;border: none;background: #ffd700;color: #000;font-weight: bold;cursor: pointer;transition: all .3s ease;display: inline-flex;align-items: center;gap: 8px}
+        .btn:hover{transform: translateY(-3px);box-shadow: 0 5px 15px rgba(0, 0, 0, .3)}
+        .btn i{font-size: 1.2rem}
+        .cameras-section, .news-section, .ip-ban-section, .visits-section{display: none}
+        .section-title{color: #ffd700;margin: 25px 0 15px;display: flex;align-items: center;gap: 10px}
+        .camera-grid, .news-grid, .ip-grid{display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;margin-top: 20px}
+        .camera-card, .news-card, .ip-card{background: rgba(255, 255, 255, .1);border-radius: 15px;padding: 20px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18);cursor: move;transition: transform .3s ease}
+        .camera-card:hover, .news-card:hover, .ip-card:hover{transform: translateY(-5px);box-shadow: 0 12px 40px rgba(0, 0, 0, .4)}
+        .modal{display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, .8);z-index: 1000;align-items: center;justify-content: center}
+        .modal-content{background: rgba(0, 0, 0, .9);border-radius: 15px;padding: 30px;width: 90%;max-width: 600px;box-shadow: 0 10px 30px rgba(0, 0, 0, .5);border: 1px solid rgba(255, 255, 255, .18);position: relative}
+        .close-modal{position: absolute;top: 20px;right: 20px;font-size: 1.5rem;cursor: pointer;color: #ffd700}
+        .notification{position: fixed;top: 20px;right: 20px;padding: 15px 25px;border-radius: 8px;background: rgba(0, 0, 0, .8);border-left: 4px solid #4dff4d;box-shadow: 0 5px 15px rgba(0, 0, 0, .3);z-index: 2000;display: none;animation: slideIn .3s ease}
+        @keyframes slideIn{from{transform: translateX(100%);opacity: 0}to{transform: translateX(0);opacity: 1}}
+        footer{text-align: center;padding: 20px;margin-top: 30px;font-size: .9rem;opacity: .8;background: rgba(0, 0, 0, .6);border-radius: 15px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18)}
+        
+        /* Tabs styling */
+        .tabs{display: flex;margin: 20px 0;border-bottom: 1px solid rgba(255, 255, 255, .2)}
+        .tab{padding: 12px 24px;cursor: pointer;transition: all .3s ease;border-bottom: 3px solid transparent}
+        .tab.active{border-bottom: 3px solid #ffd700;color: #ffd700}
+        .tab:hover{background: rgba(255, 255, 255, .1)}
+        
+        /* Search container */
+        .search-container{display: flex;gap: 10px;margin: 20px 0}
+        .search-container input{flex: 1}
+        
+        /* Stats container */
+        .stats-container{display: flex;gap: 20px;margin: 20px 0}
+        .stat-card{background: rgba(255, 255, 255, .1);padding: 15px;border-radius: 10px;text-align: center;min-width: 150px}
+        .stat-label{font-size: .9rem;opacity: .8;margin-bottom: 5px}
+        .stat-value{font-size: 1.8rem;font-weight: bold;color: #ffd700}
+        
+        /* Form row */
+        .form-row{display: grid;grid-template-columns: 1fr 1fr;gap: 15px}
+        
+        /* Suggestion list */
+        .suggestion-list{position: absolute;top: 100%;left: 0;right: 0;background: rgba(0, 0, 0, .9);border: 1px solid rgba(255, 255, 255, .2);border-radius: 8px;max-height: 200px;overflow-y: auto;z-index: 100;display: none}
+        .suggestion-item{padding: 10px;cursor: pointer;border-bottom: 1px solid rgba(255, 255, 255, .1)}
+        .suggestion-item:hover{background: rgba(255, 215, 0, .2)}
+        
+        /* Status indicator */
+        .status-indicator{display: inline-block;width: 12px;height: 12px;border-radius: 50%;margin-right: 8px}
+        .status-connected{background: #4dff4d}
+        .status-disconnected{background: #ff4d4d}
+        
+        /* Notification error */
+        .notification.error{border-left-color: #ff4d4d}
+        
+        /* Camera actions */
+        .camera-actions, .news-actions, .ip-actions{display: flex;gap: 10px;margin-top: 15px}
+        
+        /* News styling */
+        .news-title{display: flex;align-items: center;gap: 10px;margin-bottom: 10px;font-weight: bold}
+        .news-content{margin-bottom: 15px;opacity: .9}
+        .news-details{margin-bottom: 15px}
+        .news-meta{font-size: .85rem;opacity: .7;margin-bottom: 15px}
+        .drag-handle{cursor: move}
+        
+        /* Drag and drop */
+        .drag-over{border: 2px dashed #ffd700}
+        .dragging{opacity: .5}
+        
+        /* Position warning */
+        .position-warning{color: #ffd700;margin-top: 5px;font-size: .9rem;display: none}
+        
+        /* Buttons secondary and danger */
+        .btn-secondary{background: rgba(255, 255, 255, .2);color: #fff}
+        .btn-danger{background: #ff4d4d;color: #fff}
+        .btn-danger:hover{background: #ff3333}
+        
+        /* Camera card improvements */
+        .camera-header{display: flex;justify-content: space-between;align-items: center;margin-bottom: 15px}
+        .camera-title{font-size: 1.2rem;font-weight: bold}
+        .camera-id{font-size: .85rem;opacity: .7}
+        .camera-location{display: flex;align-items: center;gap: 5px;margin: 10px 0;font-size: .9rem}
+        .camera-position{display: inline-block;background: rgba(255, 215, 0, .2);padding: 3px 8px;border-radius: 10px;font-size: .85rem}
+        .camera-iframe-container{margin: 15px 0;position: relative;padding-top: 56.25%}
+        .camera-iframe{position: absolute;top: 0;left: 0;width: 100%;height: 100%;border-radius: 10px}
+        .camera-actions{justify-content: space-between}
+        
+        /* IP Ban styling */
+        .ip-grid{display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;margin-top: 20px}
+        .ip-card{background: rgba(255, 255, 255, .1);border-radius: 15px;padding: 20px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18)}
+        .ip-header{display: flex;justify-content: space-between;align-items: center;margin-bottom: 15px}
+        .ip-title{font-size: 1.2rem;font-weight: bold}
+        .ip-details{margin: 10px 0}
+        .ip-actions{display: flex;gap: 10px;margin-top: 15px}
+        .ip-table{width: 100%;border-collapse: collapse;margin-top: 20px}
+        .ip-table th, .ip-table td{padding: 12px;text-align: left;border-bottom: 1px solid rgba(255, 255, 255, .1)}
+        .ip-table th{background: rgba(255, 215, 0, .2);font-weight: bold}
+        .ip-table tr:hover{background: rgba(255, 255, 255, .05)}
+        .unban-btn{background: #4dff4d;color: #000}
+        .unban-btn:hover{background: #33cc33}
+        
+        /* Visits styling */
+        .data-table{width: 100%;border-collapse: collapse;margin-top: 20px;background: rgba(0, 0, 0, 0.3);border-radius: 10px;overflow: hidden}
+        .data-table th, .data-table td{padding: 12px;text-align: left;border-bottom: 1px solid rgba(255, 255, 255, 0.1)}
+        .data-table th{background: rgba(255, 215, 0, 0.2);font-weight: bold}
+        .data-table tr:hover{background: rgba(255, 255, 255, 0.05)}
+        .ban-btn{background: #ff4d4d;color: #fff}
+        .ban-btn:hover{background: #ff3333}
+        
+        /* Official letter style - strict, formal, precise */
+        .official-notice {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #f0e6d2;
+            max-width: 900px;
+            margin: 1.5rem auto;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 2.8rem 3rem;
+            border: 1px solid #ffd70055;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+        
+        .notice-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 1.2rem;
+        }
+        
+        .notice-header h3 {
+            color: #ffd700;
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .notice-header .ref {
+            font-family: monospace;
+            color: #ffd70099;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .notice-body {
+            margin: 2rem 0;
+        }
+        
+        .notice-body p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        .notice-body .dateline {
+            text-align: right;
+            font-style: normal;
+            color: #ffd700cc;
+            margin-top: 2rem;
+            border-top: 1px dashed #ffd70055;
+            padding-top: 1.2rem;
+        }
+        
+        .signature-official {
+            margin: 2.8rem 0 1rem;
+            text-align: right;
+            font-family: 'Georgia', serif;
+        }
+        
+        .signature-official .name {
+            font-size: 2.2rem;
+            color: #ffd700;
+            font-weight: 400;
+            border-bottom: 1px solid #ffd700;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        
+        .signature-official .title {
+            font-size: 1rem;
+            opacity: 0.8;
+            letter-spacing: 3px;
+            margin-top: 0.8rem;
+            text-transform: uppercase;
+        }
+        
+        .seal {
+            text-align: center;
+            margin-top: 2.2rem;
+            font-size: 1.3rem;
+            color: #ffd700;
+            opacity: 0.7;
+        }
+        
+        .legal-footer {
+            margin-top: 2.5rem;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #ffd70099;
+            border-top: 1px solid #ffd70033;
+            padding-top: 1.2rem;
+            font-family: monospace;
+        }
+        
+        /* Hide all staff sections by default, only show auth section with official notice */
+        .cameras-section, .news-section, .ip-ban-section, .visits-section {
+            display: none !important;
+        }
+        
+        .auth-section {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo"><i class="fas fa-car"></i></div>
+                <div><h1>Macau Traffic</h1><p class="subtitle">Real-time traffic conditions and waiting times for Macau's major roads and border crossings, best for citizens.</p></div>
+            </div>
+        </header>
+
+        <div class="auth-section" id="authSection">
+            <h2><i class="fas fa-gavel"></i> OFFICIAL NOTICE: PROJECT SHUTDOWN</h2>
+            
+            <div class="official-notice">
+                <div class="notice-header">
+                    <h3>MACAU TRAFFIC MONITOR</h3>
+                    <div class="ref">REF: MTM/2026/CLOSURE/001</div>
+                    <div style="color:#ffd700; margin-top:0.5rem;">16 MARCH 2026</div>
+                </div>
+                
+                <div class="notice-body">
+                    <p><strong>TO ALL USERS:</strong></p>
+                    
+                    <p>This serves as formal notification that the Macau Traffic Monitor web service, operated by the Website Development Team, will be permanently discontinued effective immediately.</p>
+                    
+                    <p><strong>REASON FOR TERMINATION:</strong> Unrecoverable operational costs including web hosting, database management, and ongoing development expenditures have rendered the project financially unsustainable. Despite efforts to maintain the free service, the economic burden exceeds the project's capacity.</p>
+                    
+                    <p><strong>EFFECTIVE DATE:</strong> All systems, databases, and public interfaces associated with Macau Traffic Monitor are hereby decommissioned as of 16 March 2026. No further updates, maintenance, or support will be provided.</p>
+                    
+
+                    <div class="dateline">
+                        <i class="fas fa-map-pin"></i> Issued in Macau, 16 March 2026
+                    </div>
+                </div>
+                
+                <div class="signature-official">
+                    <div class="name">Brendan Liu</div>
+                    <div class="title">Lead Developer · Website Development Team</div>
+                    <div style="margin-top: 0.8rem; font-size: 0.9rem;">On behalf of the project team</div>
+                </div>
+                
+                <div class="seal">
+                    <i class="fas fa-stamp"></i> [ PROJECT CLOSED · SEALED ]
+                </div>
+                
+                <div class="legal-footer">
+                    <i class="fas fa-database"></i> macau-traffic-501cb · FIREBASE INSTANCE TERMINATED · NO FURTHER CORRESPONDENCE
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem; opacity: 0.7; font-family: monospace;">
+                This notice supersedes all previous communications. Service has ceased permanently.
+            </div>
+        </div>
+
+        <!-- Hidden staff sections - kept for structure but not displayed -->
+        <div class="cameras-section" id="camerasSection" style="display:none;">[staff panel hidden]</div>
+        <div class="news-section" id="newsSection" style="display:none;">[staff panel hidden]</div>
+        <div class="ip-ban-section" id="ipBanSection" style="display:none;">[staff panel hidden]</div>
+        <div class="visits-section" id="visitsSection" style="display:none;">[staff panel hidden]</div>
+
+        <div class="modal" id="cameraModal"><!-- modal content hidden --></div>
+        <div class="modal" id="newsModal"><!-- modal content hidden --></div>
+        <div class="modal" id="banIPModal"><!-- modal content hidden --></div>
+
+        <div class="notification" id="notification"><p id="notificationMessage">Operation completed successfully!</p></div>
+        <footer><p>Macau Traffic Monitor Staff Panel © 2026</p><p>Data Source: Firebase Realtime Database</p></footer>
+    </div>
+
+    <script>
+        // Firebase config (kept but unused since staff panel is hidden)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",        
+            authDomain: "macau-traffic-501cb.firebaseapp.com",        
+            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",        
+            projectId: "macau-traffic-501cb",        
+            storageBucket: "macau-traffic-501cb.appspot.com",        
+            messagingSenderId: "123456789012",        
+            appId: "1:123456789012:web:abcdef1234567890abcdef"
+        };
+        
+        // Initialize Firebase (minimal, no operations)
+        firebase.initializeApp(firebaseConfig);
+        
+        // Simple logout function if any tab tries to show
+        function logout() {
+            // do nothing - we're in shutdown mode
+        }
+        
+        // Override any tab clicks to do nothing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide all staff sections, ensure only auth section visible
+            document.getElementById('camerasSection').style.display = 'none';
+            document.getElementById('newsSection').style.display = 'none';
+            document.getElementById('ipBanSection').style.display = 'none';
+            document.getElementById('visitsSection').style.display = 'none';
+            document.getElementById('authSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
