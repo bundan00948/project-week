@@ -3,329 +3,3603 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Panel – Macau Traffic Monitor</title>
+    <title>Macau Traffic Monitor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="icon" href="https://i.postimg.cc/XNyP9t3q/Screenshot-2026-01-21-at-23-44-24-removebg-preview.png" type="image/x-icon">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+        import { getDatabase, ref, onValue, push, set, remove, onChildAdded, onChildChanged, onChildRemoved } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFk_4BSjnAE65-H7JxX8dOvtc86qlWlQ0",
+            authDomain: "macau-traffic-database.firebaseapp.com",
+            projectId: "macau-traffic-database",
+            storageBucket: "macau-traffic-database.firebasestorage.app",
+            messagingSenderId: "149938244922",
+            appId: "1:149938244922:web:b4edaf4298b7e15e899403",
+            measurementId: "G-JSSBLM1R4K"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+        
+        // Make Firebase objects globally accessible
+        window.firebaseApp = app;
+        window.firebaseDatabase = database;
+        window.firebaseAuth = auth;
+        window.firebaseFunctions = {
+            ref, onValue, push, set, remove, onChildAdded, onChildChanged, onChildRemoved,  
+            createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
+        };
+    </script>
+    
     <style>
-        *{margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
-        body{background: linear-gradient(rgba(0, 0, 0, .8), rgba(0, 0, 0, .8)), url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;background-size: cover;color: #fff;min-height: 100vh;padding: 20px;overflow-x: hidden}
-        .container{max-width: 1400px;margin: 0 auto}
-        header{text-align: center;padding: 20px 0;margin-bottom: 20px;background: rgba(0, 0, 0, .6);border-radius: 15px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18)}
-        .logo-container{display: flex;align-items: center;justify-content: center;gap: 15px;margin-bottom: 10px}
-        .logo{width: 80px;height: 80px;background: linear-gradient(45deg, #ffd700, #ff8c00);border-radius: 50%;display: flex;align-items: center;justify-content: center;box-shadow: 0 0 20px rgba(255, 215, 0, .5)}
-        .logo i{font-size: 40px;color: #8b0000}
-        h1{font-size: 2.8rem;text-shadow: 0 2px 4px rgba(0, 0, 0, .5);margin-bottom: 5px}
-        .subtitle{font-size: 1.2rem;opacity: .9;max-width: 600px;margin: 0 auto 20px}
-        .auth-section{background: rgba(255, 255, 255, .1);border-radius: 15px;padding: 25px;margin: 20px 0;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18);text-align: left}
-        .auth-section h2{color: #ffd700;margin-bottom: 20px;text-align: center}
-        .form-group{margin-bottom: 20px;text-align: left}
-        .form-group label{display: block;margin-bottom: 8px;font-weight: bold}
-        .form-group input, .form-group select, .form-group textarea{width: 100%;padding: 12px;border-radius: 8px;border: 1px solid rgba(255, 255, 255, .3);background: rgba(0, 0, 0, .3);color: #fff;font-size: 1rem}
-        .btn{padding: 12px 25px;border-radius: 30px;border: none;background: #ffd700;color: #000;font-weight: bold;cursor: pointer;transition: all .3s ease;display: inline-flex;align-items: center;gap: 8px}
-        .btn:hover{transform: translateY(-3px);box-shadow: 0 5px 15px rgba(0, 0, 0, .3)}
-        .btn i{font-size: 1.2rem}
-        .cameras-section, .news-section, .ip-ban-section, .visits-section{display: none}
-        .section-title{color: #ffd700;margin: 25px 0 15px;display: flex;align-items: center;gap: 10px}
-        .camera-grid, .news-grid, .ip-grid{display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;margin-top: 20px}
-        .camera-card, .news-card, .ip-card{background: rgba(255, 255, 255, .1);border-radius: 15px;padding: 20px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18);cursor: move;transition: transform .3s ease}
-        .camera-card:hover, .news-card:hover, .ip-card:hover{transform: translateY(-5px);box-shadow: 0 12px 40px rgba(0, 0, 0, .4)}
-        .modal{display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, .8);z-index: 1000;align-items: center;justify-content: center}
-        .modal-content{background: rgba(0, 0, 0, .9);border-radius: 15px;padding: 30px;width: 90%;max-width: 600px;box-shadow: 0 10px 30px rgba(0, 0, 0, .5);border: 1px solid rgba(255, 255, 255, .18);position: relative}
-        .close-modal{position: absolute;top: 20px;right: 20px;font-size: 1.5rem;cursor: pointer;color: #ffd700}
-        .notification{position: fixed;top: 20px;right: 20px;padding: 15px 25px;border-radius: 8px;background: rgba(0, 0, 0, .8);border-left: 4px solid #4dff4d;box-shadow: 0 5px 15px rgba(0, 0, 0, .3);z-index: 2000;display: none;animation: slideIn .3s ease}
-        @keyframes slideIn{from{transform: translateX(100%);opacity: 0}to{transform: translateX(0);opacity: 1}}
-        footer{text-align: center;padding: 20px;margin-top: 30px;font-size: .9rem;opacity: .8;background: rgba(0, 0, 0, .6);border-radius: 15px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18)}
-        
-        /* Tabs styling */
-        .tabs{display: flex;margin: 20px 0;border-bottom: 1px solid rgba(255, 255, 255, .2)}
-        .tab{padding: 12px 24px;cursor: pointer;transition: all .3s ease;border-bottom: 3px solid transparent}
-        .tab.active{border-bottom: 3px solid #ffd700;color: #ffd700}
-        .tab:hover{background: rgba(255, 255, 255, .1)}
-        
-        /* Search container */
-        .search-container{display: flex;gap: 10px;margin: 20px 0}
-        .search-container input{flex: 1}
-        
-        /* Stats container */
-        .stats-container{display: flex;gap: 20px;margin: 20px 0}
-        .stat-card{background: rgba(255, 255, 255, .1);padding: 15px;border-radius: 10px;text-align: center;min-width: 150px}
-        .stat-label{font-size: .9rem;opacity: .8;margin-bottom: 5px}
-        .stat-value{font-size: 1.8rem;font-weight: bold;color: #ffd700}
-        
-        /* Form row */
-        .form-row{display: grid;grid-template-columns: 1fr 1fr;gap: 15px}
-        
-        /* Suggestion list */
-        .suggestion-list{position: absolute;top: 100%;left: 0;right: 0;background: rgba(0, 0, 0, .9);border: 1px solid rgba(255, 255, 255, .2);border-radius: 8px;max-height: 200px;overflow-y: auto;z-index: 100;display: none}
-        .suggestion-item{padding: 10px;cursor: pointer;border-bottom: 1px solid rgba(255, 255, 255, .1)}
-        .suggestion-item:hover{background: rgba(255, 215, 0, .2)}
-        
-        /* Status indicator */
-        .status-indicator{display: inline-block;width: 12px;height: 12px;border-radius: 50%;margin-right: 8px}
-        .status-connected{background: #4dff4d}
-        .status-disconnected{background: #ff4d4d}
-        
-        /* Notification error */
-        .notification.error{border-left-color: #ff4d4d}
-        
-        /* Camera actions */
-        .camera-actions, .news-actions, .ip-actions{display: flex;gap: 10px;margin-top: 15px}
-        
-        /* News styling */
-        .news-title{display: flex;align-items: center;gap: 10px;margin-bottom: 10px;font-weight: bold}
-        .news-content{margin-bottom: 15px;opacity: .9}
-        .news-details{margin-bottom: 15px}
-        .news-meta{font-size: .85rem;opacity: .7;margin-bottom: 15px}
-        .drag-handle{cursor: move}
-        
-        /* Drag and drop */
-        .drag-over{border: 2px dashed #ffd700}
-        .dragging{opacity: .5}
-        
-        /* Position warning */
-        .position-warning{color: #ffd700;margin-top: 5px;font-size: .9rem;display: none}
-        
-        /* Buttons secondary and danger */
-        .btn-secondary{background: rgba(255, 255, 255, .2);color: #fff}
-        .btn-danger{background: #ff4d4d;color: #fff}
-        .btn-danger:hover{background: #ff3333}
-        
-        /* Camera card improvements */
-        .camera-header{display: flex;justify-content: space-between;align-items: center;margin-bottom: 15px}
-        .camera-title{font-size: 1.2rem;font-weight: bold}
-        .camera-id{font-size: .85rem;opacity: .7}
-        .camera-location{display: flex;align-items: center;gap: 5px;margin: 10px 0;font-size: .9rem}
-        .camera-position{display: inline-block;background: rgba(255, 215, 0, .2);padding: 3px 8px;border-radius: 10px;font-size: .85rem}
-        .camera-iframe-container{margin: 15px 0;position: relative;padding-top: 56.25%}
-        .camera-iframe{position: absolute;top: 0;left: 0;width: 100%;height: 100%;border-radius: 10px}
-        .camera-actions{justify-content: space-between}
-        
-        /* IP Ban styling */
-        .ip-grid{display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;margin-top: 20px}
-        .ip-card{background: rgba(255, 255, 255, .1);border-radius: 15px;padding: 20px;box-shadow: 0 8px 32px rgba(0, 0, 0, .3);backdrop-filter: blur(10px);border: 1px solid rgba(255, 255, 255, .18)}
-        .ip-header{display: flex;justify-content: space-between;align-items: center;margin-bottom: 15px}
-        .ip-title{font-size: 1.2rem;font-weight: bold}
-        .ip-details{margin: 10px 0}
-        .ip-actions{display: flex;gap: 10px;margin-top: 15px}
-        .ip-table{width: 100%;border-collapse: collapse;margin-top: 20px}
-        .ip-table th, .ip-table td{padding: 12px;text-align: left;border-bottom: 1px solid rgba(255, 255, 255, .1)}
-        .ip-table th{background: rgba(255, 215, 0, .2);font-weight: bold}
-        .ip-table tr:hover{background: rgba(255, 255, 255, .05)}
-        .unban-btn{background: #4dff4d;color: #000}
-        .unban-btn:hover{background: #33cc33}
-        
-        /* Visits styling */
-        .data-table{width: 100%;border-collapse: collapse;margin-top: 20px;background: rgba(0, 0, 0, 0.3);border-radius: 10px;overflow: hidden}
-        .data-table th, .data-table td{padding: 12px;text-align: left;border-bottom: 1px solid rgba(255, 255, 255, 0.1)}
-        .data-table th{background: rgba(255, 215, 0, 0.2);font-weight: bold}
-        .data-table tr:hover{background: rgba(255, 255, 255, 0.05)}
-        .ban-btn{background: #ff4d4d;color: #fff}
-        .ban-btn:hover{background: #ff3333}
-        
-        /* Official letter style - strict, formal, precise */
-        .official-notice {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 1.2rem;
-            line-height: 1.7;
-            color: #f0e6d2;
-            max-width: 900px;
-            margin: 1.5rem auto;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 20px;
-            padding: 2.8rem 3rem;
-            border: 1px solid #ffd70055;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        /* All existing CSS styles remain unchanged */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .notice-header {
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://img1.wsimg.com/isteam/getty/2154404610') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
             text-align: center;
-            margin-bottom: 2.5rem;
-            border-bottom: 2px solid #ffd700;
-            padding-bottom: 1.2rem;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
         }
         
-        .notice-header h3 {
+        /* Language Selector Styles */
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 215, 0, 0.8);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255, 215, 0, 1);
+            transform: translateY(-2px);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5px;
+            display: none;
+            min-width: 150px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .lang-dropdown.show {
+            display: block;
+        }
+        
+        .lang-option {
+            padding: 8px 12px;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .lang-option:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .logo i {
+            font-size: 40px;
+            color: #8b0000;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-tab {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .nav-tab.active {
+            background: #ffd700;
+            color: #000;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .map-container {
+            flex: 3;
+            min-width: 300px;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            border: none;
+        }
+        
+        .info-panel {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
             color: #ffd700;
-            font-size: 2rem;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
-        .notice-header .ref {
-            font-family: monospace;
-            color: #ffd70099;
-            margin-top: 0.5rem;
+        .traffic-status {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .status-item {
+            text-align: center;
+        }
+        
+        .status-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .status-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .congestion-high { color: #ff4d4d; }
+        .congestion-medium { color: #ffcc00; }
+        .congestion-low { color: #4dff4d; }
+        
+        .waiting-times {
+            margin-top: 20px;
+        }
+        
+        .waiting-time-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .waiting-time-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 10px;
+        }
+        
+        .waiting-time-item:last-child {
+            border-bottom: none;
+        }
+        
+        .location-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .time-display {
+            font-weight: bold;
+        }
+        
+        .time-low { color: #4dff4d; }
+        .time-medium { color: #ffcc00; }
+        .time-high { color: #ff4d4d; }
+        .time-severe { color: #9932cc; }
+        .time-closed { color: #808080; }
+        
+        .legend {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffd700;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
             font-size: 0.9rem;
         }
         
-        .notice-body {
-            margin: 2rem 0;
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
         }
         
-        .notice-body p {
-            margin-bottom: 1.5rem;
-            text-align: justify;
-        }
+        .legend-severe { background-color: #9932cc; }
+        .legend-high { background-color: #ff4d4d; }
+        .legend-medium { background-color: #ffcc00; }
+        .legend-low { background-color: #4dff4d; }
+        .legend-closed { background-color: #808080; }
         
-        .notice-body .dateline {
-            text-align: right;
-            font-style: normal;
-            color: #ffd700cc;
-            margin-top: 2rem;
-            border-top: 1px dashed #ffd70055;
-            padding-top: 1.2rem;
-        }
-        
-        .signature-official {
-            margin: 2.8rem 0 1rem;
-            text-align: right;
-            font-family: 'Georgia', serif;
-        }
-        
-        .signature-official .name {
-            font-size: 2.2rem;
-            color: #ffd700;
-            font-weight: 400;
-            border-bottom: 1px solid #ffd700;
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-        
-        .signature-official .title {
-            font-size: 1rem;
-            opacity: 0.8;
-            letter-spacing: 3px;
-            margin-top: 0.8rem;
-            text-transform: uppercase;
-        }
-        
-        .seal {
+        .app-promo {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
             text-align: center;
-            margin-top: 2.2rem;
-            font-size: 1.3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .app-promo h2 {
             color: #ffd700;
+            margin-bottom: 15px;
+        }
+        
+        .app-features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .app-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .app-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .app-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-btn.apple {
+            background: #000;
+        }
+        
+        .app-btn.google {
+            background: #34A853;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .map-instructions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            animation: fadeOut 5s forwards;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .map-container {
+                height: 400px;
+                min-width: 100%;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tab {
+                width: 80%;
+                text-align: center;
+            }
+            
+            .language-selector {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .traffic-status {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        .data-source {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .data-source i {
+            font-size: 0.7rem;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            color: #ffd700;
+        }
+        
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid #ffd700;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        
+        .status-live {
+            background-color: #4dff4d;
+            box-shadow: 0 0 5px #4dff4d;
+        }
+        
+        .status-offline {
+            background-color: #ff4d4d;
+        }
+        
+        .current-time {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .median-time {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .median-value {
+            font-size: 1.3rem;
+        }
+        
+        .additional-info {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .info-box {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .info-box h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            line-height: 1.6;
+        }
+        
+        .info-content ul {
+            padding-left: 20px;
+        }
+        
+        .info-content li {
+            margin-bottom: 10px;
+        }
+        
+        .camera-feeds {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .camera-feeds h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .camera-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .camera-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .camera-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #ffd700;
+        }
+        
+        .camera-container {
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .camera-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .camera-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .chat-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .chat-box h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .content-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .content-section h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .content-section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Camera Tabs Styles */
+        .camera-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .camera-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .camera-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .camera-tab.active {
+            background: #ffd700;
+            color: #000;
+        }
+        
+        .camera-content {
+            display: none;
+        }
+        
+        .camera-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .camera-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .camera-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .camera-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Bug fix indicator */
+        .bug-fix-note {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Firebase status indicator */
+        .firebase-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ff4d4d;
+        }
+        
+        .status-dot.connected {
+            background-color: #4dff4d;
+            box-shadow: 0 0 8px #4dff4d;
+        }
+        
+        /* News Styles */
+        .news-popup {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .news-popup-content {
+            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),  
+                        url('https://files.elfsightcdn.com/eafe4a4d-3436-495d-b748-5bdce62d911d/99ba84f1-f60b-46a6-a705-85a12f6be6b2/macau-transito-veiculo-carro-car-%E4%BA%A4%E9%80%9A-%E8%BB%8A-credit-by-conselho-executivo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            position: relative;
+        }
+
+        .news-popup-content h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .news-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .news-close:hover {
+            color: #fff;
+        }
+
+        #popup-news-content {
+            margin: 20px 0;
+            line-height: 1.6;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        #close-news-popup {
+            display: block;
+            margin: 20px auto 0;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .news-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-item h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .news-item .news-date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .news-item .news-content {
+            line-height: 1.6;
+        }
+        
+        /* Add this CSS for the urgent tag */
+        .urgent-tag {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        /* IP Ban Styles */
+        .banned-message {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px auto;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .banned-message h2 {
+            color: #ff4d4d;
+            margin-bottom: 20px;
+        }
+        
+        .banned-message p {
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .banned-message i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ff4d4d;
+        }
+        
+        .ip-checking {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .ip-checking .spinner {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Banned overlay for complete access blocking */
+        .banned-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .banned-overlay-content {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .banned-overlay-content h2 {
+            color: #ff4d4d;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        
+        .banned-overlay-content p {
+            margin: 15px 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .banned-overlay-content i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ff4d4d;
+        }
+        
+        .ban-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+        }
+        
+        /* Custom Chat System Styles */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-title {
+            color: #ffd700;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-role {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .role-admin { background: #ff4d4d; }
+        .role-moderator { background: #00ffff; }
+        .role-elite { background: #9932cc; }
+        .role-premium { background: #ffd700; color: #000; }
+        .role-member { background: #808080; }
+        
+        .chat-messages {
+            height: 500px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .message-user {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .message-time {
+            font-size: 0.8rem;
             opacity: 0.7;
         }
         
-        .legal-footer {
-            margin-top: 2.5rem;
-            font-size: 0.9rem;
+        .message-content {
+            line-height: 1.5;
+        }
+        
+        .message-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+        }
+        
+        .message:hover .message-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 30px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .send-btn {
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background: #ffcc00;
+            transform: translateY(-2px);
+        }
+        
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            max-width: 500px;
+            margin: 50px auto;
+        }
+        
+        .auth-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .auth-input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .auth-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        
+        .auth-btn {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: #ffd700;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn:hover {
+            background: #ffcc00;
+            transform: translateY(-2px);
+        }
+        
+        .auth-toggle {
+            margin-top: 20px;
+            color: #ffd700;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .auth-title {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .moderation-panel {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .moderation-panel.active {
+            display: block;
+        }
+        
+        .moderation-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .moderation-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .moderation-select {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .moderation-btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            background: #ff4d4d;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .moderation-btn:hover {
+            background: #ff3333;
+        }
+        
+        .system-message {
             text-align: center;
-            color: #ffd70099;
-            border-top: 1px solid #ffd70033;
-            padding-top: 1.2rem;
-            font-family: monospace;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 5px;
+            margin: 10px 0;
+            font-style: italic;
         }
         
-        /* Hide all staff sections by default, only show auth section with official notice */
-        .cameras-section, .news-section, .ip-ban-section, .visits-section {
-            display: none !important;
+        .banned-message-chat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            margin: 20px 0;
         }
         
-        .auth-section {
-            display: block !important;
+        .logout-btn {
+            background: #ff4d4d;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #ff3333;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .chat-messages {
+                height: 300px;
+            }
+            
+            .chat-input-container {
+                flex-direction: column;
+            }
+            
+            .send-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Weather Panel Styles */
+        .weather-panel {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-top: 20px;
+        }
+        
+        .weather-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .weather-section h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .weather-info, .warning-info {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 120px;
+        }
+        
+        .weather-data {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .weather-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        
+        .weather-details {
+            flex: 1;
+        }
+        
+        .weather-temp {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .weather-desc {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .weather-extra {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .weather-extra div {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .warning-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .warning-logo {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .warning-details {
+            flex: 1;
+        }
+        
+        .warning-title-text {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .warning-issued {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .no-warning {
+            text-align: center;
+            padding: 20px;
+            color: #4dff4d;
+        }
+        
+        .no-warning i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .weather-panel {
+                width: 100%;
+            }
+            
+            .weather-main {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .weather-extra {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Elfsight Popup | Untitled Popup -->
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-c9616ffe-955b-4c76-816a-7e105b98b486" data-elfsight-app-lazy></div>
+
+    <!-- Banned User Overlay -->
+    <div class="banned-overlay" id="bannedOverlay">
+        <div class="banned-overlay-content">
+            <i class="fas fa-ban"></i>
+            <h2>Access Denied</h2>
+            <p>Your IP address has been banned from one of our administrators.</p>
+            <div class="ban-details" id="banDetails"></div>
+            <p>Please contact the administrator if you believe this is an error.</p>
+        </div>
+    </div>
+
     <div class="container">
         <header>
+            <!-- Language Selector -->
+            <div class="language-selector">
+                <button class="lang-btn" id="langButton">
+                    <i class="fas fa-globe"></i>
+                    <span id="currentLang">English</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" class="lang-option" data-lang="en">English</a>
+                    <a href="#" class="lang-option" data-lang="zh">繁體中文</a>
+                    <a href="#" class="lang-option" data-lang="pt">Português</a>
+                    <a href="#" class="lang-option" data-lang="ja">日本語</a>
+                </div>
+            </div>
+            
             <div class="logo-container">
-                <div class="logo"><i class="fas fa-car"></i></div>
-                <div><h1>Macau Traffic</h1><p class="subtitle">Real-time traffic conditions and waiting times for Macau's major roads and border crossings, best for citizens.</p></div>
+                <div class="logo">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h1 id="header-title">Macau Traffic Monitor</h1>
+            </div>
+            <h2 id="welcome-message">Hello! Welcome to visit our website!</h2>
+            <p class="subtitle" id="header-subtitle">Real-time traffic conditions and waiting times for Macau's major roads and border crossings. Fully Coded by (Project Week) F1J Group 5.</p>
+            
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-page="dashboard" id="nav-dashboard">Dashboard</div>
+                <div class="nav-tab" data-page="cameras" id="nav-cameras">Live Cameras</div>
+                <div class="nav-tab" data-page="news" id="nav-news">News</div>
+                <div class="nav-tab" data-page="chat" id="nav-chat">Community Chat</div>
+                <div class="nav-tab" data-page="about" id="nav-about">About</div>
             </div>
         </header>
-
-        <div class="auth-section" id="authSection">
-            <h2><i class="fas fa-gavel"></i> OFFICIAL NOTICE: MAO ZEDONG AND MORITZ'S WEDDING/h2>
-            
-            <div class="official-notice">
-                <div class="notice-header">
-                    <h3>MACAU TRAFFIC MONITOR</h3>
-                    <div class="ref">REF: MTM/2026/CLOSURE/001</div>
-                    <div style="color:#ffd700; margin-top:0.5rem;">16 MARCH 2026</div>
+        
+        <!-- IP Checking Message -->
+        <div class="ip-checking" id="ipCheckingMessage">
+            <div class="spinner"></div>
+            <span>Checking your IP address...</span>
+        </div>
+        
+        <!-- Banned Message (deprecated) -->
+        <div class="banned-message" id="bannedMessage" style="display: none;">
+            <i class="fas fa-ban"></i>
+            <h2>Access Denied</h2>
+            <p>Your IP address has been banned from one of our administrators.</p>
+            <p id="ban-details"></p>
+            <p>Please contact the administrator if you believe this is an error.</p>
+        </div>
+        
+        <!-- Dashboard Page -->
+        <div class="page active" id="dashboard-page">
+            <div class="dashboard">
+                <div class="map-container">
+                    <div class="map-instructions">
+                        <i class="fas fa-hand-pointer"></i> <span id="map-instruction">Drag to navigate the map</span>
+                    </div>
+                    <iframe 
+                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29915.939909044417!2d113.54536582744484!3d22.193976191121838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2smo!4v1769007598523!5m2!1sen!2smo" width="100%" height="100%" style="border: 0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
-                
-                <div class="notice-body">
-                    <p><strong>TO ALL USERS:</strong></p>
-                    
-                    <p>This serves as formal notification that the Macau Traffic Monitor web service, operated by the Website Development Team, will be permanently discontinued effective immediately.</p>
-                    
-                    <p><strong>REASON FOR TERMINATION:</strong> Unrecoverable operational costs including web hosting, database management, and ongoing development expenditures have rendered the project financially unsustainable. Despite efforts to maintain the free service, the economic burden exceeds the project's capacity.</p>
-                    
-                    <p><strong>EFFECTIVE DATE:</strong> All systems, databases, and public interfaces associated with Macau Traffic Monitor are hereby decommissioned as of 16 March 2026. No further updates, maintenance, or support will be provided.</p>
-                    
 
-                    <div class="dateline">
-                        <i class="fas fa-map-pin"></i> Issued in Macau, 16 March 2026
+                <div class="info-panel">
+                    <h2 class="panel-title"><i class="fas fa-info-circle"></i> <span id="traffic-overview">Traffic Overview</span></h2>
+                    
+                    <div class="current-time">
+                        <span id="current-time-label">Current Time: </span> <span id="current-time-display">--:--:--</span>
+                    </div>
+                    
+                    <div class="traffic-status">
+                        <div class="status-item">
+                            <div class="status-label" id="overall-traffic">Overall Traffic</div>
+                            <div class="status-value congestion-low" id="traffic-status-value">LIGHT</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label" id="average-delay-label">Average Delay</div>
+                            <div class="status-value" id="average-delay">15 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="waiting-times">
+                        <h3><i class="fas fa-clock"></i> <span id="crossing-duration">Estimated Crossing Duration</span></h3>
+                        
+                        <div class="waiting-time-item" data-location="friendship">
+                            <div class="location-name">
+                                <i class="fas fa-bridge"></i>
+                                <span id="friendship-bridge">Friendship Bridge</span>
+                            </div>
+                            <div class="time-display time-medium" id="friendship-time">-- min</div>
+                        </div>
+
+                        <div class="waiting-time-item" data-location="sai-van">
+                            <div class="location-name">
+                                <i class="fas fa-bridge"></i>
+                                <span id="sai-van-bridge">Sai Van Bridge</span>
+                            </div>
+                            <div class="time-display time-medium" id="sai-van-time">-- min</div>
+                        </div>
+                        
+                        <div class="waiting-time-item" data-location="horta">
+                            <div class="location-name">
+                                <i class="fas fa-road"></i>
+                                <span id="horta-costa">Avenida de Horta e Costa</span>
+                            </div>
+                            <div class="time-display time-high" id="horta-time">-- min</div>
+                        </div>
+                        
+                        <div class="waiting-time-item" data-location="san-ma">
+                            <div class="location-name">
+                                <i class="fas fa-road"></i>
+                                <span id="san-ma-lou">San Ma Lou</span>
+                            </div>
+                            <div class="time-display time-medium" id="san-ma-time">-- min</div>
+                        </div>
+                        
+                        <div class="waiting-time-item" data-location="praca">
+                            <div class="location-name">
+                                <i class="fas fa-road"></i>
+                                <span id="praca-amaral">Praca de Ferreira do Amaral</span>
+                            </div>
+                            <div class="time-display time-medium" id="praca-time">-- min</div>
+                        </div>
+                        
+                        <div class="waiting-time-item" data-location="portas">
+                            <div class="location-name">
+                                <i class="fas fa-archway"></i>
+                                <span id="portas-cerco">Portas do Cerco</span>
+                            </div>
+                            <div class="time-display time-high" id="portas-time">-- min</div>
+                        </div>
+                        
+                        <div class="waiting-time-item" data-location="cotai">
+                            <div class="location-name">
+                                <i class="fas fa-road"></i>
+                                <span id="cotai-strip">Cotai Strip</span>
+                            </div>
+                            <div class="time-display time-medium" id="cotai-time">-- min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-title" id="traffic-legend-title">Traffic Legend</div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-severe"></div>
+                            <span id="severe-traffic">Severe Traffic (40+ min delay)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-high"></div>
+                            <span id="heavy-traffic">Heavy Traffic (20-40 min delay)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-medium"></div>
+                            <span id="moderate-traffic">Moderate Traffic (10-20 min delay)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-low"></div>
+                            <span id="light-traffic">Light Traffic (<10 min delay)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-closed"></div>
+                            <span id="closed-traffic">Closed/Blocked</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weather Panel -->
+            <div class="weather-panel">
+                <h2 class="panel-title"><i class="fas fa-cloud-sun"></i> <span id="weather-title">Weather Information</span></h2>
+                
+                <div class="weather-content">
+                    <div class="weather-section">
+                        <h3><i class="fas fa-thermometer-half"></i> <span id="current-weather-title">Current Weather</span></h3>
+                        <div class="weather-info" id="current-weather">
+                            <div class="loading" id="weather-loading">
+                                <div class="spinner"></div>
+                                <span>Loading weather data...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="weather-section">
+                        <h3><i class="fas fa-exclamation-triangle"></i> <span id="warning-title">Weather Warnings</span></h3>
+                        <div class="warning-info" id="weather-warnings">
+                            <div class="loading" id="warning-loading">
+                                <div class="spinner"></div>
+                                <span>Loading warnings...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="additional-info">
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> <span id="website-info-title">Website Traffic Information</span></h3>
+                    <div class="info-content">
+                        <p id="website-info-desc">This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.</p>
+                        <ul>
+                            <li id="info-point-1">Times are updated every 30 seconds based on current traffic conditions</li>
+                            <li id="info-point-2">Colors indicate traffic severity levels</li>
+                            <li id="info-point-3">Data is simulated for demonstration purposes</li>
+                            <li id="info-point-4">Actual travel times may vary</li>
+                        </ul>
                     </div>
                 </div>
                 
-                <div class="signature-official">
-                    <div class="name">Kingsly Ng</div>
-                    <div class="title">Head Developer · Website Development Team</div>
-                    <div style="margin-top: 0.8rem; font-size: 0.9rem;">On behalf of the project team</div>
+                <div class="info-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> <span id="travel-tips-title">Travel Tips</span></h3>
+                    <div class="info-content">
+                        <ul>
+                            <li id="tip-1">Avoid peak hours (7:00-9:30 and 17:00-19:00) when possible</li>
+                            <li id="tip-2">Please note that Macau's maximum speed in normal roads is 50 km/h, whole bridges are 80 km/h.</li>
+                            <li id="tip-3">Consider using public transportation during heavy traffic periods</li>
+                            <li id="tip-4">Check border crossing times before traveling</li>
+                            <li id="tip-5">Plan extra time for important appointments</li>
+                            <li id="tip-6">Use alternative routes when main roads show heavy congestion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Cameras Page -->
+        <div class="page" id="cameras-page">
+            <div class="bug-fix-note">
+                <strong>Bug Fix Note: </strong> The language switching bug has been resolved. 
+            </div>
+            
+            <div class="camera-feeds">
+                <h2><i class="fas fa-video"></i> <span id="live-cameras-title">Live Traffic Cameras</span></h2>
+                
+                <!-- Camera Tabs -->
+                <div class="camera-tabs">
+                    <div class="camera-tab active" data-camera-tab="macau-city" id="tab-macau-city">澳門市區</div>
+                    <div class="camera-tab" data-camera-tab="taipa" id="tab-taipa">氹仔</div>
+                    <div class="camera-tab" data-camera-tab="bridges" id="tab-bridges">跨海大橋</div>
+                    <div class="camera-tab" data-camera-tab="border" id="tab-border">口岸</div>
                 </div>
                 
-                <div class="seal">
-                    <i class="fas fa-stamp"></i> [ PROJECT CLOSED ]
+                <!-- Loading indicator -->
+                <div class="loading" id="cameras-loading">
+                    <div class="spinner"></div>
+                    <span>Loading cameras from Firebase...</span>
                 </div>
                 
-                <div class="legal-footer">
-                    <i class="fas fa-database"></i> macau-traffic-501cb · FIREBASE INSTANCE TERMINATED · NO FURTHER CORRESPONDENCE
+                <!-- Camera Contents -->
+                <div class="camera-content active" id="macau-city-content"></div>
+                <div class="camera-content" id="taipa-content"></div>
+                <div class="camera-content" id="bridges-content"></div>
+                <div class="camera-content" id="border-content"></div>
+            </div>
+        </div>
+        
+        <!-- News Page -->
+        <div class="page" id="news-page">
+            <div class="content-section">
+                <h2><i class="fas fa-newspaper"></i> Latest News</h2>
+                <div id="news-container">
+                    <!-- News items will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Community Chat Page -->
+        <div class="page" id="chat-page">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2 class="chat-title"><i class="fas fa-comments"></i> Community Chat</h2>
+                    <div class="user-info" id="userInfo">
+                        <!-- User info will be displayed here -->
+                    </div>
+                </div>
+                
+                <!-- Moderation Panel (visible to Admins and Moderators) -->
+                <div class="moderation-panel" id="moderationPanel">
+                    <h3><i class="fas fa-gavel"></i> Moderation Panel</h3>
+                    <div class="moderation-form">
+                        <input type="text" class="moderation-input" id="banUserInput" placeholder="Enter username to ban">
+                        <select class="moderation-select" id="banDuration">
+                            <option value="temp">Temporary (24 hours)</option>
+                            <option value="perm">Permanent</option>
+                        </select>
+                        <input type="text" class="moderation-input" id="banReason" placeholder="Reason for ban">
+                        <button class="moderation-btn" id="banUserBtn">Ban User</button>
+                    </div>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be loaded here -->
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Type your message...">
+                    <button class="send-btn" id="sendMessageBtn">Send</button>
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 2rem; opacity: 0.7; font-family: monospace;">
-                This notice supersedes all previous communications. Service has ceased permanently.
+            <!-- Authentication Container -->
+            <div class="auth-container" id="authContainer">
+                <h2 class="auth-title">Login to Chat</h2>
+                <form class="auth-form" id="loginForm">
+                    <input type="text" class="auth-input" id="loginUsername" placeholder="Username" required>
+                    <input type="password" class="auth-input" id="loginPassword" placeholder="Password" required>
+                    <button type="submit" class="auth-btn">Login</button>
+                </form>
+                <div class="auth-toggle" id="showSignup">Don't have an account? Sign up</div>
+            </div>
+            
+            <div class="auth-container" id="signupContainer" style="display: none;">
+                <h2 class="auth-title">Create Account</h2>
+                <form class="auth-form" id="signupForm">
+                    <input type="text" class="auth-input" id="signupUsername" placeholder="Username" required>
+                    <input type="password" class="auth-input" id="signupPassword" placeholder="Password" required>
+                    <input type="email" class="auth-input" id="signupEmail" placeholder="Email" required>
+                    <button type="submit" class="auth-btn">Sign Up</button>
+                </form>
+                <div class="auth-toggle" id="showLogin">Already have an account? Login</div>
+            </div>
+            
+            <div class="content-section">
+                <h2 id="community-guidelines-title">Community Guidelines</h2>
+                <p id="community-guidelines-desc">Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates, road conditions, and travel tips with fellow Macau residents and visitors.</p>
+                <p id="guidelines-intro">Please follow these guidelines to keep our community helpful and respectful: </p>
+                <ul>
+                    <li id="guideline-1">Share accurate, current traffic information</li>
+                    <li id="guideline-2">Be respectful and courteous to all users</li>
+                    <li id="guideline-3">Report road incidents, accidents, or construction</li>
+                    <li id="guideline-4">Ask questions about traffic patterns or road conditions</li>
+                    <li id="guideline-5">Avoid spam, advertisements, or off-topic discussions</li>
+                    <li id="guideline-6">Use appropriate language - no offensive content</li>
+                </ul>
+                <p id="moderation-note">Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.</p>
             </div>
         </div>
-
-        <!-- Hidden staff sections - kept for structure but not displayed -->
-        <div class="cameras-section" id="camerasSection" style="display:none;">[staff panel hidden]</div>
-        <div class="news-section" id="newsSection" style="display:none;">[staff panel hidden]</div>
-        <div class="ip-ban-section" id="ipBanSection" style="display:none;">[staff panel hidden]</div>
-        <div class="visits-section" id="visitsSection" style="display:none;">[staff panel hidden]</div>
-
-        <div class="modal" id="cameraModal"><!-- modal content hidden --></div>
-        <div class="modal" id="newsModal"><!-- modal content hidden --></div>
-        <div class="modal" id="banIPModal"><!-- modal content hidden --></div>
-
-        <div class="notification" id="notification"><p id="notificationMessage">Operation completed successfully!</p></div>
-        <footer><p>Macau Traffic Monitor Staff Panel © 2026</p><p>Data Source: Firebase Realtime Database</p></footer>
+        
+        <!-- About Page -->
+        <div class="page" id="about-page">
+            <div class="content-section">
+                <h2 id="about-title">About Macau Traffic Monitor</h2>
+                
+                <p id="about-desc">Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions, estimated crossing times, and live camera feeds for major roads and border crossings.</p>
+                
+                <h3 id="mission-title">Our Mission</h3>
+                <p id="mission-desc">We aim to reduce travel time and improve road safety in Macau by providing accurate, real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.</p>
+                
+                <h3 id="data-sources-title">Data Sources</h3>
+                <p id="data-sources-desc">Our traffic data is sourced from multiple official channels: </p>
+                <ul>
+                    <li id="source-1">DSAT (Direcção de Serviços de Trânsito) - Official traffic data</li>
+                    <li id="source-2">Google Maps API - Traffic flow and incident reports</li>
+                    <li id="source-3">Live traffic cameras operated by DSAT</li>
+                    <li id="source-4">Community reports from our users</li>
+                </ul>
+                
+                <h3 id="features-title">Features</h3>
+                <ul>
+                    <li id="feature-1">Real-time traffic conditions visualization</li>
+                    <li id="feature-2">Estimated waiting times for border crossings</li>
+                    <li id="feature-3">Live traffic camera feeds</li>
+                    <li id="feature-4">Community chat for real-time updates</li>
+                    <li id="feature-5">Mobile app for on-the-go traffic updates</li>
+                    <li id="feature-6">Historical traffic pattern analysis</li>
+                </ul>
+            </div>
+            
+            <div class="app-promo">
+                <h2><i class="fas fa-mobile-alt"></i> <span id="mobile-app-title">Get Traffic Updates on the Go</span></h2>
+                <p id="mobile-app-desc">Download our mobile app for traffic alerts and navigation assistance</p>
+                
+                <div class="app-features">
+                    <div class="feature">
+                        <i class="fas fa-bell"></i>
+                        <p id="feature-alerts">Instant Alerts</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-route"></i>
+                        <p id="feature-routing">Smart Routing</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-history"></i>
+                        <p id="feature-history">Traffic History</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p id="feature-maps">Offline Maps</p>
+                    </div>
+                </div>
+                
+                <div class="app-buttons">
+                    <a href="#" class="app-btn apple">
+                        <i class="fab fa-apple"></i>
+                        <div>
+                            <small>Download on the</small>
+                            <p>App Store</p>
+                        </div>
+                    </a>
+                    <a href="#" class="app-btn google">
+                        <i class="fab fa-google-play"></i>
+                        <div>
+                            <small>Get it on</small>
+                            <p>Google Play</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- News Popup -->
+        <div id="news-popup" class="news-popup">
+            <div class="news-popup-content">
+                <span class="news-close">×</span>
+                <h2><i class="fas fa-bell"></i> Important News Update</h2>
+                <div id="popup-news-content"></div>
+                <button id="close-news-popup" class="app-btn">Close</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Macau Traffic Monitor © 2026 | Traffic data for Macau Special Administrative Region</p>
+            <p>Data Sources: Google Maps API | DSAT (Direcção de Serviços de Trânsito)</p>
+        </footer>
+        
+        <!-- Firebase Status Indicator -->
+        <div class="firebase-status" id="firebase-status">
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">Connecting to Firebase...</span>
+        </div>
     </div>
-
+    
     <script>
-        // Firebase config (kept but unused since staff panel is hidden)
-        const firebaseConfig = {
-            apiKey: "AIzaSyB1_sJvG1u47J3K0K0K0K0K0K0K0K0K0K0",        
-            authDomain: "macau-traffic-501cb.firebaseapp.com",        
-            databaseURL: "https://macau-traffic-501cb-default-rtdb.firebaseio.com",        
-            projectId: "macau-traffic-501cb",        
-            storageBucket: "macau-traffic-501cb.appspot.com",        
-            messagingSenderId: "123456789012",        
-            appId: "1:123456789012:web:abcdef1234567890abcdef"
-        };
-        
-        // Initialize Firebase (minimal, no operations)
-        firebase.initializeApp(firebaseConfig);
-        
-        // Simple logout function if any tab tries to show
-        function logout() {
-            // do nothing - we're in shutdown mode
-        }
-        
-        // Override any tab clicks to do nothing
+        // Wait for Firebase to initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide all staff sections, ensure only auth section visible
-            document.getElementById('camerasSection').style.display = 'none';
-            document.getElementById('newsSection').style.display = 'none';
-            document.getElementById('ipBanSection').style.display = 'none';
-            document.getElementById('visitsSection').style.display = 'none';
-            document.getElementById('authSection').style.display = 'block';
+            // Check if Firebase is loaded
+            if (typeof window.firebaseApp === 'undefined') {
+                console.error('Firebase not initialized properly');
+                return;
+            }
+            
+            // Get Firebase references
+            const database = window.firebaseDatabase;
+            const auth = window.firebaseAuth;
+            const {
+                ref, onValue, push, set, remove, onChildAdded, onChildChanged, onChildRemoved,  
+                createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
+            } = window.firebaseFunctions;
+            
+            // DOM Elements
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            const camerasLoading = document.getElementById('cameras-loading');
+            const ipCheckingMessage = document.getElementById('ipCheckingMessage');
+            const bannedMessage = document.getElementById('bannedMessage');
+            const banDetails = document.getElementById('ban-details');
+            const bannedOverlay = document.getElementById('bannedOverlay');
+            const banDetailsOverlay = document.getElementById('banDetails');
+            
+            // Chat System Elements
+            const chatPage = document.getElementById('chat-page');
+            const authContainer = document.getElementById('authContainer');
+            const signupContainer = document.getElementById('signupContainer');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const showSignup = document.getElementById('showSignup');
+            const showLogin = document.getElementById('showLogin');
+            const userInfo = document.getElementById('userInfo');
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            const moderationPanel = document.getElementById('moderationPanel');
+            const banUserBtn = document.getElementById('banUserBtn');
+            
+            // Current user data
+            let currentUser = null;
+            let userRole = 'member';
+            
+            // Update Firebase connection status
+            function updateFirebaseStatus(connected) {
+                if (connected) {
+                    statusDot.classList.add('connected');
+                    statusText.textContent = 'Connected to Firebase';
+                } else {
+                    statusDot.classList.remove('connected');
+                    statusText.textContent = 'Disconnected from Firebase';
+                }
+            }
+            
+            // Tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and pages
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding page
+                    const pageId = tab.getAttribute('data-page') + '-page';
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    // Load cameras if we're on the cameras page
+                    if (tab.getAttribute('data-page') === 'cameras') {
+                        loadCamerasFromFirebase();
+                    }
+                    
+                    // Load news if we're on the news page
+                    if (tab.getAttribute('data-page') === 'news') {
+                        loadNewsFromFirebase();
+                    }
+                    
+                    // Initialize chat if we're on the chat page
+                    if (tab.getAttribute('data-page') === 'chat') {
+                        initChat();
+                    }
+                    
+                    // Load weather if we're on the dashboard page
+                    if (tab.getAttribute('data-page') === 'dashboard') {
+                        loadWeatherData();
+                    }
+                });
+            });
+            
+            // Camera tab navigation
+            document.querySelectorAll('.camera-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all camera tabs and contents
+                    document.querySelectorAll('.camera-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.camera-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding camera content
+                    const contentId = tab.getAttribute('data-camera-tab') + '-content';
+                    document.getElementById(contentId).classList.add('active');
+                });
+            });
+            
+            // Language selector functionality
+            const langButton = document.getElementById('langButton');
+            const langDropdown = document.getElementById('langDropdown');
+            const langOptions = document.querySelectorAll('.lang-option');
+            const currentLangSpan = document.getElementById('currentLang');
+            
+            // Toggle language dropdown
+            langButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langDropdown.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!langButton.contains(e.target)) {
+                    langDropdown.classList.remove('show');
+                }
+            });
+            
+            // Change language
+            langOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                    langDropdown.classList.remove('show');
+                });
+            });
+            
+            // Translation data - ALL translations now in one place
+            const translations = {
+                en: {
+                    "header-title": "Macau Traffic Monitor",                           
+                    "welcome-message": "Hello! Welcome to visit our website!",                           
+                    "header-subtitle": "Real-time traffic conditions and waiting times for Macau's major roads and border crossings",                           
+                    "nav-dashboard": "Dashboard",                           
+                    "nav-cameras": "Live Cameras",                           
+                    "nav-news": "News",                
+                    "nav-chat": "Community Chat",                           
+                    "nav-about": "About",                           
+                    "map-instruction": "Drag to navigate the map",                           
+                    "traffic-overview": "Traffic Overview",                           
+                    "current-time-label": "Current Time: ",                           
+                    "overall-traffic": "Overall Traffic",                           
+                    "traffic-status-value": "LIGHT",                           
+                    "average-delay-label": "Average Delay",                           
+                    "crossing-duration": "Estimated Crossing Duration",                           
+                    "friendship-bridge": "Friendship Bridge",                           
+                    "sai-van-bridge": "Sai Van Bridge",                           
+                    "horta-costa": "Avenida de Horta e Costa",                           
+                    "san-ma-lou": "San Ma Lou",                           
+                    "praca-amaral": "Praca de Ferreira do Amaral",                           
+                    "portas-cerco": "Portas do Cerco",                           
+                    "cotai-strip": "Cotai Strip",                           
+                    "median-traffic-label": "Median Traffic Time: ",                           
+                    "traffic-legend-title": "Traffic Legend",                           
+                    "severe-traffic": "Severe Traffic (40+ min delay)",                           
+                    "heavy-traffic": "Heavy Traffic (20-40 min delay)",                           
+                    "moderate-traffic": "Moderate Traffic (10-20 min delay)",                           
+                    "light-traffic": "Light Traffic (<10 min delay)",                           
+                    "closed-traffic": "Closed/Blocked",                           
+                    "website-info-title": "Website Traffic Information",                           
+                    "website-info-desc": "This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.",                           
+                    "info-point-1": "Times are updated every 30 seconds based on current traffic conditions",                           
+                    "info-point-2": "Colors indicate traffic severity levels",                           
+                    "info-point-3": "Data is simulated for demonstration purposes",                           
+                    "info-point-4": "Actual travel times may vary",                           
+                    "travel-tips-title": "Travel Tips",                           
+                    "tip-1": "Avoid peak hours (7:00-9:30 and 17:00-19:00) when possible",                           
+                    "tip-2": "Please note that Macau's maximum speed in normal roads is 50 km/h, whole bridges are 80 km/h.",                           
+                    "tip-3": "Consider using public transportation during heavy traffic periods",                           
+                    "tip-4": "Check border crossing times before traveling",                           
+                    "tip-5": "Plan extra time for important appointments",                           
+                    "tip-6": "Use alternative routes when main roads show heavy congestion",                           
+                    "live-cameras-title": "Live Traffic Cameras",                           
+                    "tab-macau-city": "Macau City",                          
+                    "tab-taipa": "Taipa",                          
+                    "tab-bridges": "Cross-Sea Bridges",                          
+                    "tab-border": "Border Crossings",                          
+                    "community-chat-title": "Community Chat",                           
+                    "community-guidelines-title": "Community Guidelines",                           
+                    "community-guidelines-desc": "Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates, road conditions, and travel tips with fellow Macau residents and visitors.",                           
+                    "guidelines-intro": "Please follow these guidelines to keep our community helpful and respectful: ",                           
+                    "guideline-1": "Share accurate, current traffic information",                           
+                    "guideline-2": "Be respectful and courteous to all users",                           
+                    "guideline-3": "Report road incidents, accidents, or construction",                           
+                    "guideline-4": "Ask questions about traffic patterns or road conditions",                           
+                    "guideline-5": "Avoid spam, advertisements, or off-topic discussions",                           
+                    "guideline-6": "Use appropriate language - no offensive content",                           
+                    "moderation-note": "Our moderators monitor the chat to ensure a positive experience for everyone. Violation of these guidelines may result in temporary or permanent ban from the chat.",                           
+                    "about-title": "About Macau Traffic Monitor",                           
+                    "about-desc": "Macau Traffic Monitor is a real-time traffic information platform designed to help residents and visitors navigate Macau's road network efficiently. Our service provides up-to-date traffic conditions, estimated crossing times, and live camera feeds for major roads and border crossings.",                           
+                    "mission-title": "Our Mission",                           
+                    "mission-desc": "We aim to reduce travel time and improve road safety in Macau by providing accurate, real-time traffic information. Our platform helps users make informed decisions about their travel routes and timing.",                           
+                    "data-sources-title": "Data Sources",                           
+                    "data-sources-desc": "Our traffic data is sourced from multiple official channels: ",                           
+                    "source-1": "DSAT (Direcção de Serviços de Trânsito) - Official traffic data",                           
+                    "source-2": "Google Maps API - Traffic flow and incident reports",                           
+                    "source-3": "Live traffic cameras operated by DSAT",                           
+                    "source-4": "Community reports from our users",                           
+                    "features-title": "Features",                           
+                    "feature-1": "Real-time traffic conditions visualization",                           
+                    "feature-2": "Estimated waiting times for border crossings",                           
+                    "feature-3": "Live traffic camera feeds",                           
+                    "feature-4": "Community chat for real-time updates",                           
+                    "feature-5": "Mobile app for on-the-go traffic updates",                           
+                    "feature-6": "Historical traffic pattern analysis",                           
+                    "mobile-app-title": "Get Traffic Updates on the Go",                           
+                    "mobile-app-desc": "Download our mobile app for traffic alerts and navigation assistance",                           
+                    "feature-alerts": "Instant Alerts",                           
+                    "feature-routing": "Smart Routing",                           
+                    "feature-history": "Traffic History",                           
+                    "feature-maps": "Offline Maps",                      
+                    // Camera titles
+                    "camera-title-1": "Tunnel da Penha towards Largo do Governor Vasco Rocha Vieira (Reservoir)",                           
+                    "camera-title-2": "Tunnel da Penha towards Rua do Campo",                           
+                    "camera-title-3": "Mercado da Rua do Aljube",                           
+                    "camera-title-4": "Avenida do Conselheiro Borja and Rua do Campo Intersection",                           
+                    "camera-title-5": "Avenida do Conselheiro Borja",                           
+                    "camera-title-6": "Avenida de Venceslau de Morais",                           
+                    "camera-title-7": "Inner Harbour",                           
+                    "camera-title-8": "Rua Nova da Areia Preta",                           
+                    "camera-title-9": "Praça de Tap Seac",                           
+                    "camera-title-10": "Praça do Vasco Rocha Vieira",                           
+                    "camera-title-11": "Blood Donation Centre",                           
+                    "camera-title-12": "Praça da Nave Desportiva",                           
+                    "camera-title-13": "Praça de Ferreira do Amaral",                           
+                    "camera-title-14": "Avenida do Infante D. Henrique and Avenida do Dr. Rodrigo Rodrigues Intersection",                           
+                    "camera-title-15": "Rua dos Mercadores / Avenida da Praia Grande Intersection",                           
+                    "camera-title-16": "Rua dos Mercadores",                           
+                    "camera-title-17": "Haiwan Garden",                           
+                    "camera-title-18": "Macau International Airport",                           
+                    "camera-title-19": "Estrada do Istmo Circular Intersection",                           
+                    "camera-title-20": "Cotai Strip",                           
+                    "camera-title-21": "Cotai Strip 2 / Estrada do Istmo",                           
+                    "camera-title-22": "Avenida da Amizade",                           
+                    "camera-title-23": "Ponte da Amizade near North Bay Entrance Intersection",                           
+                    "camera-title-24": "Ponte da Amizade towards Taipa",                           
+                    "camera-title-25": "Ponte da Amizade towards Macau",                           
+                    "camera-title-26": "Ponte de Sai Van towards Macau",                           
+                    "camera-title-27": "Ponte de Sai Van towards Taipa (High)",                           
+                    "camera-title-28": "Ponte de Sai Van towards Macau (High)",                           
+                    "camera-title-29": "Macau Bridge Entrance (Macau)",                           
+                    "camera-title-30": "Macau Bridge towards Taipa",                           
+                    "camera-title-31": "Macau Bridge towards Macau",                           
+                    "camera-title-32": "Tunnel da Portas do Cerco",                           
+                    "camera-title-33": "Avenida da Portas do Cerco",                           
+                    "camera-title-34": "Qingmao Port (A)",                           
+                    "camera-title-35": "Qingmao Port (B)",                           
+                    "camera-title-36": "Outer Harbour Ferry Terminal (A)",                           
+                    "camera-title-37": "Outer Harbour Ferry Terminal (B)",                           
+                    "camera-title-38": "Hengqin Port (A)",                           
+                    "camera-title-39": "Hengqin Port (B)",                           
+                    "camera-title-40": "Hengqin Port (C)",                           
+                    "camera-title-41": "Hengqin Port (D)",                           
+                    "camera-title-42": "Hong Kong-Zhuhai-Macau Bridge to Zhuhai",                           
+                    "camera-title-43": "Hong Kong-Zhuhai-Macau Bridge to Macau",                           
+                    "camera-title-44": "Hong Kong-Zhuhai-Macau Bridge to Passenger Drop-off Platform",                           
+                    "camera-title-45": "Hong Kong-Zhuhai-Macau Bridge (Macau Entry)", 
+                    // Weather translations
+                    "weather-title": "Weather Information", 
+                    "current-weather-title": "Current Weather", 
+                    "warning-title": "Weather Warnings"
+                },                           
+                zh: {
+                    "header-title": "澳門交通監控",                           
+                    "welcome-message": "您好！歡迎訪問我們的網站！",                           
+                    "header-subtitle": "澳門主要道路和邊境口岸的實時交通狀況和等待時間",                           
+                    "nav-dashboard": "儀表板",                           
+                    "nav-cameras": "實時攝像頭",                           
+                    "nav-news": "新聞",                
+                    "nav-chat": "社區聊天",                           
+                    "nav-about": "關於",                           
+                    "map-instruction": "拖動以導航地圖",                           
+                    "traffic-overview": "交通概覽",                           
+                    "current-time-label": "當前時間：",                           
+                    "overall-traffic": "整體交通",                           
+                    "traffic-status-value": "輕鬆",                           
+                    "average-delay-label": "平均延遲",                           
+                    "crossing-duration": "預計過境時間",                           
+                    "friendship-bridge": "友誼大橋",                           
+                    "sai-van-bridge": "西灣大橋",                           
+                    "horta-costa": "荷蘭園大馬路",                           
+                    "san-ma-lou": "新馬路",                           
+                    "praca-amaral": "亞馬喇前地",                           
+                    "portas-cerco": "关闸边检大楼",                           
+                    "cotai-strip": "路氹城",                           
+                    "median-traffic-label": "中位交通時間：",                           
+                    "traffic-legend-title": "交通圖例",                           
+                    "severe-traffic": "嚴重交通（延遲40分鐘以上）",                           
+                    "heavy-traffic": "嚴重交通（延遲20-40分鐘）",                           
+                    "moderate-traffic": "中等交通（延遲10-20分鐘）",                           
+                    "light-traffic": "輕鬆交通（延遲少於10分鐘）",                           
+                    "closed-traffic": "關閉/封閉",                           
+                    "website-info-title": "網站交通信息",                           
+                    "website-info-desc": "此實時交通監控提供澳門主要道路和邊境口岸的預計等待時間。",                           
+                    "info-point-1": "時間每30秒根據當前交通狀況更新一次",                           
+                    "info-point-2": "顏色表示交通嚴重程度",                           
+                    "info-point-3": "數據僅供演示用途",                           
+                    "info-point-4": "實際旅行時間可能有所不同",                           
+                    "travel-tips-title": "旅行提示",                           
+                    "tip-1": "盡可能避免高峰時間（早上7:00-9:30和下午5:00-7:00）",                           
+                    "tip-2": "請注意，澳門一般道路的最高速度為50公里/小時，橋樑為80公里/小時。",                           
+                    "tip-3": "在交通繁忙時段考慮使用公共交通工具",                           
+                    "tip-4": "出行前檢查邊境口岸時間",                           
+                    "tip-5": "為重要會議預留額外時間",                           
+                    "tip-6": "當主要道路出現嚴重擁堵時使用替代路線",                           
+                    "live-cameras-title": "實時交通攝像頭",                           
+                    "tab-macau-city": "澳門市區",                          
+                    "tab-taipa": "氹仔",                          
+                    "tab-bridges": "跨海大橋",                          
+                    "tab-border": "口岸",                          
+                    "community-chat-title": "社區聊天",                           
+                    "community-guidelines-title": "社區指南",                           
+                    "community-guidelines-desc": "歡迎來到澳門交通監控社區聊天！此空間用於與澳門居民和遊客分享實時交通更新、道路狀況和旅行提示。",                           
+                    "guidelines-intro": "請遵守以下指南以保持我們社區的幫助性和尊重性：",                           
+                    "guideline-1": "分享準確、當前的交通信息",                           
+                    "guideline-2": "對所有用戶保持尊重和禮貌",                           
+                    "guideline-3": "報告道路事件、事故或施工",                           
+                    "guideline-4": "詢問交通模式或道路狀況問題",                           
+                    "guideline-5": "避免垃圾郵件、廣告或離題討論",                           
+                    "guideline-6": "使用適當的語言 - 無 offensive 內容",                           
+                    "moderation-note": "我們的管理員監控聊天以確保每個人都有積極的體驗。違反這些指南可能導致暫時或永久禁止聊天。",                           
+                    "about-title": "關於澳門交通監控",                           
+                    "about-desc": "澳門交通監控是一個實時交通信息平台，旨在幫助居民和遊客高效地導航澳門的道路網絡。我們的服務提供最新的交通狀況、預計過境時間和主要道路及邊境口岸的實時攝像頭饋送。",                           
+                    "mission-title": "我們的使命",                           
+                    "mission-desc": "我們旨在通過提供準確、實時的交通信息來減少澳門的旅行時間並改善道路安全。我們的平台幫助用戶對旅行路線和時間做出明智的決定。",                           
+                    "data-sources-title": "數據來源",                           
+                    "data-sources-desc": "我們的交通數據來自多個官方渠道：",                           
+                    "source-1": "交通事務局 - 官方交通數據",                           
+                    "source-2": "Google Maps API - 交通流量和事件報告",                           
+                    "source-3": "交通事務局運營的實時交通攝像頭",                           
+                    "source-4": "我們用戶的社區報告",                           
+                    "features-title": "功能",                           
+                    "feature-1": "實時交通狀況可視化",                           
+                    "feature-2": "邊境口岸預計等待時間",                           
+                    "feature-3": "實時交通攝像頭饋送",                           
+                    "feature-4": "社區聊天實時更新",                           
+                    "feature-5": "移動應用程序用於路上交通更新",                           
+                    "feature-6": "歷史交通模式分析",                           
+                    "mobile-app-title": "隨時隨地獲取交通更新",                           
+                    "mobile-app-desc": "下載我們的移動應用程序以獲取交通警報和導航協助",                           
+                    "feature-alerts": "即時警報",                           
+                    "feature-routing": "智能路線規劃",                           
+                    "feature-history": "交通歷史",                           
+                    "feature-maps": "離線地圖",                      
+                    // Camera titles
+                    "camera-title-1": "松山隧道向羅理基（水塘）",                           
+                    "camera-title-2": "松山隧道向高士德",                           
+                    "camera-title-3": "紅街市",                           
+                    "camera-title-4": "提督馬路與高士德大馬路交界",                           
+                    "camera-title-5": "提督馬路",                           
+                    "camera-title-6": "慕拉士大馬路",                           
+                    "camera-title-7": "內港",                           
+                    "camera-title-8": "黑沙環新街",                           
+                    "camera-title-9": "塔石廣場",                           
+                    "camera-title-10": "宋玉生廣場",                           
+                    "camera-title-11": "捐血中心",                           
+                    "camera-title-12": "南灣湖廣場",                           
+                    "camera-title-13": "亚马喇前地",                           
+                    "camera-title-14": "殷皇子大馬路與葡京路交界",                           
+                    "camera-title-15": "新马路 / 南湾马路交界",                           
+                    "camera-title-16": "新馬路",                           
+                    "camera-title-17": "海灣花園",                           
+                    "camera-title-18": "澳門國際機場",                           
+                    "camera-title-19": "路氹連貫公路圓形地",                           
+                    "camera-title-20": "金光大道",                           
+                    "camera-title-21": "金光大道 2 / 路氹連貫公路",                           
+                    "camera-title-22": "友誼馬路",                           
+                    "camera-title-23": "友誼大橋近北安入口交匯處",                           
+                    "camera-title-24": "友谊大桥向氹仔",                           
+                    "camera-title-25": "友誼大橋向澳门",                           
+                    "camera-title-26": "西灣大橋向澳门",                           
+                    "camera-title-27": "西灣大橋向氹仔（高处）",                           
+                    "camera-title-28": "西灣大橋向澳门（高处）",                           
+                    "camera-title-29": "澳門大橋入口（澳门）",                           
+                    "camera-title-30": "澳門大橋向氹仔",                           
+                    "camera-title-31": "澳門大橋向澳门",                           
+                    "camera-title-32": "關閘隧道",                           
+                    "camera-title-33": "關閘大馬路",                           
+                    "camera-title-34": "青茂口岸（A）",                           
+                    "camera-title-35": "青茂口岸（B）",                           
+                    "camera-title-36": "外港客運碼頭（A）",                           
+                    "camera-title-37": "外港客運碼頭（B）",                           
+                    "camera-title-38": "橫琴口岸（A）",                           
+                    "camera-title-39": "橫琴口岸（B）",                           
+                    "camera-title-40": "橫琴口岸（C）",                           
+                    "camera-title-41": "橫琴口岸（D）",                           
+                    "camera-title-42": "港珠澳大橋往珠海",                           
+                    "camera-title-43": "港珠澳大橋往澳門",                           
+                    "camera-title-44": "港珠澳大橋往送客平台",                           
+                    "camera-title-45": "港珠澳大橋（澳門入境）", 
+                    // Weather translations
+                    "weather-title": "天氣資訊", 
+                    "current-weather-title": "當前天氣", 
+                    "warning-title": "天氣警告"
+                },                           
+                pt: {
+                    "header-title": "Monitor de Trânsito de Macau",                           
+                    "welcome-message": "Olá! Bem-vindo ao nosso website!",                           
+                    "header-subtitle": "Condições de trânsito em tempo real e tempos de espera para as principais estradas e travessias fronteiriças de Macau",                           
+                    "nav-dashboard": "Painel",                           
+                    "nav-cameras": "Câmaras ao Vivo",                           
+                    "nav-news": "Notícias",                
+                    "nav-chat": "Chat Comunitário",                           
+                    "nav-about": "Sobre",                           
+                    "map-instruction": "Arraste para navegar no mapa",                           
+                    "traffic-overview": "Visão Geral do Trânsito",                           
+                    "current-time-label": "Hora Atual: ",                           
+                    "overall-traffic": "Trânsito Geral",                           
+                    "traffic-status-value": "LEVE",                           
+                    "average-delay-label": "Atraso Médio",                           
+                    "crossing-duration": "Duração Estimada da Travessia",                           
+                    "friendship-bridge": "Ponte da Amizade",                           
+                    "sai-van-bridge": "Ponte de Sai Van",                           
+                    "horta-costa": "Avenida de Horta e Costa",                           
+                    "san-ma-lou": "San Ma Lou",                           
+                    "praca-amaral": "Praça de Ferreira do Amaral",                           
+                    "portas-cerco": "Portas do Cerco",                           
+                    "cotai-strip": "Faixa de Cotai",                           
+                    "median-traffic-label": "Tempo Médio de Trânsito: ",                           
+                    "traffic-legend-title": "Legenda de Trânsito",                           
+                    "severe-traffic": "Trânsito Severo (40+ min de atraso)",                           
+                    "heavy-traffic": "Trânsito Pesado (20-40 min de atraso)",                           
+                    "moderate-traffic": "Trânsito Moderado (10-20 min de atraso)",                           
+                    "light-traffic": "Trânsito Leve (<10 min de atraso)",                           
+                    "closed-traffic": "Fechado/Bloqueado",                           
+                    "website-info-title": "Informações de Trânsito do Website",                           
+                    "website-info-desc": "Este monitor de trânsito em tempo real fornece tempos de espera estimados para estradas principais e travessias fronteiriças em Macau.",                           
+                    "info-point-1": "Os tempos são atualizados a cada 30 segundos com base nas condições atuais de trânsito",                           
+                    "info-point-2": "As cores indicam níveis de gravidade do trânsito",                           
+                    "info-point-3": "Os dados são simulados para fins de demonstração",                           
+                    "info-point-4": "Os tempos reais de viagem podem variar",                           
+                    "travel-tips-title": "Dicas de Viagem",                           
+                    "tip-1": "Evite horas de pico (7:00-9:30 e 17:00-19:00) quando possível",                           
+                    "tip-2": "Note que a velocidade máxima em estradas normais em Macau é 50 km/h, e nas pontes é 80 km/h.",                           
+                    "tip-3": "Considere usar transporte público durante períodos de trânsito pesado",                           
+                    "tip-4": "Verifique os horários de travessia fronteiriça antes de viajar",                           
+                    "tip-5": "Planeje tempo extra para compromissos importantes",                           
+                    "tip-6": "Use rotas alternativas quando estradas principais mostrarem congestionamento pesado",                           
+                    "live-cameras-title": "Câmaras de Trânsito ao Vivo",                           
+                    "tab-macau-city": "Cidade de Macau",                          
+                    "tab-taipa": "Taipa",                          
+                    "tab-bridges": "Pontes Transoceânicas",                          
+                    "tab-border": "Passagens Fronteiriças",                          
+                    "community-chat-title": "Chat Comunitário",                           
+                    "community-guidelines-title": "Diretrizes Comunitárias",                           
+                    "community-guidelines-desc": "Bem-vindo ao chat comunitário do Monitor de Trânsito de Macau! Este espaço é para compartilhar atualizações de trânsito em tempo real, condições rodoviárias e dicas de viagem com residentes e visitantes de Macau.",                           
+                    "guidelines-intro": "Por favor, siga estas diretrizes para manter nossa comunidade útil e respeitosa: ",                           
+                    "guideline-1": "Compartilhe informações de trânsito precisas e atuais",                           
+                    "guideline-2": "Seja respeitoso e cortês com todos os usuários",                           
+                    "guideline-3": "Informe sobre incidentes rodoviários, acidentes ou obras",                           
+                    "guideline-4": "Faça perguntas sobre padrões de trânsito ou condições rodoviárias",                           
+                    "guideline-5": "Evite spam, anúncios ou discussões fora de tópico",                           
+                    "guideline-6": "Use linguagem apropriada - sem conteúdo ofensivo",                           
+                    "moderation-note": "Nossos moderadores monitoram o chat para garantir uma experiência positiva para todos. Violação destas diretrizes pode resultar em banimento temporário ou permanente do chat.",                           
+                    "about-title": "Sobre o Monitor de Trânsito de Macau",                           
+                    "about-desc": "O Monitor de Trânsito de Macau é uma plataforma de informações de trânsito em tempo real projetada para ajudar residentes e visitantes a navegar eficientemente pela rede rodoviária de Macau. Nosso serviço fornece condições de trânsito atualizadas, tempos de travessia estimados e feeds de câmaras ao vivo para estradas principais e travessias fronteiriças.",                           
+                    "mission-title": "Nossa Missão",                           
+                    "mission-desc": "Nosso objetivo é reduzir o tempo de viagem e melhorar a segurança rodoviária em Macau fornecendo informações de trânsito precisas e em tempo real. Nossa plataforma ajuda os usuários a tomar decisões informadas sobre rotas e horários de viagem.",                           
+                    "data-sources-title": "Fontes de Dados",                           
+                    "data-sources-desc": "Nossos dados de trânsito são obtidos de múltiplos canais oficiais: ",                           
+                    "source-1": "DSAT (Direção de Serviços de Trânsito) - Dados de trânsito oficiais",                           
+                    "source-2": "API do Google Maps - Relatórios de fluxo de trânsito e incidentes",                           
+                    "source-3": "Câmaras de trânsito ao vivo operadas pela DSAT",                           
+                    "source-4": "Relatórios comunitários de nossos usuários",                           
+                    "features-title": "Recursos",                           
+                    "feature-1": "Visualização de condições de trânsito em tempo real",                           
+                    "feature-2": "Tempos de espera estimados para travessias fronteiriças",                           
+                    "feature-3": "Feeds de câmaras de trânsito ao vivo",                           
+                    "feature-4": "Chat comunitário para atualizações em tempo real",                           
+                    "feature-5": "Aplicativo móvel para atualizações de trânsito em movimento",                           
+                    "feature-6": "Análise de padrões históricos de trânsito",                           
+                    "mobile-app-title": "Receba Atualizações de Trânsito em Movimento",                           
+                    "mobile-app-desc": "Baixe nosso aplicativo móvel para alertas de trânsito e assistência de navegação",                           
+                    "feature-alerts": "Alertas Instantâneos",                           
+                    "feature-routing": "Roteamento Inteligente",                           
+                    "feature-history": "Histórico de Trânsito",                           
+                    "feature-maps": "Mapas Offline",                      
+                    // Camera titles
+                    "camera-title-1": "Túnel da Penha em direção ao Largo do Governador Vasco Rocha Vieira (Reservatório)",                           
+                    "camera-title-2": "Túnel da Penha em direção à Rua do Campo",                           
+                    "camera-title-3": "Mercado da Rua do Aljube",                           
+                    "camera-title-4": "Interseção da Avenida do Conselheiro Borja e Rua do Campo",                           
+                    "camera-title-5": "Avenida do Conselheiro Borja",                           
+                    "camera-title-6": "Avenida de Venceslau de Morais",                           
+                    "camera-title-7": "Porto Interior",                           
+                    "camera-title-8": "Rua Nova da Areia Preta",                           
+                    "camera-title-9": "Praça de Tap Seac",                           
+                    "camera-title-10": "Praça do Vasco Rocha Vieira",                           
+                    "camera-title-11": "Centro de Doação de Sangue",                           
+                    "camera-title-12": "Praça da Nave Desportiva",                           
+                    "camera-title-13": "Praça de Ferreira do Amaral",                           
+                    "camera-title-14": "Interseção da Avenida do Infante D. Henrique e Avenida do Dr. Rodrigo Rodrigues",                           
+                    "camera-title-15": "Interseção da Rua dos Mercadores / Avenida da Praia Grande",                           
+                    "camera-title-16": "Rua dos Mercadores",                           
+                    "camera-title-17": "Jardim Haiwan",                           
+                    "camera-title-18": "Aeroporto Internacional de Macau",                           
+                    "camera-title-19": "Interseção Circular da Estrada do Istmo",                           
+                    "camera-title-20": "Faixa de Cotai",                           
+                    "camera-title-21": "Faixa de Cotai 2 / Estrada do Istmo",                           
+                    "camera-title-22": "Avenida da Amizade",                           
+                    "camera-title-23": "Ponte da Amizade perto da Interseção da Entrada da Baía Norte",                           
+                    "camera-title-24": "Ponte da Amizade em direção a Taipa",                           
+                    "camera-title-25": "Ponte da Amizade em direção a Macau",                           
+                    "camera-title-26": "Ponte de Sai Van em direção a Macau",                           
+                    "camera-title-27": "Ponte de Sai Van em direção a Taipa (Alto)",                           
+                    "camera-title-28": "Ponte de Sai Van em direção a Macau (Alto)",                           
+                    "camera-title-29": "Entrada da Ponte de Macau (Macau)",                           
+                    "camera-title-30": "Ponte de Macau em direção a Taipa",                           
+                    "camera-title-31": "Ponte de Macau em direção a Macau",                           
+                    "camera-title-32": "Túnel da Portas do Cerco",                           
+                    "camera-title-33": "Avenida da Portas do Cerco",                           
+                    "camera-title-34": "Porto Qingmao (A)",                           
+                    "camera-title-35": "Porto Qingmao (B)",                           
+                    "camera-title-36": "Terminal de Ferry do Porto Exterior (A)",                           
+                    "camera-title-37": "Terminal de Ferry do Porto Exterior (B)",                           
+                    "camera-title-38": "Porto de Hengqin (A)",                           
+                    "camera-title-39": "Porto de Hengqin (B)",                           
+                    "camera-title-40": "Porto de Hengqin (C)",                           
+                    "camera-title-41": "Porto de Hengqin (D)",                           
+                    "camera-title-42": "Ponte Hong Kong-Zhuhai-Macau para Zhuhai",                           
+                    "camera-title-43": "Ponte Hong Kong-Zhuhai-Macau para Macau",                           
+                    "camera-title-44": "Ponte Hong Kong-Zhuhai-Macau para Plataforma de Entrega de Passageiros",                           
+                    "camera-title-45": "Ponte Hong Kong-Zhuhai-Macau (Entrada Macau)", 
+                    // Weather translations
+                    "weather-title": "Informações Meteorológicas", 
+                    "current-weather-title": "Clima Atual", 
+                    "warning-title": "Avisos Meteorológicos"
+                },                           
+                ja: {
+                    "header-title": "マカオ交通モニター",                           
+                    "welcome-message": "こんにちは！当サイトへようこそ！",                           
+                    "header-subtitle": "マカオの主要道路と国境横断地点のリアルタイム交通状況と待ち時間",                           
+                    "nav-dashboard": "ダッシュボード",                           
+                    "nav-cameras": "ライブカメラ",                           
+                    "nav-news": "ニュース",                
+                    "nav-chat": "コミュニティチャット",                           
+                    "nav-about": "概要",                           
+                    "map-instruction": "ドラッグして地図を操作",                           
+                    "traffic-overview": "交通概況",                           
+                    "current-time-label": "現在時刻：",                           
+                    "overall-traffic": "全体の交通状況",                           
+                    "traffic-status-value": "軽度",                           
+                    "average-delay-label": "平均遅延",                           
+                    "crossing-duration": "推定通過時間",                           
+                    "friendship-bridge": "友誼大橋",                           
+                    "sai-van-bridge": "西湾大橋",                           
+                    "horta-costa": "ホテラ・エ・コスタ大通り",                           
+                    "san-ma-lou": "新馬路",                           
+                    "praca-amaral": "アマラル広場",                           
+                    "portas-cerco": "关闸边检大楼",                           
+                    "cotai-strip": "コータイストリップ",                           
+                    "median-traffic-label": "中央値交通時間：",                           
+                    "traffic-legend-title": "交通凡例",                           
+                    "severe-traffic": "深刻な交通（40分以上遅延）",                           
+                    "heavy-traffic": "重い交通（20-40分遅延）",                           
+                    "moderate-traffic": "中程度の交通（10-20分遅延）",                           
+                    "light-traffic": "軽度の交通（10分未満遅延）",                           
+                    "closed-traffic": "閉鎖/遮断",                           
+                    "website-info-title": "ウェブサイト交通情報",                           
+                    "website-info-desc": "このリアルタイム交通モニターは、マカオの主要道路と国境横断地点の推定待ち時間を提供します。",                           
+                    "info-point-1": "時間は現在の交通状況に基づいて30秒ごとに更新されます",                           
+                    "info-point-2": "色は交通の深刻度を示します",                           
+                    "info-point-3": "データはデモンストレーション目的でシミュレートされています",                           
+                    "info-point-4": "実際の旅行時間は異なる場合があります",                           
+                    "travel-tips-title": "旅行のヒント",                           
+                    "tip-1": "可能であればラッシュアワー（午前7時から9時30分、午後5時から7時）を避けてください",                           
+                    "tip-2": "マカオの一般道路の最高速度は50km/h、橋は80km/hであることに注意してください。",                           
+                    "tip-3": "交通混雑時に公共交通機関の利用を検討してください",                           
+                    "tip-4": "旅行前に国境横断の時間を確認してください",                           
+                    "tip-5": "重要な予定には余裕を持って時間を計画してください",                           
+                    "tip-6": "主要道路が重い混雑を示している場合は代替ルートを使用してください",                           
+                    "live-cameras-title": "ライブ交通カメラ",                           
+                    "tab-macau-city": "澳門市區",                          
+                    "tab-taipa": "氹仔",                          
+                    "tab-bridges": "跨海大橋",                          
+                    "tab-border": "口岸",                          
+                    "community-chat-title": "コミュニティチャット",                           
+                    "community-guidelines-title": "コミュニティガイドライン",                           
+                    "community-guidelines-desc": "マカオ交通モニターのコミュニティチャットへようこそ！このスペースは、マカオの住民や訪問者とリアルタイムの交通更新、道路状況、旅行のヒントを共有するためのものです。",                           
+                    "guidelines-intro": "コミュニティを助け合い、敬意のある場所にするために、以下のガイドラインに従ってください：",                           
+                    "guideline-1": "正確で最新の交通情報を共有してください",                           
+                    "guideline-2": "すべてのユーザーに対して敬意と礼儀を払ってください",                           
+                    "guideline-3": "道路の事件、事故、工事を報告してください",                           
+                    "guideline-4": "交通パターンや道路状況について質問してください",                           
+                    "guideline-5": "スパム、広告、話題外の議論を避けてください",                           
+                    "guideline-6": "適切な言葉遣いをしてください - 攻撃的な内容は禁止です",                           
+                    "moderation-note": "私たちのモデレーターはチャットを監視し、すべての人がポジティブな体験ができるようにしています。これらのガイドラインに違反すると、チャットから一時的または永続的に禁止されることがあります。",                           
+                    "about-title": "マカオ交通モニターについて",                           
+                    "about-desc": "マカオ交通モニターは、住民と訪問者がマカオの道路網を効率的にナビゲートきように設計されたリアルタイム交通情報プラットフォームです。当社のサービスは、最新の交通状況、推定通過時間、主要道路と国境横断地点のライブカメラフィードを提供します。",                           
+                    "mission-title": "私たちの使命",                           
+                    "mission-desc": "正確でリアルタイムの交通情報を提供することで、マカオの旅行時間を短縮し、道路の安全性を向上させることを目指しています。当社のプラットフォームは、ユーザーが旅行ルートとタイミングについて情報に基づいた決定をできるようにします。",                           
+                    "data-sources-title": "データソース",                           
+                    "data-sources-desc": "私たちの交通データは複数の公式チャネルから取得されます：",                           
+                    "source-1": "交通事務局 - 公式交通データ",                           
+                    "source-2": "Google Maps API - 交通流と事件報告",                           
+                    "source-3": "交通事務局が運営するライブ交通カメラ",                           
+                    "source-4": "私たちのユーザーからのコミュニティ報告",                           
+                    "features-title": "機能",                           
+                    "feature-1": "リアルタイム交通状況の可視化",                           
+                    "feature-2": "国境横断の推定待ち時間",                           
+                    "feature-3": "ライブ交通カメラフィード",                           
+                    "feature-4": "リアルタイム更新のためのコミュニティチャット",                           
+                    "feature-5": "移動中の交通更新のためのモバイルアプリ",                           
+                    "feature-6": "歴史的交通パターン分析",                           
+                    "mobile-app-title": "外出先で交通情報を取得",                           
+                    "mobile-app-desc": "交通アラートとナビゲーション支援のためのモバイルアプリをダウンロード",                           
+                    "feature-alerts": "即時アラート",                           
+                    "feature-routing": "スマートルーティング",                           
+                    "feature-history": "交通履歴",                           
+                    "feature-maps": "オフライン地図",                      
+                    // Camera titles
+                    "camera-title-1": "ペニャトンネル ヴァスコ・ロチャ・ヴィエイラ知事広場方面（貯水池）",                           
+                    "camera-title-2": "ペニャトンネル ルア・ド・カンプ方面",                           
+                    "camera-title-3": "アルジュベ通り市場",                           
+                    "camera-title-4": "コンセレイロ・ボルジャ大通りとルア・ド・カンプの交差点",                           
+                    "camera-title-5": "コンセレイロ・ボルジャ大通り",                           
+                    "camera-title-6": "ベンセスラウ・デ・モライス大通り",                           
+                    "camera-title-7": "内港",                           
+                    "camera-title-8": "アレイア・プレタ新街",                           
+                    "camera-title-9": "タップ・セアック広場",                           
+                    "camera-title-10": "ヴァスコ・ロチャ・ヴィエイラ広場",                           
+                    "camera-title-11": "献血センター",                           
+                    "camera-title-12": "ナヴェ・デスポーティヴァ広場",                           
+                    "camera-title-13": "フェレイラ・ド・アマラル広場",                           
+                    "camera-title-14": "インファンテ・ドン・エンリケ大通りとロドリゴ・ロドリゲス医師大通りの交差点",                           
+                    "camera-title-15": "ルア・ドス・メルカドーレスとプラヤ・グランデ大通りの交差点",                           
+                    "camera-title-16": "ルア・ドス・メルカドーレス",                           
+                    "camera-title-17": "ハイワン・ガーデン",                           
+                    "camera-title-18": "マカオ国際空港",                           
+                    "camera-title-19": "イストモ環状道路交差点",                           
+                    "camera-title-20": "コータイ・ストリップ",                           
+                    "camera-title-21": "コータイ・ストリップ2 / イストモ道路",                           
+                    "camera-title-22": "アミザデ大通り",                           
+                    "camera-title-23": "北湾入口交差点付近のアミザデ橋",                           
+                    "camera-title-24": "タージャ方面のアミザデ橋",                           
+                    "camera-title-25": "マカオ方面のアミザデ橋",                           
+                    "camera-title-26": "マカオ方面のサイヴァン橋",                           
+                    "camera-title-27": "タージャ方面のサイヴァン橋（高所）",                           
+                    "camera-title-28": "マカオ方面のサイヴァン橋（高所）",                           
+                    "camera-title-29": "マカオ橋入口（マカオ）",                           
+                    "camera-title-30": "タージャ方面のマカオ橋",                           
+                    "camera-title-31": "マカオ方面のマカオ橋",                           
+                    "camera-title-32": "ポルタス・ド・セルコトンネル",                           
+                    "camera-title-33": "ポルタス・ド・セルコ大通り",                           
+                    "camera-title-34": "青茂ポート（A）",                           
+                    "camera-title-35": "青茂ポート（B）",                           
+                    "camera-title-36": "外港フェリー乗り場（A）",                           
+                    "camera-title-37": "外港フェリー乗り場（B）",                           
+                    "camera-title-38": "横琴ポート（A）",                           
+                    "camera-title-39": "横琴ポート（B）",                           
+                    "camera-title-40": "横琴ポート（C）",                           
+                    "camera-title-41": "横琴ポート（D）",                           
+                    "camera-title-42": "香港・珠海・マカオ橋 珠海行き",                           
+                    "camera-title-43": "香港・珠海・マカオ橋 マカオ行き",                           
+                    "camera-title-44": "香港・珠海・マカオ橋 送客プラットフォーム行き",                           
+                    "camera-title-45": "香港・珠海・マカオ橋（マカオ入国）", 
+                    // Weather translations
+                    "weather-title": "天気情報", 
+                    "current-weather-title": "現在の天気", 
+                    "warning-title": "天気警報"
+                }
+            };
+            
+            // Function to change language
+            function changeLanguage(lang) {
+                // Update current language display
+                const langNames = {
+                    'en': 'English',                           
+                    'zh': '繁體中文',                           
+                    'pt': 'Português',                           
+                    'ja': '日本語'
+                };
+                currentLangSpan.textContent = langNames[lang];
+                
+                // Update all translatable elements
+                const elements = document.querySelectorAll('[id^="header-title"], [id^="welcome-message"], [id^="header-subtitle"], [id^="nav-"], [id^="map-instruction"], [id^="traffic-overview"], [id^="current-time-label"], [id^="overall-traffic"], [id^="traffic-status-value"], [id^="average-delay-label"], [id^="crossing-duration"], [id^="friendship-bridge"], [id^="sai-van-bridge"], [id^="horta-costa"], [id^="san-ma-lou"], [id^="praca-amaral"], [id^="portas-cerco"], [id^="cotai-strip"], [id^="median-traffic-label"], [id^="traffic-legend-title"], [id^="severe-traffic"], [id^="heavy-traffic"], [id^="moderate-traffic"], [id^="light-traffic"], [id^="closed-traffic"], [id^="website-info-title"], [id^="website-info-desc"], [id^="info-point-"], [id^="travel-tips-title"], [id^="tip-"], [id^="live-cameras-title"], [id^="tab-"], [id^="community-chat-title"], [id^="community-guidelines-title"], [id^="community-guidelines-desc"], [id^="guidelines-intro"], [id^="guideline-"], [id^="moderation-note"], [id^="about-title"], [id^="about-desc"], [id^="mission-title"], [id^="mission-desc"], [id^="data-sources-title"], [id^="data-sources-desc"], [id^="source-"], [id^="features-title"], [id^="feature-"], [id^="mobile-app-title"], [id^="mobile-app-desc"], [id^="feature-alerts"], [id^="feature-routing"], [id^="feature-history"], [id^="feature-maps"], [id^="camera-title-"], [id^="weather-title"], [id^="current-weather-title"], [id^="warning-title"]');
+                
+                elements.forEach(element => {
+                    const id = element.id;
+                    if (translations[lang][id]) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            element.placeholder = translations[lang][id];
+                        } else {
+                            element.textContent = translations[lang][id];
+                        }
+                    }
+                });
+                
+                // Store selected language in localStorage
+                localStorage.setItem('selectedLanguage', lang);
+                
+                // Reload cameras if on cameras page to update camera titles
+                const activePage = document.querySelector('.page.active');
+                if (activePage && activePage.id === 'cameras-page') {
+                    loadCamerasFromFirebase();
+                }
+            }
+            
+            // Load saved language preference or default to English
+            const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+            changeLanguage(savedLang);
+            
+            // News popup functionality
+            const newsPopup = document.getElementById('news-popup');
+            const closePopup = document.getElementById('close-news-popup');
+            const closeSpan = document.querySelector('.news-close');
+            
+            // Check if popup has been shown in this session
+            if (!sessionStorage.getItem('newsPopupShown')) {
+                // Show popup after a delay
+                setTimeout(showNewsPopup, 2000);
+            }
+            
+            closePopup.addEventListener('click', hideNewsPopup);
+            closeSpan.addEventListener('click', hideNewsPopup);
+            
+            function showNewsPopup() {
+                // Load latest news for popup
+                const newsRef = ref(database, 'news');
+                onValue(newsRef, (snapshot) => {
+                    const news = snapshot.val();
+                    if (news) {
+                        const latestNews = Object.values(news)[0];
+                        document.getElementById('popup-news-content').innerHTML = `
+                            <h3>${latestNews.title}</h3>
+                            <p><strong>Date: </strong> ${latestNews.date}</p>
+                            <p>${latestNews.content}</p>
+                        `;
+                        newsPopup.style.display = 'block';
+                        sessionStorage.setItem('newsPopupShown', 'true');
+                    }
+                }, { onlyOnce: true });
+            }
+            
+            function hideNewsPopup() {
+                newsPopup.style.display = 'none';
+            }
+            
+            // Close popup if user clicks outside content
+            window.addEventListener('click', function(event) {
+                if (event.target === newsPopup) {
+                    hideNewsPopup();
+                }
+            });
+            
+            // Store camera data for traffic time calculation
+            let cameraData = {};
+            
+            // Function to load camera data from Firebase
+            function loadCameraData() {
+                const camerasRef = ref(database, 'cameras');
+                onValue(camerasRef, (snapshot) => {
+                    const cameras = snapshot.val();
+                    if (cameras) {
+                        cameraData = cameras;
+                    }
+                }, { onlyOnce: true });
+            }
+            
+            // Initialize camera data
+            loadCameraData();
+            
+            // Updated traffic data with new time ranges
+            const trafficData = {
+                "friendship": [
+                    { start: 7, end: 9.5, min: 4, max: 8 },                                       // 7:00 to 9:30 = 4-8 mins
+                    { start: 9, end: 15, min: 6, max: 7 },                                       // 9:00 - 15:00 = 5-10 mins
+                    { start: 15.01, end: 20, min: 8, max: 10 },                                   // 15:01 - 20:00 - 8-10 mins
+                    { start: 19, end: 6.99, min: 2, max: 4 }    // 19:00 to 6:59 - 4-5 mins
+                ],                                   
+                "sai-van": [
+                    { start: 7, end: 9.5, min: 3, max: 5 },                                       // 7:00 to 9:30 = 3-5 mins
+                    { start: 9.51, end: 15, min: 3, max: 5 },                                    // 9:31 - 15:00 = 5-10 mins
+                    { start: 15.01, end: 18.99, min: 3, max: 5 },                                   // 15:01 - 18:59 - 6-15 mins
+                    { start: 19, end: 6.99, min: 2, max: 4 }   // 19:00 to 6:59 - 4-10 mins
+                ],                                   
+                "horta": [
+                    { start: 7, end: 9.99, min: 2, max: 7 },                                     // 7:00 to 9:59 = 8-18 mins
+                    { start: 10, end: 15, min: 5, max: 7 },                                      // 10:00 - 15:00= 5-10 mins
+                    { start: 15.5, end: 18.99, min: 15, max: 20 },                                   // 15:30-18:59 - 15-30 mins
+                    { start: 19, end: 6.99, min: 2, max: 4 }    // 19:00 to 6:59 - 4-8 mins
+                ],                                   
+                "san-ma": [
+                    { start: 7, end: 8.99, min: 6, max: 10 },                                     // 7:00 to 8:59 = 6-10 mins
+                    { start: 9, end: 15, min: 1, max: 10 },                                       // 9:00- 15:00 = 1-10 mins
+                    { start: 15.01, end: 18.99, min: 10, max: 20 },                                   // 15:01-18:59 - 10-20 mins
+                    { start: 19, end: 6.99, min: 2, max: 4 }   // 19:00to 6:59 - 4-10 mins
+                ],                                   
+                "praca": [
+                    { start: 7, end: 8.99, min: 3, max: 7 },                                     // 7:00 to 8:59 =6-15mins
+                    { start: 9, end: 15, min: 3, max: 7 },                                       // 9:00 - 15:00 = 6-15 mins
+                    { start: 15.01, end: 18.99, min: 3, max: 5 },                                   // 15:01 - 18:59 - 6-15mins
+                    { start: 19, end: 6.99, min: 2, max: 4 }   // 19:00 to 6:59 - 6-15 mins
+                ],                                   
+                "portas": [
+                    { start: 7, end: 8.99, min: 5, max: 10 },                                     // 7:00 to 8:59 = 5 - 10 mins
+                    { start: 9, end: 15, min: 5, max: 8 },                                      // 9:00- 15:00 = 10-15 mins
+                    { start: 15.01, end: 20, min: 10, max: 25 },                                   // 15:01 - 20:00 = 10-25 min
+                    { start: 20.01, end: 23, min: 5, max: 13 },                                   // 20:01 - 23:00 = 10-15 mins
+                    { start: 23.01, end: 6.99, min: 1, max: 2 } // 23:01-6:59= 1-3 mins
+                ],                                   
+                "cotai": [
+                    { start: 7, end: 8.99, min: 3, max: 10 },                                     // 7:00 to 8:59 =3-10mins
+                    { start: 9, end: 15, min: 3, max: 7 },                                       // 9:00 - 15:00 = 3-10 mins
+                    { start: 15.01, end: 18.99, min: 10, max: 15 },                                   // 15:01 - 18:59 - 10-15mins
+                    { start: 19, end: 6.99, min: 2, max: 4 }   // 19:00 to 6:59 - 6-10 mins
+                ]
+            };
+
+            // Initialize current times for each location
+            const currentTimes = {};
+            let totalDelay = 0;
+            let locationCount = 0;
+            let lastUpdateTime = 0;
+
+            // Function to get current time in decimal format (e.g., 14.5 for 2:30 PM)
+            function getCurrentTimeDecimal() {
+                const now = new Date();
+                return now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+            }
+
+            // Function to format time as HH:MM:SS
+            function formatTime(date) {
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${hours}:${minutes}:${seconds}`;
+            }
+
+            // Function to get traffic time for a location based on current time and camera data
+            function getTrafficTime(location) {
+                const currentTime = getCurrentTimeDecimal();
+                const data = trafficData[location];
+                
+                // Find the appropriate time range
+                let baseTime = 10; // default base time
+                for (const range of data) {
+                    // Handle overnight ranges (e.g., 19:00 to 06:59)
+                    if (range.start > range.end) {
+                        if (currentTime >= range.start || currentTime <= range.end) {
+                            baseTime = Math.floor((range.min + range.max) / 2);
+                            break;
+                        }
+                    } else {
+                        if (currentTime >= range.start && currentTime <= range.end) {
+                            baseTime = Math.floor((range.min + range.max) / 2);
+                            break;
+                        }
+                    }
+                }
+                
+                // Calculate traffic time based on camera data
+                let cameraCount = 0;
+                Object.keys(cameraData).forEach(cameraId => {
+                    const camera = cameraData[cameraId];
+                    if (camera.location === location && camera.carCount !== undefined) {
+                        cameraCount += camera.carCount;
+                    }
+                });
+                
+                // Calculate traffic time: base time + (car count / 10) minutes
+                // Minimum of 1 minute, maximum of 60 minutes
+                const calculatedTime = Math.max(1, Math.min(60, baseTime + Math.floor(cameraCount / 10)));
+                return calculatedTime;
+            }
+
+            // Function to update all traffic times
+            function updateTrafficTimes() {
+                const now = new Date();
+                document.getElementById('current-time-display').textContent = formatTime(now);
+                
+                // Only update traffic times every 30 seconds to prevent too frequent changes
+                const currentTime = now.getTime();
+                const shouldUpdateTraffic = currentTime - lastUpdateTime > 30000;
+                
+                if (shouldUpdateTraffic) {
+                    lastUpdateTime = currentTime;
+                    
+                    totalDelay = 0;
+                    locationCount = 0;
+                    const timesArray = [];
+                    
+                    for (const location in trafficData) {
+                        const timeElement = document.getElementById(`${location}-time`);
+                        if (timeElement) {
+                            const newTime = getTrafficTime(location);
+                            currentTimes[location] = newTime;
+                            timesArray.push(newTime);
+                            
+                            timeElement.textContent = `${newTime} min`;
+                            
+                            // Update color class based on time
+                            timeElement.className = 'time-display';
+                            if (newTime < 10) {
+                                timeElement.classList.add('time-low');
+                            } else if (newTime < 20) {
+                                timeElement.classList.add('time-medium');
+                            } else if (newTime < 40) {
+                                timeElement.classList.add('time-high');
+                            } else {
+                                timeElement.classList.add('time-severe');
+                            }
+                            
+                            totalDelay += newTime;
+                            locationCount++;
+                        }
+                    }
+                    
+                    // Calculate and display actual median delay
+                    if (locationCount === 7) {
+                        timesArray.sort((a, b) => a - b);
+                        const medianIndex = Math.floor(timesArray.length / 2);
+                        const medianDelay = timesArray.length % 2 === 0 
+                            ? Math.round((timesArray[medianIndex - 1] + timesArray[medianIndex]) / 2)
+                            : timesArray[medianIndex];
+                        
+                        document.getElementById('average-delay').textContent = `${medianDelay} min`;
+                    }
+                }
+            }
+
+            // Fixed IP tracking functions
+            async function checkIPBanStatus() {
+                try {
+                    ipCheckingMessage.style.display = 'flex';
+                    
+                    // Get user's IP address
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    const userIP = ipData.ip;
+                    
+                    // Check if IP is banned
+                    const bannedRef = ref(database, 'banned_ips');
+                    onValue(bannedRef, (snapshot) => {
+                        // Log the visit (always log to all_visits)
+                        logVisit(userIP);
+                        
+                        if (snapshot.exists()) {
+                            const bannedIPs = snapshot.val();
+                            let isBanned = false;
+                            let banInfo = null;
+                            
+                            // Check each ban record
+                            for (const banId in bannedIPs) {
+                                if (bannedIPs[banId].ip === userIP) {
+                                    isBanned = true;
+                                    banInfo = {
+                                        banId: banId,           
+                                        reason: bannedIPs[banId].reason || 'No reason specified',           
+                                        timestamp: bannedIPs[banId].timestamp
+                                    };
+                                    break;
+                                }
+                            }
+                            
+                            if (isBanned) {
+                                // Show banned overlay instead of hiding content
+                                bannedOverlay.style.display = 'flex';
+                                ipCheckingMessage.style.display = 'none';
+                                
+                                // Display ban details
+                                banDetailsOverlay.innerHTML = `
+                                    <strong>BAN ID: </strong> ${banInfo.banId}<br>
+                                    <strong>Reason: </strong> ${banInfo.reason}<br>
+                                    <strong>Timestamp: </strong> ${new Date(banInfo.timestamp).toLocaleString()}
+                                `;
+                                
+                                logBannedAccess(userIP, banInfo.banId);
+                                return;
+                            }
+                        }
+                        
+                        // IP not banned - hide checking message and show content
+                        ipCheckingMessage.style.display = 'none';
+                    }, { onlyOnce: true });
+                } catch (error) {
+                    console.error('Error checking IP ban status: ', error);
+                    // Hide checking message even on error to prevent blocking UI
+                    ipCheckingMessage.style.display = 'none';
+                }
+            }
+            
+            // Fixed visit logging function with generated title
+            function logVisit(userIP) {
+                try {
+                    // Generate a title with date and time
+                    const now = new Date();
+                    const title = `Visit on ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+                    
+                    const visitData = {
+                        title: title,           // Generated title with date/time
+                        ip: userIP,           
+                        timestamp: new Date().toISOString(),           
+                        userAgent: navigator.userAgent,           
+                        page: window.location.href
+                    };
+                    
+                    // Log to Firebase under 'all_visits'
+                    const visitRef = push(ref(database, 'all_visits'));
+                    set(visitRef, visitData)
+                        .then(() => {
+                            console.log('Visit logged successfully with ID: ', visitRef.key);
+                        })
+                        .catch(error => {
+                            console.error('Error logging visit: ', error);
+                        });
+                } catch (error) {
+                    console.error('Error in logVisit: ', error);
+                }
+            }
+            
+            // Fixed banned access logging
+            function logBannedAccess(ip, banId) {
+                const logData = {
+                    ip: ip,           
+                    timestamp: new Date().toISOString(),           
+                    userAgent: navigator.userAgent,           
+                    page: window.location.href
+                };
+                
+                const logRef = push(ref(database, 'banned_access_logs'));
+                set(logRef, logData).catch(error => {
+                    console.error('Error logging banned access: ', error);
+                });
+            }
+            
+            // Existing camera loading functions
+            function loadCamerasFromFirebase() {
+                camerasLoading.style.display = 'flex';
+                
+                document.querySelectorAll('.camera-content').forEach(content => {
+                    content.innerHTML = ''; // Clear existing content
+                });
+                
+                const camerasRef = ref(database, 'cameras');
+                onValue(camerasRef, (snapshot) => {
+                    const cameras = snapshot.val();
+                    if (cameras) {
+                        displayCameras(cameras);
+                    } else {
+                        displayNoCamerasMessage();
+                    }
+                    camerasLoading.style.display = 'none';
+                }, { onlyOnce: true });
+            }
+
+            function displayCameras(cameras) {
+                const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+                // Convert and sort cameras by position
+                const camerasArray = Object.keys(cameras).map(cameraId => ({
+                    id: cameraId,               
+                    ...cameras[cameraId]
+                }));
+                
+                camerasArray.sort((a, b) => (a.position || 0) - (b.position || 0)); // Sort by position
+
+                const groupedCameras = {
+                    'macau-city': [],               
+                    'taipa': [],               
+                    'bridges': [],               
+                    'border': []
+                };
+
+                camerasArray.forEach(camera => {
+                    groupedCameras[camera.location].push(camera);
+                });
+
+                Object.keys(groupedCameras).forEach(location => {
+                    const container = document.getElementById(`${location}-content`);
+                    const camerasList = groupedCameras[location];
+
+                    if (camerasList.length === 0) {
+                        container.innerHTML = '<p>No cameras available for this location.</p>';
+                        return;
+                    }
+
+                    let html = '<div class="camera-grid">';
+                    camerasList.forEach(camera => {
+                        let cameraTitle = camera.titles.en; // default to English
+                        if (currentLang === 'zh' && camera.titles.zh) {
+                            cameraTitle = camera.titles.zh;
+                        } else if (currentLang === 'pt' && camera.titles.pt) {
+                            cameraTitle = camera.titles.pt;
+                        } else if (currentLang === 'ja' && camera.titles.ja) {
+                            cameraTitle = camera.titles.ja;
+                        }
+
+                        html += `
+                            <div class="camera-item">
+                                <div class="camera-title">${cameraTitle}</div>
+                                <div class="camera-container">
+                                    <iframe src="${camera.embedUrl}" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += '</div>';
+                    container.innerHTML = html;
+                });
+            }
+            
+            // Display message when no cameras are found
+            function displayNoCamerasMessage() {
+                document.querySelectorAll('.camera-content').forEach(content => {
+                    content.innerHTML = '<p style="text-align: center; padding: 20px;">No cameras available at this time.</p>';
+                });
+            }
+            
+            // Display error message
+            function displayErrorMessage() {
+                document.querySelectorAll('.camera-content').forEach(content => {
+                    content.innerHTML = '<p style="text-align: center; padding: 20px; color: #ff4d4d;">Error loading cameras. Please try again later.</p>';
+                });
+            }
+            
+            // News functionality
+            function loadNewsFromFirebase() {
+                const newsRef = ref(database, 'news');
+                onValue(newsRef, (snapshot) => {
+                    const news = snapshot.val();
+                    displayNews(news);
+                }, { onlyOnce: true });
+            }
+
+            function displayNews(newsData) {
+                const container = document.getElementById('news-container');
+                
+                if (!newsData) {
+                    container.innerHTML = '<p>No news available at this time.</p>';
+                    return;
+                }
+                
+                // Convert to array and process
+                const newsArray = Object.keys(newsData).map(key => ({
+                    id: key,                
+                    ...newsData[key]
+                }));
+                
+                // Sort news: important/urgent first, then by date (newest first)
+                newsArray.sort((a, b) => {
+                    // Check for important/urgent flags
+                    const aIsImportant = a.important || a.urgent;
+                    const bIsImportant = b.important || b.urgent;
+                    
+                    // Important news comes first
+                    if (aIsImportant && !bIsImportant) return -1;
+                    if (!aIsImportant && bIsImportant) return 1;
+                    
+                    // Both important or both not important - sort by date
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    
+                    // Handle invalid dates
+                    if (isNaN(dateA) && isNaN(dateB)) return 0;
+                    if (isNaN(dateA)) return 1;
+                    if (isNaN(dateB)) return -1;
+                    
+                    // Sort by date descending (newest first)
+                    return dateB - dateA;
+                });
+                
+                let html = '';
+                newsArray.forEach(news => {
+                    // Format date properly
+                    let displayDate = 'Unknown date';
+                    if (news.date) {
+                        try {
+                            const dateObj = new Date(news.date);
+                            if (!isNaN(dateObj.getTime())) {
+                                displayDate = dateObj.toLocaleDateString('en-US', {
+                                    year: 'numeric',                
+                                    month: 'long',                
+                                    day: 'numeric'
+                                });
+                            }
+                        } catch (e) {
+                            console.warn('Invalid date format: ', news.date);
+                        }
+                    }
+                    
+                    html += `
+                        <div class="news-item">
+                            <h3>
+                                <i class="fas fa-newspaper"></i> 
+                                ${news.title}
+                                ${(news.important || news.urgent) ? '<span class="urgent-tag">URGENT</span>' : ''}
+                            </h3>
+                            <span class="news-date"><i class="fas fa-calendar"></i> ${displayDate}</span>
+                            <div class="news-content">${news.content}</div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+
+            // Chat System Functions
+            function initChat() {
+                // Show signup form
+                showSignup.addEventListener('click', () => {
+                    authContainer.style.display = 'none';
+                    signupContainer.style.display = 'flex';
+                });
+                
+                // Show login form
+                showLogin.addEventListener('click', () => {
+                    signupContainer.style.display = 'none';
+                    authContainer.style.display = 'flex';
+                });
+                
+                // Signup form submission
+                signupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('signupUsername').value;
+                    const password = document.getElementById('signupPassword').value;
+                    const email = document.getElementById('signupEmail').value;
+                    
+                    // Create user in Firebase Auth
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then((userCredential) => {
+                            // Save additional user data to database
+                            const userId = userCredential.user.uid;
+                            const userData = {
+                                username: username,      
+                                email: email,      
+                                role: 'member',      
+                                createdAt: new Date().toISOString()
+                            };
+                            
+                            return set(ref(database, 'users/' + userId), userData);
+                        })
+                        .then(() => {
+                            alert('Account created successfully! Please login.');
+                            signupContainer.style.display = 'none';
+                            authContainer.style.display = 'flex';
+                        })
+                        .catch((error) => {
+                            alert('Error: ' + error.message);
+                        });
+                });
+                
+                // Login form submission
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('loginUsername').value;
+                    const password = document.getElementById('loginPassword').value;
+                    
+                    // For demo purposes, we'll allow login with username or email
+                    // In a real app, you'd need to store usernames separately
+                    signInWithEmailAndPassword(auth, email.includes('@') ? email : email + '@example.com', password)
+                        .then((userCredential) => {
+                            // Get user data from database
+                            const userId = userCredential.user.uid;
+                            return onValue(ref(database, 'users/' + userId), (snapshot) => {
+                                if (snapshot.exists()) {
+                                    currentUser = snapshot.val();
+                                    userRole = currentUser.role || 'member';
+                                    displayUserInfo();
+                                    authContainer.style.display = 'none';
+                                    loadChatMessages();
+                                    setupModerationPanel();
+                                } else {
+                                    alert('User data not found');
+                                    signOut(auth);
+                                }
+                            }, { onlyOnce: true });
+                        })
+                        .catch((error) => {
+                            alert('Login error: ' + error.message);
+                        });
+                });
+                
+                // Send message
+                sendMessageBtn.addEventListener('click', sendMessage);
+                messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+            
+            // Display user info
+            function displayUserInfo() {
+                userInfo.innerHTML = `
+                    <span>Welcome, ${currentUser.username}</span>
+                    <span class="user-role role-${userRole}">${userRole.charAt(0).toUpperCase() + userRole.slice(1)}</span>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                `;
+                
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    signOut(auth);
+                    currentUser = null;
+                    userRole = 'member';
+                    authContainer.style.display = 'flex';
+                    userInfo.innerHTML = '';
+                    moderationPanel.classList.remove('active');
+                });
+            }
+            
+            // Setup moderation panel for admins/moderators
+            function setupModerationPanel() {
+                if (userRole === 'admin' || userRole === 'moderator') {
+                    moderationPanel.classList.add('active');
+                    
+                    banUserBtn.addEventListener('click', () => {
+                        const username = document.getElementById('banUserInput').value;
+                        const duration = document.getElementById('banDuration').value;
+                        const reason = document.getElementById('banReason').value;
+                        
+                        if (!username) {
+                            alert('Please enter a username to ban');
+                            return;
+                        }
+                        
+                        // Find user by username
+                        const usersRef = ref(database, 'users');
+                        onValue(usersRef, (snapshot) => {
+                            if (snapshot.exists()) {
+                                const users = snapshot.val();
+                                let userId = null;
+                                
+                                for (const key in users) {
+                                    if (users[key].username === username) {
+                                        userId = key;
+                                        break;
+                                    }
+                                }
+                                
+                                if (userId) {
+                                    const banData = {
+                                        userId: userId,      
+                                        username: username,      
+                                        bannedBy: currentUser.username,      
+                                        reason: reason,      
+                                        timestamp: new Date().toISOString(),      
+                                        duration: duration
+                                    };
+                                    
+                                    // Add ban record
+                                    const banRef = push(ref(database, 'bans'));
+                                    return set(banRef, banData)
+                                        .then(() => {
+                                            // Add system message
+                                            const systemMessage = {
+                                                type: 'system',      
+                                                content: `${username} has been ${duration === 'perm' ? 'permanently' : 'temporarily'} banned by ${currentUser.username}`,      
+                                                timestamp: new Date().toISOString()
+                                            };
+                                            
+                                            const chatRef = push(ref(database, 'chat'));
+                                            return set(chatRef, systemMessage);
+                                        })
+                                        .then(() => {
+                                            alert('User banned successfully');
+                                            document.getElementById('banUserInput').value = '';
+                                            document.getElementById('banReason').value = '';
+                                        })
+                                        .catch((error) => {
+                                            alert('Error banning user: ' + error.message);
+                                        });
+                                } else {
+                                    throw new Error('User not found');
+                                }
+                            } else {
+                                throw new Error('No users found');
+                            }
+                        }, { onlyOnce: true });
+                    });
+                }
+            }
+            
+            // Load chat messages
+            function loadChatMessages() {
+                chatMessages.innerHTML = '';
+                
+                const chatRef = ref(database, 'chat');
+                onChildAdded(chatRef, (snapshot) => {
+                    const message = snapshot.val();
+                    displayMessage(message, snapshot.key);
+                });
+            }
+            
+            // Display a message
+            function displayMessage(message, messageId) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message';
+                
+                if (message.type === 'system') {
+                    messageElement.classList.add('system-message');
+                    messageElement.innerHTML = `
+                        <div class="message-content">${message.content}</div>
+                        <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
+                    `;
+                } else {
+                    // Regular message
+                    const messageRole = message.role || 'member';
+                    const roleClass = `role-${messageRole}`;
+                    
+                    messageElement.innerHTML = `
+                        <div class="message-header">
+                            <div class="message-user">
+                                <span class="user-role ${roleClass}">${messageRole.charAt(0).toUpperCase() + messageRole.slice(1)}</span>
+                                ${message.username}
+                            </div>
+                            <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
+                        </div>
+                        <div class="message-content">${message.content}</div>
+                        ${canDeleteMessage(message.username) ? `
+                            <div class="message-actions">
+                                <button class="action-btn delete-btn" data-id="${messageId}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    // Add delete functionality
+                    const deleteBtn = messageElement.querySelector('.delete-btn');
+                    if (deleteBtn) {
+                        deleteBtn.addEventListener('click', () => {
+                            deleteMessage(messageId);
+                        });
+                    }
+                }
+                
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Check if current user can delete a message
+            function canDeleteMessage(messageUsername) {
+                // Admins and moderators can delete any message
+                // Users can delete their own messages
+                return userRole === 'admin' || userRole === 'moderator' || 
+                       (currentUser && currentUser.username === messageUsername);
+            }
+            
+            // Delete a message
+            function deleteMessage(messageId) {
+                if (confirm('Are you sure you want to delete this message?')) {
+                    remove(ref(database, 'chat/' + messageId))
+                        .catch((error) => {
+                            alert('Error deleting message: ' + error.message);
+                        });
+                }
+            }
+            
+            // Send message
+            function sendMessage() {
+                const content = messageInput.value.trim();
+                if (!content) return;
+                
+                if (!currentUser) {
+                    alert('You must be logged in to send messages');
+                    return;
+                }
+                
+                // Check if user is banned
+                const bansRef = ref(database, 'bans');
+                onValue(bansRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        const bans = snapshot.val();
+                        let isBanned = false;
+                        
+                        for (const banId in bans) {
+                            const ban = bans[banId];
+                            // Check if permanent ban or temporary ban still active
+                            if (ban.duration === 'perm') {
+                                isBanned = true;
+                                break;
+                            } else if (ban.duration === 'temp') {
+                                const banTime = new Date(ban.timestamp).getTime();
+                                const now = new Date().getTime();
+                                // 24 hours in milliseconds
+                                if (now - banTime < 24 * 60 * 60 * 1000) {
+                                    isBanned = true;
+                                    break;
+                                } else {
+                                    // Remove expired temp ban
+                                    remove(ref(database, 'bans/' + banId));
+                                }
+                            }
+                        }
+                        
+                        if (isBanned) {
+                            alert('You are banned from the chat');
+                            return;
+                        }
+                    }
+                    
+                    // Send message
+                    const messageData = {
+                        username: currentUser.username,      
+                        role: userRole,      
+                        content: content,      
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    const chatRef = push(ref(database, 'chat'));
+                    return set(chatRef, messageData);
+                }, { onlyOnce: true })
+                .then(() => {
+                    messageInput.value = '';
+                })
+                .catch((error) => {
+                    alert('Error sending message: ' + error.message);
+                });
+            }
+            
+            // Auth state change listener
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    // User is signed out
+                    currentUser = null;
+                    userRole = 'member';
+                    authContainer.style.display = 'flex';
+                    userInfo.innerHTML = '';
+                    moderationPanel.classList.remove('active');
+                }
+            });
+            
+            // Weather Data Functions
+            function loadWeatherData() {
+                const weatherLoading = document.getElementById('weather-loading');
+                const warningLoading = document.getElementById('warning-loading');
+                const currentWeather = document.getElementById('current-weather');
+                const weatherWarnings = document.getElementById('weather-warnings');
+                
+                // Fetch current weather
+                fetch('https://rss.smg.gov.mo/c_ActualWeather_rss.xml')
+                    .then(response => response.text())
+                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                    .then(data => {
+                        weatherLoading.style.display = 'none';
+                        
+                        const items = data.querySelectorAll("item");
+                        if (items.length > 0) {
+                            const item = items[0];
+                            const title = item.querySelector("title").textContent;
+                            const description = item.querySelector("description").textContent;
+                            
+                            // Parse weather data
+                            const tempMatch = description.match(/Temperature: ([\d.]+)C/);
+                            const humidityMatch = description.match(/Humidity: ([\d.]+)%/);
+                            const pressureMatch = description.match(/Pressure: ([\d.]+) hPa/);
+                            
+                            const temp = tempMatch ? tempMatch[1] : '--';
+                            const humidity = humidityMatch ? humidityMatch[1] : '--';
+                            const pressure = pressureMatch ? pressureMatch[1] : '--';
+                            
+                            // Simple weather icon based on description
+                            let weatherIcon = 'fas fa-cloud-sun';
+                            if (description.includes('rain')) {
+                                weatherIcon = 'fas fa-cloud-rain';
+                            } else if (description.includes('cloud')) {
+                                weatherIcon = 'fas fa-cloud';
+                            } else if (description.includes('sun')) {
+                                weatherIcon = 'fas fa-sun';
+                            }
+                            
+                            currentWeather.innerHTML = `
+                                <div class="weather-data">
+                                    <div class="weather-main">
+                                        <div class="weather-icon">
+                                            <i class="${weatherIcon}"></i>
+                                        </div>
+                                        <div class="weather-details">
+                                            <div class="weather-temp">${temp}°C</div>
+                                            <div class="weather-desc">${title}</div>
+                                        </div>
+                                    </div>
+                                    <div class="weather-extra">
+                                        <div>
+                                            <span>Humidity</span>
+                                            <strong>${humidity}%</strong>
+                                        </div>
+                                        <div>
+                                            <span>Pressure</span>
+                                            <strong>${pressure} hPa</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            currentWeather.innerHTML = '<p>Weather data not available</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching weather: ', error);
+                        weatherLoading.style.display = 'none';
+                        currentWeather.innerHTML = '<p>Error loading weather data</p>';
+                    });
+                
+                // Fetch weather warnings
+                fetch('https://rss.smg.gov.mo/c_WSignal_rss.xml')
+                    .then(response => response.text())
+                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                    .then(data => {
+                        warningLoading.style.display = 'none';
+                        
+                        const items = data.querySelectorAll("item");
+                        if (items.length > 0) {
+                            let warningsHTML = '';
+                            items.forEach(item => {
+                                const title = item.querySelector("title").textContent;
+                                const description = item.querySelector("description").textContent;
+                                const pubDate = item.querySelector("pubDate").textContent;
+                                
+                                // Format date
+                                const date = new Date(pubDate);
+                                const formattedDate = date.toLocaleString();
+                                
+                                // Simple warning icon
+                                let warningIcon = 'fas fa-exclamation-triangle';
+                                if (title.includes('Typhoon') || title.includes('颱風')) {
+                                    warningIcon = 'fas fa-wind';
+                                } else if (title.includes('Rain') || title.includes('雨')) {
+                                    warningIcon = 'fas fa-cloud-showers-heavy';
+                                } else if (title.includes('Thunder') || title.includes('雷')) {
+                                    warningIcon = 'fas fa-bolt';
+                                }
+                                
+                                warningsHTML += `
+                                    <div class="warning-item">
+                                        <div class="warning-logo">
+                                            <i class="${warningIcon}"></i>
+                                        </div>
+                                        <div class="warning-details">
+                                            <div class="warning-title-text">${title}</div>
+                                            <div class="warning-desc">${description}</div>
+                                            <div class="warning-issued">Issued: ${formattedDate}</div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            weatherWarnings.innerHTML = warningsHTML;
+                        } else {
+                            weatherWarnings.innerHTML = `
+                                <div class="no-warning">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>No current weather warnings</p>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching warnings: ', error);
+                        warningLoading.style.display = 'none';
+                        weatherWarnings.innerHTML = '<p>Error loading warnings data</p>';
+                    });
+            }
+            
+            // Initialize the application
+            function init() {
+                // Update times immediately
+                updateTrafficTimes();
+                
+                // Update times every second
+                setInterval(updateTrafficTimes, 1000);
+                
+                // Initialize Firebase connection status
+                updateFirebaseStatus(true);
+                
+                // Check IP ban status
+                checkIPBanStatus();
+                
+                // Load weather data
+                loadWeatherData();
+            }
+            
+            // Start the application
+            init();
         });
     </script>
+    
+    <script async src="https://iframely.net/embed.js"></script>
 </body>
 </html>
