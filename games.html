@@ -10,7 +10,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
         // Your web app's Firebase configuration
@@ -36,7 +36,7 @@
                 const data = await response.json();
                 return data.ip;
             } catch (error) {
-                console.error("Error getting IP:", error);
+                console.error("Error getting IP: ", error);
                 return "unknown";
             }
         }
@@ -53,7 +53,7 @@
                     timestamp: timestamp
                 });
             } catch (error) {
-                console.error("Error logging game play:", error);
+                console.error("Error logging game play: ", error);
             }
         }
 
@@ -61,7 +61,7 @@
         async function getGames() {
             try {
                 // Get all games ordered by uploadDate
-                const gamesQuery = query(collection(db, "games"), orderBy("uploadDate", "desc"));
+                const gamesQuery = query(collection(db, "games"), orderBy("createdAt", "desc"));
                 const gamesSnapshot = await getDocs(gamesQuery);
                 
                 const games = [];
@@ -93,7 +93,7 @@
                 const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
                 
                 const newGames = games.filter(game => {
-                    const uploadDate = game.uploadDate.toDate ? game.uploadDate.toDate() : new Date(game.uploadDate);
+                    const uploadDate = game.createdAt?.toDate ? game.createdAt.toDate() : new Date(game.createdAt);
                     return uploadDate >= sevenDaysAgo;
                 });
                 
@@ -102,7 +102,7 @@
                 
                 return { topGames, newGames, remainingGames };
             } catch (error) {
-                console.error("Error getting games:", error);
+                console.error("Error getting games: ", error);
                 return { topGames: [], newGames: [], remainingGames: [] };
             }
         }
@@ -138,7 +138,7 @@
             gameCard.setAttribute('data-title', game.title);
             gameCard.setAttribute('data-description', game.description);
             
-            const uploadDate = game.uploadDate.toDate ? game.uploadDate.toDate() : new Date(game.uploadDate);
+            const uploadDate = game.createdAt?.toDate ? game.createdAt.toDate() : new Date(game.createdAt);
             const formattedDate = uploadDate.toLocaleDateString();
             
             gameCard.innerHTML = `
