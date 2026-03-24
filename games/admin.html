@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Universe - Admin Panel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game Universe - Admin Panel (Fixed)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
         :root {
             --primary-black: #0a0a0a;
@@ -20,7 +17,6 @@
             --admin-blue-light: #3b82f6;
             --admin-red: #dc2626;
             --admin-green: #16a34a;
-            --admin-purple: #8b5cf6;
             --pixel-font: 'Press Start 2P', cursive;
             --tech-font: 'Orbitron', sans-serif;
         }
@@ -92,7 +88,8 @@
             border: 1px solid transparent;
         }
         
-        nav a:hover, nav a.active {
+        nav a:hover,
+        nav a.active {
             background: rgba(59, 130, 246, 0.2);
             color: var(--admin-blue-light);
             border: 1px solid var(--admin-blue-light);
@@ -175,6 +172,7 @@
             border-bottom: none;
             margin-right: 5px;
             transition: all 0.3s ease;
+            user-select: none;
         }
         
         .tab.active {
@@ -192,8 +190,14 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .games-grid {
@@ -243,6 +247,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             font-family: var(--pixel-font);
             letter-spacing: 1px;
+            user-select: none;
         }
         
         .game-info {
@@ -258,6 +263,7 @@
             color: var(--accent-white);
             font-family: var(--pixel-font);
             letter-spacing: 1px;
+            user-select: text;
         }
         
         .game-description {
@@ -266,6 +272,7 @@
             line-height: 1.5;
             margin-bottom: 20px;
             flex-grow: 1;
+            user-select: text;
         }
         
         .game-meta {
@@ -275,6 +282,7 @@
             font-size: 0.8rem;
             margin-bottom: 15px;
             font-family: var(--tech-font);
+            user-select: none;
         }
         
         .admin-actions {
@@ -292,6 +300,7 @@
             transition: all 0.3s ease;
             font-size: 0.8rem;
             letter-spacing: 1px;
+            user-select: none;
         }
         
         .btn-edit {
@@ -304,12 +313,7 @@
             color: white;
         }
         
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn:hover:not(:disabled) {
+        .btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
         }
@@ -342,8 +346,8 @@
             color: var(--admin-blue-light);
         }
         
-        .form-group input,
-        .form-group textarea,
+        .form-group input, 
+        .form-group textarea, 
         .form-group select {
             width: 100%;
             padding: 12px;
@@ -370,6 +374,7 @@
             font-family: var(--pixel-font);
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            user-select: none;
         }
         
         .btn-submit:hover {
@@ -382,7 +387,7 @@
             background: rgba(30, 30, 30, 0.8);
             border: 2px solid var(--admin-blue-light);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto;
             margin-bottom: 40px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
@@ -390,12 +395,14 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px;
         }
         
         th, td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            user-select: text;
         }
         
         th {
@@ -408,29 +415,6 @@
         
         tr:hover {
             background: rgba(30, 58, 138, 0.1);
-        }
-        
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-            gap: 10px;
-        }
-        
-        .pagination button {
-            padding: 10px 15px;
-            background: rgba(30, 58, 138, 0.3);
-            color: var(--admin-blue-light);
-            border: 1px solid var(--admin-blue-light);
-            cursor: pointer;
-            font-family: var(--tech-font);
-            transition: all 0.3s ease;
-        }
-        
-        .pagination button:hover,
-        .pagination button.active {
-            background: var(--admin-blue-light);
-            color: var(--primary-black);
         }
         
         .search-container {
@@ -456,6 +440,7 @@
             cursor: pointer;
             font-family: var(--tech-font);
             font-weight: 600;
+            user-select: none;
         }
         
         .modal {
@@ -468,6 +453,8 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
             animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            user-select: none;
         }
         
         .modal-content {
@@ -503,6 +490,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            user-select: none;
         }
         
         .close:hover {
@@ -525,112 +513,13 @@
             display: none;
         }
         
-        .collection-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--admin-blue-light);
         }
         
-        .collection-card {
-            background: rgba(30, 30, 30, 0.8);
-            border: 2px solid var(--admin-purple);
-            border-radius: 8px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .collection-card:hover {
-            transform: translateY(-5px);
-            background: rgba(40, 40, 40, 0.9);
-            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
-        }
-        
-        .collection-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--admin-purple);
-        }
-        
-        .collection-title {
-            font-size: 1.2rem;
-            font-family: var(--pixel-font);
-            color: var(--admin-purple);
-            letter-spacing: 1px;
-        }
-        
-        .collection-description {
-            color: #a9a9a9;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .collection-games {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .collection-game {
-            background: rgba(139, 92, 246, 0.2);
-            color: var(--admin-purple);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-family: var(--tech-font);
-        }
-        
-        .collection-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn-collection-edit {
-            background: var(--admin-purple);
-            color: white;
-        }
-        
-        .btn-collection-delete {
-            background: var(--admin-red);
-            color: white;
-        }
-        
-        .collection-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        .collection-form-full {
-            grid-column: 1 / -1;
-        }
-        
-        .collection-games-select {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid var(--admin-purple);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            margin-top: 5px;
-        }
-        
-        .collection-games-select label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--accent-white);
-        }
-        
-        .collection-games-select input[type="checkbox"] {
-            margin-right: 8px;
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -656,10 +545,6 @@
             .tab {
                 padding: 10px 15px;
                 font-size: 0.7rem;
-            }
-            
-            .collection-form {
-                grid-template-columns: 1fr;
             }
         }
         
@@ -721,64 +606,25 @@
         
         <div class="tabs">
             <div class="tab active" data-tab="games">Manage Games</div>
-            <div class="tab" data-tab="collections">Collections</div>
             <div class="tab" data-tab="plays">Play Records</div>
             <div class="tab" data-tab="create">Create Game</div>
         </div>
         
         <div class="tab-content active" id="games-tab">
             <div class="search-container">
-                <input type="text" id="search-games" placeholder="Search games...">
+                <input type="text" id="search-games" placeholder="Search games by title or description..." />
                 <button id="search-games-btn"><i class="fas fa-search"></i> Search</button>
             </div>
             
-            <div class="games-grid" id="games-container">
+            <div id="games-container" class="games-grid">
                 <!-- Games will be loaded here -->
-            </div>
-        </div>
-        
-        <div class="tab-content" id="collections-tab">
-            <div class="search-container">
-                <input type="text" id="search-collections" placeholder="Search collections...">
-                <button id="search-collections-btn"><i class="fas fa-search"></i> Search</button>
-            </div>
-            
-            <div class="collection-grid" id="collections-container">
-                <!-- Collections will be loaded here -->
-            </div>
-            
-            <div class="form-container">
-                <h3 class="form-title">CREATE NEW COLLECTION</h3>
-                <form id="collection-form">
-                    <div class="collection-form">
-                        <div class="form-group collection-form-full">
-                            <label for="collection-name">Collection Name</label>
-                            <input type="text" id="collection-name" required>
-                            <div class="error-message" id="collection-name-error"></div>
-                        </div>
-                        
-                        <div class="form-group collection-form-full">
-                            <label for="collection-description">Description</label>
-                            <textarea id="collection-description" required></textarea>
-                            <div class="error-message" id="collection-description-error"></div>
-                        </div>
-                        
-                        <div class="form-group collection-form-full">
-                            <label>Select Games</label>
-                            <div class="collection-games-select" id="games-selection">
-                                <!-- Games will be loaded here -->
-                            </div>
-                            <div class="error-message" id="collection-games-error"></div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit">CREATE COLLECTION</button>
-                </form>
+                <div class="loading">Loading games...</div>
             </div>
         </div>
         
         <div class="tab-content" id="plays-tab">
             <div class="search-container">
-                <input type="text" id="search-plays" placeholder="Search by IP or game...">
+                <input type="text" id="search-plays" placeholder="Search by IP or game..." />
                 <button id="search-plays-btn"><i class="fas fa-search"></i> Search</button>
             </div>
             
@@ -788,51 +634,44 @@
                         <tr>
                             <th>IP Address</th>
                             <th>Game</th>
-                            <th>Date & Time</th>
+                            <th>Date &amp; Time</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="plays-table-body">
-                        <!-- Play records will be loaded here -->
+                        <tr><td colspan="4" class="loading">Loading play records...</td></tr>
                     </tbody>
                 </table>
-            </div>
-            
-            <div class="pagination">
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>Next <i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
         
         <div class="tab-content" id="create-tab">
             <div class="form-container">
                 <h3 class="form-title">CREATE NEW GAME</h3>
-                <form id="game-form">
+                <form id="game-form" novalidate>
                     <div class="form-group">
-                        <label for="game-title">Game Title</label>
-                        <input type="text" id="game-title" required>
+                        <label for="game-title">Game Title *</label>
+                        <input type="text" id="game-title" required />
                         <div class="error-message" id="title-error"></div>
                     </div>
                     <div class="form-group">
-                        <label for="game-description">Description</label>
+                        <label for="game-description">Description *</label>
                         <textarea id="game-description" required></textarea>
                         <div class="error-message" id="description-error"></div>
                     </div>
                     <div class="form-group">
-                        <label for="game-image">Image URL</label>
-                        <input type="url" id="game-image" required>
+                        <label for="game-image">Image URL * (https://...)</label>
+                        <input type="url" id="game-image" placeholder="https://example.com/image.jpg" required />
                         <div class="error-message" id="image-error"></div>
                     </div>
                     <div class="form-group">
-                        <label for="game-url">Game URL</label>
-                        <input type="url" id="game-url" required>
+                        <label for="game-url">Game URL * (https://...)</label>
+                        <input type="url" id="game-url" placeholder="https://example.com/game.html" required />
                         <div class="error-message" id="url-error"></div>
                     </div>
                     <div class="form-group">
                         <label for="game-rating">Rating (1-5)</label>
-                        <input type="number" id="game-rating" min="1" max="5" step="0.1" value="4.5" required>
+                        <input type="number" id="game-rating" min="1" max="5" step="0.1" value="4.5" required />
                         <div class="error-message" id="rating-error"></div>
                     </div>
                     <div class="form-group">
@@ -849,37 +688,37 @@
     </div>
     
     <!-- Edit Game Modal -->
-    <div id="editModal" class="modal">
+    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">EDIT GAME</h2>
-                <span class="close">×</span>
+                <h2 id="modalTitle" class="modal-title">EDIT GAME</h2>
+                <span class="close" role="button" aria-label="Close editing form">×</span>
             </div>
-            <form id="edit-game-form">
-                <input type="hidden" id="edit-game-id">
+            <form id="edit-game-form" novalidate>
+                <input type="hidden" id="edit-game-id" />
                 <div class="form-group">
-                    <label for="edit-game-title">Game Title</label>
-                    <input type="text" id="edit-game-title" required>
+                    <label for="edit-game-title">Game Title *</label>
+                    <input type="text" id="edit-game-title" required />
                     <div class="error-message" id="edit-title-error"></div>
                 </div>
                 <div class="form-group">
-                    <label for="edit-game-description">Description</label>
+                    <label for="edit-game-description">Description *</label>
                     <textarea id="edit-game-description" required></textarea>
                     <div class="error-message" id="edit-description-error"></div>
                 </div>
                 <div class="form-group">
-                    <label for="edit-game-image">Image URL</label>
-                    <input type="url" id="edit-game-image" required>
+                    <label for="edit-game-image">Image URL *</label>
+                    <input type="url" id="edit-game-image" required />
                     <div class="error-message" id="edit-image-error"></div>
                 </div>
                 <div class="form-group">
-                    <label for="edit-game-url">Game URL</label>
-                    <input type="url" id="edit-game-url" required>
+                    <label for="edit-game-url">Game URL *</label>
+                    <input type="url" id="edit-game-url" required />
                     <div class="error-message" id="edit-url-error"></div>
                 </div>
                 <div class="form-group">
                     <label for="edit-game-rating">Rating (1-5)</label>
-                    <input type="number" id="edit-game-rating" min="1" max="5" step="0.1" required>
+                    <input type="number" id="edit-game-rating" min="1" max="5" step="0.1" required />
                     <div class="error-message" id="edit-rating-error"></div>
                 </div>
                 <div class="form-group">
@@ -894,297 +733,69 @@
         </div>
     </div>
     
-    <!-- Edit Collection Modal -->
-    <div id="editCollectionModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">EDIT COLLECTION</h2>
-                <span class="close" id="close-edit-collection">×</span>
-            </div>
-            <form id="edit-collection-form">
-                <input type="hidden" id="edit-collection-id">
-                <div class="collection-form">
-                    <div class="form-group collection-form-full">
-                        <label for="edit-collection-name">Collection Name</label>
-                        <input type="text" id="edit-collection-name" required>
-                        <div class="error-message" id="edit-collection-name-error"></div>
-                    </div>
-                    
-                    <div class="form-group collection-form-full">
-                        <label for="edit-collection-description">Description</label>
-                        <textarea id="edit-collection-description" required></textarea>
-                        <div class="error-message" id="edit-collection-description-error"></div>
-                    </div>
-                    
-                    <div class="form-group collection-form-full">
-                        <label>Select Games</label>
-                        <div class="collection-games-select" id="edit-games-selection">
-                            <!-- Games will be loaded here -->
-                        </div>
-                        <div class="error-message" id="edit-collection-games-error"></div>
-                    </div>
-                </div>
-                <button type="submit" class="btn-submit">UPDATE COLLECTION</button>
-            </form>
-        </div>
-    </div>
-    
     <footer>
         <p>2023 GAME UNIVERSE ADMIN PANEL. ALL RIGHTS RESERVED.</p>
     </footer>
     
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script>
-        // Firebase configuration
+        // ==================== FIREBASE INITIALIZATION ====================
         const firebaseConfig = {
-            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",   
-            authDomain: "blacket-65c5b.firebaseapp.com",   
-            projectId: "blacket-65c5b",   
-            storageBucket: "blacket-65c5b.firebasestorage.app",   
-            messagingSenderId: "497023905730",   
-            appId: "1:497023905730:web:a59093052a3f93a476305b",   
+            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
+            authDomain: "blacket-65c5b.firebaseapp.com",
+            projectId: "blacket-65c5b",
+            storageBucket: "blacket-65c5b.firebasestorage.app",
+            messagingSenderId: "497023905730",
+            appId: "1:497023905730:web:a59093052a3f93a476305b",
             measurementId: "G-XZZR5DH79B"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Game data structure
-        const gamesRef = db.collection('games');
-        const playsRef = db.collection('plays');
-        const collectionsRef = db.collection('collections');
+        // ==================== DOM ELEMENTS ====================
+        const gamesContainer = document.getElementById("games-container");
+        const playsTableBody = document.getElementById("plays-table-body");
+        const gameForm = document.getElementById("game-form");
+        const editGameForm = document.getElementById("edit-game-form");
+        const editModal = document.getElementById("editModal");
+        const closeModal = document.querySelector(".close");
+        const tabs = document.querySelectorAll(".tab");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const searchGamesInput = document.getElementById("search-games");
+        const searchPlaysInput = document.getElementById("search-plays");
+        const totalGamesEl = document.getElementById("total-games");
+        const totalPlaysEl = document.getElementById("total-plays");
+        const uniqueIPsEl = document.getElementById("unique-ips");
+        const newGamesEl = document.getElementById("new-games");
 
-        // DOM Elements
-        const gamesContainer = document.getElementById('games-container');
-        const collectionsContainer = document.getElementById('collections-container');
-        const playsTableBody = document.getElementById('plays-table-body');
-        const gameForm = document.getElementById('game-form');
-        const collectionForm = document.getElementById('collection-form');
-        const editGameForm = document.getElementById('edit-game-form');
-        const editCollectionForm = document.getElementById('edit-collection-form');
-        const editModal = document.getElementById('editModal');
-        const editCollectionModal = document.getElementById('editCollectionModal');
-        const closeModal = document.querySelector('.close');
-        const closeEditCollection = document.getElementById('close-edit-collection');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const searchGamesInput = document.getElementById('search-games');
-        const searchCollectionsInput = document.getElementById('search-collections');
-        const searchPlaysInput = document.getElementById('search-plays');
-        const totalGamesEl = document.getElementById('total-games');
-        const totalPlaysEl = document.getElementById('total-plays');
-        const uniqueIPsEl = document.getElementById('unique-ips');
-        const newGamesEl = document.getElementById('new-games');
-        const gamesSelection = document.getElementById('games-selection');
-        const editGamesSelection = document.getElementById('edit-games-selection');
-
-        // Tab switching
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs and contents
-                tabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                tab.classList.add('active');
-                
-                // Show corresponding content
-                const tabId = tab.getAttribute('data-tab');
-                document.getElementById(`${tabId}-tab`).classList.add('active');
-                
-                // Load collections when switching to collections tab
-                if (tabId === 'collections') {
-                    loadCollections();
-                    loadGamesForSelection();
-                }
+        // ==================== HELPER FUNCTIONS ====================
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text.replace(/[&<>"']/g, function(match) {
+                if (match === '&') return '&amp;';
+                if (match === '<') return '&lt;';
+                if (match === '>') return '&gt;';
+                if (match === '"') return '&quot;';
+                return '&#39;';
             });
-        });
+        }
 
-        // Close modals
-        closeModal.addEventListener('click', () => {
-            editModal.style.display = 'none';
-        });
-
-        closeEditCollection.addEventListener('click', () => {
-            editCollectionModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === editModal) {
-                editModal.style.display = 'none';
-            }
-            if (event.target === editCollectionModal) {
-                editCollectionModal.style.display = 'none';
-            }
-        });
-
-        // Format date
         function formatDate(date) {
+            if (!date) return "Unknown";
+            if (date.toDate) date = date.toDate();
             return new Date(date).toLocaleString();
         }
 
-        // Format date for "NEW" badge
         function isRecent(date) {
+            if (!date) return false;
             const now = new Date();
             const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
             return diffDays <= 7;
         }
 
-        // Create game card HTML
-        function createGameCard(game) {
-            const createdAt = game.createdAt.toDate();
-            const isNew = isRecent(createdAt);
-            const badge = isNew ? 'NEW' : '';
-            
-            return `
-                <div class="game-card" data-id="${game.id}">
-                    <div class="game-banner" style="background-image: url('${game.image}');">
-                        ${badge ? `<div class="game-badge">${badge}</div>` : ''}
-                    </div>
-                    <div class="game-info">
-                        <h3 class="game-title">${game.title}</h3>
-                        <p class="game-description">${game.description}</p>
-                        <div class="game-meta">
-                            <span><i class="fas fa-star"></i> ${game.rating}</span>
-                            <span><i class="${game.multiplayer ? 'fas fa-users' : 'fas fa-user'}"></i> ${game.multiplayer ? 'Multiplayer' : 'Single Player'}</span>
-                        </div>
-                        <div class="admin-actions">
-                            <button class="btn btn-edit" data-id="${game.id}">Edit</button>
-                            <button class="btn btn-delete" data-id="${game.id}">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Create collection card HTML
-        function createCollectionCard(collection, gamesMap) {
-            const gameNames = collection.games.map(gameId => gamesMap[gameId] || 'Unknown Game');
-            
-            return `
-                <div class="collection-card" data-id="${collection.id}">
-                    <div class="collection-header">
-                        <h3 class="collection-title">${collection.name}</h3>
-                    </div>
-                    <p class="collection-description">${collection.description}</p>
-                    <div class="collection-games">
-                        ${gameNames.map(name => `<span class="collection-game">${name}</span>`).join('')}
-                    </div>
-                    <div class="collection-actions">
-                        <button class="btn btn-collection-edit" data-id="${collection.id}">Edit</button>
-                        <button class="btn btn-collection-delete" data-id="${collection.id}">Delete</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Show error message
-        function showError(fieldId, message) {
-            const errorElement = document.getElementById(fieldId);
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-        }
-
-        // Hide error message
-        function hideError(fieldId) {
-            const errorElement = document.getElementById(fieldId);
-            errorElement.style.display = 'none';
-        }
-
-        // Validate form
-        function validateForm(formId) {
-            let isValid = true;
-            
-            // Title validation
-            const title = document.getElementById(`${formId}-title`);
-            if (!title.value.trim()) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}title-error`, 'Title is required');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit' ? 'edit-' : ''}title-error`);
-            }
-            
-            // Description validation
-            const description = document.getElementById(`${formId === 'edit' ? 'edit-' : ''}game-description`);
-            if (!description.value.trim()) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}description-error`, 'Description is required');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit' ? 'edit-' : ''}description-error`);
-            }
-            
-            // Image URL validation
-            const image = document.getElementById(`${formId === 'edit' ? 'edit-' : ''}game-image`);
-            if (!image.value.trim()) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}image-error`, 'Image URL is required');
-                isValid = false;
-            } else if (!isValidUrl(image.value)) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}image-error`, 'Please enter a valid image URL');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit' ? 'edit-' : ''}image-error`);
-            }
-            
-            // Game URL validation
-            const url = document.getElementById(`${formId === 'edit' ? 'edit-' : ''}game-url`);
-            if (!url.value.trim()) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}url-error`, 'Game URL is required');
-                isValid = false;
-            } else if (!isValidUrl(url.value)) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}url-error`, 'Please enter a valid game URL');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit' ? 'edit-' : ''}url-error`);
-            }
-            
-            // Rating validation
-            const rating = document.getElementById(`${formId === 'edit' ? 'edit-' : ''}game-rating`);
-            if (!rating.value || rating.value < 1 || rating.value > 5) {
-                showError(`${formId === 'edit' ? 'edit-' : ''}rating-error`, 'Rating must be between 1 and 5');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit' ? 'edit-' : ''}rating-error`);
-            }
-            
-            return isValid;
-        }
-
-        // Validate collection form
-        function validateCollectionForm(formId) {
-            let isValid = true;
-            
-            // Name validation
-            const name = document.getElementById(`${formId}-name`);
-            if (!name.value.trim()) {
-                showError(`${formId === 'edit-' ? 'edit-' : ''}collection-name-error`, 'Collection name is required');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit-' ? 'edit-' : ''}collection-name-error`);
-            }
-            
-            // Description validation
-            const description = document.getElementById(`${formId === 'edit-' ? 'edit-' : ''}collection-description`);
-            if (!description.value.trim()) {
-                showError(`${formId === 'edit-' ? 'edit-' : ''}collection-description-error`, 'Description is required');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit-' ? 'edit-' : ''}collection-description-error`);
-            }
-            
-            // Games validation
-            const selectedGames = document.querySelectorAll(`#${formId === 'edit-' ? 'edit-' : ''}games-selection input[type="checkbox"]:checked`);
-            if (selectedGames.length === 0) {
-                showError(`${formId === 'edit-' ? 'edit-' : ''}collection-games-error`, 'At least one game must be selected');
-                isValid = false;
-            } else {
-                hideError(`${formId === 'edit-' ? 'edit-' : ''}collection-games-error`);
-            }
-            
-            return isValid;
-        }
-
-        // Validate URL
         function isValidUrl(string) {
             try {
                 new URL(string);
@@ -1194,509 +805,365 @@
             }
         }
 
-        // Load games from Firebase
-        async function loadGames() {
-            gamesContainer.innerHTML = '<p>Loading games...</p>';
+        // Show/hide error messages
+        function showError(elementId, message) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.textContent = message;
+                el.style.display = "block";
+            }
+        }
+
+        function hideError(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.textContent = "";
+                el.style.display = "none";
+            }
+        }
+
+        // Generic form validation for both create and edit
+        function validateForm(formType) {
+            let isValid = true;
+            const prefix = formType === "edit" ? "edit-" : "";
             
+            const title = document.getElementById(`${prefix}game-title`).value.trim();
+            if (!title) {
+                showError(`${prefix}title-error`, "Title is required");
+                isValid = false;
+            } else {
+                hideError(`${prefix}title-error`);
+            }
+            
+            const description = document.getElementById(`${prefix}game-description`).value.trim();
+            if (!description) {
+                showError(`${prefix}description-error`, "Description is required");
+                isValid = false;
+            } else {
+                hideError(`${prefix}description-error`);
+            }
+            
+            const image = document.getElementById(`${prefix}game-image`).value.trim();
+            if (!image) {
+                showError(`${prefix}image-error`, "Image URL is required");
+                isValid = false;
+            } else if (!isValidUrl(image)) {
+                showError(`${prefix}image-error`, "Please enter a valid URL (starting with http:// or https://)");
+                isValid = false;
+            } else {
+                hideError(`${prefix}image-error`);
+            }
+            
+            const url = document.getElementById(`${prefix}game-url`).value.trim();
+            if (!url) {
+                showError(`${prefix}url-error`, "Game URL is required");
+                isValid = false;
+            } else if (!isValidUrl(url)) {
+                showError(`${prefix}url-error`, "Please enter a valid URL (starting with http:// or https://)");
+                isValid = false;
+            } else {
+                hideError(`${prefix}url-error`);
+            }
+            
+            const rating = parseFloat(document.getElementById(`${prefix}game-rating`).value);
+            if (isNaN(rating) || rating < 1 || rating > 5) {
+                showError(`${prefix}rating-error`, "Rating must be between 1 and 5");
+                isValid = false;
+            } else {
+                hideError(`${prefix}rating-error`);
+            }
+            
+            return isValid;
+        }
+
+        // ==================== GAMES ====================
+        async function loadGames() {
+            gamesContainer.innerHTML = '<div class="loading">Loading games...</div>';
             try {
-                const snapshot = await gamesRef.orderBy('createdAt', 'desc').get();
-                
+                const snapshot = await gamesRef.orderBy("createdAt", "desc").get();
                 if (snapshot.empty) {
-                    gamesContainer.innerHTML = '<p>No games available.</p>';
+                    gamesContainer.innerHTML = "<p>No games available. Create your first game!</p>";
+                    totalGamesEl.textContent = "0";
+                    newGamesEl.textContent = "0";
                     return;
                 }
                 
                 const games = [];
                 snapshot.forEach(doc => {
-                    games.push({ id: doc.id, ...doc.data() });
+                    const data = doc.data();
+                    games.push({ id: doc.id, ...data });
                 });
                 
-                gamesContainer.innerHTML = games.map(game => createGameCard(game)).join('');
-                
-                // Update stats
+                gamesContainer.innerHTML = games.map(game => createGameCard(game)).join("");
                 totalGamesEl.textContent = games.length;
                 
-                // Count new games
-                const newGames = games.filter(game => isRecent(game.createdAt.toDate()));
-                newGamesEl.textContent = newGames.length;
+                const newGamesCount = games.filter(game => {
+                    if (!game.createdAt) return false;
+                    const date = game.createdAt.toDate ? game.createdAt.toDate() : game.createdAt;
+                    return isRecent(date);
+                }).length;
+                newGamesEl.textContent = newGamesCount;
                 
-                // Attach event listeners
                 attachGameEventListeners();
             } catch (error) {
-                console.error('Error loading games: ', error);
-                gamesContainer.innerHTML = '<p>Error loading games. Please try again later.</p>';
+                console.error("Error loading games:", error);
+                gamesContainer.innerHTML = `<p>Error loading games: ${error.message}. Please check console and Firebase permissions.</p>`;
             }
         }
-
-        // Load collections from Firebase
-        async function loadCollections() {
-            collectionsContainer.innerHTML = '<p>Loading collections...</p>';
+        
+        function createGameCard(game) {
+            const createdAtDate = game.createdAt && game.createdAt.toDate ? game.createdAt.toDate() : null;
+            const isNew = isRecent(createdAtDate);
+            const badge = isNew ? '<div class="game-badge">NEW</div>' : '';
             
-            try {
-                const snapshot = await collectionsRef.orderBy('name').get();
-                
-                if (snapshot.empty) {
-                    collectionsContainer.innerHTML = '<p>No collections available.</p>';
-                    return;
-                }
-                
-                // Get all games to map IDs to titles
-                const gamesSnapshot = await gamesRef.get();
-                const gamesMap = {};
-                gamesSnapshot.forEach(doc => {
-                    gamesMap[doc.id] = doc.data().title;
-                });
-                
-                const collections = [];
-                snapshot.forEach(doc => {
-                    collections.push({ id: doc.id, ...doc.data() });
-                });
-                
-                collectionsContainer.innerHTML = collections.map(collection => 
-                    createCollectionCard(collection, gamesMap)
-                ).join('');
-                
-                // Attach event listeners
-                attachCollectionEventListeners();
-            } catch (error) {
-                console.error('Error loading collections: ', error);
-                collectionsContainer.innerHTML = '<p>Error loading collections. Please try again later.</p>';
-            }
+            return `
+                <div class="game-card" data-id="${escapeHtml(game.id)}">
+                    <div class="game-banner" style="background-image: url('${escapeHtml(game.image)}');">
+                        ${badge}
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">${escapeHtml(game.title)}</h3>
+                        <p class="game-description">${escapeHtml(game.description)}</p>
+                        <div class="game-meta">
+                            <span><i class="fas fa-star"></i> ${game.rating || "N/A"}</span>
+                            <span><i class="${game.multiplayer ? "fas fa-users" : "fas fa-user"}"></i> ${game.multiplayer ? "Multiplayer" : "Single Player"}</span>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn btn-edit" data-id="${escapeHtml(game.id)}">Edit</button>
+                            <button class="btn btn-delete" data-id="${escapeHtml(game.id)}">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
-
-        // Load games for selection
-        async function loadGamesForSelection() {
-            try {
-                const snapshot = await gamesRef.orderBy('title').get();
-                
-                if (snapshot.empty) {
-                    gamesSelection.innerHTML = '<p>No games available.</p>';
-                    editGamesSelection.innerHTML = '<p>No games available.</p>';
-                    return;
-                }
-                
-                const games = [];
-                snapshot.forEach(doc => {
-                    games.push({ id: doc.id, title: doc.data().title });
+        
+        function attachGameEventListeners() {
+            // Edit buttons
+            document.querySelectorAll(".btn-edit").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const gameId = btn.getAttribute("data-id");
+                    try {
+                        const doc = await gamesRef.doc(gameId).get();
+                        if (doc.exists) {
+                            const game = doc.data();
+                            document.getElementById("edit-game-id").value = gameId;
+                            document.getElementById("edit-game-title").value = game.title || "";
+                            document.getElementById("edit-game-description").value = game.description || "";
+                            document.getElementById("edit-game-image").value = game.image || "";
+                            document.getElementById("edit-game-url").value = game.url || "";
+                            document.getElementById("edit-game-rating").value = game.rating || 4.5;
+                            document.getElementById("edit-game-multiplayer").value = game.multiplayer ? "true" : "false";
+                            editModal.style.display = "block";
+                        } else {
+                            alert("Game not found.");
+                        }
+                    } catch (error) {
+                        console.error("Error loading game for edit:", error);
+                        alert("Failed to load game data.");
+                    }
                 });
-                
-                const gamesOptions = games.map(game => 
-                    `<label><input type="checkbox" value="${game.id}"> ${game.title}</label>`
-                ).join('');
-                
-                gamesSelection.innerHTML = gamesOptions;
-                editGamesSelection.innerHTML = gamesOptions;
-            } catch (error) {
-                console.error('Error loading games for selection: ', error);
-                gamesSelection.innerHTML = '<p>Error loading games. Please try again later.</p>';
-                editGamesSelection.innerHTML = '<p>Error loading games. Please try again later.</p>';
-            }
+            });
+            
+            // Delete buttons
+            document.querySelectorAll(".btn-delete").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const gameId = btn.getAttribute("data-id");
+                    if (confirm("Are you sure you want to delete this game? This action cannot be undone.")) {
+                        try {
+                            await gamesRef.doc(gameId).delete();
+                            await loadGames(); // refresh list
+                            alert("Game deleted successfully!");
+                        } catch (error) {
+                            console.error("Error deleting game:", error);
+                            alert("Failed to delete game. Check permissions.");
+                        }
+                    }
+                });
+            });
         }
-
-        // Load play records
+        
+        // ==================== PLAYS ====================
         async function loadPlays() {
-            playsTableBody.innerHTML = '<tr><td colspan="4">Loading play records...</td></tr>';
-            
+            playsTableBody.innerHTML = '<tr><td colspan="4" class="loading">Loading play records...</td></tr>';
             try {
-                const snapshot = await playsRef.orderBy('timestamp', 'desc').limit(50).get();
-                
+                const snapshot = await playsRef.orderBy("timestamp", "desc").limit(50).get();
                 if (snapshot.empty) {
                     playsTableBody.innerHTML = '<tr><td colspan="4">No play records found.</td></tr>';
+                    totalPlaysEl.textContent = "0";
+                    uniqueIPsEl.textContent = "0";
                     return;
                 }
                 
-                const plays = [];
-                const gameTitles = {};
-                
-                // Get all games to map IDs to titles
+                // Fetch all games to map gameId to title
                 const gamesSnapshot = await gamesRef.get();
+                const gameTitles = {};
                 gamesSnapshot.forEach(doc => {
-                    gameTitles[doc.id] = doc.data().title;
+                    gameTitles[doc.id] = doc.data().title || "Unknown Game";
                 });
                 
+                const plays = [];
                 snapshot.forEach(doc => {
                     const play = { id: doc.id, ...doc.data() };
-                    play.gameTitle = gameTitles[play.gameId] || 'Unknown Game';
+                    play.gameTitle = gameTitles[play.gameId] || "Unknown Game";
                     plays.push(play);
                 });
                 
                 playsTableBody.innerHTML = plays.map(play => `
                     <tr>
-                        <td>${play.ip}</td>
-                        <td>${play.gameTitle}</td>
-                        <td>${formatDate(play.timestamp.toDate())}</td>
-                        <td>
-                            <button class="btn btn-delete" data-id="${play.id}">Delete</button>
-                        </td>
+                        <td>${escapeHtml(play.ip)}</td>
+                        <td>${escapeHtml(play.gameTitle)}</td>
+                        <td>${formatDate(play.timestamp)}</td>
+                        <td><button class="btn btn-delete" data-id="${escapeHtml(play.id)}">Delete</button></td>
                     </tr>
-                `).join('');
+                `).join("");
                 
-                // Update stats
                 totalPlaysEl.textContent = plays.length;
+                const uniqueIPs = new Set(plays.map(p => p.ip));
+                uniqueIPsEl.textContent = uniqueIPs.size;
                 
-                // Get unique IPs
-                const uniqueIPs = [...new Set(plays.map(play => play.ip))];
-                uniqueIPsEl.textContent = uniqueIPs.length;
-                
-                // Attach delete event listeners
-                document.querySelectorAll('#plays-table-body .btn-delete').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const playId = e.target.getAttribute('data-id');
-                        if (confirm('Are you sure you want to delete this play record?')) {
+                // Attach delete listeners for plays
+                document.querySelectorAll("#plays-table-body .btn-delete").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        const playId = btn.getAttribute("data-id");
+                        if (confirm("Delete this play record?")) {
                             try {
                                 await playsRef.doc(playId).delete();
-                                loadPlays(); // Reload plays
-                                alert('Play record deleted successfully!');
+                                await loadPlays();
+                                alert("Play record deleted.");
                             } catch (error) {
-                                console.error('Error deleting play record: ', error);
-                                alert('Error deleting play record. Please try again.');
+                                console.error("Error deleting play:", error);
+                                alert("Failed to delete play record.");
                             }
                         }
                     });
                 });
             } catch (error) {
-                console.error('Error loading plays: ', error);
-                playsTableBody.innerHTML = '<tr><td colspan="4">Error loading play records. Please try again later.</td></tr>';
+                console.error("Error loading plays:", error);
+                playsTableBody.innerHTML = `<tr><td colspan="4">Error loading plays: ${error.message}</td></tr>`;
             }
         }
-
-        // Attach event listeners to game cards
-        function attachGameEventListeners() {
-            // Edit buttons
-            document.querySelectorAll('.btn-edit').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const gameId = e.target.getAttribute('data-id');
-                    try {
-                        const doc = await gamesRef.doc(gameId).get();
-                        if (doc.exists) {
-                            const game = doc.data();
-                            document.getElementById('edit-game-id').value = gameId;
-                            document.getElementById('edit-game-title').value = game.title;
-                            document.getElementById('edit-game-description').value = game.description;
-                            document.getElementById('edit-game-image').value = game.image;
-                            document.getElementById('edit-game-url').value = game.url;
-                            document.getElementById('edit-game-rating').value = game.rating;
-                            document.getElementById('edit-game-multiplayer').value = game.multiplayer.toString();
-                            
-                            editModal.style.display = 'block';
-                        }
-                    } catch (error) {
-                        console.error('Error loading game for edit: ', error);
-                        alert('Error loading game data. Please try again.');
-                    }
-                });
-            });
-            
-            // Delete buttons
-            document.querySelectorAll('.btn-delete').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const gameId = e.target.getAttribute('data-id');
-                    if (confirm('Are you sure you want to delete this game? This action cannot be undone.')) {
-                        try {
-                            await gamesRef.doc(gameId).delete();
-                            loadGames(); // Reload games
-                            alert('Game deleted successfully!');
-                        } catch (error) {
-                            console.error('Error deleting game: ', error);
-                            alert('Error deleting game. Please try again.');
-                        }
-                    }
-                });
-            });
-        }
-
-        // Attach event listeners to collection cards
-        function attachCollectionEventListeners() {
-            // Edit buttons
-            document.querySelectorAll('.btn-collection-edit').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const collectionId = e.target.getAttribute('data-id');
-                    try {
-                        const doc = await collectionsRef.doc(collectionId).get();
-                        if (doc.exists) {
-                            const collection = doc.data();
-                            document.getElementById('edit-collection-id').value = collectionId;
-                            document.getElementById('edit-collection-name').value = collection.name;
-                            document.getElementById('edit-collection-description').value = collection.description;
-                            
-                            // Load games for selection and check the ones in the collection
-                            await loadGamesForSelection();
-                            
-                            // Check the games that are in this collection
-                            collection.games.forEach(gameId => {
-                                const checkbox = document.querySelector(`#edit-games-selection input[value="${gameId}"]`);
-                                if (checkbox) checkbox.checked = true;
-                            });
-                            
-                            editCollectionModal.style.display = 'block';
-                        }
-                    } catch (error) {
-                        console.error('Error loading collection for edit: ', error);
-                        alert('Error loading collection data. Please try again.');
-                    }
-                });
-            });
-            
-            // Delete buttons
-            document.querySelectorAll('.btn-collection-delete').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const collectionId = e.target.getAttribute('data-id');
-                    if (confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
-                        try {
-                            await collectionsRef.doc(collectionId).delete();
-                            loadCollections(); // Reload collections
-                            alert('Collection deleted successfully!');
-                        } catch (error) {
-                            console.error('Error deleting collection: ', error);
-                            alert('Error deleting collection. Please try again.');
-                        }
-                    }
-                });
-            });
-        }
-
-        // Create new game
-        gameForm.addEventListener('submit', async (e) => {
+        
+        // ==================== CRUD OPERATIONS ====================
+        const gamesRef = db.collection("games");
+        const playsRef = db.collection("plays");
+        
+        // Create game
+        gameForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            
-            // Validate form
-            if (!validateForm('game')) {
-                return;
-            }
+            if (!validateForm("create")) return;
             
             const gameData = {
-                title: document.getElementById('game-title').value,  
-                description: document.getElementById('game-description').value,  
-                image: document.getElementById('game-image').value,  
-                url: document.getElementById('game-url').value,  
-                rating: parseFloat(document.getElementById('game-rating').value),  
-                multiplayer: document.getElementById('game-multiplayer').value === 'true',  
+                title: document.getElementById("game-title").value.trim(),
+                description: document.getElementById("game-description").value.trim(),
+                image: document.getElementById("game-image").value.trim(),
+                url: document.getElementById("game-url").value.trim(),
+                rating: parseFloat(document.getElementById("game-rating").value),
+                multiplayer: document.getElementById("game-multiplayer").value === "true",
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
             try {
                 await gamesRef.add(gameData);
+                alert("Game created successfully!");
                 gameForm.reset();
-                loadGames(); // Reload games
-                alert('Game created successfully!');
-                
                 // Switch to games tab
-                tabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                document.querySelector('[data-tab="games"]').classList.add('active');
-                document.getElementById('games-tab').classList.add('active');
+                document.querySelector('[data-tab="games"]').click();
+                await loadGames();
             } catch (error) {
-                console.error('Error creating game: ', error);
-                alert('Error creating game. Please try again.');
+                console.error("Error creating game:", error);
+                alert(`Failed to create game: ${error.message}`);
             }
         });
-
-        // Create new collection
-        collectionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Validate form
-            if (!validateCollectionForm('collection')) {
-                return;
-            }
-            
-            // Get selected games
-            const selectedGames = Array.from(document.querySelectorAll('#games-selection input[type="checkbox"]:checked'))
-                .map(checkbox => checkbox.value);
-            
-            const collectionData = {
-                name: document.getElementById('collection-name').value,
-                description: document.getElementById('collection-description').value,
-                games: selectedGames,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            try {
-                await collectionsRef.add(collectionData);
-                collectionForm.reset();
-                
-                // Uncheck all checkboxes
-                document.querySelectorAll('#games-selection input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                
-                loadCollections(); // Reload collections
-                alert('Collection created successfully!');
-            } catch (error) {
-                console.error('Error creating collection: ', error);
-                alert('Error creating collection. Please try again.');
-            }
-        });
-
+        
         // Update game
-        editGameForm.addEventListener('submit', async (e) => {
+        editGameForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            if (!validateForm("edit")) return;
             
-            // Validate form
-            if (!validateForm('edit')) {
-                return;
-            }
-            
-            const gameId = document.getElementById('edit-game-id').value;
-            const gameData = {
-                title: document.getElementById('edit-game-title').value,  
-                description: document.getElementById('edit-game-description').value,  
-                image: document.getElementById('edit-game-image').value,  
-                url: document.getElementById('edit-game-url').value,  
-                rating: parseFloat(document.getElementById('edit-game-rating').value),  
-                multiplayer: document.getElementById('edit-game-multiplayer').value === 'true'
+            const gameId = document.getElementById("edit-game-id").value;
+            const updatedData = {
+                title: document.getElementById("edit-game-title").value.trim(),
+                description: document.getElementById("edit-game-description").value.trim(),
+                image: document.getElementById("edit-game-image").value.trim(),
+                url: document.getElementById("edit-game-url").value.trim(),
+                rating: parseFloat(document.getElementById("edit-game-rating").value),
+                multiplayer: document.getElementById("edit-game-multiplayer").value === "true"
             };
             
             try {
-                await gamesRef.doc(gameId).update(gameData);
-                editModal.style.display = 'none';
-                loadGames(); // Reload games
-                alert('Game updated successfully!');
+                await gamesRef.doc(gameId).update(updatedData);
+                alert("Game updated successfully!");
+                editModal.style.display = "none";
+                await loadGames();
             } catch (error) {
-                console.error('Error updating game: ', error);
-                alert('Error updating game. Please try again.');
+                console.error("Error updating game:", error);
+                alert(`Failed to update game: ${error.message}`);
             }
         });
-
-        // Update collection
-        editCollectionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Validate form
-            if (!validateCollectionForm('edit-collection')) {
+        
+        // ==================== SEARCH ====================
+        function filterGames() {
+            const term = searchGamesInput.value.toLowerCase().trim();
+            const cards = document.querySelectorAll(".game-card");
+            if (term === "") {
+                cards.forEach(c => c.style.display = "block");
                 return;
             }
-            
-            const collectionId = document.getElementById('edit-collection-id').value;
-            
-            // Get selected games
-            const selectedGames = Array.from(document.querySelectorAll('#edit-games-selection input[type="checkbox"]:checked'))
-                .map(checkbox => checkbox.value);
-            
-            const collectionData = {
-                name: document.getElementById('edit-collection-name').value,
-                description: document.getElementById('edit-collection-description').value,
-                games: selectedGames
-            };
-            
-            try {
-                await collectionsRef.doc(collectionId).update(collectionData);
-                editCollectionModal.style.display = 'none';
-                loadCollections(); // Reload collections
-                alert('Collection updated successfully!');
-            } catch (error) {
-                console.error('Error updating collection: ', error);
-                alert('Error updating collection. Please try again.');
-            }
-        });
-
-        // Search functionality
-        document.getElementById('search-games-btn').addEventListener('click', () => {
-            const searchTerm = searchGamesInput.value.toLowerCase().trim();
-            const gameCards = document.querySelectorAll('.game-card');
-            
-            if (searchTerm === '') {
-                gameCards.forEach(card => card.style.display = 'block');
-                return;
-            }
-            
-            gameCards.forEach(card => {
-                const title = card.querySelector('.game-title').textContent.toLowerCase();
-                const description = card.querySelector('.game-description').textContent.toLowerCase();
-                
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
+            cards.forEach(card => {
+                const title = card.querySelector(".game-title")?.textContent.toLowerCase() || "";
+                const desc = card.querySelector(".game-description")?.textContent.toLowerCase() || "";
+                if (title.includes(term) || desc.includes(term)) {
+                    card.style.display = "block";
                 } else {
-                    card.style.display = 'none';
+                    card.style.display = "none";
                 }
             });
-        });
-
-        document.getElementById('search-collections-btn').addEventListener('click', () => {
-            const searchTerm = searchCollectionsInput.value.toLowerCase().trim();
-            const collectionCards = document.querySelectorAll('.collection-card');
-            
-            if (searchTerm === '') {
-                collectionCards.forEach(card => card.style.display = 'block');
+        }
+        
+        function filterPlays() {
+            const term = searchPlaysInput.value.toLowerCase().trim();
+            const rows = document.querySelectorAll("#plays-table-body tr");
+            if (term === "") {
+                rows.forEach(r => r.style.display = "table-row");
                 return;
             }
-            
-            collectionCards.forEach(card => {
-                const title = card.querySelector('.collection-title').textContent.toLowerCase();
-                const description = card.querySelector('.collection-description').textContent.toLowerCase();
-                
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-
-        document.getElementById('search-plays-btn').addEventListener('click', () => {
-            const searchTerm = searchPlaysInput.value.toLowerCase().trim();
-            const rows = document.querySelectorAll('#plays-table-body tr');
-            
-            if (searchTerm === '') {
-                rows.forEach(row => row.style.display = 'table-row');
-                return;
-            }
-            
             rows.forEach(row => {
-                const ip = row.cells[0].textContent.toLowerCase();
-                const game = row.cells[1].textContent.toLowerCase();
-                
-                if (ip.includes(searchTerm) || game.includes(searchTerm)) {
-                    row.style.display = 'table-row';
+                const ip = row.cells[0]?.textContent.toLowerCase() || "";
+                const game = row.cells[1]?.textContent.toLowerCase() || "";
+                if (ip.includes(term) || game.includes(term)) {
+                    row.style.display = "table-row";
                 } else {
-                    row.style.display = 'none';
+                    row.style.display = "none";
                 }
             });
+        }
+        
+        document.getElementById("search-games-btn").addEventListener("click", filterGames);
+        document.getElementById("search-plays-btn").addEventListener("click", filterPlays);
+        searchGamesInput.addEventListener("keyup", (e) => { if (e.key === "Enter") filterGames(); });
+        searchPlaysInput.addEventListener("keyup", (e) => { if (e.key === "Enter") filterPlays(); });
+        
+        // ==================== TAB SWITCHING ====================
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const tabId = tab.getAttribute("data-tab");
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                tabContents.forEach(c => c.classList.remove("active"));
+                document.getElementById(`${tabId}-tab`).classList.add("active");
+                if (tabId === "plays") loadPlays();
+            });
         });
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        // ==================== MODAL ====================
+        closeModal.addEventListener("click", () => editModal.style.display = "none");
+        window.addEventListener("click", (e) => { if (e.target === editModal) editModal.style.display = "none"; });
+        window.addEventListener("keydown", (e) => { if (e.key === "Escape" && editModal.style.display === "block") editModal.style.display = "none"; });
+        
+        // ==================== INITIALIZE ====================
+        document.addEventListener("DOMContentLoaded", () => {
             loadGames();
             loadPlays();
-            
-            // Setup search on Enter key
-            searchGamesInput.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    document.getElementById('search-games-btn').click();
-                }
-            });
-            
-            searchCollectionsInput.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    document.getElementById('search-collections-btn').click();
-                }
-            });
-            
-            searchPlaysInput.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    document.getElementById('search-plays-btn').click();
-                }
-            });
-            
-            // Add validation to form inputs
-            const inputs = document.querySelectorAll('#game-form input, #game-form textarea, #game-form select, #edit-game-form input, #edit-game-form textarea, #edit-game-form select');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => {
-                    const formId = input.closest('form').id === 'game-form' ? 'game' : 'edit';
-                    const fieldId = input.id.replace(formId === 'edit' ? 'edit-' : '', '').replace('-error', '');
-                    hideError(`${formId === 'edit' ? 'edit-' : ''}${fieldId}-error`);
-                });
-            });
-            
-            // Add validation to collection form inputs
-            const collectionInputs = document.querySelectorAll('#collection-form input, #collection-form textarea, #edit-collection-form input, #edit-collection-form textarea');
-            collectionInputs.forEach(input => {
-                input.addEventListener('input', () => {
-                    const formId = input.closest('form').id === 'collection-form' ? 'collection' : 'edit-collection';
-                    const fieldId = input.id.replace(formId === 'edit-collection' ? 'edit-' : '', '').replace('-error', '');
-                    hideError(`${formId === 'edit-collection' ? 'edit-' : ''}${fieldId}-error`);
-                });
-            });
         });
     </script>
 </body>
