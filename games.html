@@ -389,6 +389,113 @@
             border: none;
         }
         
+        /* Collection modal styles */
+        .collection-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .collection-modal-content {
+            background-color: var(--secondary-black);
+            margin: 5% auto;
+            padding: 0;
+            border: 2px solid var(--accent-white);
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            position: relative;
+            border-radius: 0;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        
+        .collection-header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 1px solid var(--accent-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collection-title {
+            font-family: var(--pixel-font);
+            font-size: 1.2rem;
+            color: var(--accent-white);
+            letter-spacing: 1px;
+        }
+        
+        .collection-close {
+            color: var(--accent-white);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .collection-close:hover {
+            color: #f72585;
+            text-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
+        }
+        
+        .collection-games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+        
+        .collection-game-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent-white);
+            cursor: pointer;
+        }
+        
+        .collection-game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+            background: rgba(40, 40, 40, 0.9);
+        }
+        
+        .collection-game-banner {
+            height: 150px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .collection-game-info {
+            padding: 15px;
+        }
+        
+        .collection-game-title {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--accent-white);
+            font-family: var(--pixel-font);
+            letter-spacing: 1px;
+        }
+        
+        .collection-game-description {
+            color: #a9a9a9;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -500,6 +607,19 @@
         </div>
     </div>
     
+    <!-- Collection Modal -->
+    <div id="collectionModal" class="collection-modal">
+        <div class="collection-modal-content">
+            <div class="collection-header">
+                <h2 class="collection-title" id="collectionModalTitle">GAME COLLECTION</h2>
+                <span class="collection-close">×</span>
+            </div>
+            <div class="collection-games-grid" id="collectionGamesGrid">
+                <!-- Collection games will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
     <footer>
         <p>© 2023 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH <i class="fas fa-heart" style="color: #f72585;"></i> FOR GAMERS</p>
     </footer>
@@ -507,12 +627,12 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",   
-            authDomain: "blacket-65c5b.firebaseapp.com",   
-            projectId: "blacket-65c5b",   
-            storageBucket: "blacket-65c5b.firebasestorage.app",   
-            messagingSenderId: "497023905730",   
-            appId: "1:497023905730:web:a59093052a3f93a476305b",   
+            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",    
+            authDomain: "blacket-65c5b.firebaseapp.com",    
+            projectId: "blacket-65c5b",    
+            storageBucket: "blacket-65c5b.firebasestorage.app",    
+            messagingSenderId: "497023905730",    
+            appId: "1: 497023905730: web: a59093052a3f93a476305b",    
             measurementId: "G-XZZR5DH79B"
         };
 
@@ -540,9 +660,9 @@
                 
                 // Add play record to 'plays' collection (matching admin panel)
                 await db.collection("plays").add({
-                    gameId: gameId,  
-                    gameTitle: gameTitle,  
-                    ip: ip,  
+                    gameId: gameId,   
+                    gameTitle: gameTitle,   
+                    ip: ip,   
                     timestamp: timestamp
                 });
                 
@@ -616,9 +736,9 @@
                 const allGames = [...topGames, ...newGames, ...olderGames];
                 
                 return { 
-                    topGames,  
-                    newGames,  
-                    olderGames,  
+                    topGames,   
+                    newGames,   
+                    olderGames,   
                     allGames 
                 };
             } catch (error) {
@@ -663,6 +783,9 @@
             gameCard.setAttribute('data-title', game.title);
             gameCard.setAttribute('data-description', game.description);
             
+            // Check if game is a collection
+            const isCollection = game.isCollection || false;
+            
             gameCard.innerHTML = `
                 <div class="game-banner" style="background-image: url('${game.image}');">
                     ${badgeText ? `<div class="game-badge">${badgeText}</div>` : ''}
@@ -674,11 +797,74 @@
                         <span><i class="fas fa-star"></i> ${game.rating || 'N/A'}</span>
                         <span><i class="${game.multiplayer ? 'fas fa-users' : 'fas fa-user'}"></i> ${game.multiplayer ? 'Multiplayer' : 'Single Player'}</span>
                     </div>
-                    <button class="play-button" data-url="${game.url}" data-id="${game.id}" data-title="${game.title}">Play Now</button>
+                    <button class="play-button" 
+                            data-url="${game.url}" 
+                            data-id="${game.id}" 
+                            data-title="${game.title}"
+                            data-is-collection="${isCollection}"
+                            ${isCollection ? `data-collection-id="${game.id}"` : ''}>
+                        ${isCollection ? 'View Collection' : 'Play Now'}
+                    </button>
                 </div>
             `;
             
             return gameCard;
+        }
+
+        // Function to get sub-games for a collection
+        async function getCollectionGames(collectionId) {
+            try {
+                const subGamesSnapshot = await db.collection("games")
+                    .where("collectionId", "==", collectionId)
+                    .orderBy("createdAt", "desc")
+                    .get();
+                
+                const subGames = [];
+                subGamesSnapshot.forEach((doc) => {
+                    subGames.push({ id: doc.id, ...doc.data() });
+                });
+                
+                return subGames;
+            } catch (error) {
+                console.error("Error getting collection games: ", error);
+                return [];
+            }
+        }
+
+        // Function to render collection games
+        function renderCollectionGames(games, collectionTitle) {
+            const collectionGamesGrid = document.getElementById('collectionGamesGrid');
+            collectionGamesGrid.innerHTML = '';
+            
+            document.getElementById('collectionModalTitle').textContent = `${collectionTitle} - Versions`;
+            
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'collection-game-card';
+                gameCard.innerHTML = `
+                    <div class="collection-game-banner" style="background-image: url('${game.image}');"></div>
+                    <div class="collection-game-info">
+                        <h3 class="collection-game-title">${game.title}</h3>
+                        <p class="collection-game-description">${game.description}</p>
+                    </div>
+                `;
+                
+                gameCard.addEventListener('click', async function() {
+                    // Log game play with IP recording
+                    await logGamePlay(game.id, game.title);
+                    
+                    // Set modal content
+                    document.getElementById('modalGameTitle').textContent = game.title;
+                    document.getElementById('gameFrame').src = game.url;
+                    
+                    // Show game modal and hide collection modal
+                    document.getElementById('collectionModal').style.display = 'none';
+                    document.getElementById('gameModal').style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                });
+                
+                collectionGamesGrid.appendChild(gameCard);
+            });
         }
 
         // Function to initialize the page
@@ -700,17 +886,33 @@
                     const gameId = this.getAttribute('data-id');
                     const gameUrl = this.getAttribute('data-url');
                     const gameTitle = this.getAttribute('data-title');
+                    const isCollection = this.getAttribute('data-is-collection') === 'true';
                     
-                    // Log game play with IP recording
-                    await logGamePlay(gameId, gameTitle);
-                    
-                    // Set modal content
-                    document.getElementById('modalGameTitle').textContent = gameTitle;
-                    document.getElementById('gameFrame').src = gameUrl;
-                    
-                    // Show modal
-                    document.getElementById('gameModal').style.display = 'block';
-                    document.body.style.overflow = 'hidden';
+                    if (isCollection) {
+                        // Handle collection
+                        const collectionId = this.getAttribute('data-collection-id');
+                        const subGames = await getCollectionGames(collectionId);
+                        
+                        if (subGames.length > 0) {
+                            renderCollectionGames(subGames, gameTitle);
+                            document.getElementById('collectionModal').style.display = 'block';
+                            document.body.style.overflow = 'hidden';
+                        } else {
+                            alert('No versions available for this collection.');
+                        }
+                    } else {
+                        // Handle regular game
+                        // Log game play with IP recording
+                        await logGamePlay(gameId, gameTitle);
+                        
+                        // Set modal content
+                        document.getElementById('modalGameTitle').textContent = gameTitle;
+                        document.getElementById('gameFrame').src = gameUrl;
+                        
+                        // Show modal
+                        document.getElementById('gameModal').style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
                 });
             });
         }
@@ -766,6 +968,32 @@
             if (event.key === "Escape" && modal.style.display === "block") {
                 modal.style.display = "none";
                 document.getElementById('gameFrame').src = ""; // Clear the iframe
+                document.body.style.overflow = "auto"; // Re-enable scrolling
+            }
+        });
+
+        // Collection modal functionality
+        const collectionModal = document.getElementById("collectionModal");
+        const collectionCloseBtn = document.querySelector(".collection-close");
+        
+        // Close collection modal when clicking the X
+        collectionCloseBtn.addEventListener('click', function() {
+            collectionModal.style.display = "none";
+            document.body.style.overflow = "auto"; // Re-enable scrolling
+        });
+        
+        // Close collection modal when clicking outside the content
+        window.addEventListener('click', function(event) {
+            if (event.target === collectionModal) {
+                collectionModal.style.display = "none";
+                document.body.style.overflow = "auto"; // Re-enable scrolling
+            }
+        });
+        
+        // Close collection modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" && collectionModal.style.display === "block") {
+                collectionModal.style.display = "none";
                 document.body.style.overflow = "auto"; // Re-enable scrolling
             }
         });
