@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,   initial-scale=1.0">
     <title>Game Universe - All Games</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,838 +11,914 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         :root {
-            --primary-black: #0a0a0a;
-            --secondary-black: #1a1a1a;
-            --accent-white: #f0f0f0;
-            --highlight-white: #ffffff;
-            --accent-gray: #333333;
-            --pixel-font: 'Press Start 2P', cursive;
-            --tech-font: 'Orbitron', sans-serif;
-            --top-gold: #FFD700;
-            --new-blue: #4169E1; /* Changed to blue */
-            --older-blue: #1E90FF;
-            --contact-blue: #1E3A8A;
+            --primary-black:   #0a0a0a;
+            --secondary-black:   #1a1a1a;
+            --accent-white:   #f0f0f0;
+            --highlight-white:   #ffffff;
+            --accent-gray:   #333333;
+            --pixel-font:   'Press Start 2P',   cursive;
+            --tech-font:   'Orbitron',   sans-serif;
+            --top-gold:   #FFD700;
+            --new-blue:   #4169E1;
+            --older-blue:   #1E90FF;
+            --contact-blue:   #1E3A8A;
+            --filter-bg:   rgba(30,   30,   30,   0.8);
+            --filter-active:   #4169E1;
         }
         
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin:   0;
+            padding:   0;
+            box-sizing:   border-box;
         }
         
         body {
-            background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
-            color: var(--accent-white);
-            min-height: 100vh;
-            padding-bottom: 40px;
-            font-family: var(--tech-font);
-            overflow-x: hidden;
+            background:   linear-gradient(135deg,   var(--primary-black) 0%,   var(--secondary-black) 100%);
+            color:   var(--accent-white);
+            min-height:   100vh;
+            padding-bottom:   40px;
+            font-family:   var(--tech-font);
+            overflow-x:   hidden;
         }
         
         header {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid var(--accent-white);
+            background:   rgba(0,   0,   0,   0.85);
+            padding:   20px 5%;
+            display:   flex;
+            justify-content:   space-between;
+            align-items:   center;
+            box-shadow:   0 4px 20px rgba(0,   0,   0,   0.7);
+            position:   sticky;
+            top:   0;
+            z-index:   100;
+            border-bottom:   2px solid var(--accent-white);
         }
         
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            display:   flex;
+            align-items:   center;
+            gap:   15px;
         }
         
         .logo i {
-            font-size: 2.5rem;
-            color: var(--accent-white);
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            font-size:   2.5rem;
+            color:   var(--accent-white);
+            text-shadow:   0 0 10px rgba(255,   255,   255,   0.5);
         }
         
         .logo h1 {
-            font-size: 1.8rem;
-            font-family: var(--pixel-font);
-            color: var(--accent-white);
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            letter-spacing: 1px;
+            font-size:   1.8rem;
+            font-family:   var(--pixel-font);
+            color:   var(--accent-white);
+            text-shadow:   0 0 10px rgba(255,   255,   255,   0.3);
+            letter-spacing:   1px;
         }
         
         nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
+            display:   flex;
+            list-style:   none;
+            gap:   25px;
         }
         
         nav a {
-            color: var(--accent-white);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 8px 15px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            font-family: var(--tech-font);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid var(--accent-white);
+            color:   var(--accent-white);
+            text-decoration:   none;
+            font-size:   0.9rem;
+            font-weight:   500;
+            padding:   8px 15px;
+            border-radius:   4px;
+            transition:   all 0.3s ease;
+            font-family:   var(--tech-font);
+            text-transform:   uppercase;
+            letter-spacing:   1px;
+            border:   2px solid var(--accent-white);
         }
         
-        nav a:hover, nav a.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--accent-white);
-            border: 2px solid var(--accent-white);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        nav a:hover,   nav a.active {
+            background:   rgba(255,   255,   255,   0.1);
+            color:   var(--accent-white);
+            border:   2px solid var(--accent-white);
+            box-shadow:   0 0 10px rgba(255,   255,   255,   0.2);
         }
         
         .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
-            position: relative;
-            border-bottom: 3px solid var(--accent-white);
+            text-align:   center;
+            padding:   80px 20px;
+            background:   url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
+            position:   relative;
+            border-bottom:   3px solid var(--accent-white);
         }
         
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            content:   '';
+            position:   absolute;
+            top:   0;
+            left:   0;
+            width:   100%;
+            height:   100%;
+            background:   rgba(0,   0,   0,   0.7);
         }
         
         .hero-content {
-            position: relative;
-            max-width: 900px;
-            margin: 0 auto;
+            position:   relative;
+            max-width:   900px;
+            margin:   0 auto;
         }
         
         .hero h2 {
-            font-size: 2.8rem;
-            margin-bottom: 25px;
-            font-family: var(--pixel-font);
-            color: var(--accent-white);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            letter-spacing: 2px;
+            font-size:   2.8rem;
+            margin-bottom:   25px;
+            font-family:   var(--pixel-font);
+            color:   var(--accent-white);
+            text-shadow:   0 0 15px rgba(255,   255,   255,   0.5);
+            letter-spacing:   2px;
         }
         
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 35px;
-            line-height: 1.6;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size:   1.2rem;
+            margin-bottom:   35px;
+            line-height:   1.6;
+            max-width:   700px;
+            margin-left:   auto;
+            margin-right:   auto;
         }
         
         .search-container {
-            max-width: 650px;
-            margin: 0 auto;
-            position: relative;
+            max-width:   650px;
+            margin:   0 auto;
+            position:   relative;
         }
         
         .search-container input {
-            width: 100%;
-            padding: 18px 25px;
-            border-radius: 0;
-            border: 2px solid var(--accent-white);
-            background: rgba(0, 0, 0, 0.7);
-            font-size: 1.1rem;
-            color: var(--accent-white);
-            font-family: var(--tech-font);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            width:   100%;
+            padding:   18px 25px;
+            border-radius:   0;
+            border:   2px solid var(--accent-white);
+            background:   rgba(0,   0,   0,   0.7);
+            font-size:   1.1rem;
+            color:   var(--accent-white);
+            font-family:   var(--tech-font);
+            box-shadow:   0 0 15px rgba(255,   255,   255,   0.1);
         }
         
         .search-container input:focus {
-            outline: none;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            outline:   none;
+            box-shadow:   0 0 20px rgba(255,   255,   255,   0.3);
         }
         
         .search-container button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--accent-white);
-            color: var(--primary-black);
-            border: none;
-            padding: 12px 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-family: var(--pixel-font);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            position:   absolute;
+            right:   10px;
+            top:   50%;
+            transform:   translateY(-50%);
+            background:   var(--accent-white);
+            color:   var(--primary-black);
+            border:   none;
+            padding:   12px 25px;
+            cursor:   pointer;
+            font-weight:   600;
+            transition:   all 0.3s ease;
+            font-family:   var(--pixel-font);
+            font-size:   0.8rem;
+            letter-spacing:   1px;
         }
         
         .search-container button:hover {
-            background: var(--primary-black);
-            color: var(--accent-white);
-            border: 1px solid var(--accent-white);
+            background:   var(--primary-black);
+            color:   var(--accent-white);
+            border:   1px solid var(--accent-white);
         }
         
         .games-section {
-            padding: 50px 5%;
+            padding:   50px 5%;
         }
         
         .section-title {
-            text-align: center;
-            margin-bottom: 50px;
+            text-align:   center;
+            margin-bottom:   30px;
         }
         
         .section-title h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            font-family: var(--pixel-font);
-            color: var(--accent-white);
-            letter-spacing: 2px;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 15px;
+            font-size:   2.2rem;
+            margin-bottom:   20px;
+            font-family:   var(--pixel-font);
+            color:   var(--accent-white);
+            letter-spacing:   2px;
+            position:   relative;
+            display:   inline-block;
+            padding-bottom:   15px;
         }
         
         .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            border-radius: 2px;
+            content:   '';
+            position:   absolute;
+            bottom:   0;
+            left:   50%;
+            transform:   translateX(-50%);
+            width:   100px;
+            height:   4px;
+            border-radius:   2px;
         }
         
         .top-games .section-title h2::after {
-            background: var(--top-gold);
+            background:   var(--top-gold);
         }
         
         .new-games .section-title h2::after {
-            background: var(--new-blue); /* Changed to blue */
+            background:   var(--new-blue);
         }
         
         .older-games .section-title h2::after {
-            background: var(--older-blue);
+            background:   var(--older-blue);
         }
         
         .section-title p {
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 0 auto;
-            color: #a9a9a9;
-            line-height: 1.6;
+            font-size:   1.1rem;
+            max-width:   700px;
+            margin:   0 auto;
+            color:   #a9a9a9;
+            line-height:   1.6;
         }
         
         .top-games-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
+            display:   grid;
+            grid-template-columns:   repeat(3,   1fr);
+            gap:   25px;
+            max-width:   1400px;
+            margin:   0 auto;
         }
         
         .new-games-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
+            display:   grid;
+            grid-template-columns:   repeat(5,   1fr);
+            gap:   25px;
+            max-width:   1400px;
+            margin:   0 auto;
         }
         
         .all-games-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
+            display:   grid;
+            grid-template-columns:   repeat(7,   1fr);
+            gap:   25px;
+            max-width:   1400px;
+            margin:   0 auto;
         }
         
         .game-card {
-            background: rgba(30, 30, 30, 0.8);
-            border-radius: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            border: 2px solid var(--accent-white);
-            min-height: 320px;
+            background:   rgba(30,   30,   30,   0.8);
+            border-radius:   0;
+            overflow:   hidden;
+            transition:   all 0.4s cubic-bezier(0.175,   0.885,   0.32,   1.275);
+            box-shadow:   0 10px 20px rgba(0,   0,   0,   0.5);
+            position:   relative;
+            display:   flex;
+            flex-direction:   column;
+            border:   2px solid var(--accent-white);
+            min-height:   320px;
         }
         
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
-            background: rgba(40, 40, 40, 0.9);
-            border: 2px solid var(--accent-white);
+            transform:   translateY(-10px);
+            box-shadow:   0 15px 30px rgba(255,   255,   255,   0.1);
+            background:   rgba(40,   40,   40,   0.9);
+            border:   2px solid var(--accent-white);
         }
         
         .game-banner {
-            height: 160px;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            flex-shrink: 0;
+            height:   160px;
+            width:   100%;
+            background-size:   cover;
+            background-position:   center;
+            position:   relative;
+            flex-shrink:   0;
         }
         
         .game-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--accent-white);
-            color: var(--primary-black);
-            padding: 5px 15px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            font-family: var(--pixel-font);
-            letter-spacing: 1px;
-            border: 2px solid var(--primary-black);
+            position:   absolute;
+            top:   15px;
+            right:   15px;
+            background:   var(--accent-white);
+            color:   var(--primary-black);
+            padding:   5px 15px;
+            font-weight:   600;
+            font-size:   0.7rem;
+            box-shadow:   0 4px 10px rgba(0,   0,   0,   0.3);
+            font-family:   var(--pixel-font);
+            letter-spacing:   1px;
+            border:   2px solid var(--primary-black);
         }
         
         .game-badge.top {
-            background: var(--top-gold);
-            color: var(--primary-black);
+            background:   var(--top-gold);
+            color:   var(--primary-black);
         }
         
         .game-badge.new {
-            background: var(--new-blue); /* Changed to blue */
-            color: var(--primary-black);
+            background:   var(--new-blue);
+            color:   var(--primary-black);
         }
         
         .game-info {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
+            padding:   15px;
+            flex-grow:   1;
+            display:   flex;
+            flex-direction:   column;
         }
         
         .game-title {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            color: var(--accent-white);
-            font-family: var(--pixel-font);
-            letter-spacing: 1px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            font-size:   0.9rem;
+            margin-bottom:   10px;
+            color:   var(--accent-white);
+            font-family:   var(--pixel-font);
+            letter-spacing:   1px;
+            overflow:   hidden;
+            text-overflow:   ellipsis;
+            display:   -webkit-box;
+            -webkit-line-clamp:   2;
+            -webkit-box-orient:   vertical;
         }
         
         .game-description {
-            color: #a9a9a9;
-            font-size: 0.75rem;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
+            color:   #a9a9a9;
+            font-size:   0.75rem;
+            line-height:   1.4;
+            margin-bottom:   15px;
+            flex-grow:   1;
+            overflow:   hidden;
+            text-overflow:   ellipsis;
+            display:   -webkit-box;
+            -webkit-line-clamp:   3;
+            -webkit-box-orient:   vertical;
         }
         
         .game-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--accent-white);
-            font-size: 0.7rem;
-            margin-bottom: 12px;
-            font-family: var(--tech-font);
+            display:   flex;
+            justify-content:   space-between;
+            color:   var(--accent-white);
+            font-size:   0.7rem;
+            margin-bottom:   12px;
+            font-family:   var(--tech-font);
         }
         
         .play-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: var(--accent-white);
-            color: var(--primary-black);
-            text-align: center;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-family: var(--pixel-font);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            flex-shrink: 0;
+            display:   block;
+            width:   100%;
+            padding:   12px;
+            background:   var(--accent-white);
+            color:   var(--primary-black);
+            text-align:   center;
+            text-decoration:   none;
+            font-weight:   600;
+            transition:   all 0.3s ease;
+            border:   none;
+            cursor:   pointer;
+            font-size:   0.8rem;
+            font-family:   var(--pixel-font);
+            letter-spacing:   1px;
+            text-transform:   uppercase;
+            flex-shrink:   0;
         }
         
         .play-button:hover {
-            background: var(--primary-black);
-            color: var(--accent-white);
-            border: 1px solid var(--accent-white);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            background:   var(--primary-black);
+            color:   var(--accent-white);
+            border:   1px solid var(--accent-white);
+            box-shadow:   0 0 15px rgba(255,   255,   255,   0.3);
         }
         
         .hidden {
-            display: none;
+            display:   none;
         }
         
         footer {
-            text-align: center;
-            padding: 30px;
-            margin-top: 50px;
-            color: #a9a9a9;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
+            text-align:   center;
+            padding:   30px;
+            margin-top:   50px;
+            color:   #a9a9a9;
+            border-top:   1px solid rgba(255,   255,   255,   0.1);
+            font-size:   0.9rem;
         }
         
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            animation: fadeIn 0.3s ease;
+            display:   none;
+            position:   fixed;
+            z-index:   1000;
+            left:   0;
+            top:   0;
+            width:   100%;
+            height:   100%;
+            background-color:   rgba(0,   0,   0,   0.9);
+            animation:   fadeIn 0.3s ease;
         }
         
         .modal-content {
-            background-color: var(--secondary-black);
-            margin: 5% auto;
-            padding: 0;
-            border: 2px solid var(--accent-white);
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
-            position: relative;
-            border-radius: 0;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            background-color:   var(--secondary-black);
+            margin:   5% auto;
+            padding:   0;
+            border:   2px solid var(--accent-white);
+            width:   90%;
+            max-width:   1000px;
+            height:   80vh;
+            position:   relative;
+            border-radius:   0;
+            box-shadow:   0 0 30px rgba(255,   255,   255,   0.2);
         }
         
         .modal-header {
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border-bottom: 1px solid var(--accent-white);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding:   15px 20px;
+            background:   rgba(0,   0,   0,   0.7);
+            border-bottom:   1px solid var(--accent-white);
+            display:   flex;
+            justify-content:   space-between;
+            align-items:   center;
         }
         
         .modal-title {
-            font-family: var(--pixel-font);
-            font-size: 1.2rem;
-            color: var(--accent-white);
-            letter-spacing: 1px;
+            font-family:   var(--pixel-font);
+            font-size:   1.2rem;
+            color:   var(--accent-white);
+            letter-spacing:   1px;
         }
         
         .close {
-            color: var(--accent-white);
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color:   var(--accent-white);
+            font-size:   28px;
+            font-weight:   bold;
+            cursor:   pointer;
+            transition:   all 0.3s ease;
         }
         
         .close:hover {
-            color: #f72585;
-            text-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
+            color:   #f72585;
+            text-shadow:   0 0 10px rgba(247,   37,   133,   0.7);
         }
         
         .game-frame {
-            width: 100%;
-            height: calc(100% - 60px);
-            border: none;
+            width:   100%;
+            height:   calc(100% - 60px);
+            border:   none;
         }
         
         .collection-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            animation: fadeIn 0.3s ease;
+            display:   none;
+            position:   fixed;
+            z-index:   1000;
+            left:   0;
+            top:   0;
+            width:   100%;
+            height:   100%;
+            background-color:   rgba(0,   0,   0,   0.9);
+            animation:   fadeIn 0.3s ease;
         }
         
         .collection-modal-content {
-            background-color: var(--secondary-black);
-            margin: 5% auto;
-            padding: 0;
-            border: 2px solid var(--accent-white);
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
-            position: relative;
-            border-radius: 0;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
-            overflow: hidden;
+            background-color:   var(--secondary-black);
+            margin:   5% auto;
+            padding:   0;
+            border:   2px solid var(--accent-white);
+            width:   90%;
+            max-width:   1000px;
+            height:   80vh;
+            position:   relative;
+            border-radius:   0;
+            box-shadow:   0 0 30px rgba(255,   255,   255,   0.2);
+            overflow:   hidden;
         }
         
         .collection-header {
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border-bottom: 1px solid var(--accent-white);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding:   15px 20px;
+            background:   rgba(0,   0,   0,   0.7);
+            border-bottom:   1px solid var(--accent-white);
+            display:   flex;
+            justify-content:   space-between;
+            align-items:   center;
         }
         
         .collection-title {
-            font-family: var(--pixel-font);
-            font-size: 1.2rem;
-            color: var(--accent-white);
-            letter-spacing: 1px;
+            font-family:   var(--pixel-font);
+            font-size:   1.2rem;
+            color:   var(--accent-white);
+            letter-spacing:   1px;
         }
         
         .collection-close {
-            color: var(--accent-white);
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color:   var(--accent-white);
+            font-size:   28px;
+            font-weight:   bold;
+            cursor:   pointer;
+            transition:   all 0.3s ease;
         }
         
         .collection-close:hover {
-            color: #f72585;
-            text-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
+            color:   #f72585;
+            text-shadow:   0 0 10px rgba(247,   37,   133,   0.7);
         }
         
         .collection-games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            height: calc(100% - 60px);
-            overflow-y: auto;
+            display:   grid;
+            grid-template-columns:   repeat(auto-fill,   minmax(250px,   1fr));
+            gap:   20px;
+            padding:   20px;
+            height:   calc(100% - 60px);
+            overflow-y:   auto;
         }
         
         .collection-game-card {
-            background: rgba(30, 30, 30, 0.8);
-            border-radius: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--accent-white);
-            cursor: pointer;
+            background:   rgba(30,   30,   30,   0.8);
+            border-radius:   0;
+            overflow:   hidden;
+            transition:   all 0.3s ease;
+            box-shadow:   0 5px 15px rgba(0,   0,   0,   0.5);
+            border:   1px solid var(--accent-white);
+            cursor:   pointer;
         }
         
         .collection-game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
-            background: rgba(40, 40, 40, 0.9);
+            transform:   translateY(-5px);
+            box-shadow:   0 10px 20px rgba(255,   255,   255,   0.1);
+            background:   rgba(40,   40,   40,   0.9);
         }
         
         .collection-game-banner {
-            height: 150px;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
+            height:   150px;
+            width:   100%;
+            background-size:   cover;
+            background-position:   center;
         }
         
         .collection-game-info {
-            padding: 15px;
+            padding:   15px;
         }
         
         .collection-game-title {
-            font-size: 1rem;
-            margin-bottom: 8px;
-            color: var(--accent-white);
-            font-family: var(--pixel-font);
-            letter-spacing: 1px;
+            font-size:   1rem;
+            margin-bottom:   8px;
+            color:   var(--accent-white);
+            font-family:   var(--pixel-font);
+            letter-spacing:   1px;
         }
         
         .collection-game-description {
-            color: #a9a9a9;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            margin-bottom: 10px;
+            color:   #a9a9a9;
+            font-size:   0.8rem;
+            line-height:   1.4;
+            margin-bottom:   10px;
         }
         
         /* Contact section styles */
         .contact-section {
-            padding: 50px 5%;
-            background: linear-gradient(135deg, var(--contact-blue) 0%, #0c1e4d 100%);
-            border-top: 3px solid var(--accent-white);
-            border-bottom: 3px solid var(--accent-white);
-            display: none; /* Hidden by default */
+            padding:   50px 5%;
+            background:   linear-gradient(135deg,   var(--contact-blue) 0%,   #0c1e4d 100%);
+            border-top:   3px solid var(--accent-white);
+            border-bottom:   3px solid var(--accent-white);
+            display:   none; /* Hidden by default */
         }
         
         .contact-section.active {
-            display: block;
+            display:   block;
         }
         
         .contact-section .section-title h2::after {
-            background: var(--accent-white);
+            background:   var(--accent-white);
         }
         
         .contact-container {
-            display: flex;
-            gap: 40px;
-            max-width: 1400px;
-            margin: 0 auto;
+            display:   flex;
+            gap:   40px;
+            max-width:   1400px;
+            margin:   0 auto;
         }
         
         .form-container {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 30px;
-            border-radius: 0;
-            border: 2px solid var(--accent-white);
+            flex:   1;
+            background:   rgba(0,   0,   0,   0.3);
+            padding:   30px;
+            border-radius:   0;
+            border:   2px solid var(--accent-white);
         }
         
         .form-container h3 {
-            font-family: var(--pixel-font);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--accent-white);
-            letter-spacing: 1px;
+            font-family:   var(--pixel-font);
+            font-size:   1.5rem;
+            margin-bottom:   20px;
+            color:   var(--accent-white);
+            letter-spacing:   1px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom:   20px;
         }
         
         .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
+            display:   block;
+            margin-bottom:   8px;
+            font-weight:   500;
+            font-size:   0.9rem;
         }
         
-        .form-group input, 
-        .form-group textarea, 
+        .form-group input,   
+        .form-group textarea,   
         .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 0;
-            border: 2px solid var(--accent-white);
-            background: rgba(0, 0, 0, 0.5);
-            color: var(--accent-white);
-            font-family: var(--tech-font);
-            font-size: 1rem;
+            width:   100%;
+            padding:   12px 15px;
+            border-radius:   0;
+            border:   2px solid var(--accent-white);
+            background:   rgba(0,   0,   0,   0.5);
+            color:   var(--accent-white);
+            font-family:   var(--tech-font);
+            font-size:   1rem;
         }
         
-        .form-group input:focus, 
-        .form-group textarea:focus, 
+        .form-group input:focus,   
+        .form-group textarea:focus,   
         .form-group select:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            outline:   none;
+            box-shadow:   0 0 10px rgba(255,   255,   255,   0.3);
         }
         
         .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
+            min-height:   120px;
+            resize:   vertical;
         }
         
         .submit-btn {
-            background: var(--accent-white);
-            color: var(--primary-black);
-            border: none;
-            padding: 12px 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-family: var(--pixel-font);
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            width: 100%;
-            text-transform: uppercase;
+            background:   var(--accent-white);
+            color:   var(--primary-black);
+            border:   none;
+            padding:   12px 25px;
+            cursor:   pointer;
+            font-weight:   600;
+            transition:   all 0.3s ease;
+            font-family:   var(--pixel-font);
+            font-size:   0.9rem;
+            letter-spacing:   1px;
+            width:   100%;
+            text-transform:   uppercase;
         }
         
         .submit-btn:hover {
-            background: var(--primary-black);
-            color: var(--accent-white);
-            border: 1px solid var(--accent-white);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            background:   var(--primary-black);
+            color:   var(--accent-white);
+            border:   1px solid var(--accent-white);
+            box-shadow:   0 0 15px rgba(255,   255,   255,   0.3);
         }
         
         .form-message {
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 0;
-            text-align: center;
-            font-weight: 500;
-            display: none;
+            padding:   15px;
+            margin-top:   20px;
+            border-radius:   0;
+            text-align:   center;
+            font-weight:   500;
+            display:   none;
         }
         
         .form-message.success {
-            background: rgba(46, 204, 113, 0.3);
-            border: 1px solid #2ECC71;
-            color: #2ECC71;
-            display: block;
+            background:   rgba(46,   204,   113,   0.3);
+            border:   1px solid #2ECC71;
+            color:   #2ECC71;
+            display:   block;
         }
         
         .form-message.error {
-            background: rgba(231, 76, 60, 0.3);
-            border: 1px solid #E74C3C;
-            color: #E74C3C;
-            display: block;
+            background:   rgba(231,   76,   60,   0.3);
+            border:   1px solid #E74C3C;
+            color:   #E74C3C;
+            display:   block;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity:   0; }
+            to { opacity:   1; }
         }
         
         /* Responsive adjustments */
-        @media (max-width: 1400px) {
+        @media (max-width:   1400px) {
             .all-games-grid {
-                grid-template-columns: repeat(6, 1fr);
+                grid-template-columns:   repeat(6,   1fr);
             }
         }
         
-        @media (max-width: 1200px) {
+        @media (max-width:   1200px) {
             .top-games-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:   repeat(2,   1fr);
             }
             
             .new-games-grid {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns:   repeat(4,   1fr);
             }
             
             .all-games-grid {
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns:   repeat(5,   1fr);
             }
             
             .contact-container {
-                flex-direction: column;
+                flex-direction:   column;
             }
         }
         
-        @media (max-width: 992px) {
+        @media (max-width:   992px) {
             .top-games-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:   repeat(2,   1fr);
             }
             
             .new-games-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns:   repeat(3,   1fr);
             }
             
             .all-games-grid {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns:   repeat(4,   1fr);
             }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width:   768px) {
             header {
-                flex-direction: column;
-                gap: 20px;
-                padding: 15px;
+                flex-direction:   column;
+                gap:   20px;
+                padding:   15px;
             }
             
             nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
+                flex-wrap:   wrap;
+                justify-content:   center;
+                gap:   10px;
             }
             
             .hero h2 {
-                font-size: 1.8rem;
+                font-size:   1.8rem;
             }
             
             .hero p {
-                font-size: 1rem;
+                font-size:   1rem;
             }
             
             .top-games-grid {
-                grid-template-columns: repeat(1, 1fr);
+                grid-template-columns:   repeat(1,   1fr);
             }
             
             .new-games-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:   repeat(2,   1fr);
             }
             
             .all-games-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns:   repeat(3,   1fr);
             }
             
             .game-card {
-                min-height: 280px;
+                min-height:   280px;
             }
             
             .game-banner {
-                height: 120px;
+                height:   120px;
             }
             
             .game-title {
-                font-size: 0.75rem;
+                font-size:   0.75rem;
             }
         }
         
-        @media (max-width: 576px) {
+        @media (max-width:   576px) {
             .hero {
-                padding: 50px 15px;
+                padding:   50px 15px;
             }
             
             .hero h2 {
-                font-size: 1.4rem;
+                font-size:   1.4rem;
             }
             
-            .new-games-grid, 
+            .new-games-grid,   
             .all-games-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:   repeat(2,   1fr);
             }
             
             .search-container button {
-                padding: 10px 15px;
-                font-size: 0.7rem;
+                padding:   10px 15px;
+                font-size:   0.7rem;
             }
         }
         
         .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            font-size: 1.2rem;
+            display:   flex;
+            justify-content:   center;
+            align-items:   center;
+            height:   200px;
+            font-size:   1.2rem;
         }
         
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid var(--accent-white);
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-right: 15px;
+            border:   4px solid rgba(255,   255,   255,   0.3);
+            border-radius:   50%;
+            border-top:   4px solid var(--accent-white);
+            width:   40px;
+            height:   40px;
+            animation:   spin 1s linear infinite;
+            margin-right:   15px;
         }
         
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% { transform:   rotate(0deg); }
+            100% { transform:   rotate(360deg); }
         }
         
         /* Tab navigation */
         .tab-navigation {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
+            display:   flex;
+            justify-content:   center;
+            margin-bottom:   30px;
         }
         
         .tab-button {
-            padding: 12px 25px;
-            background: rgba(0, 0, 0, 0.5);
-            color: var(--accent-white);
-            border: 2px solid var(--accent-white);
-            font-family: var(--pixel-font);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0 10px;
+            padding:   12px 25px;
+            background:   rgba(0,   0,   0,   0.5);
+            color:   var(--accent-white);
+            border:   2px solid var(--accent-white);
+            font-family:   var(--pixel-font);
+            font-size:   0.9rem;
+            cursor:   pointer;
+            transition:   all 0.3s ease;
+            margin:   0 10px;
         }
         
         .tab-button.active {
-            background: var(--accent-white);
-            color: var(--primary-black);
+            background:   var(--accent-white);
+            color:   var(--primary-black);
         }
         
         .tab-button:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
+            background:   rgba(255,   255,   255,   0.1);
+        }
+        
+        /* Enhanced tag filtering styles */
+        .filter-section {
+            background:   rgba(20,   20,   20,   0.9);
+            padding:   25px 5%;
+            border-top:   2px solid var(--accent-white);
+            border-bottom:   2px solid var(--accent-white);
+            margin-bottom:   30px;
+        }
+        
+        .filter-container {
+            display:   flex;
+            flex-wrap:   wrap;
+            gap:   12px;
+            max-height:   200px;
+            overflow-y:   auto;
+            padding:   10px;
+            border:   1px solid rgba(255,   255,   255,   0.2);
+            background:   rgba(10,   10,   10,   0.5);
+        }
+        
+        .filter-tag {
+            padding:   10px 20px;
+            background:   var(--filter-bg);
+            border:   1px solid var(--accent-white);
+            color:   var(--accent-white);
+            font-family:   var(--tech-font);
+            font-size:   0.9rem;
+            cursor:   pointer;
+            transition:   all 0.3s ease;
+            display:   flex;
+            align-items:   center;
+            gap:   8px;
+        }
+        
+        .filter-tag:hover {
+            background:   rgba(255,   255,   255,   0.1);
+        }
+        
+        .filter-tag.active {
+            background:   var(--filter-active);
+            color:   var(--accent-white);
+            font-weight:   bold;
+            border-color:   var(--filter-active);
+        }
+        
+        .filter-tag .tag-count {
+            background:   rgba(0,   0,   0,   0.5);
+            border-radius:   50%;
+            width:   22px;
+            height:   22px;
+            display:   flex;
+            align-items:   center;
+            justify-content:   center;
+            font-size:   0.7rem;
+        }
+        
+        .section-hidden {
+            display:   none;
+        }
+        
+        .no-results {
+            text-align:   center;
+            padding:   50px;
+            font-size:   1.2rem;
+            color:   #a9a9a9;
+        }
+        
+        .no-results i {
+            font-size:   3rem;
+            margin-bottom:   20px;
+            display:   block;
+            color:   var(--filter-active);
         }
     </style>
 </head>
@@ -863,7 +939,7 @@
     <section class="hero">
         <div class="hero-content">
             <h2>DISCOVER AMAZING GAMES</h2>
-            <p>Explore our collection of the best games across all genres. From action-packed adventures to relaxing puzzles, find your next favorite game today!</p>
+            <p>Explore our collection of the best games across all genres. From action-packed adventures to relaxing puzzles,   find your next favorite game today!</p>
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="SEARCH FOR GAMES...">
                 <button id="search-button"><i class="fas fa-search"></i> SEARCH</button>
@@ -871,32 +947,39 @@
         </div>
     </section>
     
+    <!-- Enhanced Filter Section -->
+    <section class="filter-section">
+        <div class="filter-container" id="filter-container">
+            <!-- Filter tags will be added here dynamically -->
+        </div>
+    </section>
+    
     <!-- Main Content (Home Page) -->
     <main id="main-content">
-        <section class="games-section top-games">
+        <section class="games-section top-games" id="top-games-section">
             <div class="section-title">
                 <h2>TOP GAMES</h2>
-                <p>Our most popular games based on play count worldwide</p>
+                <p>Our most popular games based on play count (3 per row)</p>
             </div>
             <div class="top-games-grid" id="top-games-grid">
                 <div class="loading"><div class="spinner"></div> Loading top games...</div>
             </div>
         </section>
         
-        <section class="games-section new-games">
+        <section class="games-section new-games" id="new-games-section">
             <div class="section-title">
                 <h2>NEW GAMES</h2>
-                <p>Recently added games to our collection - Only for 5 days after release!</p>
+                <p>Recently added games to our collection (5 per row) - Only for 5 days after release!</p>
             </div>
             <div class="new-games-grid" id="new-games-grid">
                 <div class="loading"><div class="spinner"></div> Loading new games...</div>
             </div>
         </section>
         
-        <section class="games-section older-games">
+        <section class="games-section older-games" id="older-games-section">
             <div class="section-title">
                 <h2>ALL GAMES</h2>
-                <p>Browse through our extensive library of games</p>
+                <p>Browse through our extensive library of games (7 per row)</p>
             </div>
             <div class="all-games-grid" id="all-games-grid">
                 <div class="loading"><div class="spinner"></div> Loading all games...</div>
@@ -947,7 +1030,7 @@
                 </form>
             </div>
             
-            <div class="form-container" id="report-form-container" style="display: none;">
+            <div class="form-container" id="report-form-container" style="display:   none;">
                 <h3>REPORT AN ISSUE</h3>
                 <form id="reportIssueForm">
                     <div class="form-group">
@@ -1003,13 +1086,13 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
-            authDomain: "blacket-65c5b.firebaseapp.com",
-            projectId: "blacket-65c5b",
-            storageBucket: "blacket-65c5b.firebasestorage.app",
-            messagingSenderId: "497023905730",
-            appId: "1:497023905730:web:a59093052a3f93a476305b",
-            measurementId: "G-XZZR5DH79B"
+            apiKey:   "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",   
+            authDomain:   "blacket-65c5b.firebaseapp.com",   
+            projectId:   "blacket-65c5b",   
+            storageBucket:   "blacket-65c5b.firebasestorage.app",   
+            messagingSenderId:   "497023905730",   
+            appId:   "1:  497023905730:  web:  a59093052a3f93a476305b",   
+            measurementId:   "G-XZZR5DH79B"
         };
 
         // Initialize Firebase
@@ -1017,7 +1100,7 @@
         const db = firebase.firestore();
 
         // Tab navigation
-        document.getElementById('home-tab').addEventListener('click', function(e) {
+        document.getElementById('home-tab').addEventListener('click',   function(e) {
             e.preventDefault();
             document.getElementById('main-content').style.display = 'block';
             document.getElementById('contact-section').classList.remove('active');
@@ -1025,7 +1108,7 @@
             document.getElementById('contact-tab').classList.remove('active');
         });
 
-        document.getElementById('contact-tab').addEventListener('click', function(e) {
+        document.getElementById('contact-tab').addEventListener('click',   function(e) {
             e.preventDefault();
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('contact-section').classList.add('active');
@@ -1034,14 +1117,14 @@
         });
 
         // Form tab navigation
-        document.getElementById('suggest-tab').addEventListener('click', function() {
+        document.getElementById('suggest-tab').addEventListener('click',   function() {
             document.getElementById('suggest-form-container').style.display = 'block';
             document.getElementById('report-form-container').style.display = 'none';
             this.classList.add('active');
             document.getElementById('report-tab').classList.remove('active');
         });
 
-        document.getElementById('report-tab').addEventListener('click', function() {
+        document.getElementById('report-tab').addEventListener('click',   function() {
             document.getElementById('suggest-form-container').style.display = 'none';
             document.getElementById('report-form-container').style.display = 'block';
             this.classList.add('active');
@@ -1054,38 +1137,38 @@
                 const data = await response.json();
                 return data.ip;
             } catch (error) {
-                console.error("Error getting IP: ", error);
+                console.error("Error getting IP:   ",   error);
                 return "unknown";
             }
         }
 
-        async function logGamePlay(gameId, gameTitle) {
+        async function logGamePlay(gameId,   gameTitle) {
             try {
                 const ip = await getUserIP();
                 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
                 
                 await db.collection("plays").add({
-                    gameId: gameId,
-                    gameTitle: gameTitle,
-                    ip: ip,
-                    timestamp: timestamp
+                    gameId:   gameId,   
+                    gameTitle:   gameTitle,   
+                    ip:   ip,   
+                    timestamp:   timestamp
                 });
                 
-                console.log(`Play recorded for game ${gameTitle} (ID: ${gameId}) from IP: ${ip}`);
+                console.log(`Play recorded for game ${gameTitle} (ID:   ${gameId}) from IP:   ${ip}`);
             } catch (error) {
-                console.error("Error logging game play: ", error);
+                console.error("Error logging game play:   ",   error);
             }
         }
 
         async function getGames() {
             try {
                 const gamesSnapshot = await db.collection("games")
-                    .orderBy("createdAt", "desc")
+                    .orderBy("createdAt",   "desc")
                     .get();
                 
                 const games = [];
                 gamesSnapshot.forEach((doc) => {
-                    games.push({ id: doc.id, ...doc.data() });
+                    games.push({ id:   doc.id,   ...doc.data() });
                 });
                 
                 const playsSnapshot = await db.collection("plays").get();
@@ -1096,10 +1179,10 @@
                     playCounts[gameId] = (playCounts[gameId] || 0) + 1;
                 });
                 
-                const sortedByPlays = [...games].sort((a, b) => (playCounts[b.id] || 0) - (playCounts[a.id] || 0));
-                const topGames = sortedByPlays.slice(0, 3);
+                const sortedByPlays = [...games].sort((a,   b) => (playCounts[b.id] || 0) - (playCounts[a.id] || 0));
+                const topGames = sortedByPlays.slice(0,   3);
                 
-                topGames.forEach((game, index) => {
+                topGames.forEach((game,   index) => {
                     game.rank = index + 1;
                 });
                 
@@ -1112,7 +1195,7 @@
                 const olderGames = [];
                 
                 remainingGames.forEach(game => {
-                    const uploadDate = game.createdAt?.toDate ? game.createdAt.toDate() : new Date(game.createdAt);
+                    const uploadDate = game.createdAt?.toDate ? game.createdAt.toDate() :   new Date(game.createdAt);
                     if (uploadDate >= fiveDaysAgo) {
                         newGames.push(game);
                     } else {
@@ -1120,52 +1203,53 @@
                     }
                 });
                 
-                newGames.sort((a, b) => {
-                    const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
-                    const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+                newGames.sort((a,   b) => {
+                    const dateA = a.createdAt?.toDate ? a.createdAt.toDate() :   new Date(a.createdAt);
+                    const dateB = b.createdAt?.toDate ? b.createdAt.toDate() :   new Date(b.createdAt);
                     return dateB - dateA;
                 });
                 
-                olderGames.sort((a, b) => a.title.localeCompare(b.title));
+                olderGames.sort((a,   b) => a.title.localeCompare(b.title));
                 
                 return { 
-                    topGames, 
-                    newGames, 
-                    olderGames, 
-                    allGames: [...topGames, ...newGames, ...olderGames]
+                    topGames,    
+                    newGames,    
+                    olderGames,    
+                    allGames:   [...topGames,   ...newGames,   ...olderGames]
                 };
             } catch (error) {
-                console.error("Error getting games: ", error);
-                return { topGames: [], newGames: [], olderGames: [], allGames: [] };
+                console.error("Error getting games:   ",   error);
+                return { topGames:   [],   newGames:   [],   olderGames:   [],   allGames:   [] };
             }
         }
 
-        function createGameCard(game, badgeText = null, badgeClass = '') {
+        function createGameCard(game,   badgeText = null,   badgeClass = '') {
             const gameCard = document.createElement('div');
             gameCard.className = 'game-card';
-            gameCard.setAttribute('data-title', game.title);
-            gameCard.setAttribute('data-description', game.description);
+            gameCard.setAttribute('data-title',   game.title);
+            gameCard.setAttribute('data-description',   game.description);
+            gameCard.setAttribute('data-tags',   game.tags ? game.tags.join(',  ') :   '');
             
             const isCollection = game.isCollection || false;
             
             gameCard.innerHTML = `
-                <div class="game-banner" style="background-image: url('${game.image}');">
-                    ${badgeText ? `<div class="game-badge ${badgeClass}">${badgeText}</div>` : ''}
+                <div class="game-banner" style="background-image:   url('${game.image}');">
+                    ${badgeText ? `<div class="game-badge ${badgeClass}">${badgeText}</div>` :   ''}
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.title}</h3>
                     <p class="game-description">${game.description}</p>
                     <div class="game-meta">
                         <span><i class="fas fa-star"></i> ${game.rating || 'N/A'}</span>
-                        <span><i class="${game.multiplayer ? 'fas fa-users' : 'fas fa-user'}"></i> ${game.multiplayer ? 'Multiplayer' : 'Single Player'}</span>
+                        <span><i class="${game.multiplayer ? 'fas fa-users' :   'fas fa-user'}"></i> ${game.multiplayer ? 'Multiplayer' :   'Single Player'}</span>
                     </div>
                     <button class="play-button" 
                             data-url="${game.url}" 
                             data-id="${game.id}" 
                             data-title="${game.title}"
                             data-is-collection="${isCollection}"
-                            ${isCollection ? `data-collection-id="${game.id}"` : ''}>
-                        ${isCollection ? 'View Collection' : 'Play Now'}
+                            ${isCollection ? `data-collection-id="${game.id}"` :   ''}>
+                        ${isCollection ? 'View Collection' :   'Play Now'}
                     </button>
                 </div>
             `;
@@ -1176,23 +1260,23 @@
         async function getCollectionGames(collectionId) {
             try {
                 const subGamesSnapshot = await db.collection("games")
-                    .where("collectionId", "==", collectionId)
-                    .orderBy("createdAt", "desc")
+                    .where("collectionId",   "==",   collectionId)
+                    .orderBy("createdAt",   "desc")
                     .get();
                 
                 const subGames = [];
                 subGamesSnapshot.forEach((doc) => {
-                    subGames.push({ id: doc.id, ...doc.data() });
+                    subGames.push({ id:   doc.id,   ...doc.data() });
                 });
                 
                 return subGames;
             } catch (error) {
-                console.error("Error getting collection games: ", error);
+                console.error("Error getting collection games:   ",   error);
                 return [];
             }
         }
 
-        function renderCollectionGames(games, collectionTitle) {
+        function renderCollectionGames(games,   collectionTitle) {
             const collectionGamesGrid = document.getElementById('collectionGamesGrid');
             collectionGamesGrid.innerHTML = '';
             
@@ -1202,15 +1286,15 @@
                 const gameCard = document.createElement('div');
                 gameCard.className = 'collection-game-card';
                 gameCard.innerHTML = `
-                    <div class="collection-game-banner" style="background-image: url('${game.image}');"></div>
+                    <div class="collection-game-banner" style="background-image:   url('${game.image}');"></div>
                     <div class="collection-game-info">
                         <h3 class="collection-game-title">${game.title}</h3>
                         <p class="collection-game-description">${game.description}</p>
                     </div>
                 `;
                 
-                gameCard.addEventListener('click', async function() {
-                    await logGamePlay(game.id, game.title);
+                gameCard.addEventListener('click',   async function() {
+                    await logGamePlay(game.id,   game.title);
                     
                     document.getElementById('modalGameTitle').textContent = game.title;
                     document.getElementById('gameFrame').src = game.url;
@@ -1235,13 +1319,13 @@
             
             gamesData.topGames.forEach(game => {
                 const badgeText = `TOP ${game.rank}`;
-                const gameCard = createGameCard(game, badgeText, 'top');
+                const gameCard = createGameCard(game,   badgeText,   'top');
                 topGamesGrid.appendChild(gameCard);
             });
             
             gamesData.newGames.forEach(game => {
                 const badgeText = "NEW";
-                const gameCard = createGameCard(game, badgeText, 'new'); // Changed to blue class
+                const gameCard = createGameCard(game,   badgeText,   'new');
                 newGamesGrid.appendChild(gameCard);
             });
             
@@ -1260,8 +1344,11 @@
                 issueGameSelect.appendChild(option);
             });
             
+            // Render filter tags
+            renderFilterTags(gamesData.allGames);
+            
             document.querySelectorAll('.play-button').forEach(button => {
-                button.addEventListener('click', async function(e) {
+                button.addEventListener('click',   async function(e) {
                     e.preventDefault();
                     const gameId = this.getAttribute('data-id');
                     const gameUrl = this.getAttribute('data-url');
@@ -1273,14 +1360,14 @@
                         const subGames = await getCollectionGames(collectionId);
                         
                         if (subGames.length > 0) {
-                            renderCollectionGames(subGames, gameTitle);
+                            renderCollectionGames(subGames,   gameTitle);
                             document.getElementById('collectionModal').style.display = 'block';
                             document.body.style.overflow = 'hidden';
                         } else {
                             alert('No versions available for this collection.');
                         }
                     } else {
-                        await logGamePlay(gameId, gameTitle);
+                        await logGamePlay(gameId,   gameTitle);
                         
                         document.getElementById('modalGameTitle').textContent = gameTitle;
                         document.getElementById('gameFrame').src = gameUrl;
@@ -1290,6 +1377,91 @@
                     }
                 });
             });
+            
+            // Apply any existing filters after rendering
+            applyFilters();
+        }
+
+        function renderFilterTags(games) {
+            const filterContainer = document.getElementById('filter-container');
+            
+            // Extract all unique tags and count their occurrences
+            const tagCounts = {};
+            games.forEach(game => {
+                if (game.tags && Array.isArray(game.tags)) {
+                    game.tags.forEach(tag => {
+                        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                    });
+                }
+            });
+            
+            // Clear existing tags
+            filterContainer.innerHTML = '';
+            
+            // Create filter buttons for each tag
+            Object.keys(tagCounts).sort().forEach(tag => {
+                const tagButton = document.createElement('button');
+                tagButton.className = 'filter-tag';
+                tagButton.innerHTML = `
+                    ${tag} 
+                    <span class="tag-count">${tagCounts[tag]}</span>
+                `;
+                tagButton.dataset.tag = tag;
+                tagButton.addEventListener('click',   toggleFilterTag);
+                filterContainer.appendChild(tagButton);
+            });
+        }
+
+        function toggleFilterTag(e) {
+            const tag = e.currentTarget.dataset.tag;
+            e.currentTarget.classList.toggle('active');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const activeTags = Array.from(document.querySelectorAll('.filter-tag.active'))
+                .map(tag => tag.dataset.tag);
+            
+            // Apply filters to each section
+            filterSection('top-games-grid',   'top-games-section',   activeTags);
+            filterSection('new-games-grid',   'new-games-section',   activeTags);
+            filterSection('all-games-grid',   'older-games-section',   activeTags);
+        }
+
+        function filterSection(gridId,   sectionId,   activeTags) {
+            const grid = document.getElementById(gridId);
+            const section = document.getElementById(sectionId);
+            const gameCards = grid.querySelectorAll('.game-card');
+            
+            if (activeTags.length === 0) {
+                // Show all games if no filters are active
+                gameCards.forEach(card => {
+                    card.classList.remove('hidden');
+                });
+                section.classList.remove('section-hidden');
+                return;
+            }
+            
+            let visibleCount = 0;
+            
+            gameCards.forEach(card => {
+                const gameTags = card.getAttribute('data-tags').split(',  ');
+                const hasMatchingTag = activeTags.some(tag => gameTags.includes(tag));
+                
+                if (hasMatchingTag) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Hide section if no games are visible
+            if (visibleCount === 0) {
+                section.classList.add('section-hidden');
+            } else {
+                section.classList.remove('section-hidden');
+            }
         }
 
         function performSearch() {
@@ -1313,18 +1485,21 @@
                     card.classList.add('hidden');
                 }
             });
+            
+            // Re-apply filters to maintain consistency
+            applyFilters();
         }
 
         const modal = document.getElementById("gameModal");
         const closeBtn = document.querySelector(".close");
         
-        closeBtn.addEventListener('click', function() {
+        closeBtn.addEventListener('click',   function() {
             modal.style.display = "none";
             document.getElementById('gameFrame').src = "";
             document.body.style.overflow = "auto";
         });
         
-        window.addEventListener('click', function(event) {
+        window.addEventListener('click',   function(event) {
             if (event.target === modal) {
                 modal.style.display = "none";
                 document.getElementById('gameFrame').src = "";
@@ -1332,7 +1507,7 @@
             }
         });
         
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown',   function(event) {
             if (event.key === "Escape" && modal.style.display === "block") {
                 modal.style.display = "none";
                 document.getElementById('gameFrame').src = "";
@@ -1343,34 +1518,34 @@
         const collectionModal = document.getElementById("collectionModal");
         const collectionCloseBtn = document.querySelector(".collection-close");
         
-        collectionCloseBtn.addEventListener('click', function() {
+        collectionCloseBtn.addEventListener('click',   function() {
             collectionModal.style.display = "none";
             document.body.style.overflow = "auto";
         });
         
-        window.addEventListener('click', function(event) {
+        window.addEventListener('click',   function(event) {
             if (event.target === collectionModal) {
                 collectionModal.style.display = "none";
                 document.body.style.overflow = "auto";
             }
         });
         
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown',   function(event) {
             if (event.key === "Escape" && collectionModal.style.display === "block") {
                 collectionModal.style.display = "none";
                 document.body.style.overflow = "auto";
             }
         });
 
-        document.getElementById('search-button').addEventListener('click', performSearch);
+        document.getElementById('search-button').addEventListener('click',   performSearch);
         
-        document.getElementById('search-input').addEventListener('keyup', function(event) {
+        document.getElementById('search-input').addEventListener('keyup',   function(event) {
             if (event.key === 'Enter') {
                 performSearch();
             }
         });
 
-        document.getElementById('suggestGameForm').addEventListener('submit', async function(e) {
+        document.getElementById('suggestGameForm').addEventListener('submit',   async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('suggestName').value;
@@ -1383,13 +1558,13 @@
             
             try {
                 await db.collection("gameSuggestions").add({
-                    name: name,
-                    email: email,
-                    gameTitle: title,
-                    gameBanner: banner,
-                    gameLink: link,
-                    gameDescription: description,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    name:   name,   
+                    email:   email,   
+                    gameTitle:   title,   
+                    gameBanner:   banner,   
+                    gameLink:   link,   
+                    gameDescription:   description,   
+                    timestamp:   firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
                 messageDiv.textContent = "Game suggestion submitted successfully!";
@@ -1397,13 +1572,13 @@
                 
                 this.reset();
             } catch (error) {
-                console.error("Error submitting suggestion: ", error);
+                console.error("Error submitting suggestion:   ",   error);
                 messageDiv.textContent = "Error submitting suggestion. Please try again.";
                 messageDiv.className = "form-message error";
             }
         });
         
-        document.getElementById('reportIssueForm').addEventListener('submit', async function(e) {
+        document.getElementById('reportIssueForm').addEventListener('submit',   async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('reportName').value;
@@ -1420,15 +1595,15 @@
             
             try {
                 const gameDoc = await db.collection("games").doc(gameId).get();
-                const gameTitle = gameDoc.exists ? gameDoc.data().title : "Unknown Game";
+                const gameTitle = gameDoc.exists ? gameDoc.data().title :   "Unknown Game";
                 
                 await db.collection("issueReports").add({
-                    name: name,
-                    email: email,
-                    gameId: gameId,
-                    gameTitle: gameTitle,
-                    issueDescription: issueDescription,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    name:   name,   
+                    email:   email,   
+                    gameId:   gameId,   
+                    gameTitle:   gameTitle,   
+                    issueDescription:   issueDescription,   
+                    timestamp:   firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
                 messageDiv.textContent = "Issue reported successfully!";
@@ -1436,24 +1611,24 @@
                 
                 this.reset();
             } catch (error) {
-                console.error("Error submitting issue: ", error);
+                console.error("Error submitting issue:   ",   error);
                 messageDiv.textContent = "Error reporting issue. Please try again.";
                 messageDiv.className = "form-message error";
             }
         });
 
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded',   async function() {
             const gamesData = await getGames();
             renderGames(gamesData);
             
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
+                anchor.addEventListener('click',   function(e) {
                     e.preventDefault();
                     const target = document.querySelector(this.getAttribute('href'));
                     if (target) {
                         window.scrollTo({
-                            top: target.offsetTop - 80,
-                            behavior: 'smooth'
+                            top:   target.offsetTop - 80,   
+                            behavior:   'smooth'
                         });
                     }
                 });
