@@ -89,7 +89,7 @@
             border: 1px solid transparent;
         }
         
-        nav a:hover, 
+        nav a:hover,
         nav a.active {
             background: rgba(59, 130, 246, 0.2);
             color: var(--admin-blue-light);
@@ -160,6 +160,7 @@
             display: flex;
             margin-bottom: 30px;
             border-bottom: 2px solid var(--admin-blue-light);
+            flex-wrap: wrap;
         }
         
         .tab {
@@ -297,6 +298,7 @@
         .admin-actions {
             display: flex;
             gap: 10px;
+            margin-top: auto;
         }
         
         .btn {
@@ -355,8 +357,8 @@
             color: var(--admin-blue-light);
         }
         
-        .form-group input, 
-        .form-group textarea, 
+        .form-group input,
+        .form-group textarea,
         .form-group select {
             width: 100%;
             padding: 12px;
@@ -365,11 +367,6 @@
             color: var(--accent-white);
             font-family: var(--tech-font);
             border-radius: 4px;
-        }
-        
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
         }
         
         .tag-selects {
@@ -418,8 +415,7 @@
             min-width: 500px;
         }
         
-        th, 
-        td {
+        th, td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid rgba(59, 130, 246, 0.2);
@@ -540,89 +536,46 @@
             color: var(--admin-blue-light);
         }
         
+        .alert-error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid var(--admin-red);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #ff8a8a;
+        }
+        
         @media (max-width: 768px) {
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 20px;
             }
-            
-            .game-card {
-                height: 340px;
-            }
-            
-            .game-banner {
-                height: 180px;
-            }
-            
-            .game-title {
-                font-size: 1rem;
-            }
-            
-            .tabs {
-                flex-wrap: wrap;
-            }
-            
-            .tab {
-                padding: 10px 15px;
-                font-size: 0.7rem;
-            }
+            .game-card { height: 340px; }
+            .game-banner { height: 180px; }
+            .game-title { font-size: 1rem; }
+            .tab { padding: 10px 15px; font-size: 0.7rem; }
         }
         
         @media (max-width: 480px) {
-            .games-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
+            .games-grid { grid-template-columns: 1fr; }
+            .stats-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">
-            <i class="fas fa-crown"></i>
-            <h1>GAME UNIVERSE ADMIN</h1>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Games</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Tags</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </nav>
+        <div class="logo"><i class="fas fa-crown"></i><h1>GAME UNIVERSE ADMIN</h1></div>
+        <nav><ul><li><a href="#" class="active">Dashboard</a></li></ul></nav>
     </header>
     
     <div class="container">
-        <div class="section-title">
-            <h2>ADMIN DASHBOARD</h2>
-            <p>Manage games, view statistics, and monitor user activity</p>
-        </div>
+        <div class="section-title"><h2>ADMIN DASHBOARD</h2><p>Manage games, view statistics, and monitor user activity</p></div>
         
         <div class="stats-container">
-            <div class="stat-card">
-                <i class="fas fa-gamepad"></i>
-                <h3 id="total-games">0</h3>
-                <p>Total Games</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-play-circle"></i>
-                <h3 id="total-plays">0</h3>
-                <p>Total Plays</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-users"></i>
-                <h3 id="unique-ips">0</h3>
-                <p>Unique IPs</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-chart-line"></i>
-                <h3 id="new-games">0</h3>
-                <p>New Games (7 days)</p>
-            </div>
+            <div class="stat-card"><i class="fas fa-gamepad"></i><h3 id="total-games">0</h3><p>Total Games</p></div>
+            <div class="stat-card"><i class="fas fa-play-circle"></i><h3 id="total-plays">0</h3><p>Total Plays</p></div>
+            <div class="stat-card"><i class="fas fa-users"></i><h3 id="unique-ips">0</h3><p>Unique IPs</p></div>
+            <div class="stat-card"><i class="fas fa-chart-line"></i><h3 id="new-games">0</h3><p>New Games (7 days)</p></div>
         </div>
         
         <div class="tabs">
@@ -637,10 +590,7 @@
                 <input type="text" id="search-games" placeholder="Search games by title or tags..." />
                 <button id="search-games-btn"><i class="fas fa-search"></i> Search</button>
             </div>
-            
-            <div id="games-container" class="games-grid">
-                <div class="loading">Loading games...</div>
-            </div>
+            <div id="games-container" class="games-grid"><div class="loading">Loading games...</div></div>
         </div>
         
         <div class="tab-content" id="plays-tab">
@@ -648,21 +598,8 @@
                 <input type="text" id="search-plays" placeholder="Search by IP or game..." />
                 <button id="search-plays-btn"><i class="fas fa-search"></i> Search</button>
             </div>
-            
             <div class="table-container">
-                 <table>
-                    <thead>
-                         <tr>
-                            <th>IP Address</th>
-                            <th>Game</th>
-                            <th>Date & Time</th>
-                            <th>Actions</th>
-                         </tr>
-                    </thead>
-                    <tbody id="plays-table-body">
-                         <tr><td colspan="4" class="loading">Loading play records...</td></tr>
-                    </tbody>
-                 </table>
+                <table><thead><tr><th>IP Address</th><th>Game</th><th>Date & Time</th><th>Actions</th></tr></thead><tbody id="plays-table-body"><tr><td colspan="4" class="loading">Loading play records...</td></tr></tbody></table>
             </div>
         </div>
         
@@ -670,39 +607,13 @@
             <div class="form-container">
                 <h3 class="form-title">CREATE NEW GAME</h3>
                 <form id="game-form" novalidate>
-                    <div class="form-group">
-                        <label for="game-title">Game Title *</label>
-                        <input type="text" id="game-title" required />
-                        <div class="error-message" id="title-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="game-image">Image URL * (https://...)</label>
-                        <input type="url" id="game-image" placeholder="https://macautraffic.com/images/games/" value="https://macautraffic.com/images/games/" required />
-                        <div class="error-message" id="image-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="game-url">Game URL * (https://...)</label>
-                        <input type="url" id="game-url" placeholder="https://macautraffic.com/games/" value="https://macautraffic.com/games/" required />
-                        <div class="error-message" id="url-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="game-rating">Rating (1-5)</label>
-                        <input type="number" id="game-rating" min="1" max="5" step="0.1" value="4.5" required />
-                        <div class="error-message" id="rating-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="game-multiplayer">Multiplayer</label>
-                        <select id="game-multiplayer" required>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Tags (up to 3)</label>
-                        <div class="tag-selects" id="create-tag-selects">
-                            <!-- Tag selects will be populated here -->
-                        </div>
-                    </div>
+                    <div class="form-group"><label for="game-title">Game Title *</label><input type="text" id="game-title" required /><div class="error-message" id="title-error"></div></div>
+                    <div class="form-group"><label for="game-image">Image URL *</label><input type="url" id="game-image" placeholder="https://..." value="https://picsum.photos/400/200?graffiti" required /><div class="error-message" id="image-error"></div></div>
+                    <div class="form-group"><label for="game-icon">Game Icon URL (optional)</label><input type="url" id="game-icon" placeholder="https://..." /><div class="error-message" id="icon-error"></div></div>
+                    <div class="form-group"><label for="game-url">Game URL *</label><input type="url" id="game-url" placeholder="https://..." value="https://example.com/game" required /><div class="error-message" id="url-error"></div></div>
+                    <div class="form-group"><label for="game-rating">Rating (1-5)</label><input type="number" id="game-rating" min="1" max="5" step="0.1" value="4.5" required /><div class="error-message" id="rating-error"></div></div>
+                    <div class="form-group"><label for="game-multiplayer">Multiplayer</label><select id="game-multiplayer" required><option value="true">Yes</option><option value="false">No</option></select></div>
+                    <div class="form-group"><label>Tags (up to 3)</label><div class="tag-selects" id="create-tag-selects"></div></div>
                     <button type="submit" class="btn-submit">CREATE GAME</button>
                 </form>
             </div>
@@ -713,105 +624,55 @@
                 <h3 class="form-title">MANAGE TAGS</h3>
                 <div class="form-group">
                     <label for="new-tag">Add New Tag</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="new-tag" placeholder="Enter new tag name" />
-                        <button id="add-tag-btn" class="btn-submit">Add Tag</button>
-                    </div>
+                    <div style="display: flex; gap: 10px;"><input type="text" id="new-tag" placeholder="Enter new tag name" /><button id="add-tag-btn" class="btn-submit">Add Tag</button></div>
                 </div>
                 <div class="table-container">
-                    <table>
-                        <thead>
-                             <tr>
-                                <th>Tag Name</th>
-                                <th>Games Count</th>
-                                <th>Actions</th>
-                             </tr>
-                        </thead>
-                        <tbody id="tags-table-body">
-                             <tr><td colspan="3" class="loading">Loading tags...</td></tr>
-                        </tbody>
-                    </table>
+                    <table><thead><tr><th>Tag Name</th><th>Games Count</th><th>Actions</th></tr></thead><tbody id="tags-table-body"><tr><td colspan="3" class="loading">Loading tags...</td></tr></tbody></table>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Edit Game Modal -->
-    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+    <div id="editModal" class="modal" role="dialog" aria-modal="true">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle" class="modal-title">EDIT GAME</h2>
-                <span class="close" role="button" aria-label="Close editing form">×</span>
-            </div>
+            <div class="modal-header"><h2 class="modal-title">EDIT GAME</h2><span class="close" role="button">×</span></div>
             <form id="edit-game-form" novalidate>
                 <input type="hidden" id="edit-game-id" />
-                <div class="form-group">
-                    <label for="edit-game-title">Game Title *</label>
-                    <input type="text" id="edit-game-title" required />
-                    <div class="error-message" id="edit-title-error"></div>
-                </div>
-                <div class="form-group">
-                    <label for="edit-game-image">Image URL *</label>
-                    <input type="url" id="edit-game-image" required />
-                    <div class="error-message" id="edit-image-error"></div>
-                </div>
-                <div class="form-group">
-                    <label for="edit-game-url">Game URL *</label>
-                    <input type="url" id="edit-game-url" required />
-                    <div class="error-message" id="edit-url-error"></div>
-                </div>
-                <div class="form-group">
-                    <label for="edit-game-rating">Rating (1-5)</label>
-                    <input type="number" id="edit-game-rating" min="1" max="5" step="0.1" required />
-                    <div class="error-message" id="edit-rating-error"></div>
-                </div>
-                <div class="form-group">
-                    <label for="edit-game-multiplayer">Multiplayer</label>
-                    <select id="edit-game-multiplayer" required>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Tags (up to 3)</label>
-                    <div class="tag-selects" id="edit-tag-selects">
-                        <!-- Tag selects will be populated here -->
-                    </div>
-                </div>
+                <div class="form-group"><label for="edit-game-title">Game Title *</label><input type="text" id="edit-game-title" required /><div class="error-message" id="edit-title-error"></div></div>
+                <div class="form-group"><label for="edit-game-image">Image URL *</label><input type="url" id="edit-game-image" required /><div class="error-message" id="edit-image-error"></div></div>
+                <div class="form-group"><label for="edit-game-icon">Game Icon URL (optional)</label><input type="url" id="edit-game-icon" /><div class="error-message" id="edit-icon-error"></div></div>
+                <div class="form-group"><label for="edit-game-url">Game URL *</label><input type="url" id="edit-game-url" required /><div class="error-message" id="edit-url-error"></div></div>
+                <div class="form-group"><label for="edit-game-rating">Rating (1-5)</label><input type="number" id="edit-game-rating" min="1" max="5" step="0.1" required /><div class="error-message" id="edit-rating-error"></div></div>
+                <div class="form-group"><label for="edit-game-multiplayer">Multiplayer</label><select id="edit-game-multiplayer" required><option value="true">Yes</option><option value="false">No</option></select></div>
+                <div class="form-group"><label>Tags (up to 3)</label><div class="tag-selects" id="edit-tag-selects"></div></div>
                 <button type="submit" class="btn-submit">UPDATE GAME</button>
             </form>
         </div>
     </div>
     
-    <footer>
-        <p>2023 GAME UNIVERSE ADMIN PANEL. ALL RIGHTS RESERVED.</p>
-    </footer>
+    <footer><p>2023 GAME UNIVERSE ADMIN PANEL. ALL RIGHTS RESERVED.</p></footer>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script>
-        // ==================== FIREBASE INITIALIZATION ====================
+        // ==================== FIREBASE ====================
         const firebaseConfig = {
-            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw", 
-            authDomain: "blacket-65c5b.firebaseapp.com", 
-            projectId: "blacket-65c5b", 
-            storageBucket: "blacket-65c5b.firebasestorage.app", 
-            messagingSenderId: "497023905730", 
-            appId: "1:497023905730:web:a59093052a3f93a476305b", 
-            measurementId: "G-XZZR5DH79B"
+            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
+            authDomain: "blacket-65c5b.firebaseapp.com",
+            projectId: "blacket-65c5b",
+            storageBucket: "blacket-65c5b.firebasestorage.app",
+            messagingSenderId: "497023905730",
+            appId: "1:497023905730:web:a59093052a3f93a476305b"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        console.log("Firebase initialized. Firestore: ", db);
-
-        // ==================== REFERENCES ====================
+        
+        // References
         const gamesRef = db.collection("games");
         const playsRef = db.collection("plays");
         const tagsRef = db.collection("tags");
-
-        // ==================== DOM ELEMENTS ====================
+        
+        // DOM elements
         const gamesContainer = document.getElementById("games-container");
         const playsTableBody = document.getElementById("plays-table-body");
         const tagsTableBody = document.getElementById("tags-table-body");
@@ -831,581 +692,233 @@
         const editTagSelects = document.getElementById("edit-tag-selects");
         const newTagInput = document.getElementById("new-tag");
         const addTagBtn = document.getElementById("add-tag-btn");
-
-        // ==================== HELPER FUNCTIONS ====================
-        function escapeHtml(text) {
-            if (!text) return "";
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
-        }
-
-        function formatDate(date) {
-            if (!date) return "Unknown";
-            if (date.toDate) date = date.toDate();
-            return new Date(date).toLocaleString();
-        }
-
-        function isRecent(date) {
-            if (!date) return false;
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = diffTime / (1000 * 60 * 60 * 24);
-            return diffDays <= 7;
-        }
-
-        function isValidUrl(string) {
-            try {
-                new URL(string);
-                return true;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        function showError(elementId, message) {
-            const el = document.getElementById(elementId);
-            if (el) {
-                el.textContent = message;
-                el.style.display = "block";
-            }
-        }
-
-        function hideError(elementId) {
-            const el = document.getElementById(elementId);
-            if (el) {
-                el.textContent = "";
-                el.style.display = "none";
-            }
-        }
-
-        function validateForm(formType) {
-            let isValid = true;
-            const prefix = formType === "edit" ? "edit-" : "";
-            
+        
+        // Helper functions
+        function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m; }); }
+        function formatDate(date) { if (!date) return "Unknown"; if (date.toDate) date = date.toDate(); return new Date(date).toLocaleString(); }
+        function isRecent(date) { if (!date) return false; const diff = (new Date() - (date.toDate ? date.toDate() : date)) / (1000*60*60*24); return diff <= 7; }
+        function isValidUrl(string) { try { new URL(string); return true; } catch(e) { return false; } }
+        function showError(elId, msg) { const el = document.getElementById(elId); if(el) { el.textContent = msg; el.style.display = "block"; } }
+        function hideError(elId) { const el = document.getElementById(elId); if(el) { el.textContent = ""; el.style.display = "none"; } }
+        
+        function validateForm(prefix = "") {
+            let valid = true;
             const title = document.getElementById(`${prefix}game-title`).value.trim();
-            if (!title) {
-                showError(`${prefix}title-error`, "Title is required");
-                isValid = false;
-            } else {
-                hideError(`${prefix}title-error`);
-            }
-            
-            const image = document.getElementById(`${prefix}game-image`).value.trim();
-            if (!image) {
-                showError(`${prefix}image-error`, "Image URL is required");
-                isValid = false;
-            } else if (!isValidUrl(image)) {
-                showError(`${prefix}image-error`, "Please enter a valid URL (starting with http:// or https://)");
-                isValid = false;
-            } else {
-                hideError(`${prefix}image-error`);
-            }
-            
+            if(!title) { showError(`${prefix}title-error`, "Title required"); valid=false; } else { hideError(`${prefix}title-error`); }
+            const img = document.getElementById(`${prefix}game-image`).value.trim();
+            if(!img) { showError(`${prefix}image-error`, "Image URL required"); valid=false; } else if(!isValidUrl(img)) { showError(`${prefix}image-error`, "Valid URL required"); valid=false; } else { hideError(`${prefix}image-error`); }
+            const icon = document.getElementById(`${prefix}game-icon`).value.trim();
+            if(icon && !isValidUrl(icon)) { showError(`${prefix}icon-error`, "Valid URL required"); valid=false; } else { hideError(`${prefix}icon-error`); }
             const url = document.getElementById(`${prefix}game-url`).value.trim();
-            if (!url) {
-                showError(`${prefix}url-error`, "Game URL is required");
-                isValid = false;
-            } else if (!isValidUrl(url)) {
-                showError(`${prefix}url-error`, "Please enter a valid URL (starting with http:// or https://)");
-                isValid = false;
-            } else {
-                hideError(`${prefix}url-error`);
-            }
-            
+            if(!url) { showError(`${prefix}url-error`, "Game URL required"); valid=false; } else if(!isValidUrl(url)) { showError(`${prefix}url-error`, "Valid URL required"); valid=false; } else { hideError(`${prefix}url-error`); }
             const rating = parseFloat(document.getElementById(`${prefix}game-rating`).value);
-            if (isNaN(rating) || rating < 1 || rating > 5) {
-                showError(`${prefix}rating-error`, "Rating must be between 1 and 5");
-                isValid = false;
-            } else {
-                hideError(`${prefix}rating-error`);
-            }
-            
-            return isValid;
+            if(isNaN(rating) || rating<1 || rating>5) { showError(`${prefix}rating-error`, "Rating 1-5"); valid=false; } else { hideError(`${prefix}rating-error`); }
+            return valid;
         }
-
-        // ==================== TAGS ====================
+        
+        // ========== TAGS ==========
         async function loadTagsForSelects() {
             try {
                 const snapshot = await tagsRef.orderBy("name").get();
-                const tags = [];
-                snapshot.forEach(doc => {
-                    tags.push({ id: doc.id, name: doc.data().name });
-                });
-                
-                // Clear existing selects
-                createTagSelects.innerHTML = '';
-                editTagSelects.innerHTML = '';
-                
-                // Create 3 select elements for each form
-                for (let i = 0; i < 3; i++) {
-                    const createSelect = document.createElement('div');
-                    createSelect.className = 'tag-select';
-                    createSelect.innerHTML = `
-                        <select id="game-tag-${i+1}">
-                            <option value="">Select Tag</option>
-                            ${tags.map(tag => `<option value="${escapeHtml(tag.name)}">${escapeHtml(tag.name)}</option>`).join('')}
-                        </select>
-                    `;
-                    createTagSelects.appendChild(createSelect);
-                    
-                    const editSelect = document.createElement('div');
-                    editSelect.className = 'tag-select';
-                    editSelect.innerHTML = `
-                        <select id="edit-game-tag-${i+1}">
-                            <option value="">Select Tag</option>
-                            ${tags.map(tag => `<option value="${escapeHtml(tag.name)}">${escapeHtml(tag.name)}</option>`).join('')}
-                        </select>
-                    `;
-                    editTagSelects.appendChild(editSelect);
+                const tags = snapshot.docs.map(doc => ({ id: doc.id, name: doc.data().name }));
+                [createTagSelects, editTagSelects].forEach(container => { if(container) container.innerHTML = ""; });
+                for(let i=1; i<=3; i++) {
+                    const options = `<option value="">Select Tag</option>` + tags.map(t => `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)}</option>`).join('');
+                    if(createTagSelects) createTagSelects.insertAdjacentHTML('beforeend', `<div class="tag-select"><select id="game-tag-${i}">${options}</select></div>`);
+                    if(editTagSelects) editTagSelects.insertAdjacentHTML('beforeend', `<div class="tag-select"><select id="edit-game-tag-${i}">${options}</select></div>`);
                 }
-            } catch (error) {
-                console.error("Error loading tags for selects: ", error);
-            }
+            } catch(e) { console.error("loadTagsForSelects error", e); }
         }
-
+        
         async function loadTags() {
             tagsTableBody.innerHTML = '<tr><td colspan="3" class="loading">Loading tags...</td></tr>';
             try {
                 const snapshot = await tagsRef.orderBy("name").get();
-                if (snapshot.empty) {
-                    tagsTableBody.innerHTML = '<tr><td colspan="3">No tags found.</td></tr>';
-                    return;
-                }
-                
-                const tags = [];
-                snapshot.forEach(doc => {
-                    tags.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Get game counts for each tag
-                const gamesSnapshot = await gamesRef.get();
+                if(snapshot.empty) { tagsTableBody.innerHTML = '<tr><td colspan="3">No tags. Add some!</td></tr>'; return; }
+                const gamesSnap = await gamesRef.get();
                 const tagCounts = {};
-                gamesSnapshot.forEach(doc => {
-                    const game = doc.data();
-                    if (game.tags && Array.isArray(game.tags)) {
-                        game.tags.forEach(tag => {
-                            if (tag) {
-                                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-                            }
-                        });
+                gamesSnap.forEach(doc => { const tagsArr = doc.data().tags; if(Array.isArray(tagsArr)) tagsArr.forEach(t => { if(t) tagCounts[t] = (tagCounts[t]||0)+1; }); });
+                tagsTableBody.innerHTML = snapshot.docs.map(doc => {
+                    const tag = doc.data().name;
+                    return `<tr><td>${escapeHtml(tag)}</td><td>${tagCounts[tag]||0}</td><td><button class="btn btn-delete" data-id="${doc.id}" data-name="${escapeHtml(tag)}">Delete</button></td></tr>`;
+                }).join("");
+                document.querySelectorAll("#tags-table-body .btn-delete").forEach(btn => btn.addEventListener("click", async (e) => {
+                    const tagId = btn.dataset.id, tagName = btn.dataset.name;
+                    if(confirm(`Delete "${tagName}" from all games?`)) {
+                        try {
+                            const gamesSnap = await gamesRef.get();
+                            const batch = db.batch();
+                            gamesSnap.forEach(gameDoc => {
+                                const data = gameDoc.data();
+                                if(data.tags && data.tags.includes(tagName)) {
+                                    const newTags = data.tags.filter(t => t !== tagName);
+                                    batch.update(gamesRef.doc(gameDoc.id), { tags: newTags });
+                                }
+                            });
+                            await batch.commit();
+                            await tagsRef.doc(tagId).delete();
+                            await loadTags(); await loadTagsForSelects(); await loadGames();
+                            alert("Tag deleted!");
+                        } catch(err) { console.error(err); alert("Delete failed: "+err.message); }
                     }
-                });
-                
-                tagsTableBody.innerHTML = tags.map(tag => `
-                    <tr>
-                        <td>${escapeHtml(tag.name)}</td>
-                        <td>${tagCounts[tag.name] || 0}</td>
-                        <td>
-                            <button class="btn btn-delete" data-id="${escapeHtml(tag.id)}" data-name="${escapeHtml(tag.name)}">Delete</button>
-                        </td>
-                    </tr>
-                `).join("");
-                
-                document.querySelectorAll("#tags-table-body .btn-delete").forEach(btn => {
-                    btn.addEventListener("click", async (e) => {
-                        const tagId = btn.getAttribute("data-id");
-                        const tagName = btn.getAttribute("data-name");
-                        if (confirm(`Delete tag "${tagName}"? It will be removed from all games.`)) {
-                            try {
-                                // Remove tag from all games
-                                const gamesSnapshot = await gamesRef.get();
-                                const batch = db.batch();
-                                
-                                gamesSnapshot.forEach(doc => {
-                                    const gameRef = gamesRef.doc(doc.id);
-                                    const gameData = doc.data();
-                                    if (gameData.tags && Array.isArray(gameData.tags)) {
-                                        const updatedTags = gameData.tags.filter(t => t !== tagName);
-                                        batch.update(gameRef, { tags: updatedTags });
-                                    }
-                                });
-                                
-                                await batch.commit();
-                                
-                                // Delete the tag document
-                                await tagsRef.doc(tagId).delete();
-                                
-                                await loadTags();
-                                await loadTagsForSelects();
-                                await loadGames();
-                                alert("Tag deleted successfully!");
-                            } catch (error) {
-                                console.error("Error deleting tag: ", error);
-                                alert("Failed to delete tag.");
-                            }
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error("Error loading tags: ", error);
-                tagsTableBody.innerHTML = `<tr><td colspan="3">Error loading tags: ${error.message}</td></tr>`;
-            }
+                }));
+            } catch(e) { tagsTableBody.innerHTML = `<tr><td colspan="3">Error: ${e.message}</td></tr>`; }
         }
-
+        
         async function addNewTag() {
-            const tagName = newTagInput.value.trim();
-            if (!tagName) {
-                alert("Please enter a tag name");
-                return;
-            }
-            
+            const name = newTagInput.value.trim();
+            if(!name) return alert("Enter tag name");
             try {
-                // Check if tag already exists
-                const existingTag = await tagsRef.where("name", "==", tagName).get();
-                if (!existingTag.empty) {
-                    alert("Tag already exists!");
-                    return;
-                }
-                
-                // Add new tag
-                await tagsRef.add({ name: tagName });
+                const exist = await tagsRef.where("name", "==", name).get();
+                if(!exist.empty) return alert("Tag exists");
+                await tagsRef.add({ name });
                 newTagInput.value = "";
-                await loadTags();
-                await loadTagsForSelects();
-                alert("Tag added successfully!");
-            } catch (error) {
-                console.error("Error adding tag: ", error);
-                alert("Failed to add tag.");
-            }
+                await loadTags(); await loadTagsForSelects();
+                alert("Tag added");
+            } catch(e) { alert("Add failed: "+e.message); }
         }
-
-        // ==================== GAMES ====================
+        
+        // ========== GAMES ==========
         async function loadGames() {
             gamesContainer.innerHTML = '<div class="loading">Loading games...</div>';
             try {
                 const snapshot = await gamesRef.orderBy("createdAt", "desc").get();
-                if (snapshot.empty) {
-                    gamesContainer.innerHTML = "<p>No games available. Create your first game!</p>";
-                    totalGamesEl.textContent = "0";
-                    newGamesEl.textContent = "0";
-                    return;
-                }
-                
-                const games = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    games.push({ id: doc.id, ...data });
-                });
-                
-                gamesContainer.innerHTML = games.map(game => createGameCard(game)).join("");
+                if(snapshot.empty) { gamesContainer.innerHTML = "<p>No games yet. Create one!</p>"; totalGamesEl.textContent="0"; newGamesEl.textContent="0"; return; }
+                const games = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                gamesContainer.innerHTML = games.map(game => {
+                    const isNew = isRecent(game.createdAt);
+                    const tagsHtml = game.tags?.length ? `<div class="game-tags">${game.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>` : '';
+                    return `<div class="game-card" data-id="${game.id}">
+                        <div class="game-banner" style="background-image: url('${escapeHtml(game.image)}');">${isNew ? '<div class="game-badge">NEW</div>' : ''}</div>
+                        <div class="game-info">
+                            <h3 class="game-title">${escapeHtml(game.title)}</h3>${tagsHtml}
+                            <div class="game-meta"><span><i class="fas fa-star"></i> ${game.rating||"N/A"}</span><span><i class="${game.multiplayer ? 'fas fa-users' : 'fas fa-user'}"></i> ${game.multiplayer ? "Multiplayer" : "Single Player"}</span></div>
+                            <div class="admin-actions"><button class="btn btn-edit" data-id="${game.id}">Edit</button><button class="btn btn-delete" data-id="${game.id}">Delete</button></div>
+                        </div>
+                    </div>`;
+                }).join("");
                 totalGamesEl.textContent = games.length;
-                
-                const newGamesCount = games.filter(game => {
-                    if (!game.createdAt) return false;
-                    const date = game.createdAt.toDate ? game.createdAt.toDate() : game.createdAt;
-                    return isRecent(date);
-                }).length;
-                newGamesEl.textContent = newGamesCount;
-                
-                attachGameEventListeners();
-            } catch (error) {
-                console.error("Error loading games: ", error);
-                gamesContainer.innerHTML = `<p>Error loading games: ${error.message}. Please check console and Firebase permissions.</p>`;
-            }
+                newGamesEl.textContent = games.filter(g => isRecent(g.createdAt)).length;
+                attachGameEvents();
+            } catch(e) { gamesContainer.innerHTML = `<div class="alert-error">⚠️ Failed to load games: ${e.message}</div>`; }
         }
         
-        function createGameCard(game) {
-            const createdAtDate = game.createdAt && game.createdAt.toDate ? game.createdAt.toDate() : null;
-            const isNew = isRecent(createdAtDate);
-            const badge = isNew ? '<div class="game-badge">NEW</div>' : '';
-            
-            let tagsHtml = '';
-            if (game.tags && Array.isArray(game.tags) && game.tags.length > 0) {
-                tagsHtml = '<div class="game-tags">';
-                game.tags.forEach(tag => {
-                    if (tag) {
-                        tagsHtml += `<span class="tag">${escapeHtml(tag)}</span>`;
-                    }
-                });
-                tagsHtml += '</div>';
-            }
-            
-            return `
-                <div class="game-card" data-id="${escapeHtml(game.id)}">
-                    <div class="game-banner" style="background-image: url('${escapeHtml(game.image)}');">
-                        ${badge}
-                    </div>
-                    <div class="game-info">
-                        <h3 class="game-title">${escapeHtml(game.title)}</h3>
-                        ${tagsHtml}
-                        <div class="game-meta">
-                            <span><i class="fas fa-star"></i> ${game.rating || "N/A"}</span>
-                            <span><i class="${game.multiplayer ? "fas fa-users" : "fas fa-user"}"></i> ${game.multiplayer ? "Multiplayer" : "Single Player"}</span>
-                        </div>
-                        <div class="admin-actions">
-                            <button class="btn btn-edit" data-id="${escapeHtml(game.id)}">Edit</button>
-                            <button class="btn btn-delete" data-id="${escapeHtml(game.id)}">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function attachGameEventListeners() {
-            document.querySelectorAll(".btn-edit").forEach(btn => {
-                btn.addEventListener("click", async (e) => {
-                    const gameId = btn.getAttribute("data-id");
-                    try {
-                        // Ensure tag selects are populated before showing modal
-                        await loadTagsForSelects();
-                        
-                        const doc = await gamesRef.doc(gameId).get();
-                        if (doc.exists) {
-                            const game = doc.data();
-                            document.getElementById("edit-game-id").value = gameId;
-                            document.getElementById("edit-game-title").value = game.title || "";
-                            document.getElementById("edit-game-image").value = game.image || "";
-                            document.getElementById("edit-game-url").value = game.url || "";
-                            document.getElementById("edit-game-rating").value = game.rating || 4.5;
-                            document.getElementById("edit-game-multiplayer").value = game.multiplayer ? "true" : "false";
-                            
-                            // Reset all selects
-                            for (let i = 1; i <= 3; i++) {
-                                const select = document.getElementById(`edit-game-tag-${i}`);
-                                if (select) select.value = "";
-                            }
-                            
-                            // Set selected tags
-                            if (game.tags && Array.isArray(game.tags)) {
-                                game.tags.forEach((tag, index) => {
-                                    if (index < 3) {
-                                        const select = document.getElementById(`edit-game-tag-${index+1}`);
-                                        if (select) select.value = tag;
-                                    }
-                                });
-                            }
-                            
-                            editModal.style.display = "block";
-                        } else {
-                            alert("Game not found.");
-                        }
-                    } catch (error) {
-                        console.error("Error loading game for edit: ", error);
-                        alert("Failed to load game data.");
-                    }
-                });
-            });
-            
-            document.querySelectorAll(".btn-delete").forEach(btn => {
-                btn.addEventListener("click", async (e) => {
-                    const gameId = btn.getAttribute("data-id");
-                    if (confirm("Are you sure you want to delete this game? This action cannot be undone.")) {
-                        try {
-                            await gamesRef.doc(gameId).delete();
-                            await loadGames();
-                            alert("Game deleted successfully!");
-                        } catch (error) {
-                            console.error("Error deleting game: ", error);
-                            alert("Failed to delete game. Check permissions.");
-                        }
-                    }
-                });
-            });
-        }
-        
-        // ==================== PLAYS ====================
-        async function loadPlays() {
-            playsTableBody.innerHTML = '<tr><td colspan="4" class="loading">Loading play records...</td></tr>';
-            try {
-                const snapshot = await playsRef.orderBy("timestamp", "desc").limit(50).get();
-                if (snapshot.empty) {
-                    playsTableBody.innerHTML = '<tr><td colspan="4">No play records found.</td></tr>';
-                    totalPlaysEl.textContent = "0";
-                    uniqueIPsEl.textContent = "0";
-                    return;
+        function attachGameEvents() {
+            document.querySelectorAll(".btn-edit").forEach(btn => btn.addEventListener("click", async (e) => {
+                const id = btn.dataset.id;
+                try {
+                    await loadTagsForSelects();
+                    const doc = await gamesRef.doc(id).get();
+                    if(!doc.exists) return alert("Not found");
+                    const g = doc.data();
+                    document.getElementById("edit-game-id").value = id;
+                    document.getElementById("edit-game-title").value = g.title||"";
+                    document.getElementById("edit-game-image").value = g.image||"";
+                    document.getElementById("edit-game-icon").value = g.icon||"";
+                    document.getElementById("edit-game-url").value = g.url||"";
+                    document.getElementById("edit-game-rating").value = g.rating||4.5;
+                    document.getElementById("edit-game-multiplayer").value = g.multiplayer ? "true" : "false";
+                    for(let i=1;i<=3;i++) { const sel = document.getElementById(`edit-game-tag-${i}`); if(sel) sel.value = ""; }
+                    if(g.tags) g.tags.forEach((tag,idx) => { if(idx<3) { const sel = document.getElementById(`edit-game-tag-${idx+1}`); if(sel) sel.value = tag; } });
+                    editModal.style.display = "block";
+                } catch(err) { alert("Edit load error: "+err.message); }
+            }));
+            document.querySelectorAll(".btn-delete").forEach(btn => btn.addEventListener("click", async (e) => {
+                if(confirm("Permanently delete this game?")) {
+                    try { await gamesRef.doc(btn.dataset.id).delete(); await loadGames(); alert("Deleted"); } catch(err) { alert("Delete error: "+err.message); }
                 }
-                
-                const gamesSnapshot = await gamesRef.get();
-                const gameTitles = {};
-                gamesSnapshot.forEach(doc => {
-                    gameTitles[doc.id] = doc.data().title || "Unknown Game";
-                });
-                
-                const plays = [];
-                snapshot.forEach(doc => {
-                    const play = { id: doc.id, ...doc.data() };
-                    play.gameTitle = gameTitles[play.gameId] || "Unknown Game";
-                    plays.push(play);
-                });
-                
-                playsTableBody.innerHTML = plays.map(play => `
-                    <tr>
-                        <td>${escapeHtml(play.ip)}</td>
-                        <td>${escapeHtml(play.gameTitle)}</td>
-                        <td>${formatDate(play.timestamp)}</td>
-                        <td><button class="btn btn-delete" data-id="${escapeHtml(play.id)}">Delete</button></td>
-                    </tr>
-                `).join("");
-                
-                totalPlaysEl.textContent = plays.length;
-                const uniqueIPs = new Set(plays.map(p => p.ip));
-                uniqueIPsEl.textContent = uniqueIPs.size;
-                
-                document.querySelectorAll("#plays-table-body .btn-delete").forEach(btn => {
-                    btn.addEventListener("click", async (e) => {
-                        const playId = btn.getAttribute("data-id");
-                        if (confirm("Delete this play record?")) {
-                            try {
-                                await playsRef.doc(playId).delete();
-                                await loadPlays();
-                                alert("Play record deleted.");
-                            } catch (error) {
-                                console.error("Error deleting play: ", error);
-                                alert("Failed to delete play record.");
-                            }
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error("Error loading plays: ", error);
-                playsTableBody.innerHTML = `<tr><td colspan="4">Error loading plays: ${error.message}</td></tr>`;
-            }
+            }));
         }
         
-        // ==================== CRUD OPERATIONS ====================
+        // ========== PLAYS ==========
+        async function loadPlays() {
+            playsTableBody.innerHTML = '<tr><td colspan="4" class="loading">Loading plays...</td></tr>';
+            try {
+                const snap = await playsRef.orderBy("timestamp", "desc").limit(100).get();
+                if(snap.empty) { playsTableBody.innerHTML = '<tr><td colspan="4">No play records</td></tr>'; totalPlaysEl.textContent="0"; uniqueIPsEl.textContent="0"; return; }
+                const gamesMap = new Map();
+                const gamesSnap = await gamesRef.get();
+                gamesSnap.forEach(d => gamesMap.set(d.id, d.data().title || "Unknown"));
+                const plays = snap.docs.map(d => ({ id: d.id, ...d.data(), gameTitle: gamesMap.get(d.data().gameId) || "Unknown" }));
+                playsTableBody.innerHTML = plays.map(p => `<tr><td>${escapeHtml(p.ip||"")}</td><td>${escapeHtml(p.gameTitle)}</td><td>${formatDate(p.timestamp)}</td><td><button class="btn btn-delete" data-id="${p.id}">Delete</button></td></tr>`).join("");
+                totalPlaysEl.textContent = plays.length;
+                uniqueIPsEl.textContent = new Set(plays.map(p=>p.ip)).size;
+                document.querySelectorAll("#plays-table-body .btn-delete").forEach(btn => btn.addEventListener("click", async () => {
+                    if(confirm("Delete this play record?")) { try { await playsRef.doc(btn.dataset.id).delete(); await loadPlays(); } catch(e) { alert("Failed: "+e.message); } }
+                }));
+            } catch(e) { playsTableBody.innerHTML = `<tr><td colspan="4">Error: ${e.message}</td></tr>`; }
+        }
+        
+        // ========== CRUD ==========
         gameForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            if (!validateForm("create")) return;
-            
+            if(!validateForm("")) return;
             const tags = [];
-            for (let i = 1; i <= 3; i++) {
-                const tag = document.getElementById(`game-tag-${i}`).value;
-                if (tag) tags.push(tag);
-            }
-            
-            const gameData = {
-                title: document.getElementById("game-title").value.trim(), 
-                image: document.getElementById("game-image").value.trim(), 
-                url: document.getElementById("game-url").value.trim(), 
-                rating: parseFloat(document.getElementById("game-rating").value), 
-                multiplayer: document.getElementById("game-multiplayer").value === "true", 
-                tags: tags, 
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            for(let i=1;i<=3;i++) { const val = document.getElementById(`game-tag-${i}`).value; if(val) tags.push(val); }
+            const data = {
+                title: document.getElementById("game-title").value.trim(),
+                image: document.getElementById("game-image").value.trim(),
+                icon: document.getElementById("game-icon").value.trim() || null,
+                url: document.getElementById("game-url").value.trim(),
+                rating: parseFloat(document.getElementById("game-rating").value),
+                multiplayer: document.getElementById("game-multiplayer").value === "true",
+                tags, createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
-            try {
-                await gamesRef.add(gameData);
-                alert("Game created successfully!");
-                gameForm.reset();
-                document.getElementById("game-image").value = "https://macautraffic.com/images/games/";
-                document.getElementById("game-url").value = "https://macautraffic.com/games/";
-                document.querySelector('[data-tab="games"]').click();
-                await loadGames();
-            } catch (error) {
-                console.error("Error creating game: ", error);
-                alert(`Failed to create game: ${error.message}`);
-            }
+            try { await gamesRef.add(data); alert("Game created!"); gameForm.reset(); document.querySelector('[data-tab="games"]').click(); await loadGames(); } catch(e) { alert("Create error: "+e.message); }
         });
         
         editGameForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            if (!validateForm("edit")) return;
-            
+            if(!validateForm("edit-")) return;
             const tags = [];
-            for (let i = 1; i <= 3; i++) {
-                const tag = document.getElementById(`edit-game-tag-${i}`).value;
-                if (tag) tags.push(tag);
-            }
-            
-            const gameId = document.getElementById("edit-game-id").value;
-            const updatedData = {
-                title: document.getElementById("edit-game-title").value.trim(), 
-                image: document.getElementById("edit-game-image").value.trim(), 
-                url: document.getElementById("edit-game-url").value.trim(), 
-                rating: parseFloat(document.getElementById("edit-game-rating").value), 
-                multiplayer: document.getElementById("edit-game-multiplayer").value === "true", 
-                tags: tags
+            for(let i=1;i<=3;i++) { const val = document.getElementById(`edit-game-tag-${i}`).value; if(val) tags.push(val); }
+            const id = document.getElementById("edit-game-id").value;
+            const update = {
+                title: document.getElementById("edit-game-title").value.trim(),
+                image: document.getElementById("edit-game-image").value.trim(),
+                icon: document.getElementById("edit-game-icon").value.trim() || null,
+                url: document.getElementById("edit-game-url").value.trim(),
+                rating: parseFloat(document.getElementById("edit-game-rating").value),
+                multiplayer: document.getElementById("edit-game-multiplayer").value === "true",
+                tags
             };
-            
-            try {
-                await gamesRef.doc(gameId).update(updatedData);
-                alert("Game updated successfully!");
-                editModal.style.display = "none";
-                await loadGames();
-            } catch (error) {
-                console.error("Error updating game: ", error);
-                alert(`Failed to update game: ${error.message}`);
-            }
+            try { await gamesRef.doc(id).update(update); alert("Updated"); editModal.style.display = "none"; await loadGames(); } catch(e) { alert("Update error: "+e.message); }
         });
         
-        // ==================== SEARCH ====================
-        function filterGames() {
-            const term = searchGamesInput.value.toLowerCase().trim();
-            const cards = document.querySelectorAll(".game-card");
-            if (term === "") {
-                cards.forEach(c => c.style.display = "block");
-                return;
-            }
-            cards.forEach(card => {
-                const title = card.querySelector(".game-title")?.textContent.toLowerCase() || "";
-                const tags = Array.from(card.querySelectorAll(".tag"))
-                    .map(tag => tag.textContent.toLowerCase())
-                    .join(" ");
-                
-                if (title.includes(term) || tags.includes(term)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        }
-        
-        function filterPlays() {
-            const term = searchPlaysInput.value.toLowerCase().trim();
-            const rows = document.querySelectorAll("#plays-table-body tr");
-            if (term === "") {
-                rows.forEach(r => r.style.display = "table-row");
-                return;
-            }
-            rows.forEach(row => {
-                const ip = row.cells[0]?.textContent.toLowerCase() || "";
-                const game = row.cells[1]?.textContent.toLowerCase() || "";
-                if (ip.includes(term) || game.includes(term)) {
-                    row.style.display = "table-row";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        }
-        
+        // ========== SEARCH ==========
+        function filterGames() { const term = searchGamesInput.value.toLowerCase(); document.querySelectorAll(".game-card").forEach(card => { const title = card.querySelector(".game-title")?.textContent.toLowerCase() || ""; const tags = Array.from(card.querySelectorAll(".tag")).map(t=>t.textContent.toLowerCase()).join(" "); card.style.display = (title.includes(term) || tags.includes(term)) ? "block" : "none"; }); }
+        function filterPlays() { const term = searchPlaysInput.value.toLowerCase(); Array.from(document.querySelectorAll("#plays-table-body tr")).forEach(row => { if(row.cells.length<2) return; const ip = row.cells[0]?.textContent.toLowerCase()||""; const game = row.cells[1]?.textContent.toLowerCase()||""; row.style.display = (ip.includes(term) || game.includes(term)) ? "" : "none"; }); }
         document.getElementById("search-games-btn").addEventListener("click", filterGames);
         document.getElementById("search-plays-btn").addEventListener("click", filterPlays);
-        searchGamesInput.addEventListener("keyup", (e) => { if (e.key === "Enter") filterGames(); });
-        searchPlaysInput.addEventListener("keyup", (e) => { if (e.key === "Enter") filterPlays(); });
+        searchGamesInput.addEventListener("keyup", e => e.key==="Enter" && filterGames());
+        searchPlaysInput.addEventListener("keyup", e => e.key==="Enter" && filterPlays());
         
-        // ==================== TAB SWITCHING ====================
-        tabs.forEach(tab => {
-            tab.addEventListener("click", () => {
-                const tabId = tab.getAttribute("data-tab");
-                tabs.forEach(t => t.classList.remove("active"));
-                tab.classList.add("active");
-                tabContents.forEach(c => c.classList.remove("active"));
-                document.getElementById(`${tabId}-tab`).classList.add("active");
-                if (tabId === "games") loadGames();
-                if (tabId === "plays") loadPlays();
-                if (tabId === "tags") loadTags();
-                if (tabId === "create") loadTagsForSelects();
-            });
-        });
+        // ========== TABS ==========
+        tabs.forEach(tab => tab.addEventListener("click", () => {
+            const id = tab.dataset.tab;
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            tabContents.forEach(c => c.classList.remove("active"));
+            document.getElementById(`${id}-tab`).classList.add("active");
+            if(id === "games") loadGames();
+            if(id === "plays") loadPlays();
+            if(id === "tags") loadTags();
+            if(id === "create") loadTagsForSelects();
+        }));
         
-        // ==================== MODAL ====================
+        // ========== MODAL ==========
         closeModal.addEventListener("click", () => editModal.style.display = "none");
-        window.addEventListener("click", (e) => { if (e.target === editModal) editModal.style.display = "none"; });
-        window.addEventListener("keydown", (e) => { if (e.key === "Escape" && editModal.style.display === "block") editModal.style.display = "none"; });
+        window.addEventListener("click", e => { if(e.target === editModal) editModal.style.display = "none"; });
+        window.addEventListener("keydown", e => { if(e.key === "Escape" && editModal.style.display === "block") editModal.style.display = "none"; });
         
-        // ==================== TAG MANAGEMENT ====================
+        // ========== INIT ==========
         addTagBtn.addEventListener("click", addNewTag);
-        newTagInput.addEventListener("keyup", (e) => { if (e.key === "Enter") addNewTag(); });
-        
-        // ==================== INITIALIZE ====================
+        newTagInput.addEventListener("keyup", e => e.key==="Enter" && addNewTag());
         document.addEventListener("DOMContentLoaded", async () => {
-            await loadTagsForSelects(); // ensure selects are populated early
-            loadGames();
-            loadPlays();
+            await loadTagsForSelects();
+            await loadGames();
+            await loadPlays();
+            await loadTags();
         });
     </script>
 </body>
