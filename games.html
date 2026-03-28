@@ -6,9 +6,6 @@
     <title>Game Universe - All Games</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         :root {
             --primary-black: #0a0a0a;
@@ -24,6 +21,17 @@
             --contact-blue: #1E3A8A;
             --filter-bg: rgba(30, 30, 30, 0.8);
             --filter-active: #4169E1;
+            
+            /* Tag colors */
+            --action-color: #ff4d4d;
+            --adventure-color: #4da6ff;
+            --puzzle-color: #ffcc00;
+            --rpg-color: #9933ff;
+            --strategy-color: #33cc33;
+            --sports-color: #ff9900;
+            --simulation-color: #00cc99;
+            --horror-color: #990000;
+            --indie-color: #cc6600;
         }
         
         * {
@@ -102,51 +110,196 @@
         }
         
         .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
             position: relative;
+            height: 450px;
+            overflow: hidden;
             border-bottom: 3px solid var(--accent-white);
         }
         
-        .hero::before {
-            content: '';
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .carousel-slide {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
         }
         
-        .hero-content {
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .slide-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+        }
+        
+        .slide-content {
             position: relative;
+            z-index: 2;
             max-width: 900px;
-            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
         }
         
-        .hero h2 {
-            font-size: 2.8rem;
-            margin-bottom: 25px;
+        .slide-icon {
+            width: 180px;
+            height: 180px;
+            border: 4px solid var(--accent-white);
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slide-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slide-icon i {
+            font-size: 5rem;
+            color: var(--accent-white);
+        }
+        
+        .slide-icon .rank-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--pixel-font);
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-black);
+            border: 3px solid var(--primary-black);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .slide-icon .rank-1 {
+            background: var(--top-gold);
+        }
+        
+        .slide-icon .rank-2 {
+            background: silver;
+        }
+        
+        .slide-icon .rank-3 {
+            background: #cd7f32; /* Bronze */
+        }
+        
+        .slide-info {
+            flex: 1;
+        }
+        
+        .slide-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
             font-family: var(--pixel-font);
             color: var(--accent-white);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
         }
         
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 35px;
+        .slide-info p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
             line-height: 1.6;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 650px;
+        }
+        
+        .slide-info .game-meta {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+        
+        .slide-info .game-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .slide-play-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--accent-white);
+            color: var(--primary-black);
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: var(--pixel-font);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slide-play-button:hover {
+            background: var(--primary-black);
+            color: var(--accent-white);
+            border: 2px solid var(--accent-white);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 3;
+        }
+        
+        .carousel-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background: var(--accent-white);
+            transform: scale(1.3);
         }
         
         .search-container {
-            max-width: 650px;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: 30px auto;
             position: relative;
+            padding: 0 20px;
         }
         
         .search-container input {
@@ -220,10 +373,6 @@
             border-radius: 2px;
         }
         
-        .top-games .section-title h2::after {
-            background: var(--top-gold);
-        }
-        
         .new-games .section-title h2::after {
             background: var(--new-blue);
         }
@@ -240,28 +389,103 @@
             line-height: 1.6;
         }
         
-        .top-games-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            max-width: 1400px;
+        .games-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1600px;
             margin: 0 auto;
+        }
+        
+        .filter-sidebar {
+            width: 250px;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 25px;
+            border: 2px solid var(--accent-white);
+            border-radius: 0;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .filter-sidebar h3 {
+            font-family: var(--pixel-font);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--accent-white);
+            letter-spacing: 1px;
+            text-align: center;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(10, 10, 10, 0.5);
+            border-radius: 4px;
+        }
+        
+        .filter-tag {
+            padding: 12px 15px;
+            background: var(--filter-bg);
+            border: 1px solid var(--accent-white);
+            color: var(--accent-white);
+            font-family: var(--tech-font);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-tag:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .filter-tag.active {
+            background: var(--filter-active);
+            color: var(--accent-white);
+            font-weight: bold;
+            border-color: var(--filter-active);
+            box-shadow: 0 0 10px var(--filter-active);
+        }
+        
+        .filter-tag .tag-count {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            margin-left: auto;
+        }
+        
+        .games-content {
+            flex: 1;
         }
         
         .new-games-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
         }
         
         .all-games-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
         }
         
         .game-card {
@@ -273,15 +497,14 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            border: 2px solid var(--accent-white);
             min-height: 280px;
+            border: 2px solid var(--accent-white);
         }
         
         .game-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
             background: rgba(40, 40, 40, 0.9);
-            border: 2px solid var(--accent-white);
         }
         
         .game-banner {
@@ -306,11 +529,6 @@
             font-family: var(--pixel-font);
             letter-spacing: 1px;
             border: 2px solid var(--primary-black);
-        }
-        
-        .game-badge.top {
-            background: var(--top-gold);
-            color: var(--primary-black);
         }
         
         .game-badge.new {
@@ -682,39 +900,54 @@
         /* Responsive adjustments */
         @media (max-width: 1400px) {
             .all-games-grid {
-                grid-template-columns: repeat(6, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
         }
         
         @media (max-width: 1200px) {
-            .top-games-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .new-games-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
             
             .all-games-grid {
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .contact-container {
                 flex-direction: column;
             }
+            
+            .filter-sidebar {
+                width: 200px;
+            }
         }
         
         @media (max-width: 992px) {
-            .top-games-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .new-games-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
             
             .all-games-grid {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-sidebar {
+                width: 180px;
+                padding: 15px;
+            }
+            
+            .slide-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .slide-icon {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .slide-info h2 {
+                font-size: 2rem;
             }
         }
         
@@ -731,16 +964,28 @@
                 gap: 10px;
             }
             
-            .hero h2 {
-                font-size: 1.8rem;
+            .hero {
+                height: 400px;
             }
             
-            .hero p {
-                font-size: 1rem;
+            .slide-icon {
+                width: 120px;
+                height: 120px;
             }
             
-            .top-games-grid {
-                grid-template-columns: repeat(1, 1fr);
+            .slide-info h2 {
+                font-size: 1.6rem;
+            }
+            
+            .games-container {
+                flex-direction: column;
+            }
+            
+            .filter-sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                margin-bottom: 30px;
             }
             
             .new-games-grid {
@@ -748,7 +993,7 @@
             }
             
             .all-games-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .game-card {
@@ -766,16 +1011,21 @@
         
         @media (max-width: 576px) {
             .hero {
-                padding: 50px 15px;
+                height: 350px;
             }
             
-            .hero h2 {
-                font-size: 1.4rem;
+            .slide-icon {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .slide-info h2 {
+                font-size: 1.3rem;
             }
             
             .new-games-grid, 
             .all-games-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(1, 1fr);
             }
             
             .search-container button {
@@ -835,62 +1085,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
         
-        /* Enhanced tag filtering styles */
-        .filter-section {
-            background: rgba(20, 20, 20, 0.9);
-            padding: 25px 5%;
-            border-top: 2px solid var(--accent-white);
-            border-bottom: 2px solid var(--accent-white);
-            margin-bottom: 30px;
-        }
-        
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(10, 10, 10, 0.5);
-        }
-        
-        .filter-tag {
-            padding: 10px 20px;
-            background: var(--filter-bg);
-            border: 1px solid var(--accent-white);
-            color: var(--accent-white);
-            font-family: var(--tech-font);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .filter-tag:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .filter-tag.active {
-            background: var(--filter-active);
-            color: var(--accent-white);
-            font-weight: bold;
-            border-color: var(--filter-active);
-        }
-        
-        .filter-tag .tag-count {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-        }
-        
         .section-hidden {
             display: none;
         }
@@ -908,6 +1102,90 @@
             display: block;
             color: var(--filter-active);
         }
+        
+        /* Enhanced tag-based border colors */
+        .game-card[data-tags*="action"] {
+            border: 2px solid var(--action-color);
+            box-shadow: 0 0 15px var(--action-color);
+        }
+        
+        .game-card[data-tags*="adventure"] {
+            border: 2px solid var(--adventure-color);
+            box-shadow: 0 0 15px var(--adventure-color);
+        }
+        
+        .game-card[data-tags*="puzzle"] {
+            border: 2px solid var(--puzzle-color);
+            box-shadow: 0 0 15px var(--puzzle-color);
+        }
+        
+        .game-card[data-tags*="rpg"] {
+            border: 2px solid var(--rpg-color);
+            box-shadow: 0 0 15px var(--rpg-color);
+        }
+        
+        .game-card[data-tags*="strategy"] {
+            border: 2px solid var(--strategy-color);
+            box-shadow: 0 0 15px var(--strategy-color);
+        }
+        
+        .game-card[data-tags*="sports"] {
+            border: 2px solid var(--sports-color);
+            box-shadow: 0 0 15px var(--sports-color);
+        }
+        
+        .game-card[data-tags*="simulation"] {
+            border: 2px solid var(--simulation-color);
+            box-shadow: 0 0 15px var(--simulation-color);
+        }
+        
+        .game-card[data-tags*="horror"] {
+            border: 2px solid var(--horror-color);
+            box-shadow: 0 0 15px var(--horror-color);
+        }
+        
+        .game-card[data-tags*="indie"] {
+            border: 2px solid var(--indie-color);
+            box-shadow: 0 0 15px var(--indie-color);
+        }
+        
+        /* Animation for game cards */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .game-card:hover {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Enhanced filter tag styling */
+        .filter-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--filter-active);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .filter-tag.active::before {
+            transform: scaleY(1);
+        }
+        
+        .filter-tag[data-tag="action"]::before { background: var(--action-color); }
+        .filter-tag[data-tag="adventure"]::before { background: var(--adventure-color); }
+        .filter-tag[data-tag="puzzle"]::before { background: var(--puzzle-color); }
+        .filter-tag[data-tag="rpg"]::before { background: var(--rpg-color); }
+        .filter-tag[data-tag="strategy"]::before { background: var(--strategy-color); }
+        .filter-tag[data-tag="sports"]::before { background: var(--sports-color); }
+        .filter-tag[data-tag="simulation"]::before { background: var(--simulation-color); }
+        .filter-tag[data-tag="horror"]::before { background: var(--horror-color); }
+        .filter-tag[data-tag="indie"]::before { background: var(--indie-color); }
     </style>
 </head>
 <body>
@@ -925,54 +1203,49 @@
     </header>
     
     <section class="hero">
-        <div class="hero-content">
-            <h2>DISCOVER AMAZING GAMES</h2>
-            <p>Explore our collection of the best games across all genres. From action-packed adventures to relaxing puzzles, find your next favorite game today!</p>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="SEARCH FOR GAMES...">
-                <button id="search-button"><i class="fas fa-search"></i> SEARCH</button>
-            </div>
+        <div class="carousel-container" id="topGamesCarousel">
+            <!-- Carousel slides will be added here dynamically -->
         </div>
     </section>
     
-    <!-- Enhanced Filter Section -->
-    <section class="filter-section">
-        <div class="filter-container" id="filter-container">
-            <!-- Filter tags will be added here dynamically -->
-        </div>
-    </section>
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="SEARCH FOR GAMES...">
+        <button id="search-button"><i class="fas fa-search"></i> SEARCH</button>
+    </div>
     
     <!-- Main Content (Home Page) -->
     <main id="main-content">
-        <section class="games-section top-games" id="top-games-section">
-            <div class="section-title">
-                <h2>TOP GAMES</h2>
-                <p>Most popular games based on players</p>
+        <div class="games-container">
+            <!-- Enhanced Filter Section on the left -->
+            <aside class="filter-sidebar" id="filterSidebar">
+                <h3>FILTER BY CATEGORY</h3>
+                <div class="filter-container" id="filter-container">
+                    <!-- Filter tags will be added here dynamically -->
+                </div>
+            </aside>
+            
+            <div class="games-content">
+                <section class="games-section new-games" id="new-games-section">
+                    <div class="section-title">
+                        <h2>NEW GAMES</h2>
+                        <p>Recently added games to our collection - Only for 5 days after release!</p>
+                    </div>
+                    <div class="new-games-grid" id="new-games-grid">
+                        <div class="loading"><div class="spinner"></div> Loading new games...</div>
+                    </div>
+                </section>
+                
+                <section class="games-section older-games" id="older-games-section">
+                    <div class="section-title">
+                        <h2>ALL GAMES</h2>
+                        <p>Browse through our extensive library of games</p>
+                    </div>
+                    <div class="all-games-grid" id="all-games-grid">
+                        <div class="loading"><div class="spinner"></div> Loading all games...</div>
+                    </div>
+                </section>
             </div>
-            <div class="top-games-grid" id="top-games-grid">
-                <div class="loading"><div class="spinner"></div> Loading top games...</div>
-            </div>
-        </section>
-        
-        <section class="games-section new-games" id="new-games-section">
-            <div class="section-title">
-                <h2>NEW GAMES</h2>
-                <p>Recently added games to our collection - Only for 5 days after release!</p>
-            </div>
-            <div class="new-games-grid" id="new-games-grid">
-                <div class="loading"><div class="spinner"></div> Loading new games...</div>
-            </div>
-        </section>
-        
-        <section class="games-section older-games" id="older-games-section">
-            <div class="section-title">
-                <h2>ALL GAMES</h2>
-                <p>Browse through our extensive library of games</p>
-            </div>
-            <div class="all-games-grid" id="all-games-grid">
-                <div class="loading"><div class="spinner"></div> Loading all games...</div>
-            </div>
-        </section>
+        </div>
     </main>
     
     <!-- Contact Section (Separate Page) -->
@@ -1071,15 +1344,20 @@
         <p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️ BY BRENDAN</p>
     </footer>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",     
-            authDomain: "blacket-65c5b.firebaseapp.com",     
-            projectId: "blacket-65c5b",     
-            storageBucket: "blacket-65c5b.firebasestorage.app",     
-            messagingSenderId: "497023905730",     
-            appId: "1:497023905730:web:a59093052a3f93a476305b",     
+            apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
+            authDomain: "blacket-65c5b.firebaseapp.com",
+            databaseURL: "https://blacket-65c5b-default-rtdb.firebaseio.com",
+            projectId: "blacket-65c5b",
+            storageBucket: "blacket-65c5b.firebasestorage.app",
+            messagingSenderId: "497023905730",
+            appId: "1:497023905730:web:a59093052a3f93a476305b",
             measurementId: "G-XZZR5DH79B"
         };
 
@@ -1136,9 +1414,9 @@
                 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
                 
                 await db.collection("plays").add({
-                    gameId: gameId,     
-                    gameTitle: gameTitle,     
-                    ip: ip,     
+                    gameId: gameId,
+                    gameTitle: gameTitle,
+                    ip: ip,
                     timestamp: timestamp
                 });
                 
@@ -1200,9 +1478,9 @@
                 olderGames.sort((a, b) => a.title.localeCompare(b.title));
                 
                 return { 
-                    topGames,      
-                    newGames,      
-                    olderGames,      
+                    topGames,
+                    newGames,
+                    olderGames,
                     allGames: [...topGames, ...newGames, ...olderGames]
                 };
             } catch (error) {
@@ -1215,7 +1493,7 @@
             const gameCard = document.createElement('div');
             gameCard.className = 'game-card';
             gameCard.setAttribute('data-title', game.title);
-            gameCard.setAttribute('data-tags', game.tags ? game.tags.join(',') : '');
+            gameCard.setAttribute('data-tags', game.tags ? game.tags.join(', ') : '');
             
             const isCollection = game.isCollection || false;
             
@@ -1293,20 +1571,118 @@
             });
         }
 
+        function renderTopGamesCarousel(topGames) {
+            const carouselContainer = document.getElementById('topGamesCarousel');
+            carouselContainer.innerHTML = '';
+            
+            topGames.forEach((game, index) => {
+                const slide = document.createElement('div');
+                slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+                slide.dataset.index = index;
+                
+                // Determine rank badge class
+                let rankBadgeClass = '';
+                if (game.rank === 1) rankBadgeClass = 'rank-1';
+                else if (game.rank === 2) rankBadgeClass = 'rank-2';
+                else if (game.rank === 3) rankBadgeClass = 'rank-3';
+                
+                slide.innerHTML = `
+                    <div class="slide-background" style="background-image: url('${game.image}');"></div>
+                    <div class="slide-content">
+                        <div class="slide-icon">
+                            ${game.icon ? `<img src="${game.icon}" alt="${game.title}">` : '<i class="fas fa-gamepad"></i>'}
+                            <div class="rank-badge ${rankBadgeClass}">${game.rank}</div>
+                        </div>
+                        <div class="slide-info">
+                            <h2>${game.title}</h2>
+                            <div class="game-meta">
+                                <span><i class="fas fa-star"></i> ${game.rating || 'N/A'}</span>
+                                <span><i class="${game.multiplayer ? 'fas fa-users' : 'fas fa-user'}"></i> ${game.multiplayer ? 'Multiplayer' : 'Single Player'}</span>
+                                <span><i class="fas fa-trophy"></i> TOP ${game.rank}</span>
+                            </div>
+                            <p>${game.description || 'No description available.'}</p>
+                            <button class="slide-play-button" data-url="${game.url}" data-id="${game.id}" data-title="${game.title}">
+                                PLAY NOW
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                carouselContainer.appendChild(slide);
+            });
+            
+            // Create navigation dots
+            const navDots = document.createElement('div');
+            navDots.className = 'carousel-nav';
+            
+            topGames.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+                dot.dataset.index = index;
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                });
+                navDots.appendChild(dot);
+            });
+            
+            carouselContainer.appendChild(navDots);
+            
+            // Add event listeners to play buttons
+            document.querySelectorAll('.slide-play-button').forEach(button => {
+                button.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    const gameId = this.getAttribute('data-id');
+                    const gameUrl = this.getAttribute('data-url');
+                    const gameTitle = this.getAttribute('data-title');
+                    
+                    await logGamePlay(gameId, gameTitle);
+                    
+                    document.getElementById('modalGameTitle').textContent = gameTitle;
+                    document.getElementById('gameFrame').src = gameUrl;
+                    
+                    document.getElementById('gameModal').style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            // Start carousel auto-rotation
+            startCarousel();
+        }
+
+        let currentSlide = 0;
+        let carouselInterval;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function startCarousel() {
+            clearInterval(carouselInterval);
+            carouselInterval = setInterval(nextSlide, 5000);
+        }
+
         function renderGames(gamesData) {
-            const topGamesGrid = document.getElementById('top-games-grid');
             const newGamesGrid = document.getElementById('new-games-grid');
             const allGamesGrid = document.getElementById('all-games-grid');
             
-            topGamesGrid.innerHTML = '';
             newGamesGrid.innerHTML = '';
             allGamesGrid.innerHTML = '';
-            
-            gamesData.topGames.forEach(game => {
-                const badgeText = `TOP ${game.rank}`;
-                const gameCard = createGameCard(game, badgeText, 'top');
-                topGamesGrid.appendChild(gameCard);
-            });
             
             gamesData.newGames.forEach(game => {
                 const badgeText = "NEW";
@@ -1331,6 +1707,9 @@
             
             // Render filter tags
             renderFilterTags(gamesData.allGames);
+            
+            // Render top games carousel
+            renderTopGamesCarousel(gamesData.topGames);
             
             document.querySelectorAll('.play-button').forEach(button => {
                 button.addEventListener('click', async function(e) {
@@ -1408,7 +1787,6 @@
                 .map(tag => tag.dataset.tag);
             
             // Apply filters to each section
-            filterSection('top-games-grid', 'top-games-section', activeTags);
             filterSection('new-games-grid', 'new-games-section', activeTags);
             filterSection('all-games-grid', 'older-games-section', activeTags);
         }
@@ -1430,7 +1808,7 @@
             let visibleCount = 0;
             
             gameCards.forEach(card => {
-                const gameTags = card.getAttribute('data-tags').split(',');
+                const gameTags = card.getAttribute('data-tags').split(', ');
                 const hasMatchingTag = activeTags.some(tag => gameTags.includes(tag));
                 
                 if (hasMatchingTag) {
@@ -1542,12 +1920,12 @@
             
             try {
                 await db.collection("gameSuggestions").add({
-                    name: name,     
-                    email: email,     
-                    gameTitle: title,     
-                    gameBanner: banner,     
-                    gameLink: link,     
-                    gameDescription: description,     
+                    name: name,
+                    email: email,
+                    gameTitle: title,
+                    gameBanner: banner,
+                    gameLink: link,
+                    gameDescription: description,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -1582,11 +1960,11 @@
                 const gameTitle = gameDoc.exists ? gameDoc.data().title : "Unknown Game";
                 
                 await db.collection("issueReports").add({
-                    name: name,     
-                    email: email,     
-                    gameId: gameId,     
-                    gameTitle: gameTitle,     
-                    issueDescription: issueDescription,     
+                    name: name,
+                    email: email,
+                    gameId: gameId,
+                    gameTitle: gameTitle,
+                    issueDescription: issueDescription,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -1611,7 +1989,7 @@
                     const target = document.querySelector(this.getAttribute('href'));
                     if (target) {
                         window.scrollTo({
-                            top: target.offsetTop - 80,     
+                            top: target.offsetTop - 80,
                             behavior: 'smooth'
                         });
                     }
