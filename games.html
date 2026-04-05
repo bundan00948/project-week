@@ -2166,6 +2166,10 @@
       border: 1px solid rgba(42, 255, 158, 0.3);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
+    .profile-page-panel {
+      max-width: 980px;
+      margin: 0 auto 30px;
+    }
 
     /* Header Row: Avatar + Banner */
     .profile-top {
@@ -2574,34 +2578,52 @@
     <div class="page" id="profile-page">
       <div class="page-content">
         <h2 class="page-title">User Profile</h2>
-        <div class="profile-section">
-          <div class="avatar-container">
-            <img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar">
-          </div>
-          <div class="profile-username" id="profile-username">Username</div>
-          <div class="user-title" id="profile-title">User</div>
-          <div class="profile-email" id="profile-email">user@example.com</div>
-          
-          <div class="profile-stats">
-            <div class="stat-item">
-              <div class="stat-value" id="play-count">0</div>
-              <div class="stat-label">PLAYS</div>
+        <div class="user-profile-container profile-page-panel">
+          <div class="profile-top">
+            <div class="avatar">
+              <img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar">
             </div>
-            <div class="stat-item">
-              <div class="stat-value" id="friend-count">0</div>
-              <div class="stat-label">FRIENDS</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value" id="gift-count">0</div>
-              <div class="stat-label">GIFTS</div>
+            <div class="banner">
+              <img id="profile-banner" class="banner-bg" src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=100&fit=crop" alt="Profile Banner">
+              <div class="banner-content">
+                <div class="banner-username">
+                  <span id="profile-username">Username</span>
+                  <span class="verified-badge" id="profile-title">User</span>
+                </div>
+                <div class="banner-title"><i class="fas fa-envelope"></i> <span id="profile-email">user@example.com</span></div>
+                <div class="banner-title"><i class="fas fa-calendar-alt"></i> Member since <span id="member-since">January 2023</span></div>
+              </div>
             </div>
           </div>
-          
-          <div class="member-since">
-            Member since: <span id="member-since">January 2023</span>
+          <div class="badges-section">
+            <div class="badges-header"><i class="fas fa-medal"></i> Earned Badges</div>
+            <div class="badges-grid" id="profile-badges-grid"></div>
+          </div>
+          <div class="unlocks-container">
+            <div class="unlocks-header">
+              <div class="unlocks-label"><i class="fas fa-box-open"></i> Blooks Unlocked</div>
+              <div class="unlocks-count"><span id="profile-unlocks-count">0</span> / <span id="profile-unlocks-total">150</span></div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="profile-unlocks-progress"></div></div>
+          </div>
+          <div class="stats-row">
+            <div class="stars-container">
+              <div class="stars-icon"><i class="fas fa-star"></i></div>
+              <div class="stars-info">
+                <div class="stars-label">Total Stars</div>
+                <div class="stars-value" id="profile-stars">0</div>
+              </div>
+            </div>
+            <div class="playtime-container">
+              <div class="playtime-icon"><i class="fas fa-clock"></i></div>
+              <div class="playtime-info">
+                <div class="playtime-label">Total Playtime</div>
+                <div class="playtime-value" id="profile-playtime">0h 0m</div>
+              </div>
+            </div>
           </div>
         </div>
-        
+
         <!-- Gift Wall Section -->
         <div class="gift-wall">
           <h2 class="gift-wall-header">Gift Wall</h2>
@@ -3223,6 +3245,13 @@
     const profileUsername = document.getElementById('profile-username');
     const profileTitle = document.getElementById('profile-title');
     const profileEmail = document.getElementById('profile-email');
+    const profileBanner = document.getElementById('profile-banner');
+    const profileStars = document.getElementById('profile-stars');
+    const profilePlaytime = document.getElementById('profile-playtime');
+    const profileBadgesGrid = document.getElementById('profile-badges-grid');
+    const profileUnlocksCount = document.getElementById('profile-unlocks-count');
+    const profileUnlocksTotal = document.getElementById('profile-unlocks-total');
+    const profileUnlocksProgress = document.getElementById('profile-unlocks-progress');
 
     // NEW: Blooket-style profile modal elements
     const modalUserAvatarNew = document.getElementById('modal-user-avatar-new');
@@ -3254,6 +3283,7 @@
     let selectedUserForGift = null;
     let selectedGiftForSend = null;
     let friendsData = [];
+    const TOTAL_BLOOKS_COUNT = 150;
 
     // ========== Helper: show notification ==========
     function showNotification(message, type) {
@@ -3262,6 +3292,22 @@
       notificationIcon.className = `notification-icon ${type}`;
       notificationPopup.classList.add('show');
       setTimeout(() => notificationPopup.classList.remove('show'), 3000);
+    }
+
+    function formatPlaytime(totalSeconds) {
+      const safeSeconds = Number.isFinite(totalSeconds) ? totalSeconds : 0;
+      const hours = Math.floor(safeSeconds / 3600);
+      const minutes = Math.floor((safeSeconds % 3600) / 60);
+      return `${hours}h ${minutes}m`;
+    }
+
+    function getEarnedBadges(unlockedCount, starsCount, playsCount) {
+      const badges = [];
+      if (unlockedCount >= 100) badges.push({ name: "Master Collector", icon: "fa-crown" });
+      if (starsCount >= 10000) badges.push({ name: "Starlord", icon: "fa-star" });
+      if (playsCount >= 100) badges.push({ name: "Veteran", icon: "fa-clock" });
+      if (badges.length === 0) badges.push({ name: "Newbie", icon: "fa-seedling" });
+      return badges;
     }
 
     // ========== Save user profile (coins 0 for normal, 999999 for admin) ==========
@@ -3299,6 +3345,9 @@
         profileUsername.textContent = data.username || user.email;
         profileTitle.textContent = data.title || "User";
         profileEmail.textContent = user.email;
+        if (profileBanner) {
+          profileBanner.src = data.banner || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=100&fit=crop";
+        }
         if (data.createdAt) {
           const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
           memberSince.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
@@ -3315,12 +3364,13 @@
 
     // ========== Update stats (plays, friends, gifts) ==========
     async function updateStats(uid) {
+      if (!playCount && !friendCount && !giftCount) return;
       const playsSnap = await getDocs(query(collection(db, "plays"), where("userId", "==", uid)));
-      playCount.textContent = playsSnap.size;
+      if (playCount) playCount.textContent = playsSnap.size;
       const friendsSnap = await getDocs(query(collection(db, "friends"), where("userId", "==", uid)));
-      friendCount.textContent = friendsSnap.size;
+      if (friendCount) friendCount.textContent = friendsSnap.size;
       const giftsSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", uid)));
-      giftCount.textContent = giftsSnap.size;
+      if (giftCount) giftCount.textContent = giftsSnap.size;
     }
 
     // ========== Auth state observer with admin coin enforcement ==========
@@ -3608,17 +3658,41 @@
     async function loadProfilePage(userId) {
       try {
         const userDoc = await getDoc(doc(db, "users", userId));
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          document.getElementById('profile-avatar').src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-          document.getElementById('profile-username').textContent = data.username || data.email;
-          document.getElementById('profile-title').textContent = data.title || "User";
-          document.getElementById('profile-email').textContent = data.email;
-          if (data.createdAt) {
-            const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-            document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-          }
+        if (!userDoc.exists()) return;
+        const data = userDoc.data();
+        const userEmail = currentUser?.email || data.email || "user@example.com";
+
+        document.getElementById('profile-avatar').src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+        document.getElementById('profile-username').textContent = data.username || userEmail;
+        document.getElementById('profile-title').textContent = data.title || "User";
+        document.getElementById('profile-email').textContent = userEmail;
+        if (profileBanner) {
+          profileBanner.src = data.banner || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=100&fit=crop";
         }
+        if (data.createdAt) {
+          const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+          document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+
+        const playsSnap = await getDocs(query(collection(db, "plays"), where("userId", "==", userId)));
+        let totalSec = 0;
+        playsSnap.forEach((playDoc) => { totalSec += playDoc.data().duration || 300; });
+        profilePlaytime.textContent = formatPlaytime(totalSec);
+        profileStars.textContent = data.stars || 0;
+
+        const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
+        const unlockedNames = new Set(blooksSnap.docs.map((inventoryDoc) => inventoryDoc.data().itemName));
+        const unlockedCount = unlockedNames.size;
+        profileUnlocksCount.textContent = unlockedCount;
+        profileUnlocksTotal.textContent = TOTAL_BLOOKS_COUNT;
+        const unlockedPercent = Math.min(100, (unlockedCount / TOTAL_BLOOKS_COUNT) * 100);
+        profileUnlocksProgress.style.width = `${unlockedPercent}%`;
+
+        const badges = getEarnedBadges(unlockedCount, data.stars || 0, playsSnap.size);
+        profileBadgesGrid.innerHTML = badges
+          .map((badge) => `<div class="badge-item"><i class="fas ${badge.icon}"></i> ${badge.name}</div>`)
+          .join('');
+
         updateStats(userId);
       } catch(e) { console.error(e); }
     }
@@ -4095,15 +4169,13 @@
         const playsSnap = await getDocs(query(collection(db, "plays"), where("userId", "==", userId)));
         let totalSec = 0;
         playsSnap.forEach(doc => { totalSec += doc.data().duration || 300; });
-        const hours = Math.floor(totalSec / 3600);
-        const minutes = Math.floor((totalSec % 3600) / 60);
-        modalPlaytime.innerText = `${hours}h ${minutes}m`;
+        modalPlaytime.innerText = formatPlaytime(totalSec);
         
         // Blooks owned (from inventory collection)
         const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
         const ownedNames = new Set(blooksSnap.docs.map(d => d.data().itemName));
         const current = ownedNames.size;
-        const total = 150; // You can fetch from a master collection if desired
+        const total = TOTAL_BLOOKS_COUNT;
         modalCurrentBlocks.innerText = current;
         const percent = (current / total) * 100;
         modalBlocksProgress.style.width = percent + '%';
@@ -4117,11 +4189,7 @@
         }).join('');
         
         // Badges (simple logic – adjust as needed)
-        const badges = [];
-        if (current >= 100) badges.push({ name: "Master Collector", icon: "fa-crown" });
-        if ((userData.stars || 0) >= 10000) badges.push({ name: "Starlord", icon: "fa-star" });
-        if (playsSnap.size >= 100) badges.push({ name: "Veteran", icon: "fa-clock" });
-        if (badges.length === 0) badges.push({ name: "Newbie", icon: "fa-seedling" });
+        const badges = getEarnedBadges(current, userData.stars || 0, playsSnap.size);
         const badgesGrid = document.getElementById('modal-badges-grid');
         badgesGrid.innerHTML = badges.map(b => `<div class="badge-item"><i class="fas ${b.icon}"></i> ${b.name}</div>`).join('');
         
