@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* Existing CSS styles remain unchanged */
     :root {
       --bg-dark: #0A0C10;
       --card-bg: #1A1F2A;
@@ -2569,83 +2570,47 @@
       </section>
     </div>
 
-  <!-- Profile Page - FULL Blooket-style (same as viewing other users) -->
-<div class="page" id="profile-page">
-  <div class="page-content">
-    <h2 class="page-title">My Profile</h2>
-    
-    <div class="user-profile-container" style="max-width: 950px; margin: 0 auto;">
-      
-      <!-- Header: Avatar + Banner -->
-      <div class="profile-top">
-        <div class="avatar">
-          <img id="profile-avatar-new" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="My Avatar">
-        </div>
-        <div class="banner">
-          <img id="profile-user-banner" class="banner-bg" 
-               src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=100&fit=crop" 
-               alt="Banner">
-          <div class="banner-content">
-            <div class="banner-username">
-              <span id="profile-username-new">Username</span>
-              <span class="verified-badge" id="profile-title-new">User</span>
+    <!-- Profile Page -->
+    <div class="page" id="profile-page">
+      <div class="page-content">
+        <h2 class="page-title">User Profile</h2>
+        <div class="profile-section">
+          <div class="avatar-container">
+            <img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar">
+          </div>
+          <div class="profile-username" id="profile-username">Username</div>
+          <div class="user-title" id="profile-title">User</div>
+          <div class="profile-email" id="profile-email">user@example.com</div>
+          
+          <div class="profile-stats">
+            <div class="stat-item">
+              <div class="stat-value" id="play-count">0</div>
+              <div class="stat-label">PLAYS</div>
             </div>
-            <div class="banner-title">
-              <i class="fas fa-calendar-alt"></i> Member since <span id="profile-member-since">2024</span>
+            <div class="stat-item">
+              <div class="stat-value" id="friend-count">0</div>
+              <div class="stat-label">FRIENDS</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="gift-count">0</div>
+              <div class="stat-label">GIFTS</div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Badges -->
-      <div class="badges-section">
-        <div class="badges-header"><i class="fas fa-medal"></i> Earned Badges</div>
-        <div class="badges-grid" id="profile-badges-grid"></div>
-      </div>
-
-      <!-- Blooks Unlocked -->
-      <div class="unlocks-container">
-        <div class="unlocks-header">
-          <div class="unlocks-label"><i class="fas fa-box-open"></i> Blooks Unlocked</div>
-          <div class="unlocks-count"><span id="profile-current-blocks">0</span> / <span id="profile-total-blocks">150</span></div>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" id="profile-blocks-progress" style="width: 0%;"></div></div>
-      </div>
-
-      <!-- Stats Row -->
-      <div class="stats-row">
-        <div class="stars-container">
-          <div class="stars-icon"><i class="fas fa-star"></i></div>
-          <div class="stars-info">
-            <div class="stars-label">Total Stars</div>
-            <div class="stars-value" id="profile-stars-new">0</div>
+          
+          <div class="member-since">
+            Member since: <span id="member-since">January 2023</span>
           </div>
         </div>
-        <div class="playtime-container">
-          <div class="playtime-icon"><i class="fas fa-clock"></i></div>
-          <div class="playtime-info">
-            <div class="playtime-label">Total Playtime</div>
-            <div class="playtime-value" id="profile-playtime">0h 0m</div>
+        
+        <!-- Gift Wall Section -->
+        <div class="gift-wall">
+          <h2 class="gift-wall-header">Gift Wall</h2>
+          <div class="gifts-grid" id="gift-wall-container">
+            <!-- Gift cards will be added here -->
           </div>
         </div>
       </div>
-
-      <!-- Recent Blooks -->
-      <div class="top-blooks-section">
-        <div class="top-blooks-header"><i class="fas fa-trophy"></i> My Recent Blooks</div>
-        <div class="top-blooks-grid" id="profile-top-blooks"></div>
-      </div>
-
-      <!-- Classic Stats -->
-      <div class="profile-stats" style="margin-top: 30px; justify-content: center; gap: 50px;">
-        <div class="stat-item"><div class="stat-value" id="play-count">0</div><div class="stat-label">PLAYS</div></div>
-        <div class="stat-item"><div class="stat-value" id="friend-count">0</div><div class="stat-label">FRIENDS</div></div>
-        <div class="stat-item"><div class="stat-value" id="gift-count">0</div><div class="stat-label">GIFTS RECEIVED</div></div>
-      </div>
-
     </div>
-  </div>
-</div>
 
     <!-- Play History Page -->
     <div class="page" id="history-page">
@@ -3102,51 +3067,51 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
     import { 
-      getAuth,      
-      createUserWithEmailAndPassword,      
-      signInWithEmailAndPassword,      
-      signOut,      
-      onAuthStateChanged,      
-      updatePassword,      
+      getAuth,     
+      createUserWithEmailAndPassword,     
+      signInWithEmailAndPassword,     
+      signOut,     
+      onAuthStateChanged,     
+      updatePassword,     
       updateProfile 
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
     import { 
-      getFirestore,      
-      collection,      
-      addDoc,      
-      getDocs,      
-      query,      
-      where,      
-      orderBy,      
-      limit,      
-      onSnapshot,      
-      doc,      
-      getDoc,      
-      updateDoc,      
-      setDoc,      // <-- ADDED setDoc import
-      arrayUnion,      
-      arrayRemove,      
-      serverTimestamp,      
-      writeBatch,     
-      deleteDoc,     
+      getFirestore,     
+      collection,     
+      addDoc,     
+      getDocs,     
+      query,     
+      where,     
+      orderBy,     
+      limit,     
+      onSnapshot,     
+      doc,     
+      getDoc,     
+      updateDoc,     
+      setDoc,     // <-- ADDED setDoc import
+      arrayUnion,     
+      arrayRemove,     
+      serverTimestamp,     
+      writeBatch,    
+      deleteDoc,    
       increment
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { 
-      getStorage,      
-      ref,      
-      uploadBytes,      
+      getStorage,     
+      ref,     
+      uploadBytes,     
       getDownloadURL 
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
     // Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",          
-      authDomain: "blacket-65c5b.firebaseapp.com",          
-      databaseURL: "https://blacket-65c5b-default-rtdb.firebaseio.com",          
-      projectId: "blacket-65c5b",          
-      storageBucket: "blacket-65c5b.firebasestorage.app",          
-      messagingSenderId: "497023905730",          
-      appId: "1:497023905730:web:a59093052a3f93a476305b",          
+      apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",         
+      authDomain: "blacket-65c5b.firebaseapp.com",         
+      databaseURL: "https://blacket-65c5b-default-rtdb.firebaseio.com",         
+      projectId: "blacket-65c5b",         
+      storageBucket: "blacket-65c5b.firebasestorage.app",         
+      messagingSenderId: "497023905730",         
+      appId: "1:497023905730:web:a59093052a3f93a476305b",         
       measurementId: "G-XZZR5DH79B"
     };
 
@@ -3308,12 +3273,12 @@
       if (email === "chonhouliu@gmail.com") coins = 999999;
       // Use setDoc with { merge: true } to create or update
       await setDoc(doc(db, "users", uid), {
-        email, 
-        username: username || email.split('@')[0], 
-        avatar, 
-        coins, 
-        stars: 0, 
-        title: "User", 
+        email,
+        username: username || email.split('@')[0],
+        avatar,
+        coins,
+        stars: 0,
+        title: "User",
         createdAt: serverTimestamp()
       }, { merge: true });
     }
@@ -3371,11 +3336,8 @@
         }
         await loadUserProfile(user);
         if (pendingGame) { showConfirmModal(pendingGame); pendingGame = null; }
-        
-        // FIX: Show sidebar when user is logged in
         sidebar.classList.add('active');
         mainContent.classList.add('sidebar-active');
-        
         const activePage = document.querySelector('.page.active').id;
         switch (activePage) {
           case 'profile-page': loadProfilePage(user.uid); loadGiftWall(user.uid); break;
@@ -3388,7 +3350,6 @@
         }
       } else {
         userInfoDiv.style.display = 'none';
-        // FIX: Hide sidebar when user is logged out
         sidebar.classList.remove('active');
         mainContent.classList.remove('sidebar-active');
         if (chatUnsubscribe) chatUnsubscribe();
@@ -3644,82 +3605,23 @@
     });
 
     // ========== Load profile page ==========
-   // ========== Load Profile Page - FULL Blooket-style (same as other users) ==========
-async function loadProfilePage(userId) {
-  try {
-    const userDoc = await getDoc(doc(db, "users", userId));
-    if (!userDoc.exists()) return;
-
-    const userData = userDoc.data();
-
-    // Avatar + Banner + Username
-    document.getElementById('profile-avatar-new').src = userData.avatar || 
-      "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-    document.getElementById('profile-username-new').textContent = userData.username || userData.email.split('@')[0];
-    document.getElementById('profile-title-new').textContent = userData.title || "User";
-
-    // Member since
-    const createdDate = userData.createdAt ? 
-      (userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt)) : new Date();
-    document.getElementById('profile-member-since').textContent = createdDate.getFullYear();
-
-    // Banner background
-    document.getElementById('profile-user-banner').src = userData.banner || 
-      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=100&fit=crop";
-
-    // Stars
-    document.getElementById('profile-stars-new').textContent = userData.stars || 0;
-
-    // Playtime
-    const playsSnap = await getDocs(query(collection(db, "plays"), where("userId", "==", userId)));
-    let totalSec = playsSnap.size * 300;
-    const hours = Math.floor(totalSec / 3600);
-    const minutes = Math.floor((totalSec % 3600) / 60);
-    document.getElementById('profile-playtime').textContent = `${hours}h ${minutes}m`;
-
-    // Blooks progress
-    const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
-    const owned = blooksSnap.size;
-    const total = 150;
-    document.getElementById('profile-current-blocks').textContent = owned;
-    document.getElementById('profile-total-blocks').textContent = total;
-    document.getElementById('profile-blocks-progress').style.width = `${Math.min(100, Math.round((owned / total) * 100))}%`;
-
-    // Recent Blooks
-    const topGrid = document.getElementById('profile-top-blooks');
-    topGrid.innerHTML = '';
-    const recent = blooksSnap.docs
-      .sort((a, b) => (b.data().timestamp?.toMillis?.() || 0) - (a.data().timestamp?.toMillis?.() || 0))
-      .slice(0, 10);
-    recent.forEach(docSnap => {
-      const b = docSnap.data();
-      topGrid.innerHTML += `
-        <div class="top-blook-card">
-          <div class="top-blook-image"><img src="${b.imageUrl || 'https://via.placeholder.com/80'}" alt="${b.itemName}"></div>
-          <div class="top-blook-name">${b.itemName}</div>
-          <div class="top-blook-rarity rarity-${b.rarity}">${b.rarity.toUpperCase()}</div>
-        </div>`;
-    });
-
-    // Badges
-    const badgesGrid = document.getElementById('profile-badges-grid');
-    badgesGrid.innerHTML = '';
-    const badgesList = [];
-    if (owned >= 30) badgesList.push({name: "Collector", icon: "fa-box-open"});
-    if ((userData.stars || 0) >= 2000) badgesList.push({name: "Star Hunter", icon: "fa-star"});
-    if (playsSnap.size >= 40) badgesList.push({name: "Veteran", icon: "fa-clock"});
-    if (badgesList.length === 0) badgesList.push({name: "Newbie", icon: "fa-seedling"});
-    badgesList.forEach(b => {
-      badgesGrid.innerHTML += `<div class="badge-item"><i class="fas ${b.icon}"></i> ${b.name}</div>`;
-    });
-
-    // Classic stats at bottom
-    updateStats(userId);
-
-  } catch (e) {
-    console.error("Error loading profile: ", e);
-  }
-}
+    async function loadProfilePage(userId) {
+      try {
+        const userDoc = await getDoc(doc(db, "users", userId));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          document.getElementById('profile-avatar').src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+          document.getElementById('profile-username').textContent = data.username || data.email;
+          document.getElementById('profile-title').textContent = data.title || "User";
+          document.getElementById('profile-email').textContent = data.email;
+          if (data.createdAt) {
+            const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+            document.getElementById('member-since').textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+          }
+        }
+        updateStats(userId);
+      } catch(e) { console.error(e); }
+    }
 
     // ========== Load play history with simple timestamp ==========
     async function loadPlayHistory(userId) {
@@ -3815,12 +3717,12 @@ async function loadProfilePage(userId) {
     // Get stars based on rarity
     function getStarsForRarity(rarity) {
       const starValues = {
-        'common': 5,    
-        'uncommon': 15,    
-        'rare': 25,    
-        'epic': 75,    
-        'legendary': 150,    
-        'chroma': 300,    
+        'common': 5,   
+        'uncommon': 15,   
+        'rare': 25,   
+        'epic': 75,   
+        'legendary': 150,   
+        'chroma': 300,   
         'mythical': 1000
       };
       return starValues[rarity] || 0;
@@ -3834,9 +3736,9 @@ async function loadProfilePage(userId) {
       await updateDoc(doc(db, "users", userId), { stars: increment(starsGained) });
       
       currentGiftCard = { 
-        ...item,     
-        packId: pack.id,     
-        packName: pack.name,     
+        ...item,    
+        packId: pack.id,    
+        packName: pack.name,    
         starsGained: starsGained 
       };
       
@@ -3878,15 +3780,15 @@ async function loadProfilePage(userId) {
       if (!currentUser || !currentGiftCard) return;
       try {
         await addDoc(collection(db, "inventory"), {
-          userId: currentUser.uid,     
-          packId: currentGiftCard.packId,     
-          packName: currentGiftCard.packName,     
-          itemName: currentGiftCard.name,     
-          rarity: currentGiftCard.rarity,     
-          imageUrl: currentGiftCard.imageUrl || null,     
-          animationType: currentGiftCard.animationType,     
-          videoUrl: currentGiftCard.videoUrl || null,     
-          starsGained: currentGiftCard.starsGained,     
+          userId: currentUser.uid,    
+          packId: currentGiftCard.packId,    
+          packName: currentGiftCard.packName,    
+          itemName: currentGiftCard.name,    
+          rarity: currentGiftCard.rarity,    
+          imageUrl: currentGiftCard.imageUrl || null,    
+          animationType: currentGiftCard.animationType,    
+          videoUrl: currentGiftCard.videoUrl || null,    
+          starsGained: currentGiftCard.starsGained,    
           timestamp: serverTimestamp()
         });
         packOpeningModal.style.display = 'none';
@@ -4035,7 +3937,7 @@ async function loadProfilePage(userId) {
         const newStars = (userData.stars || 0) + (mission.rewardStars || 0);
         
         await updateDoc(doc(db, "users", userId), {
-          coins: newCoins,    
+          coins: newCoins,   
           stars: newStars
         });
         
@@ -4140,10 +4042,10 @@ async function loadProfilePage(userId) {
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       const userData = userDoc.data();
       const chatData = { 
-        message,    
-        senderId: currentUser.uid,    
-        senderName: userData.username || currentUser.email,    
-        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",   
+        message,   
+        senderId: currentUser.uid,   
+        senderName: userData.username || currentUser.email,   
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",  
         timestamp: serverTimestamp() 
       };
       if (currentChatMode === 'global') chatData.type = 'global';
@@ -4256,8 +4158,8 @@ async function loadProfilePage(userId) {
         batch.update(recipientRef, { stars: newStars });
         await batch.commit();
         await addDoc(collection(db, "giftwall"), {
-          recipientId, senderId: currentUser.uid, senderName: currentUser.displayName || currentUser.email,     
-          itemName: cardData.itemName, rarity: cardData.rarity, imageUrl: cardData.imageUrl || null,     
+          recipientId, senderId: currentUser.uid, senderName: currentUser.displayName || currentUser.email,    
+          itemName: cardData.itemName, rarity: cardData.rarity, imageUrl: cardData.imageUrl || null,    
           value: cardData.starsGained || 0, stars: cardData.starsGained || 0, timestamp: serverTimestamp()
         });
         showNotification(`Gift sent! ${cardData.itemName} delivered.`, "success");
