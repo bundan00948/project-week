@@ -41,6 +41,24 @@
       overflow-x: hidden;
       display: flex;
     }
+    .page-content, .main-page {
+      position: relative;
+    }
+    .page-content::before, .main-page::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png');
+      background-size: 120px 120px;
+      background-repeat: repeat;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page-content > *, .main-page > * {
+      position: relative;
+      z-index: 1;
+    }
 
     /* Sidebar */
     .sidebar {
@@ -622,41 +640,43 @@
 
     .packs-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
     }
 
     .pack-card {
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 16px;
+      border-radius: 18px;
       overflow: hidden;
       position: relative;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.25s ease;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 10px;
     }
 
     .pack-card:hover {
-      transform: translateY(-5px);
-      border: 1px solid var(--neon-green);
-      box-shadow: 0 10px 25px rgba(42, 255, 158, 0.2);
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .pack-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      filter: blur(3px) brightness(0.6);
-      z-index: 1;
-    }
+    .pack-background { display: none; }
 
     .pack-content {
       position: relative;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
       padding: 25px;
       display: flex;
       flex-direction: column;
@@ -1204,46 +1224,61 @@
     }
 
     .chat-message {
-      margin-bottom: 12px;
-      padding: 10px;
+      margin-bottom: 6px;
+      padding: 6px 10px;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.82rem;
     }
 
     .chat-message.user {
-      background: rgba(42, 255, 158, 0.1);
-      margin-left: 20%;
+      background: rgba(42, 255, 158, 0.08);
+      margin-left: 15%;
     }
 
     .chat-message.friend {
-      background: rgba(255, 255, 255, 0.05);
-      margin-right: 20%;
+      background: rgba(255, 255, 255, 0.04);
+      margin-right: 15%;
     }
 
     .chat-message.system {
-      background: rgba(255, 61, 108, 0.1);
+      background: rgba(255, 61, 108, 0.08);
       text-align: center;
       font-style: italic;
       color: var(--neon-pink);
+      font-size: 0.75rem;
+    }
+
+    .chat-msg-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .chat-msg-header .chat-avatar {
+      width: 22px; height: 22px; border-radius: 50%; object-fit: cover; cursor: pointer; margin: 0;
+    }
+    .chat-msg-header .chat-msg-badge {
+      width: 14px; height: 14px; border-radius: 3px; object-fit: contain;
     }
 
     .message-sender {
       font-weight: 700;
-      margin-bottom: 5px;
       cursor: pointer;
-      color: var(--neon-green);
-      text-decoration: underline;
+      font-size: 0.78rem;
     }
 
     .message-content {
       word-break: break-word;
+      margin-left: 28px;
+      font-size: 0.82rem;
     }
 
     .message-time {
-      font-size: 0.7rem;
+      font-size: 0.62rem;
       color: var(--text-secondary);
       text-align: right;
-      margin-top: 5px;
+      margin-top: 2px;
     }
 
     .chat-input {
@@ -2253,13 +2288,12 @@
     }
     .user-title.gradient-title.running-gradient,
     .up-title-badge.gradient-title.running-gradient {
-      background-size: 200% 200%;
-      animation: runGradient 3s ease infinite;
+      background-size: 300% 100%;
+      animation: runGradient 3s linear infinite;
     }
     @keyframes runGradient {
       0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
     }
     .user-badge {
       display: inline-flex;
@@ -2359,18 +2393,26 @@
     .staff-table th { color: var(--neon-green); font-weight: 700; }
     .staff-table tr:hover { background: rgba(42,255,158,0.03); }
     .staff-btn {
-      padding: 6px 14px;
+      padding: 8px 18px;
       border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.78rem;
+      font-weight: 800;
+      font-size: 0.8rem;
       cursor: pointer;
       border: none;
-      transition: 0.2s;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .staff-btn-primary { background: var(--neon-green); color: #000; }
-    .staff-btn-danger { background: var(--neon-pink); color: #fff; }
-    .staff-btn-warning { background: #FFB347; color: #000; }
-    .staff-btn-sm { padding: 4px 10px; font-size: 0.72rem; }
+    .staff-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .staff-btn:active { transform: translateY(0); }
+    .staff-btn-primary { background: linear-gradient(135deg, #2AFF9E, #1ad47e); color: #000; }
+    .staff-btn-primary:hover { background: linear-gradient(135deg, #3affab, #2AFF9E); box-shadow: 0 4px 16px rgba(42,255,158,0.3); }
+    .staff-btn-danger { background: linear-gradient(135deg, #FF3D6C, #d4294f); color: #fff; }
+    .staff-btn-danger:hover { background: linear-gradient(135deg, #ff5580, #FF3D6C); box-shadow: 0 4px 16px rgba(255,61,108,0.3); }
+    .staff-btn-warning { background: linear-gradient(135deg, #FFB347, #e69a2e); color: #000; }
+    .staff-btn-warning:hover { box-shadow: 0 4px 16px rgba(255,179,71,0.3); }
+    .staff-btn-sm { padding: 5px 12px; font-size: 0.72rem; }
     .staff-badge { background: rgba(42,255,158,0.15); padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; color: var(--neon-green); display: inline-block; margin: 2px; }
     .staff-search { background: rgba(30,38,50,0.8); border: 1px solid rgba(42,255,158,0.2); border-radius: 20px; padding: 8px 16px; color: white; width: 260px; font-size: 0.85rem; }
     .staff-search:focus { outline: none; border-color: var(--neon-green); }
@@ -2542,7 +2584,7 @@
     }
     .up-banner.has-custom-banner .up-banner-bg { display: block; }
     .up-banner.has-custom-banner .up-banner-pattern { display: none; }
-    .up-banner-content { position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+    .up-banner-content { position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6); width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .up-name-row {
       font-size: 1rem; font-weight: 800; color: #fff;
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;
@@ -2731,7 +2773,7 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <i class="fas fa-user"></i>
-      <h2>USER PANEL</h2>
+      <h2>PANEL</h2>
     </div>
     
     <div class="sidebar-tabs">
@@ -2822,9 +2864,10 @@
             <div class="up-banner" id="profile-banner-wrap">
               <div class="up-banner-pattern"></div>
               <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-              <div class="up-banner-content">
-                <div class="up-name-row"><span id="profile-username">Username</span><span class="up-title-badge" id="profile-title">User</span></div>
-                <div class="up-member"><i class="fas fa-calendar-alt"></i> Member since <span id="member-since">2024</span></div>
+              <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                <span class="up-title-badge" id="profile-title">User</span>
+                <span id="member-since" style="display:none;">2024</span>
               </div>
             </div>
           </div>
@@ -2861,9 +2904,10 @@
             <div class="up-banner" id="vp-banner-wrap">
               <div class="up-banner-pattern"></div>
               <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-              <div class="up-banner-content">
-                <div class="up-name-row"><span id="vp-username">Username</span><span class="up-title-badge" id="vp-title">User</span></div>
-                <div class="up-member"><i class="fas fa-calendar-alt"></i> Member since <span id="vp-member-since">2024</span></div>
+              <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                <span class="up-title-badge" id="vp-title">User</span>
+                <span id="vp-member-since" style="display:none;">2024</span>
               </div>
             </div>
           </div>
@@ -3004,6 +3048,8 @@
             <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
             <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
             <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
           </div>
 
@@ -3067,6 +3113,28 @@
             <div class="staff-card">
               <div class="staff-card-header"><h3>Badge Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-badge-btn"><i class="fas fa-plus"></i> Create Badge</button></div>
               <div id="staff-badges-list"></div>
+            </div>
+          </div>
+
+          <!-- Staff Missions -->
+          <div class="staff-section" id="staff-missions">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Mission Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-mission-btn"><i class="fas fa-plus"></i> Create Mission</button></div>
+              <div id="staff-missions-list"></div>
+            </div>
+          </div>
+
+          <!-- Staff Stars -->
+          <div class="staff-section" id="staff-stars">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Modify User Stars</h3></div>
+              <div class="staff-flex-row" style="gap:10px;align-items:flex-end;">
+                <div class="staff-form-group" style="flex:2;"><label>User Email</label><input id="staff-stars-email" placeholder="user@example.com"></div>
+                <div class="staff-form-group" style="flex:1;"><label>Action</label><select id="staff-stars-action"><option value="set">Set to</option><option value="add">Add</option><option value="remove">Remove</option></select></div>
+                <div class="staff-form-group" style="flex:1;"><label>Amount</label><input type="number" id="staff-stars-amount" value="0"></div>
+                <button class="staff-btn staff-btn-primary" id="staff-stars-apply-btn" style="margin-bottom:14px;">Apply</button>
+              </div>
+              <div id="staff-stars-result" style="margin-top:12px;"></div>
             </div>
           </div>
 
@@ -4107,21 +4175,30 @@
         const packsQuery = query(collection(db, "packs"), orderBy("createdAt", "desc"));
         const unsubscribe = onSnapshot(packsQuery, (snapshot) => {
           shopPacks.innerHTML = '';
-          if (snapshot.empty) { shopPacks.innerHTML = '<p>No packs available</p>'; return; }
-          snapshot.forEach(doc => {
-            const pack = { id: doc.id, ...doc.data() };
+          if (snapshot.empty) { shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>'; return; }
+          snapshot.forEach(docSnap => {
+            const pack = { id: docSnap.id, ...docSnap.data() };
+            const topRarity = pack.items?.reduce((best, it) => { const order = ['common','uncommon','rare','epic','legendary','mythical','chroma']; return order.indexOf(it.rarity) > order.indexOf(best) ? it.rarity : best; }, 'common') || 'common';
+            const gradients = { common:'linear-gradient(135deg,#bdbdbd,#757575)', uncommon:'linear-gradient(135deg,#66bb6a,#2e7d32)', rare:'linear-gradient(135deg,#42a5f5,#1565c0)', epic:'linear-gradient(135deg,#ab47bc,#6a1b9a)', legendary:'linear-gradient(135deg,#ffd54f,#bf8f00)', mythical:'linear-gradient(135deg,#ef5350,#b71c1c)', chroma:'linear-gradient(135deg,#26c6da,#00838f)' };
+            const borders = { common:'#9e9e9e', uncommon:'#81c784', rare:'#64b5f6', epic:'#ce93d8', legendary:'#ffe082', mythical:'#ef9a9a', chroma:'#80deea' };
             const packCard = document.createElement('div');
             packCard.className = 'pack-card';
+            packCard.style.background = gradients[topRarity] || gradients.common;
+            packCard.style.borderColor = borders[topRarity] || borders.common;
+            const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
             packCard.innerHTML = `
-              <div class="pack-background" style="background-image: url('${pack.backgroundImage || 'https://placehold.co/600x400?text=Pack+Image'}')"></div>
               <div class="pack-content">
-                <div class="pack-header"><div class="pack-name">${pack.name}</div><div class="pack-price"><i class="fas fa-coins"></i> ${pack.price}<button class="chance-btn" data-pack-id="${pack.id}">?</button></div></div>
-                <div class="pack-items">${pack.items.map(item => `<span class="pack-item ${item.rarity}">${item.name}</span>`).join('')}</div>
-                <button class="buy-btn" data-pack-id="${pack.id}">BUY</button>
+                <div style="font-size:1rem;font-weight:900;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,0.4);">${pack.name}</div>
+                ${packImg ? `<img src="${packImg}" style="width:80px;height:80px;object-fit:contain;border-radius:12px;margin-bottom:10px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));">` : '<div style="width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:10px;"><i class="fas fa-box-open"></i></div>'}
+                <div style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:0.9rem;background:rgba(0,0,0,0.3);padding:4px 14px;border-radius:20px;"><i class="fas fa-coins" style="color:#ffd700;"></i> ${pack.price}</div>
               </div>
             `;
-            packCard.querySelector('.buy-btn').addEventListener('click', () => purchasePack(pack));
-            packCard.querySelector('.chance-btn').addEventListener('click', (e) => { e.stopPropagation(); showChanceModal(pack); });
+            packCard.addEventListener('click', () => purchasePack(pack));
+            const infoBtn = document.createElement('button');
+            infoBtn.style.cssText = 'position:absolute;top:8px;right:8px;z-index:5;background:rgba(0,0,0,0.4);border:none;color:white;width:24px;height:24px;border-radius:50%;font-size:0.7rem;cursor:pointer;';
+            infoBtn.textContent = '?';
+            infoBtn.addEventListener('click', (e) => { e.stopPropagation(); showChanceModal(pack); });
+            packCard.appendChild(infoBtn);
             shopPacks.appendChild(packCard);
           });
         });
@@ -4225,10 +4302,10 @@
       openedGiftStars.textContent = `Stars: ${item.starsGained}`;
       
       giftAnimation.innerHTML = '';
-      if (item.animationType === 'css') {
-        giftAnimation.innerHTML = `<div style="width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; border-radius: 16px;"><img src="${item.imageUrl}" alt="${item.name}" style="max-width: 100%; max-height: 100%;"></div>`;
+      if (item.imageUrl) {
+        giftAnimation.innerHTML = `<img src="${item.imageUrl}" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
       } else {
-        giftAnimation.innerHTML = `<video autoplay muted><source src="${item.videoUrl}" type="video/mp4"></video>`;
+        giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:${getRarityColor(item.rarity)};"><i class="fas fa-gift"></i></div>`;
       }
       
       packOpeningModal.style.display = 'flex';
@@ -4244,8 +4321,6 @@
           itemName: currentGiftCard.name,    
           rarity: currentGiftCard.rarity,    
           imageUrl: currentGiftCard.imageUrl || null,    
-          animationType: currentGiftCard.animationType,    
-          videoUrl: currentGiftCard.videoUrl || null,    
           starsGained: currentGiftCard.starsGained,    
           timestamp: serverTimestamp()
         });
@@ -4257,6 +4332,35 @@
     // ========== Blooket-style Inventory ==========
     let currentInventoryFilter = 'all';
     let inventoryItems = [];
+    let packBuilderItems = [];
+    const RARITIES = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
+    function renderPackBuilderItems() {
+      const list = document.getElementById('staff-pack-items-list');
+      if (!list) return;
+      list.innerHTML = packBuilderItems.map((item, i) => `
+        <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.08);">
+          <div class="staff-flex-row" style="gap:6px;align-items:flex-end;">
+            <div class="staff-form-group" style="flex:2;margin:0;"><label style="font-size:0.7rem;">Name</label><input value="${escapeHtml(item.name)}" data-idx="${i}" data-field="name" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
+            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity</label><select data-idx="${i}" data-field="rarity" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;">${RARITIES.map(r=>`<option value="${r}" ${item.rarity===r?'selected':''}>${r}</option>`).join('')}</select></div>
+            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Chance %</label><input type="number" step="0.01" value="${item.chance||0}" data-idx="${i}" data-field="chance" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
+            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Stars</label><input type="number" value="${item.starsGained||0}" data-idx="${i}" data-field="starsGained" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
+          </div>
+          <div class="staff-flex-row" style="gap:6px;margin-top:6px;align-items:flex-end;">
+            <div class="staff-form-group" style="flex:3;margin:0;"><label style="font-size:0.7rem;">Image URL</label><input value="${escapeHtml(item.imageUrl||'')}" data-idx="${i}" data-field="imageUrl" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
+            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity Color</label><input type="color" value="${item.rarityColor||'#888888'}" data-idx="${i}" data-field="rarityColor" class="pbi-field" style="padding:2px;height:32px;"></div>
+            <button type="button" class="staff-btn staff-btn-danger staff-btn-sm pbi-del" data-idx="${i}" style="margin-bottom:2px;">✕</button>
+          </div>
+        </div>
+      `).join('') || '<div style="color:var(--text-secondary);font-size:0.8rem;padding:8px;">No items added yet.</div>';
+      list.querySelectorAll('.pbi-field').forEach(f => f.addEventListener('change', () => {
+        const idx = parseInt(f.dataset.idx);
+        const field = f.dataset.field;
+        let val = f.value;
+        if (field === 'chance' || field === 'starsGained') val = parseFloat(val) || 0;
+        packBuilderItems[idx][field] = val;
+      }));
+      list.querySelectorAll('.pbi-del').forEach(b => b.addEventListener('click', () => { packBuilderItems.splice(parseInt(b.dataset.idx), 1); renderPackBuilderItems(); }));
+    }
 
     function renderInventory() {
       inventoryContainer.innerHTML = '';
@@ -4507,24 +4611,61 @@
       return `${yy}/${mm}/${dd} ${hh}:${min}`;
     }
 
-    function renderChatMessages(container, snapshot) {
+    let chatUserCache = {};
+    async function getChatUserData(uid) {
+      if (chatUserCache[uid]) return chatUserCache[uid];
+      try {
+        const u = await getDoc(doc(db, 'users', uid));
+        if (u.exists()) { chatUserCache[uid] = u.data(); return u.data(); }
+      } catch(e) {}
+      return null;
+    }
+
+    async function renderChatMessages(container, snapshot) {
       container.innerHTML = '';
       const messages = snapshot.docs.map(d => d.data()).reverse();
-      messages.forEach(msg => {
+      for (const msg of messages) {
         const div = document.createElement('div');
         div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
         if (msg.type === 'system') {
           div.innerHTML = `<div class="message-content">${msg.message}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
         } else {
+          const userData = await getChatUserData(msg.senderId);
+          const titleColor = 'var(--neon-green)';
+          let titleStyle = `color:${titleColor};`;
+          let topBadgeHtml = '';
+          if (userData) {
+            try {
+              const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', userData.title || 'User')));
+              if (!titlesSnap.empty) {
+                const td = titlesSnap.docs[0].data();
+                if (td.isGradient && td.gradientColors?.length >= 2) {
+                  titleStyle = `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
+                } else if (td.color) {
+                  titleStyle = `color:${td.color};`;
+                }
+              }
+            } catch(e) {}
+            if (userData.badges?.length > 0) {
+              try {
+                const badgesSnap = await getDocs(collection(db, 'badges'));
+                const bd = badgesSnap.docs.map(d=>d.data()).find(b=>b.name===userData.badges[0]);
+                if (bd?.icon) topBadgeHtml = `<img class="chat-msg-badge" src="${bd.icon}" alt="${bd.name}" title="${bd.name}">`;
+              } catch(e) {}
+            }
+          }
           div.innerHTML = `
-            <img class="chat-avatar" src="${msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg'}" alt="${msg.senderName}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">
-            <div class="message-sender clickable-username" data-user-id="${msg.senderId}" data-username="${msg.senderName}">${msg.senderName}</div>
+            <div class="chat-msg-header">
+              <img class="chat-avatar" src="${msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg'}" alt="${msg.senderName}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">
+              <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">${msg.senderName}</span>
+              ${topBadgeHtml}
+              <span class="message-time">${formatMessageTime(msg.timestamp)}</span>
+            </div>
             <div class="message-content">${msg.message}</div>
-            <div class="message-time">${formatMessageTime(msg.timestamp)}</div>
           `;
         }
         container.appendChild(div);
-      });
+      }
       container.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
         el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
       });
@@ -4695,8 +4836,8 @@
       } catch(e) { showNotification("Error sending gift: " + e.message, "error"); }
     }
 
-    // Send gift button in profile modal
-    modalSendGiftBtn.addEventListener('click', async () => {
+    // Send gift button (removed with old modal - kept as no-op)
+    modalSendGiftBtn?.addEventListener('click', async () => {
       if (selectedUserForGift) {
         await loadSenderGiftCards(currentUser.uid);
         sendGiftInventoryModal.style.display = 'flex';
@@ -4720,7 +4861,7 @@
             if (selectedUserForGift && selectedUserForGift.id) {
               await sendGiftToFriend(selectedUserForGift.id, card.id, card);
               sendGiftInventoryModal.style.display = 'none';
-              userProfileModal.style.display = 'none';
+              if (userProfileModal) userProfileModal.style.display = 'none';
             }
           });
           senderGiftCardsList.appendChild(cardElement);
@@ -4930,6 +5071,8 @@
             case 'staff-users': loadStaffUsers(); break;
             case 'staff-titles': loadStaffTitles(); break;
             case 'staff-badges': loadStaffBadges(); break;
+            case 'staff-missions': loadStaffMissions(); break;
+            case 'staff-stars': break;
             case 'staff-chatview': loadStaffChatViewer(); break;
           }
         });
@@ -5221,6 +5364,17 @@
       });
     }
 
+    // ========== Staff Missions ==========
+    async function loadStaffMissions() {
+      const container = document.getElementById('staff-missions-list');
+      try {
+        const snap = await getDocs(query(collection(db,'missions'),orderBy('createdAt','desc')));
+        const missions = snap.docs.map(d=>({id:d.id,...d.data()}));
+        container.innerHTML = missions.length ? missions.map(m=>`<div class="staff-card" style="margin-bottom:10px;"><div class="staff-card-header"><h3 style="font-size:0.9rem;">${escapeHtml(m.title)}</h3><div><button class="staff-btn staff-btn-danger staff-btn-sm sm-del" data-id="${m.id}">Delete</button></div></div><div style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(m.description||'')} | Type: ${m.type} | Target: ${m.target} | Reward: ${m.rewardCoins||0} coins, ${m.rewardStars||0} stars</div></div>`).join('') : '<p style="color:var(--text-secondary);">No missions.</p>';
+        container.querySelectorAll('.sm-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete mission?')){await deleteDoc(doc(db,'missions',b.dataset.id));loadStaffMissions();}}));
+      } catch(e) { container.innerHTML = '<p style="color:var(--neon-pink);">Error loading missions.</p>'; }
+    }
+
     // ========== Staff Panel Event Listeners ==========
     function setupStaffEventListeners() {
       // Games
@@ -5244,34 +5398,6 @@
       document.getElementById('staff-save-tag-btn')?.addEventListener('click',async()=>{const n=document.getElementById('staff-new-tag-name').value.trim();if(n){await addDoc(collection(db,'tags'),{name:n});document.getElementById('staff-tag-modal').style.display='none';document.getElementById('staff-new-tag-name').value='';loadStaffTags();showNotification('Tag created!','success');}});
 
       // Packs
-      let packBuilderItems = [];
-      const RARITIES = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
-      function renderPackBuilderItems() {
-        const list = document.getElementById('staff-pack-items-list');
-        list.innerHTML = packBuilderItems.map((item, i) => `
-          <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.08);">
-            <div class="staff-flex-row" style="gap:6px;align-items:flex-end;">
-              <div class="staff-form-group" style="flex:2;margin:0;"><label style="font-size:0.7rem;">Name</label><input value="${escapeHtml(item.name)}" data-idx="${i}" data-field="name" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-              <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity</label><select data-idx="${i}" data-field="rarity" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;">${RARITIES.map(r=>`<option value="${r}" ${item.rarity===r?'selected':''}>${r}</option>`).join('')}</select></div>
-              <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Chance %</label><input type="number" step="0.01" value="${item.chance||0}" data-idx="${i}" data-field="chance" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-              <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Stars</label><input type="number" value="${item.starsGained||0}" data-idx="${i}" data-field="starsGained" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            </div>
-            <div class="staff-flex-row" style="gap:6px;margin-top:6px;align-items:flex-end;">
-              <div class="staff-form-group" style="flex:3;margin:0;"><label style="font-size:0.7rem;">Image URL</label><input value="${escapeHtml(item.imageUrl||'')}" data-idx="${i}" data-field="imageUrl" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-              <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity Color</label><input type="color" value="${item.rarityColor||'#888888'}" data-idx="${i}" data-field="rarityColor" class="pbi-field" style="padding:2px;height:32px;"></div>
-              <button type="button" class="staff-btn staff-btn-danger staff-btn-sm pbi-del" data-idx="${i}" style="margin-bottom:2px;">✕</button>
-            </div>
-          </div>
-        `).join('') || '<div style="color:var(--text-secondary);font-size:0.8rem;padding:8px;">No items. Click "Add Item" to start.</div>';
-        list.querySelectorAll('.pbi-field').forEach(f => f.addEventListener('change', () => {
-          const idx = parseInt(f.dataset.idx);
-          const field = f.dataset.field;
-          let val = f.value;
-          if (field === 'chance' || field === 'starsGained') val = parseFloat(val) || 0;
-          packBuilderItems[idx][field] = val;
-        }));
-        list.querySelectorAll('.pbi-del').forEach(b => b.addEventListener('click', () => { packBuilderItems.splice(parseInt(b.dataset.idx), 1); renderPackBuilderItems(); }));
-      }
       document.getElementById('staff-pack-add-item-btn')?.addEventListener('click', () => {
         packBuilderItems.push({ name: '', rarity: 'common', chance: 0, starsGained: 0, imageUrl: '', rarityColor: '#888888' });
         renderPackBuilderItems();
@@ -5374,6 +5500,38 @@
       document.getElementById('staff-quick-add-pack')?.addEventListener('click',()=>document.getElementById('staff-add-pack-btn')?.click());
       document.getElementById('staff-quick-add-title')?.addEventListener('click',()=>document.getElementById('staff-add-title-btn')?.click());
 
+      // Missions
+      document.getElementById('staff-add-mission-btn')?.addEventListener('click', async () => {
+        const title = prompt('Mission title:'); if (!title) return;
+        const description = prompt('Description:') || '';
+        const type = prompt('Type (gametime/chatting/spending):') || 'gametime';
+        const target = parseInt(prompt('Target value:') || '10');
+        const rewardCoins = parseInt(prompt('Reward coins:') || '100');
+        const rewardStars = parseInt(prompt('Reward stars:') || '50');
+        await addDoc(collection(db,'missions'),{title,description,type,target,progress:0,rewardCoins,rewardStars,claimed:false,createdAt:serverTimestamp()});
+        loadStaffMissions();
+        showNotification('Mission created!','success');
+      });
+
+      // Stars
+      document.getElementById('staff-stars-apply-btn')?.addEventListener('click', async () => {
+        const email = document.getElementById('staff-stars-email').value.trim();
+        const action = document.getElementById('staff-stars-action').value;
+        const amount = parseInt(document.getElementById('staff-stars-amount').value) || 0;
+        if (!email) { showNotification('Enter email','error'); return; }
+        const snap = await getDocs(query(collection(db,'users'),where('email','==',email)));
+        if (snap.empty) { showNotification('User not found','error'); return; }
+        const uid = snap.docs[0].id;
+        const current = snap.docs[0].data().stars || 0;
+        let newVal = current;
+        if (action === 'set') newVal = amount;
+        else if (action === 'add') newVal = current + amount;
+        else if (action === 'remove') newVal = Math.max(0, current - amount);
+        await updateDoc(doc(db,'users',uid),{stars:newVal});
+        document.getElementById('staff-stars-result').innerHTML = `<span style="color:var(--neon-green);">✓ ${snap.docs[0].data().username}: ${current} → ${newVal} stars</span>`;
+        showNotification('Stars updated!','success');
+      });
+
       // Close staff modals on backdrop click
       document.querySelectorAll('.staff-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m) m.style.display='none';}));
     }
@@ -5403,7 +5561,6 @@
       if (e.target === sendGiftModal) sendGiftModal.style.display = 'none';
       if (e.target === sendingAnimationModal) sendingAnimationModal.style.display = 'none';
       if (e.target === chanceModal) chanceModal.style.display = 'none';
-      if (e.target === userProfileModal) userProfileModal.style.display = 'none';
       if (e.target === sendGiftChatModal) sendGiftChatModal.style.display = 'none';
       if (e.target === sendGiftInventoryModal) sendGiftInventoryModal.style.display = 'none';
     });
@@ -5416,7 +5573,6 @@
         sendGiftModal.style.display = 'none';
         sendingAnimationModal.style.display = 'none';
         chanceModal.style.display = 'none';
-        userProfileModal.style.display = 'none';
         sendGiftChatModal.style.display = 'none';
         sendGiftInventoryModal.style.display = 'none';
         loginModal.style.display = 'none';
