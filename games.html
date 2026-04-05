@@ -749,151 +749,236 @@
       color: #000;
     }
 
-    /* Inventory Page */
+    /* Inventory Page - Blooket Style */
     .inventory-header {
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid rgba(42, 255, 158, 0.2);
     }
 
-    .pack-group {
-      margin-bottom: 30px;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .pack-header {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 15px 20px;
-      border-left: 4px solid var(--neon-green);
+    .inventory-filter-bar {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
     }
 
-    .pack-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-    }
-
-    .pack-count {
-      background: rgba(42, 255, 158, 0.2);
-      padding: 3px 10px;
+    .filter-btn {
+      padding: 8px 18px;
       border-radius: 20px;
-      font-size: 0.9rem;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-secondary);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--neon-green);
+      color: #000;
+      border-color: var(--neon-green);
+    }
+
+    #inventory-container .pack-group {
+      margin-bottom: 32px;
+    }
+
+    #inventory-container .pack-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(42, 255, 158, 0.15);
+    }
+
+    #inventory-container .pack-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--text-primary);
+    }
+
+    #inventory-container .pack-count {
+      background: rgba(42, 255, 158, 0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--neon-green);
     }
 
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.4);
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
     }
 
     .card-item {
-      background: rgba(30, 30, 30, 0.7);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid transparent;
     }
 
     .card-item:hover {
-      transform: translateY(-5px);
-      border-color: var(--neon-green);
-      box-shadow: 0 5px 15px rgba(42, 255, 158, 0.2);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 2;
     }
 
-    .card-thumbnail {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: #333;
-      margin-bottom: 15px;
+    .card-item.rarity-common { background: linear-gradient(160deg, #e0e0e0, #9e9e9e); border-color: #bdbdbd; }
+    .card-item.rarity-uncommon { background: linear-gradient(160deg, #66bb6a, #2e7d32); border-color: #43a047; }
+    .card-item.rarity-rare { background: linear-gradient(160deg, #42a5f5, #1565c0); border-color: #1e88e5; }
+    .card-item.rarity-epic { background: linear-gradient(160deg, #ab47bc, #6a1b9a); border-color: #8e24aa; }
+    .card-item.rarity-legendary { background: linear-gradient(160deg, #ffd54f, #bf8f00); border-color: #f9a825; }
+    .card-item.rarity-mythical { background: linear-gradient(160deg, #ef5350, #b71c1c); border-color: #e53935; }
+    .card-item.rarity-chroma { background: linear-gradient(160deg, #26c6da, #00838f); border-color: #00acc1; }
+
+    .card-image-area {
+      width: 100%;
+      aspect-ratio: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      padding: 18px;
+      position: relative;
+    }
+
+    .card-image-area img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+      border-radius: 10px;
+    }
+
+    .card-image-area .card-icon-placeholder {
+      font-size: 3rem;
+      color: rgba(255,255,255,0.85);
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    .card-info-area {
+      background: rgba(0,0,0,0.45);
+      width: 100%;
+      padding: 10px 8px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
     }
 
     .card-name {
       font-weight: 800;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
-    .card-rarity {
-      padding: 3px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
+    .card-rarity-label {
+      font-size: 0.7rem;
       font-weight: 700;
-      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.85;
     }
 
-    .card-stats {
-      display: flex;
-      justify-content: space-around;
+    .card-stars {
+      font-size: 0.75rem;
+      color: var(--star-filled);
+      font-weight: 700;
+    }
+
+    .card-actions-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      margin-bottom: 15px;
-    }
-
-    .stat-item {
+      height: 100%;
+      background: rgba(0,0,0,0.7);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: 14px;
+      z-index: 3;
     }
 
-    .stat-value {
-      font-weight: 800;
-      font-size: 1.1rem;
+    .card-item:hover .card-actions-overlay {
+      opacity: 1;
     }
 
-    .stat-label {
-      font-size: 0.8rem;
-      opacity: 0.7;
-    }
-
-    .card-buttons {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .send-btn, .use-btn {
-      flex: 1;
-      padding: 8px;
+    .card-action-btn {
+      padding: 8px 24px;
       border-radius: 20px;
       font-weight: 700;
+      font-size: 0.8rem;
       cursor: pointer;
       border: none;
+      min-width: 90px;
+      transition: transform 0.15s;
     }
 
-    .send-btn {
-      background: rgba(42, 255, 158, 0.2);
-      color: var(--neon-green);
-      border: 1px solid var(--neon-green);
+    .card-action-btn:hover {
+      transform: scale(1.05);
     }
 
-    .send-btn:hover {
+    .card-action-btn.send-btn {
       background: var(--neon-green);
       color: #000;
     }
 
-    .use-btn {
-      background: rgba(255, 61, 108, 0.2);
-      color: var(--neon-pink);
-      border: 1px solid var(--neon-pink);
+    .card-action-btn.use-btn {
+      background: var(--neon-pink);
+      color: #fff;
     }
 
-    .use-btn:hover {
-      background: var(--neon-pink);
-      color: #000;
+    .inventory-stats-bar {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .inv-stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(42, 255, 158, 0.15);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .inv-stat-icon {
+      font-size: 1.3rem;
+      color: var(--neon-green);
+    }
+
+    .inv-stat-value {
+      font-size: 1.3rem;
+      font-weight: 900;
+    }
+
+    .inv-stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
     }
 
     /* Gift Wall */
@@ -975,28 +1060,69 @@
       font-size: 1.1rem;
     }
 
-    /* Friends & Chat Page */
-    .friends-chat-container {
-      display: flex;
-      gap: 30px;
-      max-width: 1200px;
+    /* Global Chat Panel */
+    .global-chat-panel {
+      max-width: 900px;
       margin: 0 auto;
-    }
-
-    .friends-section {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 20px;
-    }
-
-    .chat-section {
-      flex: 2;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 15px;
       padding: 20px;
       display: flex;
       flex-direction: column;
+      height: 70vh;
+    }
+
+    /* Friends Panel */
+    .friends-panel-container {
+      display: flex;
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 70vh;
+    }
+
+    .friends-sidebar-section {
+      width: 280px;
+      min-width: 240px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .friend-chat-section {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .friend-chat-header {
+      padding: 12px 16px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .friend-chat-header img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .friend-chat-placeholder {
+      color: var(--text-secondary);
+      font-style: italic;
+      font-weight: 400;
     }
 
     .add-friend-form {
@@ -1150,29 +1276,6 @@
       cursor: pointer;
     }
 
-    .chat-mode {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .chat-mode-btn {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(42, 255, 158, 0.2);
-      border-radius: 20px;
-      padding: 10px;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .chat-mode-btn.active {
-      background: var(--neon-green);
-      color: #000;
-      border-color: var(--neon-green);
-    }
 
     /* Settings Page */
     .settings-section {
@@ -2449,14 +2552,22 @@
       .main-content.sidebar-active {
         margin-left: 0;
       }
-      .friends-chat-container {
+      .friends-panel-container {
         flex-direction: column;
+        height: auto;
+      }
+      .friends-sidebar-section {
+        width: 100%;
+        min-width: unset;
+      }
+      .global-chat-panel {
+        height: 60vh;
       }
       .packs-grid {
         grid-template-columns: 1fr;
       }
       .cards-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
       }
       .gifts-grid {
         grid-template-columns: 1fr;
@@ -2516,8 +2627,11 @@
       <button class="tab-button" data-page="missions-page">
         <i class="fas fa-tasks"></i> Missions
       </button>
+      <button class="tab-button" data-page="chat-page">
+        <i class="fas fa-comments"></i> Chat
+      </button>
       <button class="tab-button" data-page="friends-page">
-        <i class="fas fa-users"></i> Friends & Chat
+        <i class="fas fa-user-friends"></i> Friends
       </button>
       <button class="tab-button" data-page="settings-page">
         <i class="fas fa-cog"></i> Settings
@@ -2647,7 +2761,9 @@
     <!-- Inventory Page -->
     <div class="page" id="inventory-page">
       <div class="page-content">
-        <h2 class="page-title">My Inventory</h2>
+        <h2 class="page-title">My Blooks</h2>
+        <div class="inventory-stats-bar" id="inventory-stats-bar"></div>
+        <div class="inventory-filter-bar" id="inventory-filter-bar"></div>
         <div class="inventory-list" id="inventory-container">
           <!-- Inventory items will be added here -->
         </div>
@@ -2664,13 +2780,28 @@
       </div>
     </div>
 
-    <!-- Friends & Chat Page -->
+    <!-- Chat Page (Global Chat Only) -->
+    <div class="page" id="chat-page">
+      <div class="page-content">
+        <h2 class="page-title">Global Chat</h2>
+        <div class="global-chat-panel">
+          <div class="chat-container" id="global-chat-container">
+            <!-- Global chat messages will be added here -->
+          </div>
+          <div class="chat-input">
+            <input type="text" id="global-chat-input" placeholder="Type a message...">
+            <button id="global-send-chat-btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friends Page (Friends list + Friend Chat) -->
     <div class="page" id="friends-page">
       <div class="page-content">
-        <h2 class="page-title">Friends & Chat</h2>
-        <div class="friends-chat-container">
-          <div class="friends-section">
-            <h3>Friends</h3>
+        <h2 class="page-title">Friends</h2>
+        <div class="friends-panel-container">
+          <div class="friends-sidebar-section">
             <div class="add-friend-form">
               <input type="email" id="friend-email" placeholder="Friend's email">
               <button id="add-friend-btn">Add</button>
@@ -2679,21 +2810,16 @@
               <!-- Friends will be added here -->
             </div>
           </div>
-          
-          <div class="chat-section">
-            <h3>Chat</h3>
-            <div class="chat-mode">
-              <button class="chat-mode-btn active" id="global-chat-btn">Global Chat</button>
-              <button class="chat-mode-btn" id="friend-chat-btn">Friend Chat</button>
+          <div class="friend-chat-section">
+            <div class="friend-chat-header" id="friend-chat-header">
+              <span class="friend-chat-placeholder">Select a friend to start chatting</span>
             </div>
-            
-            <div class="chat-container" id="chat-container">
-              <!-- Chat messages will be added here -->
+            <div class="chat-container" id="friend-chat-container">
+              <!-- Friend chat messages will be added here -->
             </div>
-            
-            <div class="chat-input">
-              <input type="text" id="chat-input" placeholder="Type a message...">
-              <button id="send-chat-btn">Send</button>
+            <div class="chat-input" id="friend-chat-input-area" style="display:none;">
+              <input type="text" id="friend-chat-input" placeholder="Type a message...">
+              <button id="friend-send-chat-btn">Send</button>
             </div>
           </div>
         </div>
@@ -3147,13 +3273,18 @@
     const shopPacks = document.getElementById('shop-packs');
     const inventoryContainer = document.getElementById('inventory-container');
     const friendsList = document.getElementById('friends-list');
-    const chatContainer = document.getElementById('chat-container');
-    const chatInput = document.getElementById('chat-input');
-    const sendChatBtn = document.getElementById('send-chat-btn');
+    const globalChatContainer = document.getElementById('global-chat-container');
+    const globalChatInput = document.getElementById('global-chat-input');
+    const globalSendChatBtn = document.getElementById('global-send-chat-btn');
+    const friendChatContainer = document.getElementById('friend-chat-container');
+    const friendChatInput = document.getElementById('friend-chat-input');
+    const friendSendChatBtn = document.getElementById('friend-send-chat-btn');
+    const friendChatInputArea = document.getElementById('friend-chat-input-area');
+    const friendChatHeader = document.getElementById('friend-chat-header');
     const addFriendBtn = document.getElementById('add-friend-btn');
     const friendEmailInput = document.getElementById('friend-email');
-    const globalChatBtn = document.getElementById('global-chat-btn');
-    const friendChatBtn = document.getElementById('friend-chat-btn');
+    let globalChatUnsubscribe = null;
+    let friendChatUnsubscribe = null;
     const sendCardModal = document.getElementById('sendCardModal');
     const sendCardName = document.getElementById('send-card-name');
     const sendCardType = document.getElementById('send-card-type');
@@ -3241,11 +3372,9 @@
     const closeUserProfileModalBtn = document.getElementById('close-user-profile-modal-btn');
 
     let pendingGame = null;
-    let currentChatMode = 'global';
     let selectedFriend = null;
     let currentUser = null;
     let currentCard = null;
-    let chatUnsubscribe = null;
     let inventoryUnsubscribe = null;
     let giftWallUnsubscribe = null;
     let userUnsubscribe = null;
@@ -3345,14 +3474,16 @@
           case 'shop-page': loadShopPacks(); loadUserBalance(user.uid); break;
           case 'inventory-page': loadInventory(user.uid); break;
           case 'missions-page': loadMissions(user.uid); break;
-          case 'friends-page': loadFriends(user.uid); loadChat(); break;
+          case 'chat-page': loadGlobalChat(); break;
+          case 'friends-page': loadFriends(user.uid); break;
           case 'settings-page': loadSettings(user.uid); break;
         }
       } else {
         userInfoDiv.style.display = 'none';
         sidebar.classList.remove('active');
         mainContent.classList.remove('sidebar-active');
-        if (chatUnsubscribe) chatUnsubscribe();
+        if (globalChatUnsubscribe) globalChatUnsubscribe();
+        if (friendChatUnsubscribe) friendChatUnsubscribe();
         if (inventoryUnsubscribe) inventoryUnsubscribe();
         if (giftWallUnsubscribe) giftWallUnsubscribe();
         if (userUnsubscribe) userUnsubscribe();
@@ -3598,7 +3729,8 @@
           case 'shop-page': loadShopPacks(); loadUserBalance(currentUser.uid); break;
           case 'inventory-page': loadInventory(currentUser.uid); break;
           case 'missions-page': loadMissions(currentUser.uid); break;
-          case 'friends-page': loadFriends(currentUser.uid); loadChat(); break;
+          case 'chat-page': loadGlobalChat(); break;
+          case 'friends-page': loadFriends(currentUser.uid); break;
           case 'settings-page': loadSettings(currentUser.uid); break;
         }
       });
@@ -3796,54 +3928,105 @@
       } catch(e) { showNotification("Error collecting item: " + e.message, "error"); }
     });
 
-    // ========== Inventory with working Use button (no orderBy to avoid index) ==========
+    // ========== Blooket-style Inventory ==========
+    let currentInventoryFilter = 'all';
+    let inventoryItems = [];
+
+    function renderInventory() {
+      inventoryContainer.innerHTML = '';
+      const statsBar = document.getElementById('inventory-stats-bar');
+      const filterBar = document.getElementById('inventory-filter-bar');
+
+      if (inventoryItems.length === 0) {
+        statsBar.innerHTML = '';
+        filterBar.innerHTML = '';
+        inventoryContainer.innerHTML = '<p class="empty-message">No blooks yet — open some packs!</p>';
+        return;
+      }
+
+      const rarityCounts = {};
+      const packCounts = {};
+      inventoryItems.forEach(item => {
+        rarityCounts[item.rarity] = (rarityCounts[item.rarity] || 0) + 1;
+        packCounts[item.packName] = (packCounts[item.packName] || 0) + 1;
+      });
+
+      statsBar.innerHTML = `
+        <div class="inv-stat"><i class="fas fa-th inv-stat-icon"></i><div><div class="inv-stat-value">${inventoryItems.length}</div><div class="inv-stat-label">Total Blooks</div></div></div>
+        <div class="inv-stat"><i class="fas fa-box-open inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(packCounts).length}</div><div class="inv-stat-label">Packs</div></div></div>
+        <div class="inv-stat"><i class="fas fa-gem inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(rarityCounts).length}</div><div class="inv-stat-label">Rarities</div></div></div>
+      `;
+
+      const packNames = Object.keys(packCounts).sort();
+      filterBar.innerHTML = `<button class="filter-btn ${currentInventoryFilter === 'all' ? 'active' : ''}" data-filter="all">All</button>`;
+      packNames.forEach(pn => {
+        filterBar.innerHTML += `<button class="filter-btn ${currentInventoryFilter === pn ? 'active' : ''}" data-filter="${pn}">${pn} (${packCounts[pn]})</button>`;
+      });
+      filterBar.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentInventoryFilter = btn.dataset.filter;
+          renderInventory();
+        });
+      });
+
+      const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => i.packName === currentInventoryFilter);
+
+      const grouped = {};
+      filtered.forEach(item => {
+        if (!grouped[item.packName]) grouped[item.packName] = [];
+        grouped[item.packName].push(item);
+      });
+
+      Object.keys(grouped).sort().forEach(packName => {
+        const items = grouped[packName];
+        const packGroup = document.createElement('div');
+        packGroup.className = 'pack-group';
+        packGroup.innerHTML = `<div class="pack-header"><div class="pack-title">${packName}</div><div class="pack-count">${items.length} blooks</div></div><div class="cards-grid"></div>`;
+        const cardsGrid = packGroup.querySelector('.cards-grid');
+
+        items.forEach(item => {
+          const r = (item.rarity || 'common').toLowerCase();
+          const card = document.createElement('div');
+          card.className = `card-item rarity-${r}`;
+          card.innerHTML = `
+            <div class="card-image-area">
+              ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.itemName}">` : `<i class="fas fa-gift card-icon-placeholder"></i>`}
+            </div>
+            <div class="card-info-area">
+              <div class="card-name" title="${item.itemName}">${item.itemName}</div>
+              <div class="card-rarity-label">${r}</div>
+              <div class="card-stars"><i class="fas fa-star"></i> ${item.starsGained || 0}</div>
+            </div>
+            <div class="card-actions-overlay">
+              <button class="card-action-btn send-btn" data-id="${item.id}" data-name="${item.itemName}" data-rarity="${item.rarity}" data-image="${item.imageUrl || ''}"><i class="fas fa-paper-plane"></i> Send</button>
+              <button class="card-action-btn use-btn" data-id="${item.id}" data-name="${item.itemName}" data-rarity="${item.rarity}" data-type="${item.type || 'item'}" data-value="${item.value || 0}" data-image="${item.imageUrl || ''}"><i class="fas fa-bolt"></i> Use</button>
+            </div>
+          `;
+          cardsGrid.appendChild(card);
+        });
+        inventoryContainer.appendChild(packGroup);
+      });
+
+      document.querySelectorAll('.card-action-btn.send-btn').forEach(btn => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentCard = { id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, image: btn.dataset.image };
+        openSendCardModal();
+      }));
+      document.querySelectorAll('.card-action-btn.use-btn').forEach(btn => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        useItem({ id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, type: btn.dataset.type, value: btn.dataset.value, image: btn.dataset.image });
+      }));
+    }
+
     async function loadInventory(userId) {
       if (inventoryUnsubscribe) inventoryUnsubscribe();
-      // Removed orderBy to avoid composite index requirement
       const inventoryQuery = query(collection(db, "inventory"), where("userId", "==", userId));
       inventoryUnsubscribe = onSnapshot(inventoryQuery, (snapshot) => {
-        console.log("Inventory snapshot size: ", snapshot.size);
-        inventoryContainer.innerHTML = '';
-        if (snapshot.empty) { 
-          inventoryContainer.innerHTML = '<p class="empty-message">No items yet - open some packs!</p>'; 
-          return; 
-        }
-        const groupedInventory = {};
-        snapshot.forEach(doc => {
-          const item = { id: doc.id, ...doc.data() };
-          if (!groupedInventory[item.packName]) groupedInventory[item.packName] = [];
-          groupedInventory[item.packName].push(item);
+        inventoryItems = [];
+        snapshot.forEach(d => {
+          inventoryItems.push({ id: d.id, ...d.data() });
         });
-        Object.keys(groupedInventory).forEach(packName => {
-          const items = groupedInventory[packName];
-          const packGroup = document.createElement('div');
-          packGroup.className = 'pack-group';
-          packGroup.innerHTML = `<div class="pack-header"><div class="pack-title">${packName}</div><div class="pack-count">${items.length} items</div></div><div class="cards-grid"></div>`;
-          const cardsGrid = packGroup.querySelector('.cards-grid');
-          items.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'card-item';
-            itemDiv.innerHTML = `
-              <div class="card-thumbnail">${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.itemName}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '<i class="fas fa-gift"></i>'}</div>
-              <div class="card-name">${item.itemName}</div>
-              <div class="card-rarity ${item.rarity}">${item.rarity.toUpperCase()}</div>
-              <div class="card-stats"><div class="stat-item"><div class="stat-value">${item.starsGained}</div><div class="stat-label">Stars</div></div></div>
-              <div class="card-buttons"><button class="send-btn" data-id="${item.id}" data-name="${item.itemName}" data-rarity="${item.rarity}" data-image="${item.imageUrl || ''}">Send</button><button class="use-btn" data-id="${item.id}" data-name="${item.itemName}" data-rarity="${item.rarity}" data-type="${item.type || 'item'}" data-value="${item.value || 0}" data-image="${item.imageUrl || ''}">Use</button></div>
-            `;
-            cardsGrid.appendChild(itemDiv);
-          });
-          inventoryContainer.appendChild(packGroup);
-        });
-        // Attach event listeners
-        document.querySelectorAll('.send-btn').forEach(btn => btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          currentCard = { id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, image: btn.dataset.image };
-          openSendCardModal();
-        }));
-        document.querySelectorAll('.use-btn').forEach(btn => btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          useItem({ id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, type: btn.dataset.type, value: btn.dataset.value, image: btn.dataset.image });
-        }));
+        renderInventory();
       }, (error) => {
         console.error("Inventory listener error: ", error);
         inventoryContainer.innerHTML = `<p class="error-message">Error loading inventory: ${error.message}</p>`;
@@ -3953,7 +4136,7 @@
       }
     }
 
-    // ========== Friends & Chat ==========
+    // ========== Friends List ==========
     async function loadFriends(userId) {
       try {
         const friendsQuery = query(collection(db, "friends"), where("userId", "==", userId));
@@ -3968,14 +4151,13 @@
             const friend = { id: doc.id, ...doc.data() };
             friendsData.push(friend);
             const friendItem = document.createElement('div');
-            friendItem.className = 'friend-item';
+            friendItem.className = `friend-item${selectedFriend && selectedFriend.id === friend.id ? ' active' : ''}`;
             friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.username}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${friend.username}</div>`;
             friendItem.addEventListener('click', () => {
               document.querySelectorAll('.friend-item').forEach(i => i.classList.remove('active'));
               friendItem.classList.add('active');
               selectedFriend = friend;
-              currentChatMode = 'friend';
-              loadChat();
+              loadFriendChat();
             });
             friendsList.appendChild(friendItem);
           });
@@ -3999,66 +4181,92 @@
       return `${yy}/${mm}/${dd} ${hh}:${min}`;
     }
 
-    async function loadChat() {
-      if (chatUnsubscribe) chatUnsubscribe();
-      let chatQuery;
-      if (currentChatMode === 'global') {
-        chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
-      } else if (currentChatMode === 'friend' && selectedFriend) {
-        const uids = [currentUser.uid, selectedFriend.id].sort();
-        const chatId = `${uids[0]}_${uids[1]}`;
-        chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
-      }
-      if (chatQuery) {
-        chatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-          chatContainer.innerHTML = '';
-          const messages = snapshot.docs.map(d => d.data()).reverse();
-          messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
-            if (msg.type === 'system') {
-              div.innerHTML = `<div class="message-content">${msg.message}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
-            } else {
-              div.innerHTML = `
-                <img class="chat-avatar" src="${msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg'}" alt="${msg.senderName}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">
-                <div class="message-sender clickable-username" data-user-id="${msg.senderId}" data-username="${msg.senderName}">${msg.senderName}</div>
-                <div class="message-content">${msg.message}</div>
-                <div class="message-time">${formatMessageTime(msg.timestamp)}</div>
-              `;
-            }
-            chatContainer.appendChild(div);
-          });
-          document.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
-            el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
-          });
-          chatContainer.scrollTop = chatContainer.scrollHeight;
-        });
-      }
+    function renderChatMessages(container, snapshot) {
+      container.innerHTML = '';
+      const messages = snapshot.docs.map(d => d.data()).reverse();
+      messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
+        if (msg.type === 'system') {
+          div.innerHTML = `<div class="message-content">${msg.message}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
+        } else {
+          div.innerHTML = `
+            <img class="chat-avatar" src="${msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg'}" alt="${msg.senderName}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">
+            <div class="message-sender clickable-username" data-user-id="${msg.senderId}" data-username="${msg.senderName}">${msg.senderName}</div>
+            <div class="message-content">${msg.message}</div>
+            <div class="message-time">${formatMessageTime(msg.timestamp)}</div>
+          `;
+        }
+        container.appendChild(div);
+      });
+      container.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
+        el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
+      });
+      container.scrollTop = container.scrollHeight;
     }
 
-    async function sendChatMessage() {
-      const message = chatInput.value.trim();
+    // ========== Global Chat ==========
+    async function loadGlobalChat() {
+      if (globalChatUnsubscribe) globalChatUnsubscribe();
+      const chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
+      globalChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
+        renderChatMessages(globalChatContainer, snapshot);
+      });
+    }
+
+    async function sendGlobalChatMessage() {
+      const message = globalChatInput.value.trim();
       if (!message || !currentUser) return;
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       const userData = userDoc.data();
-      const chatData = { 
-        message,   
-        senderId: currentUser.uid,   
-        senderName: userData.username || currentUser.email,   
-        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",  
-        timestamp: serverTimestamp() 
-      };
-      if (currentChatMode === 'global') chatData.type = 'global';
-      else if (currentChatMode === 'friend' && selectedFriend) {
-        chatData.type = 'private';
-        const uids = [currentUser.uid, selectedFriend.id].sort();
-        chatData.chatId = `${uids[0]}_${uids[1]}`;
-        chatData.participants = [currentUser.uid, selectedFriend.id];
+      await addDoc(collection(db, "chats"), {
+        message,
+        senderId: currentUser.uid,
+        senderName: userData.username || currentUser.email,
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        timestamp: serverTimestamp(),
+        type: 'global'
+      });
+      globalChatInput.value = '';
+      updateMissionProgress('chatting', 1);
+    }
+
+    // ========== Friend Chat ==========
+    async function loadFriendChat() {
+      if (friendChatUnsubscribe) friendChatUnsubscribe();
+      if (!selectedFriend) {
+        friendChatHeader.innerHTML = '<span class="friend-chat-placeholder">Select a friend to start chatting</span>';
+        friendChatContainer.innerHTML = '';
+        friendChatInputArea.style.display = 'none';
+        return;
       }
-      await addDoc(collection(db, "chats"), chatData);
-      chatInput.value = '';
-      
-      // Update chatting mission progress
+      friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${selectedFriend.avatar}" alt="${selectedFriend.username}">` : '<i class="fas fa-user"></i>'} <span>${selectedFriend.username}</span>`;
+      friendChatInputArea.style.display = 'flex';
+      const uids = [currentUser.uid, selectedFriend.id].sort();
+      const chatId = `${uids[0]}_${uids[1]}`;
+      const chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
+      friendChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
+        renderChatMessages(friendChatContainer, snapshot);
+      });
+    }
+
+    async function sendFriendChatMessage() {
+      const message = friendChatInput.value.trim();
+      if (!message || !currentUser || !selectedFriend) return;
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const userData = userDoc.data();
+      const uids = [currentUser.uid, selectedFriend.id].sort();
+      await addDoc(collection(db, "chats"), {
+        message,
+        senderId: currentUser.uid,
+        senderName: userData.username || currentUser.email,
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        timestamp: serverTimestamp(),
+        type: 'private',
+        chatId: `${uids[0]}_${uids[1]}`,
+        participants: [currentUser.uid, selectedFriend.id]
+      });
+      friendChatInput.value = '';
       updateMissionProgress('chatting', 1);
     }
 
@@ -4323,11 +4531,11 @@
     init();
 
     // ========== Event Listeners ==========
-    sendChatBtn.addEventListener('click', sendChatMessage);
-    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+    globalSendChatBtn.addEventListener('click', sendGlobalChatMessage);
+    globalChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendGlobalChatMessage(); });
+    friendSendChatBtn.addEventListener('click', sendFriendChatMessage);
+    friendChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendFriendChatMessage(); });
     addFriendBtn.addEventListener('click', addFriend);
-    globalChatBtn.addEventListener('click', () => { currentChatMode = 'global'; selectedFriend = null; loadChat(); });
-    friendChatBtn.addEventListener('click', () => { if (selectedFriend) { currentChatMode = 'friend'; loadChat(); } });
 
     // Close modals when clicking outside
     window.addEventListener('click', (e) => {
