@@ -2958,6 +2958,58 @@
       gap: 12px;
       margin-bottom: 16px;
     }
+
+    /* Pack editor: blooks as a single horizontal row */
+    .staff-blook-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 4px 0;
+    }
+    .staff-blook-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px 6px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(42,255,158,0.2);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: border-color 0.15s, background 0.15s;
+      max-width: 200px;
+    }
+    .staff-blook-chip:hover {
+      border-color: var(--neon-green);
+      background: rgba(42,255,158,0.08);
+    }
+    .staff-blook-chip img {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .staff-blook-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .staff-blook-chip-del {
+      margin-left: 2px;
+      padding: 0 6px;
+      border: none;
+      background: transparent;
+      color: var(--neon-pink);
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+    .staff-blook-chip-del:hover { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -3694,9 +3746,11 @@
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><div class="staff-form-group"><label>Background Image URL</label><input id="staff-pack-bg" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload background</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-card-header" style="margin-top:12px;"><h3 style="font-size:0.9rem;">Items</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add Item</button></div><div id="staff-pack-items-list" style="max-height:300px;overflow-y:auto;"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><div class="staff-form-group"><label>Background Image URL</label><input id="staff-pack-bg" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload background</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
-  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
+  <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Choose another pack to move this blook when you apply (saved packs only).</p></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Rarity color (optional)</label><input id="staff-blook-editor-raritycolor" type="color" value="#888888"></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
 
   <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
 
@@ -4922,33 +4976,125 @@
     let currentInventoryFilter = 'all';
     let inventoryItems = [];
     let packBuilderItems = [];
+    let staffEditUserInitialBanner = '';
+
+    async function staffAppendBlookToPackDoc(packId, entry) {
+      const d = await getDoc(doc(db, 'packs', packId));
+      if (!d.exists()) { showNotification('Pack not found', 'error'); return false; }
+      const items = [...(d.data().items || []), entry];
+      await updateDoc(doc(db, 'packs', packId), { items, updatedAt: serverTimestamp() });
+      return true;
+    }
+
     function renderPackBuilderItems() {
       const list = document.getElementById('staff-pack-items-list');
       if (!list) return;
+      if (packBuilderItems.length === 0) {
+        list.innerHTML = '<span style="color:var(--text-secondary);font-size:0.8rem;">No blooks yet — click Add blook</span>';
+        return;
+      }
+      list.innerHTML = packBuilderItems.map((item, i) => {
+        const thumb = item.imageUrl
+          ? `<img src="${escapeHtml(item.imageUrl)}" alt="">`
+          : '<span style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--text-secondary);"><i class="fas fa-cube"></i></span>';
+        const label = escapeHtml(item.name || '(unnamed)');
+        return `<div class="staff-blook-chip-wrap" style="display:inline-flex;align-items:center;gap:2px;"><button type="button" class="staff-blook-chip" data-idx="${i}">${thumb}<span>${label}</span></button><button type="button" class="staff-blook-chip-del" data-idx="${i}" title="Remove">×</button></div>`;
+      }).join('');
+      list.querySelectorAll('.staff-blook-chip').forEach(btn => {
+        btn.addEventListener('click', () => { openStaffBlookEditor(parseInt(btn.dataset.idx, 10)); });
+      });
+      list.querySelectorAll('.staff-blook-chip-del').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          packBuilderItems.splice(parseInt(btn.dataset.idx, 10), 1);
+          renderPackBuilderItems();
+        });
+      });
+    }
+
+    async function openStaffBlookEditor(idx) {
+      const modal = document.getElementById('staff-blook-editor-modal');
+      if (!modal) return;
+      const isNew = idx < 0;
+      document.getElementById('staff-blook-editor-idx').value = String(idx);
+      document.getElementById('staff-blook-editor-title').textContent = isNew ? 'Add blook' : 'Edit blook';
       const RAR_OPTS = effectiveRarityOrder.length ? effectiveRarityOrder : DEFAULT_RARITY_ORDER;
-      list.innerHTML = packBuilderItems.map((item, i) => `
-        <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.08);">
-          <div class="staff-flex-row" style="gap:6px;align-items:flex-end;">
-            <div class="staff-form-group" style="flex:2;margin:0;"><label style="font-size:0.7rem;">Name</label><input value="${escapeHtml(item.name)}" data-idx="${i}" data-field="name" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity</label><select data-idx="${i}" data-field="rarity" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;">${RAR_OPTS.map(r=>`<option value="${r}" ${(item.rarity||'').toLowerCase()===r?'selected':''}>${r}</option>`).join('')}</select></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Chance %</label><input type="number" step="0.01" value="${item.chance||0}" data-idx="${i}" data-field="chance" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Stars</label><input type="number" value="${item.starsGained||0}" data-idx="${i}" data-field="starsGained" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-          </div>
-          <div class="staff-flex-row" style="gap:6px;margin-top:6px;align-items:flex-end;">
-            <div class="staff-form-group" style="flex:3;margin:0;"><label style="font-size:0.7rem;">Image URL</label><input value="${escapeHtml(item.imageUrl||'')}" data-idx="${i}" data-field="imageUrl" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity Color</label><input type="color" value="${item.rarityColor||'#888888'}" data-idx="${i}" data-field="rarityColor" class="pbi-field" style="padding:2px;height:32px;"></div>
-            <button type="button" class="staff-btn staff-btn-danger staff-btn-sm pbi-del" data-idx="${i}" style="margin-bottom:2px;">✕</button>
-          </div>
-        </div>
-      `).join('') || '<div style="color:var(--text-secondary);font-size:0.8rem;padding:8px;">No items added yet.</div>';
-      list.querySelectorAll('.pbi-field').forEach(f => f.addEventListener('change', () => {
-        const idx = parseInt(f.dataset.idx);
-        const field = f.dataset.field;
-        let val = f.value;
-        if (field === 'chance' || field === 'starsGained') val = parseFloat(val) || 0;
-        packBuilderItems[idx][field] = val;
-      }));
-      list.querySelectorAll('.pbi-del').forEach(b => b.addEventListener('click', () => { packBuilderItems.splice(parseInt(b.dataset.idx), 1); renderPackBuilderItems(); }));
+      const raritySel = document.getElementById('staff-blook-editor-rarity');
+      raritySel.innerHTML = RAR_OPTS.map(r => `<option value="${r}">${r}</option>`).join('');
+      const currentPackId = document.getElementById('staff-pack-id').value;
+      const snap = await getDocs(collection(db, 'packs'));
+      const packs = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.shopType !== 'banner');
+      const packSel = document.getElementById('staff-blook-editor-pack');
+      let opts = '';
+      if (!currentPackId) {
+        opts += `<option value="__DRAFT__">This pack (draft — save pack first to move blooks elsewhere)</option>`;
+      }
+      packs.forEach(p => {
+        opts += `<option value="${p.id}" ${p.id === currentPackId ? 'selected' : ''}>${escapeHtml(p.name || p.id)}</option>`;
+      });
+      if (!opts) opts = '<option value="">No item packs in database</option>';
+      packSel.innerHTML = opts;
+      const item = !isNew ? packBuilderItems[idx] : null;
+      if (item) {
+        document.getElementById('staff-blook-editor-name').value = item.name || '';
+        raritySel.value = (item.rarity || 'common').toLowerCase();
+        document.getElementById('staff-blook-editor-stars').value = item.starsGained ?? 0;
+        document.getElementById('staff-blook-editor-chance').value = item.chance ?? 0;
+        document.getElementById('staff-blook-editor-image').value = item.imageUrl || '';
+        document.getElementById('staff-blook-editor-raritycolor').value = item.rarityColor || '#888888';
+        if (currentPackId) packSel.value = currentPackId;
+        else if (packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
+      } else {
+        document.getElementById('staff-blook-editor-name').value = '';
+        raritySel.value = RAR_OPTS[0] || 'common';
+        document.getElementById('staff-blook-editor-stars').value = 0;
+        document.getElementById('staff-blook-editor-chance').value = 0;
+        document.getElementById('staff-blook-editor-image').value = '';
+        document.getElementById('staff-blook-editor-raritycolor').value = '#888888';
+        if (!currentPackId && packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
+        else if (currentPackId) packSel.value = currentPackId;
+      }
+      const delBtn = document.getElementById('staff-blook-editor-delete');
+      if (delBtn) delBtn.style.display = isNew ? 'none' : 'inline-block';
+      modal.style.display = 'flex';
+    }
+
+    async function applyStaffBlookEditor() {
+      const idx = parseInt(document.getElementById('staff-blook-editor-idx').value, 10);
+      const name = document.getElementById('staff-blook-editor-name').value.trim();
+      if (!name) { showNotification('Enter a blook name', 'error'); return; }
+      const targetPack = document.getElementById('staff-blook-editor-pack').value;
+      const currentPackId = document.getElementById('staff-pack-id').value;
+      const entry = {
+        name,
+        rarity: document.getElementById('staff-blook-editor-rarity').value,
+        starsGained: parseFloat(document.getElementById('staff-blook-editor-stars').value) || 0,
+        chance: parseFloat(document.getElementById('staff-blook-editor-chance').value) || 0,
+        imageUrl: document.getElementById('staff-blook-editor-image').value.trim(),
+        rarityColor: document.getElementById('staff-blook-editor-raritycolor').value
+      };
+      const inThisPack = currentPackId ? (targetPack === currentPackId) : (targetPack === '__DRAFT__');
+
+      if (idx < 0) {
+        if (inThisPack) {
+          packBuilderItems.push(entry);
+          renderPackBuilderItems();
+        } else {
+          const ok = await staffAppendBlookToPackDoc(targetPack, entry);
+          if (ok) showNotification('Blook added to selected pack', 'success');
+        }
+      } else {
+        if (inThisPack) {
+          packBuilderItems[idx] = { ...packBuilderItems[idx], ...entry };
+          renderPackBuilderItems();
+        } else {
+          packBuilderItems.splice(idx, 1);
+          renderPackBuilderItems();
+          const ok = await staffAppendBlookToPackDoc(targetPack, entry);
+          if (ok) showNotification('Blook moved to the selected pack. Save this pack to remove it from here permanently.', 'success');
+        }
+      }
+      document.getElementById('staff-blook-editor-modal').style.display = 'none';
     }
 
     function renderInventory() {
@@ -5965,6 +6111,11 @@
       document.getElementById('staff-edit-coins').value = data.coins||0;
       document.getElementById('staff-edit-stars').value = data.stars||0;
       document.getElementById('staff-edit-avatar').value = '';
+      staffEditUserInitialBanner = data.banner || '';
+      const bUrl = document.getElementById('staff-edit-banner-url');
+      if (bUrl) bUrl.value = data.banner || '';
+      const bFile = document.getElementById('staff-edit-banner-file');
+      if (bFile) bFile.value = '';
       document.getElementById('staff-edit-mute').value = data.muteStatus || 'none';
       document.getElementById('staff-edit-ban').value = data.banStatus || 'none';
       document.getElementById('staff-edit-mod-reason').value = data.modReason || '';
@@ -6208,9 +6359,18 @@
       document.getElementById('staff-save-tag-btn')?.addEventListener('click',async()=>{const n=document.getElementById('staff-new-tag-name').value.trim();if(n){await addDoc(collection(db,'tags'),{name:n});document.getElementById('staff-tag-modal').style.display='none';document.getElementById('staff-new-tag-name').value='';loadStaffTags();showNotification('Tag created!','success');}});
 
       // Packs
-      document.getElementById('staff-pack-add-item-btn')?.addEventListener('click', () => {
-        packBuilderItems.push({ name: '', rarity: 'common', chance: 0, starsGained: 0, imageUrl: '', rarityColor: '#888888' });
-        renderPackBuilderItems();
+      document.getElementById('staff-pack-add-item-btn')?.addEventListener('click', () => openStaffBlookEditor(-1));
+      document.getElementById('staff-blook-editor-cancel')?.addEventListener('click', () => { document.getElementById('staff-blook-editor-modal').style.display = 'none'; });
+      document.getElementById('staff-blook-editor-save')?.addEventListener('click', () => applyStaffBlookEditor());
+      document.getElementById('staff-blook-editor-delete')?.addEventListener('click', () => {
+        const idx = parseInt(document.getElementById('staff-blook-editor-idx').value, 10);
+        if (idx >= 0) { packBuilderItems.splice(idx, 1); renderPackBuilderItems(); }
+        document.getElementById('staff-blook-editor-modal').style.display = 'none';
+      });
+      document.getElementById('staff-clear-banner-btn')?.addEventListener('click', () => {
+        document.getElementById('staff-edit-banner-url').value = '';
+        const f = document.getElementById('staff-edit-banner-file');
+        if (f) f.value = '';
       });
       document.getElementById('staff-pack-edit-mode')?.addEventListener('change', e => {
         const isJson = e.target.value === 'json';
@@ -6304,6 +6464,18 @@
         if(hasPermission('assign_titles')) updates.title=document.getElementById('staff-edit-user-title').value;
         const avatarVal=document.getElementById('staff-edit-avatar').value.trim();
         if(avatarVal && hasPermission('custom_avatar')) updates.avatar=avatarVal;
+        const bannerUrlField = document.getElementById('staff-edit-banner-url')?.value.trim() || '';
+        const bannerFile = document.getElementById('staff-edit-banner-file')?.files?.[0];
+        let bannerVal = bannerUrlField;
+        if (bannerFile) {
+          try {
+            const storageRef = ref(storage, `profile-banners/${uid}_${Date.now()}_${bannerFile.name}`);
+            const snapshot = await uploadBytes(storageRef, bannerFile);
+            bannerVal = await getDownloadURL(snapshot.ref);
+          } catch (err) { showNotification('Banner upload failed: '+err.message,'error'); return; }
+        }
+        if (bannerVal) updates.banner = bannerVal;
+        else if (!bannerFile && bannerUrlField === '' && staffEditUserInitialBanner) updates.banner = null;
         updates.muteStatus=document.getElementById('staff-edit-mute').value;
         updates.banStatus=document.getElementById('staff-edit-ban').value;
         updates.modReason=document.getElementById('staff-edit-mod-reason').value;
