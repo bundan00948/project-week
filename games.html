@@ -13,6 +13,7 @@
       --card-bg: #1A1F2A;
       --neon-green: #2AFF9E;
       --neon-pink: #FF3D6C;
+      --theme-grey: #8A9BB5;
       --text-primary: #FFFFFF;
       --text-secondary: #8A9BB5;
       --star-filled: #FFC107;
@@ -608,7 +609,7 @@
       color: var(--text-secondary);
     }
 
-    /* Shop Page */
+    /* Shop Page — base (inventory etc. may reuse .pack-card legacy) */
     .shop-header {
       display: flex;
       justify-content: space-between;
@@ -636,6 +637,127 @@
       font-weight: 800;
       font-size: 1.2rem;
       color: var(--neon-green);
+    }
+
+    .shop-section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--neon-green);
+      margin: 28px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shop-section-title:first-of-type { margin-top: 0; }
+    .market-pack-card {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .market-pack-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      filter: brightness(1.05);
+    }
+    .market-pack-info {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 6;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .market-pack-info:hover { background: rgba(0,0,0,0.65); }
+    .market-pack-frame {
+      border-radius: 22px;
+      padding: 5px;
+      background: linear-gradient(145deg, var(--pack-outer, #6e6e6e), var(--pack-inner, #c8c8c8));
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .market-pack-inner {
+      position: relative;
+      border-radius: 18px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.35) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .market-pack-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+    }
+    .market-pack-art {
+      position: relative;
+      z-index: 2;
+      width: 78%;
+      height: 78%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.45));
+      transform: rotate(-6deg);
+      transition: transform 0.2s ease;
+    }
+    .market-pack-card:hover .market-pack-art {
+      transform: rotate(-4deg) scale(1.04);
+    }
+    .market-pack-art-placeholder {
+      position: relative;
+      z-index: 2;
+      font-size: 3.2rem;
+      color: rgba(255,255,255,0.75);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    }
+    .market-pack-footer {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .market-pack-name {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .market-pack-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      background: rgba(0,0,0,0.25);
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(42,255,158,0.2);
+    }
+    .market-pack-price .fa-coins { color: #ffe066; }
+
+    .staff-pack-preview-box {
+      max-width: 200px;
+      margin: 12px auto 0;
+      pointer-events: none;
+    }
+    .staff-pack-preview-box .market-pack-card {
+      transform: scale(0.92);
+      transform-origin: top center;
     }
 
     .packs-grid {
@@ -678,8 +800,6 @@
       width: 100%;
       height: 100%;
       padding: 25px;
-      display: flex;
-      flex-direction: column;
       height: 100%;
     }
 
@@ -999,6 +1119,223 @@
     .inv-stat-label {
       font-size: 0.8rem;
       color: var(--text-secondary);
+    }
+
+    /* My Blooks page (Blooket-style layout; site background unchanged) */
+    .inv-blooks-page .inv-blooks-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .inv-blooks-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin: 0 0 20px;
+      max-width: 520px;
+    }
+    .inv-blooks-tokens .inv-token-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(42,255,158,0.25);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--neon-green);
+    }
+    .inv-blooks-tokens .fa-coins { color: #ffe066; }
+    .inv-pack-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+    .inv-pack-tab {
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .inv-pack-tab:hover {
+      border-color: rgba(42,255,158,0.35);
+      color: var(--text-primary);
+    }
+    .inv-pack-tab.active {
+      background: var(--neon-green);
+      color: #000;
+      border-color: var(--neon-green);
+    }
+    .inv-blooks-grid-wrap {
+      min-height: 200px;
+    }
+    .inv-blooks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px 10px;
+    }
+    @media (min-width: 600px) {
+      .inv-blooks-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 16px 14px; }
+    }
+    .inv-blook-cell {
+      position: relative;
+      cursor: pointer;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.1);
+      padding: 10px 8px 8px;
+      text-align: center;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+    }
+    .inv-blook-cell:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+      border-color: rgba(42,255,158,0.35);
+    }
+    .inv-blook-cell-inner {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .inv-blook-cell-inner img {
+      width: 88%;
+      height: 88%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+    }
+    .inv-blook-cell-inner .inv-blook-ph {
+      font-size: 2.4rem;
+      opacity: 0.75;
+    }
+    .inv-blook-cell-name {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.2em;
+    }
+    .inv-blook-qty-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .inv-blook-modal .inv-blook-modal-content {
+      max-width: 400px;
+      border-radius: 20px;
+      border: 1px solid rgba(42,255,158,0.25);
+    }
+    .inv-blook-modal-body {
+      position: relative;
+      align-items: center;
+      text-align: center;
+      padding: 28px 22px 22px;
+    }
+    .inv-blook-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-primary);
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .inv-blook-modal-close:hover { background: rgba(255,255,255,0.15); }
+    .inv-blook-modal-visual {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .inv-blook-modal-visual img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+    }
+    .inv-blook-modal-name {
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin: 0 0 6px;
+    }
+    .inv-blook-modal-rarity {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.1);
+    }
+    .inv-blook-modal-meta {
+      width: 100%;
+      text-align: left;
+      background: rgba(0,0,0,0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+    .inv-blook-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.88rem;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .inv-blook-meta-row:last-child { border-bottom: none; }
+    .inv-blook-meta-label { color: var(--text-secondary); font-weight: 600; }
+    .inv-blook-modal-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .inv-blook-modal-actions .collect-btn,
+    .inv-blook-modal-actions .cancel-btn {
+      flex: 1;
+      min-width: 120px;
     }
 
     /* Gift Wall */
@@ -1418,6 +1755,142 @@
 
     .pack-opening-modal {
       height: 400px;
+    }
+
+    /* Full-viewport pack unbox (purchase flow) */
+    .modal-content.pack-opening-modal-unbox {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+    .pack-opening-modal-unbox .modal-background {
+      filter: none;
+      background-size: cover;
+      background-position: center;
+    }
+    .pack-unbox-body {
+      justify-content: center;
+      gap: 12px;
+      padding: 24px 16px 32px;
+    }
+    .pack-unbox-hint {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      text-shadow: 0 0 12px rgba(42, 255, 158, 0.45);
+      animation: packUnboxHintPulse 1.4s ease-in-out infinite;
+    }
+    .pack-unbox-hint.is-hidden {
+      display: none !important;
+    }
+    @keyframes packUnboxHintPulse {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .gift-animation.pack-unbox-stage {
+      width: min(78vw, 340px);
+      height: min(78vw, 340px);
+      max-height: 48vh;
+      margin-bottom: 8px;
+      position: relative;
+      overflow: visible;
+      background: transparent;
+      border-radius: 20px;
+    }
+    .pack-unbox-art {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
+      pointer-events: none;
+    }
+    .pack-unbox-zipper-layer {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 6%;
+      width: 108%;
+      height: 32%;
+      cursor: pointer;
+      z-index: 3;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pack-unbox-zipper-layer:focus-visible {
+      outline: 2px solid var(--neon-green);
+      outline-offset: 4px;
+      border-radius: 8px;
+    }
+    .pack-unbox-zipper-half {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .pack-unbox-zipper-top { transform-origin: 50% 100%; }
+    .pack-unbox-zipper-bot { transform-origin: 50% 0%; }
+    .pack-unbox-zipper-half img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      user-select: none;
+      pointer-events: none;
+    }
+    .pack-unbox-zipper-top img {
+      clip-path: inset(0 0 50% 0);
+    }
+    .pack-unbox-zipper-bot img {
+      clip-path: inset(50% 0 0 0);
+    }
+    .pack-unbox-stage:not(.torn) .pack-unbox-zipper-layer {
+      animation: packZipperIdle 1.25s ease-in-out infinite;
+    }
+    @keyframes packZipperIdle {
+      0%, 100% { transform: translateX(-50%) translateY(0); filter: brightness(1); }
+      50% { transform: translateX(-50%) translateY(-3px); filter: brightness(1.15); }
+    }
+    .pack-unbox-stage.torn .pack-unbox-zipper-layer {
+      animation: none;
+      transform: translateX(-50%);
+      pointer-events: none;
+      cursor: default;
+    }
+    .pack-unbox-stage.torn .pack-unbox-zipper-top {
+      animation: packZipperTearTop 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .pack-unbox-stage.torn .pack-unbox-zipper-bot {
+      animation: packZipperTearBot 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes packZipperTearTop {
+      to {
+        transform: translate(-42%, -95%) rotate(-14deg);
+        opacity: 0;
+      }
+    }
+    @keyframes packZipperTearBot {
+      to {
+        transform: translate(42%, 110%) rotate(12deg);
+        opacity: 0;
+      }
+    }
+    .pack-unbox-reveal {
+      animation: packUnboxRevealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes packUnboxRevealPop {
+      from { opacity: 0; transform: scale(0.88); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .modal-background {
@@ -2258,6 +2731,48 @@
       color: var(--text-secondary);
     }
 
+    .daily-reward-card {
+      max-width: 420px;
+      margin: 0 auto 28px;
+      padding: 22px 24px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(42,255,158,0.12), rgba(255,61,108,0.08));
+      border: 1px solid rgba(42,255,158,0.35);
+      text-align: center;
+    }
+    .daily-reward-card h3 {
+      font-size: 1.05rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: var(--neon-green);
+    }
+    .daily-reward-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .daily-reward-btn {
+      background: var(--neon-green);
+      color: #000;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 999px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .daily-reward-btn:disabled {
+      background: #2E3A48;
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    .daily-reward-pill {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
     /* Star Icons */
     .star-icon {
       margin-right: 5px;
@@ -2306,14 +2821,47 @@
       margin: 2px;
     }
     .up-badges-row {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
+      display: flex; flex-wrap: nowrap;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      flex: 0 0 auto;
+      max-width: 42%;
+      overflow-x: auto;
+      padding: 2px 0;
+      scrollbar-width: thin;
+    }
+    .up-header-banner-wrap {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      min-width: 0;
+    }
+    .up-header-banner-wrap .up-banner {
+      flex: 1;
+      min-width: 0;
     }
     .up-badge-icon {
-      width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
-      object-fit: contain; transition: transform 0.15s;
-      border: 2px solid rgba(255,255,255,0.15);
+      width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+      object-fit: contain; transition: transform 0.15s, box-shadow 0.15s;
+      border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      padding: 0;
+      display: block;
+      background: transparent;
     }
-    .up-badge-icon:hover { transform: scale(1.15); }
+    .up-badge-icon:hover { transform: scale(1.12); box-shadow: 0 0 0 2px rgba(42,255,158,0.35); }
+    .up-badge-icon img {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 6px; display: block;
+    }
+    .up-badge-fa {
+      width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0; transition: transform 0.15s;
+    }
+    .up-badge-fa:hover { transform: scale(1.12); }
     .badge-tooltip {
       position: fixed; z-index: 9999; background: #11161F;
       border: 1px solid var(--neon-green); border-radius: 12px;
@@ -2600,7 +3148,6 @@
       background-clip: text; font-weight: 900; font-size: 0.65rem;
     }
     .up-member { font-size: 0.65rem; color: rgba(255,255,255,0.85); }
-    .up-badges-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
     .up-stats-row {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 10px; margin-bottom: 16px;
@@ -2753,6 +3300,8 @@
         grid-template-columns: 1fr;
       }
       .up-header { flex-direction: column; }
+      .up-header-banner-wrap { flex-direction: column; max-width: 100%; }
+      .up-badges-row { max-width: 100%; flex-wrap: wrap; margin-bottom: 10px; }
       .up-avatar { width: 60px; height: 60px; }
       .up-banner { max-width: 100%; height: 60px; }
       .up-blooks-grid { grid-template-columns: repeat(3, 1fr); }
@@ -2805,62 +3354,6 @@
       font-weight: 700;
       color: var(--text-secondary);
       letter-spacing: 0.06em;
-    }
-
-    /* Shop: visual pack (no title on card) */
-    .shop-section-title {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--neon-green);
-      margin: 28px 0 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .shop-section-title:first-of-type { margin-top: 0; }
-    .pack-card.pack-card-visual {
-      aspect-ratio: 0.85;
-      padding: 20px 12px 18px;
-    }
-    .pack-card.pack-card-visual .pack-visual-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 120px;
-    }
-    .pack-card.pack-card-visual .pack-visual-img,
-    .pack-card.pack-card-visual .pack-visual-placeholder {
-      max-width: 100%;
-      width: 140px;
-      height: 140px;
-      object-fit: contain;
-      transform: rotate(-8deg);
-      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.45));
-      transition: transform 0.25s ease;
-    }
-    .pack-card.pack-card-visual:hover .pack-visual-img,
-    .pack-card.pack-card-visual:hover .pack-visual-placeholder {
-      transform: rotate(-5deg) scale(1.06);
-    }
-    .pack-card.pack-card-visual .pack-visual-placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-      color: rgba(255,255,255,0.85);
-    }
-    .pack-card.pack-card-visual .pack-price-row {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      background: rgba(0,0,0,0.35);
-      padding: 6px 16px;
-      border-radius: 20px;
     }
 
     /* Pack unboxing animation */
@@ -2958,6 +3451,58 @@
       gap: 12px;
       margin-bottom: 16px;
     }
+
+    /* Pack editor: blooks as a single horizontal row */
+    .staff-blook-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 4px 0;
+    }
+    .staff-blook-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px 6px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(42,255,158,0.2);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: border-color 0.15s, background 0.15s;
+      max-width: 200px;
+    }
+    .staff-blook-chip:hover {
+      border-color: var(--neon-green);
+      background: rgba(42,255,158,0.08);
+    }
+    .staff-blook-chip img {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .staff-blook-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .staff-blook-chip-del {
+      margin-left: 2px;
+      padding: 0 6px;
+      border: none;
+      background: transparent;
+      color: var(--neon-pink);
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+    .staff-blook-chip-del:hover { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -3058,18 +3603,20 @@
         <div class="up-container" id="profile-container">
           <div class="up-header">
             <div class="up-avatar"><img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-banner" id="profile-banner-wrap">
-              <div class="up-banner-pattern"></div>
-              <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-              <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                <span class="up-title-badge" id="profile-title">User</span>
-                <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                <span id="member-since" style="display:none;">2024</span>
+            <div class="up-header-banner-wrap">
+              <div class="up-banner" id="profile-banner-wrap">
+                <div class="up-banner-pattern"></div>
+                <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
+                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                  <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                  <span class="up-title-badge" id="profile-title">User</span>
+                  <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  <span id="member-since" style="display:none;">2024</span>
+                </div>
               </div>
+              <div id="profile-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
-          <div id="profile-badges" class="up-badges-row"></div>
           <div class="up-stats-row">
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="profile-playtime-val">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
@@ -3099,18 +3646,20 @@
         <div class="up-container" id="vp-container">
           <div class="up-header">
             <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-banner" id="vp-banner-wrap">
-              <div class="up-banner-pattern"></div>
-              <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-              <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                <span class="up-title-badge" id="vp-title">User</span>
-                <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                <span id="vp-member-since" style="display:none;">2024</span>
+            <div class="up-header-banner-wrap">
+              <div class="up-banner" id="vp-banner-wrap">
+                <div class="up-banner-pattern"></div>
+                <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
+                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                  <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                  <span class="up-title-badge" id="vp-title">User</span>
+                  <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  <span id="vp-member-since" style="display:none;">2024</span>
+                </div>
               </div>
+              <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
-          <div id="vp-badges" class="up-badges-row"></div>
           <div class="up-stats-row">
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
@@ -3160,24 +3709,46 @@
           </div>
         </div>
         <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
-        <div class="packs-grid" id="shop-packs">
-          <!-- Shop packs will be added here -->
-        </div>
+        <div class="packs-grid" id="shop-packs"></div>
         <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
-        <div class="packs-grid" id="shop-banners">
-          <!-- Banner shop items -->
+        <div class="packs-grid" id="shop-banners"></div>
+      </div>
+    </div>
+
+    <!-- Inventory Page (Blooket My Blooks–style layout) -->
+    <div class="page" id="inventory-page">
+      <div class="page-content inv-blooks-page">
+        <div class="inv-blooks-top">
+          <h2 class="page-title">My Blooks</h2>
+          <div class="inv-blooks-tokens" id="inv-blooks-tokens" aria-live="polite">
+            <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
+          </div>
+        </div>
+        <p class="inv-blooks-sub">View and manage your blooks. Tap a blook for details.</p>
+        <div class="inv-pack-tabs" id="inv-pack-tabs"></div>
+        <div class="inv-blooks-grid-wrap">
+          <div class="inv-blooks-grid" id="inventory-container"></div>
         </div>
       </div>
     </div>
 
-    <!-- Inventory Page -->
-    <div class="page" id="inventory-page">
-      <div class="page-content">
-        <h2 class="page-title">My Blooks</h2>
-        <div class="inventory-stats-bar" id="inventory-stats-bar"></div>
-        <div class="inventory-filter-bar" id="inventory-filter-bar"></div>
-        <div class="inventory-list" id="inventory-container">
-          <!-- Inventory items will be added here -->
+    <div class="modal inv-blook-modal" id="inv-blook-modal" style="display:none;z-index:9500;">
+      <div class="modal-content inv-blook-modal-content">
+        <div class="modal-body inv-blook-modal-body">
+          <button type="button" class="inv-blook-modal-close" id="inv-blook-modal-close" aria-label="Close">&times;</button>
+          <div class="inv-blook-modal-visual" id="inv-blook-modal-visual"></div>
+          <h2 class="inv-blook-modal-name" id="inv-blook-modal-name">Blook</h2>
+          <div class="inv-blook-modal-rarity" id="inv-blook-modal-rarity">Common</div>
+          <div class="inv-blook-modal-meta">
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Pack</span><span id="inv-blook-modal-pack">—</span></div>
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Quantity</span><span id="inv-blook-modal-qty">1</span></div>
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Star value</span><span id="inv-blook-modal-stars">0</span></div>
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Sell for</span><span id="inv-blook-modal-sell">0 tokens</span></div>
+          </div>
+          <div class="inv-blook-modal-actions">
+            <button type="button" class="collect-btn inv-blook-sell-btn" id="inv-blook-sell-btn">Sell</button>
+            <button type="button" class="cancel-btn inv-blook-send-btn" id="inv-blook-send-btn">Send</button>
+          </div>
         </div>
       </div>
     </div>
@@ -3186,6 +3757,12 @@
     <div class="page" id="missions-page">
       <div class="page-content">
         <h2 class="page-title">Daily Missions</h2>
+        <div class="daily-reward-card" id="daily-reward-card">
+          <h3><i class="fas fa-gift"></i> Daily reward</h3>
+          <p id="daily-reward-desc">Claim your free bonus once per day.</p>
+          <button type="button" class="daily-reward-btn" id="daily-reward-claim-btn">Claim</button>
+          <div class="daily-reward-pill" id="daily-reward-status"></div>
+        </div>
         <div class="missions-container" id="missions-container">
           <!-- Missions will be added here -->
         </div>
@@ -3252,6 +3829,7 @@
             <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
             <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
             <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
             <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
             <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
@@ -3290,7 +3868,7 @@
           <!-- Staff Packs & Items -->
           <div class="staff-section" id="staff-packs">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-set-rarity-order-btn" title="Global blook rarity sort order"><i class="fas fa-sort"></i> Rarity order</button><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
+              <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
               <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Profile banners (sold in Shop)</h4>
               <div id="staff-banner-shop-list" style="margin-bottom:20px;"></div>
               <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Packs</h4>
@@ -3345,6 +3923,37 @@
             <div class="staff-card">
               <div class="staff-card-header"><h3>Badge Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-badge-btn"><i class="fas fa-plus"></i> Create Badge</button></div>
               <div id="staff-badges-list"></div>
+            </div>
+          </div>
+
+          <!-- Staff: Rarity styles + site theme (accents) -->
+          <div class="staff-section" id="staff-rarity">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Site accent colors</h3></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Default green and grey/pink accents for every visitor. Users can still override in Settings (local only).</p>
+              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
+                <div class="staff-form-group" style="margin:0;"><label>Primary (green)</label><input type="color" id="staff-site-theme-primary" value="#2AFF9E"></div>
+                <div class="staff-form-group" style="margin:0;"><label>Secondary (grey accent)</label><input type="color" id="staff-site-theme-secondary" value="#FF3D6C"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-site-theme-save">Save site theme</button>
+              </div>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Daily login reward</h3></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Coins and stars granted once per calendar day when users claim on the Missions page.</p>
+              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
+                <div class="staff-form-group" style="margin:0;"><label>Coins</label><input type="number" id="staff-daily-reward-coins" value="50" min="0"></div>
+                <div class="staff-form-group" style="margin:0;"><label>Stars</label><input type="number" id="staff-daily-reward-stars" value="10" min="0"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-daily-reward-save">Save daily reward</button>
+              </div>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Rarity order</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-order-open"><i class="fas fa-sort"></i> Edit order</button></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);">Sort order for inventory and pack editor lists.</p>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Rarity appearance</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-def-add"><i class="fas fa-plus"></i> Add rarity</button></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Solid color, optional gradient, optional animation. Used for blook highlights and inventory.</p>
+              <div id="staff-rarity-defs-list"></div>
             </div>
           </div>
 
@@ -3576,13 +4185,14 @@
 
     <!-- Pack Opening Modal -->
     <div class="modal" id="pack-opening-modal">
-      <div class="modal-content pack-opening-modal">
+      <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
         <div class="modal-background" id="opening-modal-bg"></div>
-        <div class="modal-body">
+        <div class="modal-body" id="pack-opening-modal-body">
           <div class="gift-animation" id="gift-animation">
             <!-- Animation will be shown here -->
           </div>
-          <div class="gift-details">
+          <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
+            <p class="pack-unbox-hint" id="pack-unbox-hint" style="display:none;">Tap the zipper to open</p>
             <div class="gift-name" id="opened-gift-name">Gift Name</div>
             <div class="gift-rarity" id="opened-gift-rarity">Rarity</div>
             <div class="gift-value" id="opened-gift-value">Value: 0</div>
@@ -3694,15 +4304,19 @@
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><div class="staff-form-group"><label>Background Image URL</label><input id="staff-pack-bg" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload background</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-card-header" style="margin-top:12px;"><h3 style="font-size:0.9rem;">Items</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add Item</button></div><div id="staff-pack-items-list" style="max-height:300px;overflow-y:auto;"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
-  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
+  <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-rarity-def-modal"><div class="staff-modal-content" style="max-width:440px;"><h3 id="staff-rarity-def-modal-title">Rarity style</h3><input type="hidden" id="staff-rarity-def-key"><div class="staff-form-group"><label>Rarity id (slug)</label><input id="staff-rarity-def-key-input" placeholder="e.g. legendary"></div><div class="staff-form-group"><label>Solid color</label><input id="staff-rarity-def-solid" type="color" value="#c0c0c0"></div><div class="staff-form-group"><label>Use gradient</label><select id="staff-rarity-def-gradient"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-form-group" id="staff-rarity-def-grad-wrap" style="display:none;"><label>Gradient colors (comma-separated hex)</label><input id="staff-rarity-def-grad-colors" placeholder="#aabbcc, #112233"></div><div class="staff-form-group" id="staff-rarity-def-run-wrap" style="display:none;"><label>Animated gradient</label><select id="staff-rarity-def-running"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-flex-row" style="margin-top:16px;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-def-save">Save</button><button type="button" class="staff-btn staff-btn-danger" id="staff-rarity-def-delete" style="display:none;">Delete</button><button type="button" class="staff-btn" id="staff-rarity-def-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
 
   <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
 
   <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
+  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-4px 0 8px;">Market card uses the same frame as packs; set inner/outer colors to match rarity.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-banner-shop-inner" type="color" value="#5a7a9a"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-banner-shop-outer" type="color" value="#1a2a3a"></div></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div id="staff-banner-shop-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
 
   <div class="staff-modal" id="staff-rarity-order-modal"><div class="staff-modal-content" style="max-width:480px;"><h3>Blook rarity order</h3><p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px;">Comma-separated, lowest to highest (used for inventory sorting). Default: common,uncommon,rare,epic,legendary,mythical,chroma</p><textarea id="staff-rarity-order-input" rows="3" style="width:100%;padding:10px;border-radius:10px;background:rgba(0,0,0,0.4);color:#fff;border:1px solid rgba(42,255,158,0.2);"></textarea><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-order-save">Save</button><button type="button" class="staff-btn" id="staff-rarity-order-cancel">Cancel</button></div></div></div>
 
@@ -3715,6 +4329,17 @@
         <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">Pick a banner you already own, or the default look.</p>
         <div class="banner-picker-grid" id="banner-picker-grid"></div>
         <button type="button" class="collect-btn" id="banner-picker-close" style="margin-top:16px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="badge-detail-modal" style="z-index:11001;display:none;">
+    <div class="modal-content" style="max-width:360px;">
+      <div class="modal-body" style="align-items:center;text-align:center;">
+        <div id="badge-detail-icon-wrap" style="width:64px;height:64px;margin:0 auto 12px;border-radius:14px;display:flex;align-items:center;justify-content:center;"></div>
+        <h2 id="badge-detail-name" style="font-size:1.1rem;margin-bottom:8px;">Badge</h2>
+        <p id="badge-detail-desc" style="font-size:0.88rem;color:var(--text-secondary);line-height:1.4;">—</p>
+        <button type="button" class="collect-btn" id="badge-detail-close" style="margin-top:18px;">Close</button>
       </div>
     </div>
   </div>
@@ -3753,7 +4378,8 @@
       writeBatch,    
       deleteDoc,    
       increment,
-      runTransaction
+      runTransaction,
+      deleteField
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { 
       getStorage,     
@@ -3784,8 +4410,19 @@
     const THEME_STORAGE_KEY = 'gu_theme_colors';
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
+    const DEFAULT_THEME_GREY = '#8A9BB5';
     const DEFAULT_RARITY_ORDER = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
     let effectiveRarityOrder = [...DEFAULT_RARITY_ORDER];
+    let blookRarityDefs = {};
+    const DEFAULT_RARITY_DEFS = {
+      common: { solid: '#c0c0c0', isGradient: false, gradientColors: [], isRunning: false },
+      uncommon: { solid: '#2e7d32', isGradient: false, gradientColors: [], isRunning: false },
+      rare: { solid: '#1565c0', isGradient: false, gradientColors: [], isRunning: false },
+      epic: { solid: '#6a1b9a', isGradient: false, gradientColors: [], isRunning: false },
+      legendary: { solid: '#bf8f00', isGradient: false, gradientColors: [], isRunning: false },
+      mythical: { solid: '#c62828', isGradient: false, gradientColors: [], isRunning: false },
+      chroma: { solid: '#00bcd4', isGradient: false, gradientColors: [], isRunning: false }
+    };
     function raritySortIndex(r) {
       const x = (r || 'common').toLowerCase();
       const i = effectiveRarityOrder.indexOf(x);
@@ -3796,13 +4433,43 @@
       try {
         const s = await getDoc(doc(db, 'siteConfig', 'settings'));
         if (s.exists()) {
-          const ro = s.data().blookRarityOrder;
+          const d = s.data();
+          const ro = d.blookRarityOrder;
           if (ro) {
             const arr = String(ro).split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
             if (arr.length) effectiveRarityOrder = arr;
           }
+          const rd = d.blookRarityDefs;
+          if (rd && typeof rd === 'object') blookRarityDefs = { ...DEFAULT_RARITY_DEFS, ...rd };
+          else blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+        } else {
+          blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+        }
+      } catch (e) {
+        blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+      }
+    }
+
+    function applyAccentColors(primary, secondary) {
+      const p = primary || DEFAULT_NEON_GREEN;
+      const s = secondary || DEFAULT_NEON_PINK;
+      document.documentElement.style.setProperty('--neon-green', p);
+      document.documentElement.style.setProperty('--neon-pink', s);
+      document.documentElement.style.setProperty('--theme-grey', s);
+    }
+
+    async function refreshSiteThemeFromServer() {
+      try {
+        const docSnap = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (docSnap.exists()) {
+          const st = docSnap.data().siteTheme;
+          if (st && (st.primary || st.secondary)) {
+            applyAccentColors(st.primary, st.secondary);
+            return;
+          }
         }
       } catch (e) {}
+      applyAccentColors(DEFAULT_NEON_GREEN, DEFAULT_NEON_PINK);
     }
 
     function applyThemeFromStorage() {
@@ -3810,11 +4477,9 @@
         const raw = localStorage.getItem(THEME_STORAGE_KEY);
         if (!raw) return;
         const j = JSON.parse(raw);
-        if (j.primary) document.documentElement.style.setProperty('--neon-green', j.primary);
-        if (j.secondary) document.documentElement.style.setProperty('--neon-pink', j.secondary);
+        applyAccentColors(j.primary, j.secondary);
       } catch (e) {}
     }
-    applyThemeFromStorage();
 
     function hidePageLoading() {
       const el = document.getElementById('page-loading-overlay');
@@ -3898,6 +4563,9 @@
     const shopStars = document.getElementById('shop-stars');
     const giftWallContainer = document.getElementById('gift-wall-container');
     const packOpeningModal = document.getElementById('pack-opening-modal');
+    const packOpeningModalInner = document.getElementById('pack-opening-modal-inner');
+    const packOpeningModalBody = document.getElementById('pack-opening-modal-body');
+    const packUnboxHint = document.getElementById('pack-unbox-hint');
     const openingModalBg = document.getElementById('opening-modal-bg');
     const giftAnimation = document.getElementById('gift-animation');
     const openedGiftName = document.getElementById('opened-gift-name');
@@ -4078,29 +4746,44 @@
       try {
         const badgesSnap = await getDocs(collection(db, 'badges'));
         const allBadges = badgesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        container.innerHTML = badgeNames.map(bn => {
+        container.innerHTML = '';
+        badgeNames.forEach(bn => {
           const bd = allBadges.find(b => b.name === bn);
-          if (!bd) return '';
-          const iconSrc = bd.icon || '';
-          return `<img class="up-badge-icon" src="${escapeHtml(iconSrc)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}" data-badge-name="${escapeHtml(bd.name)}" data-badge-desc="${escapeHtml(bd.description || '')}" style="background:${bd.bgColor};">`;
-        }).join('');
-        container.querySelectorAll('.up-badge-icon').forEach(img => {
-          img.addEventListener('click', (e) => {
-            document.querySelectorAll('.badge-tooltip').forEach(t => t.remove());
-            const tip = document.createElement('div');
-            tip.className = 'badge-tooltip';
-            tip.innerHTML = `<div class="bt-name">${img.dataset.badgeName}</div><div class="bt-desc">${img.dataset.badgeDesc || 'No description'}</div>`;
-            tip.style.left = e.clientX + 10 + 'px';
-            tip.style.top = e.clientY + 10 + 'px';
-            document.body.appendChild(tip);
-            setTimeout(() => tip.remove(), 3000);
-          });
+          if (!bd) return;
+          const icon = bd.icon || '';
+          const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
+          if (isFa) {
+            const safeFa = icon.split(/\s+/).filter(t => /^[a-zA-Z0-9_-]+$/.test(t)).join(' ');
+            const wrap = document.createElement('button');
+            wrap.type = 'button';
+            wrap.className = 'up-badge-fa';
+            wrap.style.background = bd.bgColor || 'var(--neon-green)';
+            wrap.style.color = bd.textColor || '#000';
+            wrap.setAttribute('aria-label', bd.name || 'Badge');
+            const iel = document.createElement('i');
+            iel.className = safeFa;
+            iel.setAttribute('aria-hidden', 'true');
+            wrap.appendChild(iel);
+            wrap.addEventListener('click', () => openBadgeDetailModal(bd));
+            container.appendChild(wrap);
+          } else {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'up-badge-icon';
+            btn.style.background = bd.bgColor || 'rgba(0,0,0,0.25)';
+            btn.setAttribute('aria-label', bd.name || 'Badge');
+            const img = document.createElement('img');
+            img.src = /^https?:\/\//i.test(icon) ? icon : '';
+            img.alt = '';
+            if (!img.src) {
+              btn.innerHTML = '<i class="fas fa-award" aria-hidden="true" style="font-size:0.95rem;color:#000;"></i>';
+            } else btn.appendChild(img);
+            btn.addEventListener('click', () => openBadgeDetailModal(bd));
+            container.appendChild(btn);
+          }
         });
       } catch(e) { container.innerHTML = ''; }
     }
-    document.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('up-badge-icon')) document.querySelectorAll('.badge-tooltip').forEach(t => t.remove());
-    });
 
     // ========== Update stats (plays, friends) ==========
     async function updateStats(uid) {
@@ -4152,7 +4835,7 @@
           case 'profile-page': loadProfilePage(user.uid); break;
           case 'history-page': loadPlayHistory(user.uid); break;
           case 'shop-page': loadShopPacks(); loadUserBalance(user.uid); break;
-          case 'inventory-page': loadInventory(user.uid); break;
+          case 'inventory-page': loadInventory(user.uid); loadFriends(user.uid); break;
           case 'missions-page': loadMissions(user.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(user.uid); break;
@@ -4464,7 +5147,7 @@
           case 'profile-page': loadProfilePage(currentUser.uid); break;
           case 'history-page': loadPlayHistory(currentUser.uid); break;
           case 'shop-page': loadShopPacks(); loadUserBalance(currentUser.uid); break;
-          case 'inventory-page': loadInventory(currentUser.uid); break;
+          case 'inventory-page': loadInventory(currentUser.uid); loadFriends(currentUser.uid); break;
           case 'missions-page': loadMissions(currentUser.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(currentUser.uid); break;
@@ -4685,29 +5368,16 @@
             const pack = { id: docSnap.id, ...docSnap.data() };
             if (pack.shopType === 'banner') return;
             anyPack = true;
-            const topRarity = pack.items?.reduce((best, it) => { const order = ['common','uncommon','rare','epic','legendary','mythical','chroma']; return order.indexOf((it.rarity||'').toLowerCase()) > order.indexOf(best) ? (it.rarity||'').toLowerCase() : best; }, 'common') || 'common';
-            const gradients = { common:'linear-gradient(135deg,#bdbdbd,#757575)', uncommon:'linear-gradient(135deg,#66bb6a,#2e7d32)', rare:'linear-gradient(135deg,#42a5f5,#1565c0)', epic:'linear-gradient(135deg,#ab47bc,#6a1b9a)', legendary:'linear-gradient(135deg,#ffd54f,#bf8f00)', mythical:'linear-gradient(135deg,#ef5350,#b71c1c)', chroma:'linear-gradient(135deg,#26c6da,#00838f)' };
-            const borders = { common:'#9e9e9e', uncommon:'#81c784', rare:'#64b5f6', epic:'#ce93d8', legendary:'#ffe082', mythical:'#ef9a9a', chroma:'#80deea' };
-            const packCard = document.createElement('div');
-            packCard.className = 'pack-card pack-card-visual';
-            packCard.style.background = gradients[topRarity] || gradients.common;
-            packCard.style.borderColor = borders[topRarity] || borders.common;
-            const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
-            packCard.innerHTML = `
-              <div class="pack-content">
-                <div class="pack-visual-wrap">
-                  ${packImg ? `<img class="pack-visual-img" src="${escapeHtml(packImg)}" alt="">` : '<div class="pack-visual-placeholder"><i class="fas fa-box-open"></i></div>'}
-                </div>
-                <div class="pack-price-row"><i class="fas fa-coins" style="color:#ffd700;"></i> ${pack.price}</div>
-              </div>
-            `;
-            packCard.addEventListener('click', () => purchasePack(pack));
-            const infoBtn = document.createElement('button');
-            infoBtn.style.cssText = 'position:absolute;top:8px;right:8px;z-index:5;background:rgba(0,0,0,0.4);border:none;color:white;width:24px;height:24px;border-radius:50%;font-size:0.7rem;cursor:pointer;';
-            infoBtn.textContent = '?';
-            infoBtn.addEventListener('click', (e) => { e.stopPropagation(); showChanceModal(pack); });
-            packCard.appendChild(infoBtn);
-            shopPacks.appendChild(packCard);
+            const card = buildMarketPackCardEl({
+              name: pack.name,
+              price: pack.price,
+              pack,
+              artUrl: marketPackArtUrl(pack),
+              patternUrl: marketPackPatternUrl(pack),
+              onCardClick: () => purchasePack(pack),
+              onInfoClick: () => showChanceModal(pack)
+            });
+            shopPacks.appendChild(card);
           });
           if (!anyPack) shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>';
         });
@@ -4728,20 +5398,16 @@
           return;
         }
         banners.forEach(b => {
-          const card = document.createElement('div');
-          card.className = 'pack-card pack-card-visual';
-          card.style.background = 'linear-gradient(135deg,#1a2a3a,#0d1520)';
-          card.style.borderColor = 'rgba(42,255,158,0.35)';
           const img = b.bannerImageUrl || b.backgroundImage || '';
-          card.innerHTML = `
-            <div class="pack-content">
-              <div class="pack-visual-wrap">
-                ${img ? `<img class="pack-visual-img" src="${escapeHtml(img)}" alt="">` : '<div class="pack-visual-placeholder"><i class="fas fa-image"></i></div>'}
-              </div>
-              <div class="pack-price-row"><i class="fas fa-coins" style="color:#ffd700;"></i> ${b.price}</div>
-            </div>
-          `;
-          card.addEventListener('click', () => purchaseBannerOffer(b));
+          const card = buildMarketPackCardEl({
+            name: b.name,
+            price: b.price,
+            pack: b,
+            artUrl: img,
+            patternUrl: '',
+            onCardClick: () => purchaseBannerOffer(b),
+            onInfoClick: null
+          });
           shopBanners.appendChild(card);
         });
       });
@@ -4828,7 +5494,9 @@
 
     async function openPack(pack, userId) {
       const item = getItemFromPack(pack);
-      const starsGained = getStarsForRarity(item.rarity);
+      const starsGained = typeof item.starsGained === 'number' && item.starsGained >= 0
+        ? item.starsGained
+        : getStarsForRarity(item.rarity);
       
       // Award stars immediately to the user
       await updateDoc(doc(db, "users", userId), { stars: increment(starsGained) });
@@ -4843,22 +5511,334 @@
       showPackOpeningModal(pack, currentGiftCard);
     }
 
+    function getRarityDef(r) {
+      const key = (r || 'common').toLowerCase();
+      return blookRarityDefs[key] || DEFAULT_RARITY_DEFS[key] || { solid: '#ffffff', isGradient: false, gradientColors: [], isRunning: false };
+    }
     function getRarityColor(rarity) {
-      switch(rarity) {
-        case 'common': return '#c0c0c0'; 
-        case 'uncommon': return '#2e7d32'; 
-        case 'rare': return '#1565c0';
-        case 'epic': return '#6a1b9a'; 
-        case 'legendary': return '#bf8f00'; 
-        case 'chroma': return '#00bcd4';
-        case 'mythical': return '#c62828';
-        default: return '#ffffff';
+      const d = getRarityDef(rarity);
+      return d.solid || '#ffffff';
+    }
+    function getRarityColorCss(rarity) {
+      const d = getRarityDef(rarity);
+      if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
+        const g = d.gradientColors.join(', ');
+        const base = `linear-gradient(135deg, ${g})`;
+        if (d.isRunning) {
+          return `${base} 0% 50% / 200% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: runGradient 3s linear infinite`;
+        }
+        return `${base}; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent`;
+      }
+      return d.solid || '#ffffff';
+    }
+
+    function ymdUTC(d) {
+      return d.toISOString().slice(0, 10);
+    }
+
+    function normalizeStaffRarityDef(raw) {
+      const solid = raw && raw.solid ? String(raw.solid) : '#c0c0c0';
+      const isGradient = !!(raw && (raw.isGradient === true || raw.isGradient === 'true'));
+      let gradientColors = [];
+      if (raw && Array.isArray(raw.gradientColors)) gradientColors = raw.gradientColors.map(String).filter(Boolean);
+      else if (raw && typeof raw.gradientColors === 'string') gradientColors = String(raw.gradientColors).split(',').map(x => x.trim()).filter(Boolean);
+      const isRunning = !!(raw && (raw.isRunning === true || raw.isRunning === 'true'));
+      return { solid, isGradient, gradientColors, isRunning };
+    }
+
+    function toggleStaffRarityGradUI() {
+      const g = document.getElementById('staff-rarity-def-gradient')?.value === 'true';
+      const gw = document.getElementById('staff-rarity-def-grad-wrap');
+      const rw = document.getElementById('staff-rarity-def-run-wrap');
+      if (gw) gw.style.display = g ? 'block' : 'none';
+      if (rw) rw.style.display = g ? 'block' : 'none';
+    }
+
+    function renderStaffRarityDefsList() {
+      const list = document.getElementById('staff-rarity-defs-list');
+      if (!list) return;
+      const keysSet = new Set([...Object.keys(DEFAULT_RARITY_DEFS), ...Object.keys(blookRarityDefs || {})]);
+      const keys = Array.from(keysSet);
+      keys.sort((a, b) => {
+        const ia = raritySortIndex(a);
+        const ib = raritySortIndex(b);
+        if (ia !== ib) return ia - ib;
+        return a.localeCompare(b);
+      });
+      list.innerHTML = keys.map(k => {
+        const def = normalizeStaffRarityDef(getRarityDef(k));
+        const gradHint = def.isGradient ? (def.gradientColors.slice(0, 3).join(', ') || '—') : 'solid';
+        const anim = def.isGradient && def.isRunning ? ' · animated' : '';
+        return `<div class="staff-user-row" style="margin-bottom:8px;align-items:center;">
+          <div style="flex:1;min-width:0;"><strong>${escapeHtml(k)}</strong>
+          <span style="font-size:0.75rem;color:var(--text-secondary);display:block;">${escapeHtml(gradHint)}${anim}</span></div>
+          <button type="button" class="staff-btn staff-btn-primary staff-btn-sm staff-rarity-def-edit" data-rarity-key="${escapeHtml(k)}">Edit</button>
+          <button type="button" class="staff-btn staff-btn-danger staff-btn-sm staff-rarity-def-del" data-rarity-key="${escapeHtml(k)}">Delete</button>
+        </div>`;
+      }).join('');
+      list.querySelectorAll('.staff-rarity-def-edit').forEach(b => b.addEventListener('click', () => openStaffRarityDefModal('edit', b.dataset.rarityKey)));
+      list.querySelectorAll('.staff-rarity-def-del').forEach(b => b.addEventListener('click', () => deleteStaffRarityDef(b.dataset.rarityKey)));
+    }
+
+    async function deleteStaffRarityDef(key) {
+      const k = (key || '').toLowerCase().trim();
+      if (!k || !confirm(`Remove custom style for "${k}"? Built-in default will be used.`)) return;
+      try {
+        await updateDoc(doc(db, 'siteConfig', 'settings'), {
+          [`blookRarityDefs.${k}`]: deleteField(),
+          updatedAt: serverTimestamp()
+        });
+        await refreshRarityOrderFromServer();
+        renderStaffRarityDefsList();
+        if (inventoryItems.length) renderInventory();
+        showNotification('Rarity style removed', 'success');
+      } catch (e) {
+        showNotification('Delete failed: ' + e.message, 'error');
       }
     }
 
+    function openStaffRarityDefModal(mode, key) {
+      const modal = document.getElementById('staff-rarity-def-modal');
+      const keyInp = document.getElementById('staff-rarity-def-key-input');
+      const keyHid = document.getElementById('staff-rarity-def-key');
+      const delBtn = document.getElementById('staff-rarity-def-delete');
+      const title = document.getElementById('staff-rarity-def-modal-title');
+      if (!modal || !keyInp || !keyHid) return;
+      if (mode === 'add') {
+        if (title) title.textContent = 'Add rarity style';
+        keyHid.value = '';
+        keyInp.value = '';
+        keyInp.disabled = false;
+        document.getElementById('staff-rarity-def-solid').value = '#c0c0c0';
+        document.getElementById('staff-rarity-def-gradient').value = 'false';
+        document.getElementById('staff-rarity-def-grad-colors').value = '';
+        document.getElementById('staff-rarity-def-running').value = 'false';
+        if (delBtn) delBtn.style.display = 'none';
+        toggleStaffRarityGradUI();
+        modal.style.display = 'flex';
+        return;
+      }
+      const k = (key || '').toLowerCase().trim();
+      const def = normalizeStaffRarityDef(getRarityDef(k));
+      if (title) title.textContent = 'Edit rarity style';
+      keyHid.value = k;
+      keyInp.value = k;
+      keyInp.disabled = true;
+      const solidEl = document.getElementById('staff-rarity-def-solid');
+      if (solidEl) solidEl.value = /^#[0-9a-fA-F]{6}$/.test(def.solid) ? def.solid : '#c0c0c0';
+      document.getElementById('staff-rarity-def-gradient').value = def.isGradient ? 'true' : 'false';
+      document.getElementById('staff-rarity-def-grad-colors').value = def.gradientColors.join(', ');
+      document.getElementById('staff-rarity-def-running').value = def.isRunning ? 'true' : 'false';
+      if (delBtn) delBtn.style.display = 'inline-flex';
+      toggleStaffRarityGradUI();
+      modal.style.display = 'flex';
+    }
+
+    async function saveStaffRarityDef() {
+      const keyHid = (document.getElementById('staff-rarity-def-key')?.value || '').trim().toLowerCase();
+      let key = keyHid;
+      if (!key) {
+        key = (document.getElementById('staff-rarity-def-key-input')?.value || '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '');
+      }
+      if (!key) { showNotification('Enter a rarity id (letters, numbers, _ or -)', 'error'); return; }
+      const solid = document.getElementById('staff-rarity-def-solid')?.value || '#c0c0c0';
+      const isGradient = document.getElementById('staff-rarity-def-gradient')?.value === 'true';
+      const gradStr = document.getElementById('staff-rarity-def-grad-colors')?.value || '';
+      const gradientColors = gradStr.split(',').map(x => x.trim()).filter(Boolean);
+      const isRunning = document.getElementById('staff-rarity-def-running')?.value === 'true';
+      if (isGradient && gradientColors.length < 2) { showNotification('Gradient needs at least two hex colors', 'error'); return; }
+      const payload = {
+        solid,
+        isGradient,
+        gradientColors: isGradient ? gradientColors : [],
+        isRunning: !!(isGradient && isRunning)
+      };
+      try {
+        const sref = doc(db, 'siteConfig', 'settings');
+        const prevSnap = await getDoc(sref);
+        const prevDefs = prevSnap.exists() && typeof prevSnap.data().blookRarityDefs === 'object'
+          ? { ...prevSnap.data().blookRarityDefs }
+          : {};
+        prevDefs[key] = payload;
+        await setDoc(sref, {
+          blookRarityDefs: prevDefs,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        await refreshRarityOrderFromServer();
+        renderStaffRarityDefsList();
+        if (inventoryItems.length) renderInventory();
+        document.getElementById('staff-rarity-def-modal').style.display = 'none';
+        showNotification('Rarity style saved', 'success');
+      } catch (e) {
+        showNotification('Save failed: ' + e.message, 'error');
+      }
+    }
+
+    async function loadStaffRaritySitePanel() {
+      await refreshRarityOrderFromServer();
+      renderStaffRarityDefsList();
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        const d = s.exists() ? s.data() : {};
+        const st = d.siteTheme || {};
+        const pr = document.getElementById('staff-site-theme-primary');
+        const sc = document.getElementById('staff-site-theme-secondary');
+        if (pr) pr.value = st.primary || DEFAULT_NEON_GREEN;
+        if (sc) sc.value = st.secondary || DEFAULT_NEON_PINK;
+        const dr = d.dailyReward || {};
+        const cEl = document.getElementById('staff-daily-reward-coins');
+        const sEl = document.getElementById('staff-daily-reward-stars');
+        if (cEl) cEl.value = dr.coins != null ? dr.coins : 50;
+        if (sEl) sEl.value = dr.stars != null ? dr.stars : 10;
+      } catch (e) {}
+    }
+
+    async function refreshDailyRewardUI(userId) {
+      const btn = document.getElementById('daily-reward-claim-btn');
+      const status = document.getElementById('daily-reward-status');
+      const desc = document.getElementById('daily-reward-desc');
+      if (!btn || !userId) return;
+      let coins = 50;
+      let stars = 10;
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (s.exists()) {
+          const dr = s.data().dailyReward;
+          if (dr && typeof dr === 'object') {
+            const c = parseInt(dr.coins, 10);
+            const st = parseInt(dr.stars, 10);
+            if (Number.isFinite(c)) coins = Math.max(0, c);
+            if (Number.isFinite(st)) stars = Math.max(0, st);
+          }
+        }
+      } catch (e) {}
+      if (desc) desc.textContent = `Claim ${coins} coins and ${stars} stars once per calendar day (UTC).`;
+      try {
+        const u = await getDoc(doc(db, 'users', userId));
+        const last = u.exists() ? u.data().lastDailyRewardDate : null;
+        const today = ymdUTC(new Date());
+        const claimed = last === today;
+        btn.disabled = claimed;
+        btn.textContent = claimed ? 'Come back tomorrow' : 'Claim';
+        if (status) status.textContent = claimed ? `Claimed for ${today}` : 'Ready to claim';
+      } catch (e) {
+        btn.disabled = true;
+        if (status) status.textContent = 'Could not load status';
+      }
+    }
+
+    async function claimDailyReward() {
+      if (!currentUser) return;
+      const uid = currentUser.uid;
+      let coins = 50;
+      let stars = 10;
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (s.exists()) {
+          const dr = s.data().dailyReward;
+          if (dr && typeof dr === 'object') {
+            const c = parseInt(dr.coins, 10);
+            const st = parseInt(dr.stars, 10);
+            if (Number.isFinite(c)) coins = Math.max(0, c);
+            if (Number.isFinite(st)) stars = Math.max(0, st);
+          }
+        }
+      } catch (e) {}
+      const today = ymdUTC(new Date());
+      try {
+        await runTransaction(db, async tx => {
+          const uref = doc(db, 'users', uid);
+          const snap = await tx.get(uref);
+          if (!snap.exists()) throw new Error('nouser');
+          const d = snap.data();
+          if (d.lastDailyRewardDate === today) throw new Error('already');
+          tx.update(uref, {
+            coins: (d.coins || 0) + coins,
+            stars: (d.stars || 0) + stars,
+            lastDailyRewardDate: today
+          });
+        });
+        showNotification(`Daily reward: +${coins} coins, +${stars} stars`, 'success');
+        loadUserBalance(uid);
+        refreshDailyRewardUI(uid);
+      } catch (e) {
+        if (e.message === 'already') showNotification('Already claimed today', 'error');
+        else if (e.message === 'nouser') showNotification('User not found', 'error');
+        else showNotification('Could not claim: ' + (e.message || 'error'), 'error');
+      }
+    }
+
+    function openBadgeDetailModal(bd) {
+      const modal = document.getElementById('badge-detail-modal');
+      const wrap = document.getElementById('badge-detail-icon-wrap');
+      const nm = document.getElementById('badge-detail-name');
+      const dc = document.getElementById('badge-detail-desc');
+      if (!modal || !wrap) return;
+      wrap.innerHTML = '';
+      wrap.style.background = bd.bgColor || 'var(--neon-green)';
+      const icon = bd.icon || '';
+      const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
+      if (isFa) {
+        const safeFa = icon.replace(/[^a-zA-Z0-9_\- ]/g, '').trim();
+        const iel = document.createElement('i');
+        iel.className = safeFa;
+        iel.setAttribute('aria-hidden', 'true');
+        iel.style.fontSize = '1.75rem';
+        iel.style.color = bd.textColor || '#000';
+        wrap.appendChild(iel);
+      } else if (/^https?:\/\//i.test(icon)) {
+        const img = document.createElement('img');
+        img.src = icon;
+        img.alt = bd.name || '';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        img.style.borderRadius = '10px';
+        wrap.appendChild(img);
+      } else {
+        wrap.innerHTML = '<i class="fas fa-award" style="font-size:1.75rem;color:#000;"></i>';
+      }
+      if (nm) nm.textContent = bd.name || 'Badge';
+      if (dc) dc.textContent = bd.description || 'No description';
+      modal.style.display = 'flex';
+    }
+
+    const PACK_UNBOX_ZIPPER_URL = 'https://ac.blooket.com/dashboard/ded3e1029e7cae327bf35eda2a5b46e616bab256/_next/static/media/packGlow.7ae463c1.png';
+
+    function resetPackOpeningModalLayout() {
+      packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
+      packOpeningModalBody?.classList.remove('pack-unbox-body');
+      giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
+      if (packUnboxHint) {
+        packUnboxHint.classList.add('is-hidden');
+        packUnboxHint.style.display = 'none';
+      }
+      openingModalBg.style.backgroundImage = '';
+      openingModalBg.style.backgroundSize = '';
+      openingModalBg.style.backgroundRepeat = '';
+      openingModalBg.style.backgroundPosition = '';
+    }
+
     function showPackOpeningModal(pack, item) {
-      const bgUrl = (pack.backgroundImage || 'https://placehold.co/600x400?text=Pack').replace(/\\/g, '/');
-      openingModalBg.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("${bgUrl.replace(/"/g, '%22')}")`;
+      resetPackOpeningModalLayout();
+
+      const fc = marketPackFrameColors(pack);
+      const inner = fc.inner || '#5a6a8a';
+      const outer = fc.outer || '#1a2233';
+      const patternUrl = marketPackPatternUrl(pack);
+      const layers = [
+        'linear-gradient(ellipse 82% 58% at 50% 40%, rgba(255,255,255,0.14), transparent 62%)',
+        patternUrl ? `url(${JSON.stringify(String(patternUrl))})` : '',
+        `linear-gradient(155deg, ${inner} 0%, ${outer} 48%, #06080d 100%)`
+      ].filter(Boolean);
+      openingModalBg.style.backgroundImage = layers.join(', ');
+      openingModalBg.style.backgroundSize = patternUrl ? '100% 100%, 320px 320px, 100% 100%' : '100% 100%, 100% 100%';
+      openingModalBg.style.backgroundRepeat = patternUrl ? 'no-repeat, repeat, no-repeat' : 'no-repeat, no-repeat';
+      openingModalBg.style.backgroundPosition = 'center, center, center';
+
+      packOpeningModalInner?.classList.add('pack-opening-modal-unbox');
+      packOpeningModalBody?.classList.add('pack-unbox-body');
+
       openedGiftName.textContent = item.name;
       openedGiftRarity.textContent = (item.rarity || 'common').toUpperCase();
       openedGiftRarity.className = `gift-rarity ${item.rarity || 'common'}`;
@@ -4871,25 +5851,56 @@
       collectBtn.style.opacity = '0';
       collectBtn.style.pointerEvents = 'none';
 
-      giftAnimation.classList.remove('pack-unbox-anim');
-      void giftAnimation.offsetWidth;
-      giftAnimation.innerHTML = '';
-      const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
-      if (packImg) {
-        giftAnimation.innerHTML = `<img src="${packImg.replace(/"/g, '&quot;')}" alt="" class="pack-unbox-pack-img" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
-      } else {
-        giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:#fff;"><i class="fas fa-box-open"></i></div>`;
+      if (packUnboxHint) {
+        packUnboxHint.classList.remove('is-hidden');
+        packUnboxHint.style.display = 'block';
       }
-      giftAnimation.classList.add('pack-unbox-anim');
 
-      packOpeningModal.style.display = 'flex';
+      giftAnimation.innerHTML = '';
+      giftAnimation.classList.add('pack-unbox-stage');
 
-      setTimeout(() => {
-        giftAnimation.classList.remove('pack-unbox-anim');
+      const artUrl = marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || '';
+      const art = document.createElement('img');
+      art.className = 'pack-unbox-art';
+      art.alt = '';
+      art.src = artUrl || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack';
+      giftAnimation.appendChild(art);
+
+      const zipperLayer = document.createElement('button');
+      zipperLayer.type = 'button';
+      zipperLayer.className = 'pack-unbox-zipper-layer';
+      zipperLayer.setAttribute('aria-label', 'Tear open pack seal');
+
+      const zipTop = document.createElement('div');
+      zipTop.className = 'pack-unbox-zipper-half pack-unbox-zipper-top';
+      const zipTopImg = document.createElement('img');
+      zipTopImg.src = PACK_UNBOX_ZIPPER_URL;
+      zipTopImg.alt = '';
+      zipTop.appendChild(zipTopImg);
+
+      const zipBot = document.createElement('div');
+      zipBot.className = 'pack-unbox-zipper-half pack-unbox-zipper-bot';
+      const zipBotImg = document.createElement('img');
+      zipBotImg.src = PACK_UNBOX_ZIPPER_URL;
+      zipBotImg.alt = '';
+      zipBot.appendChild(zipBotImg);
+
+      zipperLayer.appendChild(zipTop);
+      zipperLayer.appendChild(zipBot);
+      giftAnimation.appendChild(zipperLayer);
+
+      const revealPrize = () => {
+        giftAnimation.innerHTML = '';
+        giftAnimation.classList.remove('torn');
+        giftAnimation.classList.add('pack-unbox-reveal');
         if (item.imageUrl) {
-          giftAnimation.innerHTML = `<img src="${item.imageUrl.replace(/"/g, '&quot;')}" alt="${(item.name||'').replace(/"/g, '&quot;')}" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
+          const prize = document.createElement('img');
+          prize.src = item.imageUrl;
+          prize.alt = item.name || '';
+          prize.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:12px;display:block;';
+          giftAnimation.appendChild(prize);
         } else {
-          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:${getRarityColor(item.rarity)};"><i class="fas fa-gift"></i></div>`;
+          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;"><i class="fas fa-gift" style="color:${getRarityColor(item.rarity)};"></i></div>`;
         }
         openedGiftName.style.opacity = '1';
         openedGiftRarity.style.opacity = '1';
@@ -4897,7 +5908,21 @@
         openedGiftStars.style.opacity = '1';
         collectBtn.style.opacity = '1';
         collectBtn.style.pointerEvents = '';
-      }, 900);
+      };
+
+      const onZipperClick = () => {
+        if (giftAnimation.classList.contains('torn')) return;
+        giftAnimation.classList.add('torn');
+        if (packUnboxHint) {
+          packUnboxHint.classList.add('is-hidden');
+          packUnboxHint.style.display = 'none';
+        }
+        zipperLayer.removeEventListener('click', onZipperClick);
+        setTimeout(revealPrize, 560);
+      };
+      zipperLayer.addEventListener('click', onZipperClick);
+
+      packOpeningModal.style.display = 'flex';
     }
 
     collectBtn.addEventListener('click', async () => {
@@ -4914,6 +5939,7 @@
           timestamp: serverTimestamp()
         });
         packOpeningModal.style.display = 'none';
+        resetPackOpeningModalLayout();
         showNotification(`You received: ${currentGiftCard.name}!`, "success");
       } catch(e) { showNotification("Error collecting item: " + e.message, "error"); }
     });
@@ -4921,142 +5947,323 @@
     // ========== Blooket-style Inventory ==========
     let currentInventoryFilter = 'all';
     let inventoryItems = [];
+    let invBlookDetailContext = null;
     let packBuilderItems = [];
+    let staffEditUserInitialBanner = '';
+
+    function invSellPriceForStars(stars) {
+      const n = Number(stars) || 0;
+      return Math.max(1, Math.floor(n * 0.5));
+    }
+
+    function closeInvBlookModal() {
+      const m = document.getElementById('inv-blook-modal');
+      if (m) m.style.display = 'none';
+      invBlookDetailContext = null;
+    }
+
+    function populateRecipientSelectForInvSend() {
+      if (!recipientEmail) return;
+      recipientEmail.innerHTML = '<option value="">Select a friend</option>';
+      (friendsData || []).forEach(f => {
+        const o = document.createElement('option');
+        o.value = f.id;
+        o.textContent = f.username || f.email || f.id;
+        recipientEmail.appendChild(o);
+      });
+    }
+
+    function openInvBlookDetail(rep, copies) {
+      invBlookDetailContext = { rep, copies: copies || [rep] };
+      const r = (rep.rarity || 'common').toLowerCase();
+      const qty = (copies && copies.length) ? copies.length : 1;
+      const stars = rep.starsGained || 0;
+      const sell = invSellPriceForStars(stars);
+      const rc = getRarityColor(r);
+
+      const vis = document.getElementById('inv-blook-modal-visual');
+      if (vis) {
+        vis.innerHTML = rep.imageUrl
+          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="">`
+          : `<span class="inv-blook-ph" style="color:${rc};"><i class="fas fa-dragon"></i></span>`;
+      }
+      const nm = document.getElementById('inv-blook-modal-name');
+      if (nm) nm.textContent = rep.itemName || 'Blook';
+      const rr = document.getElementById('inv-blook-modal-rarity');
+      if (rr) {
+        rr.textContent = r;
+        rr.style.color = rc;
+        rr.style.border = `1px solid ${rc}55`;
+        rr.style.background = `${rc}22`;
+      }
+      const pk = document.getElementById('inv-blook-modal-pack');
+      if (pk) pk.textContent = rep.packName || '—';
+      const q = document.getElementById('inv-blook-modal-qty');
+      if (q) q.textContent = String(qty);
+      const st = document.getElementById('inv-blook-modal-stars');
+      if (st) st.textContent = String(stars);
+      const sl = document.getElementById('inv-blook-modal-sell');
+      if (sl) sl.textContent = `${sell} tokens (each)`;
+
+      const m = document.getElementById('inv-blook-modal');
+      if (m) m.style.display = 'flex';
+    }
+
+    async function sellOneInvBlookFromDetail() {
+      if (!currentUser || !invBlookDetailContext) return;
+      const { copies } = invBlookDetailContext;
+      const docId = copies[0].id;
+      const rep = copies[0];
+      const price = invSellPriceForStars(rep.starsGained || 0);
+      if (!confirm(`Sell one ${rep.itemName || 'blook'} for ${price} tokens?`)) return;
+      try {
+        const ref = doc(db, 'inventory', docId);
+        const uref = doc(db, 'users', currentUser.uid);
+        await runTransaction(db, async (transaction) => {
+          const snap = await transaction.get(ref);
+          if (!snap.exists()) throw new Error('missing');
+          transaction.delete(ref);
+          transaction.update(uref, { coins: increment(price) });
+        });
+        showNotification(`Sold for ${price} tokens`, 'success');
+        closeInvBlookModal();
+      } catch (e) {
+        showNotification('Could not sell: ' + (e.message || 'error'), 'error');
+      }
+    }
+
+    function openInvSendFromDetail() {
+      if (!invBlookDetailContext || !currentUser) return;
+      const { copies } = invBlookDetailContext;
+      const rep = copies[0];
+      currentCard = {
+        id: rep.id,
+        name: rep.itemName,
+        rarity: rep.rarity,
+        image: rep.imageUrl || '',
+        starsGained: rep.starsGained || 0
+      };
+      closeInvBlookModal();
+      populateRecipientSelectForInvSend();
+      if (sendCardName) sendCardName.textContent = rep.itemName || 'Blook';
+      if (sendCardType) {
+        sendCardType.innerHTML = `${escapeHtml((rep.rarity || '').toString())} · <i class="fas fa-star"></i> ${rep.starsGained || 0} · Send 1 copy`;
+      }
+      if (sendCardIcon) {
+        sendCardIcon.innerHTML = rep.imageUrl
+          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
+          : '🎁';
+      }
+      if (sendCardModal) sendCardModal.style.display = 'flex';
+    }
+
+    function openSendCardModal() {
+      if (!currentCard) return;
+      populateRecipientSelectForInvSend();
+      if (sendCardName) sendCardName.textContent = currentCard.name || 'Blook';
+      if (sendCardType) {
+        sendCardType.innerHTML = `${escapeHtml((currentCard.rarity || '').toString())} · <i class="fas fa-star"></i> ${currentCard.starsGained || 0}`;
+      }
+      if (sendCardIcon) {
+        sendCardIcon.innerHTML = currentCard.image
+          ? `<img src="${escapeHtml(currentCard.image)}" alt="" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
+          : '🎁';
+      }
+      if (sendCardModal) sendCardModal.style.display = 'flex';
+    }
+
+    async function staffAppendBlookToPackDoc(packId, entry) {
+      const d = await getDoc(doc(db, 'packs', packId));
+      if (!d.exists()) { showNotification('Pack not found', 'error'); return false; }
+      const items = [...(d.data().items || []), entry];
+      await updateDoc(doc(db, 'packs', packId), { items, updatedAt: serverTimestamp() });
+      return true;
+    }
+
     function renderPackBuilderItems() {
       const list = document.getElementById('staff-pack-items-list');
       if (!list) return;
+      if (packBuilderItems.length === 0) {
+        list.innerHTML = '<span style="color:var(--text-secondary);font-size:0.8rem;">No blooks yet — click Add blook</span>';
+        return;
+      }
+      list.innerHTML = packBuilderItems.map((item, i) => {
+        const thumb = item.imageUrl
+          ? `<img src="${escapeHtml(item.imageUrl)}" alt="">`
+          : '<span style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--text-secondary);"><i class="fas fa-cube"></i></span>';
+        const label = escapeHtml(item.name || '(unnamed)');
+        return `<div class="staff-blook-chip-wrap" style="display:inline-flex;align-items:center;gap:2px;"><button type="button" class="staff-blook-chip" data-idx="${i}">${thumb}<span>${label}</span></button><button type="button" class="staff-blook-chip-del" data-idx="${i}" title="Remove">×</button></div>`;
+      }).join('');
+      list.querySelectorAll('.staff-blook-chip').forEach(btn => {
+        btn.addEventListener('click', () => { openStaffBlookEditor(parseInt(btn.dataset.idx, 10)); });
+      });
+      list.querySelectorAll('.staff-blook-chip-del').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          packBuilderItems.splice(parseInt(btn.dataset.idx, 10), 1);
+          renderPackBuilderItems();
+        });
+      });
+    }
+
+    async function openStaffBlookEditor(idx) {
+      const modal = document.getElementById('staff-blook-editor-modal');
+      if (!modal) return;
+      const isNew = idx < 0;
+      document.getElementById('staff-blook-editor-idx').value = String(idx);
+      document.getElementById('staff-blook-editor-title').textContent = isNew ? 'Add blook' : 'Edit blook';
       const RAR_OPTS = effectiveRarityOrder.length ? effectiveRarityOrder : DEFAULT_RARITY_ORDER;
-      list.innerHTML = packBuilderItems.map((item, i) => `
-        <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.08);">
-          <div class="staff-flex-row" style="gap:6px;align-items:flex-end;">
-            <div class="staff-form-group" style="flex:2;margin:0;"><label style="font-size:0.7rem;">Name</label><input value="${escapeHtml(item.name)}" data-idx="${i}" data-field="name" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity</label><select data-idx="${i}" data-field="rarity" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;">${RAR_OPTS.map(r=>`<option value="${r}" ${(item.rarity||'').toLowerCase()===r?'selected':''}>${r}</option>`).join('')}</select></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Chance %</label><input type="number" step="0.01" value="${item.chance||0}" data-idx="${i}" data-field="chance" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Stars</label><input type="number" value="${item.starsGained||0}" data-idx="${i}" data-field="starsGained" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-          </div>
-          <div class="staff-flex-row" style="gap:6px;margin-top:6px;align-items:flex-end;">
-            <div class="staff-form-group" style="flex:3;margin:0;"><label style="font-size:0.7rem;">Image URL</label><input value="${escapeHtml(item.imageUrl||'')}" data-idx="${i}" data-field="imageUrl" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity Color</label><input type="color" value="${item.rarityColor||'#888888'}" data-idx="${i}" data-field="rarityColor" class="pbi-field" style="padding:2px;height:32px;"></div>
-            <button type="button" class="staff-btn staff-btn-danger staff-btn-sm pbi-del" data-idx="${i}" style="margin-bottom:2px;">✕</button>
-          </div>
-        </div>
-      `).join('') || '<div style="color:var(--text-secondary);font-size:0.8rem;padding:8px;">No items added yet.</div>';
-      list.querySelectorAll('.pbi-field').forEach(f => f.addEventListener('change', () => {
-        const idx = parseInt(f.dataset.idx);
-        const field = f.dataset.field;
-        let val = f.value;
-        if (field === 'chance' || field === 'starsGained') val = parseFloat(val) || 0;
-        packBuilderItems[idx][field] = val;
-      }));
-      list.querySelectorAll('.pbi-del').forEach(b => b.addEventListener('click', () => { packBuilderItems.splice(parseInt(b.dataset.idx), 1); renderPackBuilderItems(); }));
+      const raritySel = document.getElementById('staff-blook-editor-rarity');
+      raritySel.innerHTML = RAR_OPTS.map(r => `<option value="${r}">${r}</option>`).join('');
+      const currentPackId = document.getElementById('staff-pack-id').value;
+      const snap = await getDocs(collection(db, 'packs'));
+      const packs = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.shopType !== 'banner');
+      const packSel = document.getElementById('staff-blook-editor-pack');
+      let opts = '';
+      if (!currentPackId) {
+        opts += `<option value="__DRAFT__">This pack (draft — save pack first to move blooks elsewhere)</option>`;
+      }
+      packs.forEach(p => {
+        opts += `<option value="${p.id}" ${p.id === currentPackId ? 'selected' : ''}>${escapeHtml(p.name || p.id)}</option>`;
+      });
+      if (!opts) opts = '<option value="">No item packs in database</option>';
+      packSel.innerHTML = opts;
+      const item = !isNew ? packBuilderItems[idx] : null;
+      if (item) {
+        document.getElementById('staff-blook-editor-name').value = item.name || '';
+        raritySel.value = (item.rarity || 'common').toLowerCase();
+        document.getElementById('staff-blook-editor-stars').value = item.starsGained ?? 0;
+        document.getElementById('staff-blook-editor-chance').value = item.chance ?? 0;
+        document.getElementById('staff-blook-editor-image').value = item.imageUrl || '';
+        document.getElementById('staff-blook-editor-raritycolor').value = item.rarityColor || '#888888';
+        if (currentPackId) packSel.value = currentPackId;
+        else if (packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
+      } else {
+        document.getElementById('staff-blook-editor-name').value = '';
+        raritySel.value = RAR_OPTS[0] || 'common';
+        document.getElementById('staff-blook-editor-stars').value = 0;
+        document.getElementById('staff-blook-editor-chance').value = 0;
+        document.getElementById('staff-blook-editor-image').value = '';
+        document.getElementById('staff-blook-editor-raritycolor').value = '#888888';
+        if (!currentPackId && packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
+        else if (currentPackId) packSel.value = currentPackId;
+      }
+      const delBtn = document.getElementById('staff-blook-editor-delete');
+      if (delBtn) delBtn.style.display = isNew ? 'none' : 'inline-block';
+      modal.style.display = 'flex';
+    }
+
+    async function applyStaffBlookEditor() {
+      const idx = parseInt(document.getElementById('staff-blook-editor-idx').value, 10);
+      const name = document.getElementById('staff-blook-editor-name').value.trim();
+      if (!name) { showNotification('Enter a blook name', 'error'); return; }
+      const targetPack = document.getElementById('staff-blook-editor-pack').value;
+      const currentPackId = document.getElementById('staff-pack-id').value;
+      const entry = {
+        name,
+        rarity: document.getElementById('staff-blook-editor-rarity').value,
+        starsGained: parseFloat(document.getElementById('staff-blook-editor-stars').value) || 0,
+        chance: parseFloat(document.getElementById('staff-blook-editor-chance').value) || 0,
+        imageUrl: document.getElementById('staff-blook-editor-image').value.trim(),
+        rarityColor: document.getElementById('staff-blook-editor-raritycolor').value
+      };
+      const inThisPack = currentPackId ? (targetPack === currentPackId) : (targetPack === '__DRAFT__');
+
+      if (idx < 0) {
+        if (inThisPack) {
+          packBuilderItems.push(entry);
+          renderPackBuilderItems();
+        } else {
+          const ok = await staffAppendBlookToPackDoc(targetPack, entry);
+          if (ok) showNotification('Blook added to selected pack', 'success');
+        }
+      } else {
+        if (inThisPack) {
+          packBuilderItems[idx] = { ...packBuilderItems[idx], ...entry };
+          renderPackBuilderItems();
+        } else {
+          packBuilderItems.splice(idx, 1);
+          renderPackBuilderItems();
+          const ok = await staffAppendBlookToPackDoc(targetPack, entry);
+          if (ok) showNotification('Blook moved to the selected pack. Save this pack to remove it from here permanently.', 'success');
+        }
+      }
+      document.getElementById('staff-blook-editor-modal').style.display = 'none';
     }
 
     function renderInventory() {
+      if (!inventoryContainer) return;
       inventoryContainer.innerHTML = '';
-      const statsBar = document.getElementById('inventory-stats-bar');
-      const filterBar = document.getElementById('inventory-filter-bar');
+      const packTabs = document.getElementById('inv-pack-tabs');
 
       if (inventoryItems.length === 0) {
-        statsBar.innerHTML = '';
-        filterBar.innerHTML = '';
+        if (packTabs) packTabs.innerHTML = '';
         inventoryContainer.innerHTML = '<p class="empty-message">No blooks yet — open some packs!</p>';
         return;
       }
 
-      const rarityCounts = {};
       const packCounts = {};
       inventoryItems.forEach(item => {
-        rarityCounts[item.rarity] = (rarityCounts[item.rarity] || 0) + 1;
-        packCounts[item.packName] = (packCounts[item.packName] || 0) + 1;
-      });
-
-      statsBar.innerHTML = `
-        <div class="inv-stat"><i class="fas fa-th inv-stat-icon"></i><div><div class="inv-stat-value">${inventoryItems.length}</div><div class="inv-stat-label">Total Blooks</div></div></div>
-        <div class="inv-stat"><i class="fas fa-box-open inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(packCounts).length}</div><div class="inv-stat-label">Packs</div></div></div>
-        <div class="inv-stat"><i class="fas fa-gem inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(rarityCounts).length}</div><div class="inv-stat-label">Rarities</div></div></div>
-      `;
-
-      const packNames = Object.keys(packCounts).sort();
-      filterBar.innerHTML = `<button class="filter-btn ${currentInventoryFilter === 'all' ? 'active' : ''}" data-filter="all">All</button>`;
-      packNames.forEach(pn => {
-        filterBar.innerHTML += `<button class="filter-btn ${currentInventoryFilter === pn ? 'active' : ''}" data-filter="${pn}">${pn} (${packCounts[pn]})</button>`;
-      });
-      filterBar.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentInventoryFilter = btn.dataset.filter;
-          renderInventory();
-        });
-      });
-
-      const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => i.packName === currentInventoryFilter);
-
-      const grouped = {};
-      filtered.forEach(item => {
         const pn = item.packName || 'Unknown pack';
-        if (!grouped[pn]) grouped[pn] = {};
+        packCounts[pn] = (packCounts[pn] || 0) + 1;
+      });
+      const packNames = Object.keys(packCounts).sort();
+      if (!packNames.includes(currentInventoryFilter) && currentInventoryFilter !== 'all') {
+        currentInventoryFilter = 'all';
+      }
+
+      if (packTabs) {
+        packTabs.innerHTML = '';
+        const mkTab = (label, filter, count) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = `inv-pack-tab${currentInventoryFilter === filter ? ' active' : ''}`;
+          b.dataset.filter = filter;
+          b.textContent = count != null ? `${label} (${count})` : label;
+          b.addEventListener('click', () => {
+            currentInventoryFilter = filter;
+            renderInventory();
+          });
+          packTabs.appendChild(b);
+        };
+        mkTab('All', 'all', inventoryItems.length);
+        packNames.forEach(pn => mkTab(pn, pn, packCounts[pn]));
+      }
+
+      const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => (i.packName || 'Unknown pack') === currentInventoryFilter);
+      const byName = {};
+      filtered.forEach(item => {
         const key = item.itemName || '?';
-        if (!grouped[pn][key]) grouped[pn][key] = [];
-        grouped[pn][key].push(item);
+        if (!byName[key]) byName[key] = [];
+        byName[key].push(item);
       });
 
-      Object.keys(grouped).sort().forEach(packName => {
-        const byName = grouped[packName];
-        const packGroup = document.createElement('div');
-        packGroup.className = 'pack-group';
-        const nameKeys = Object.keys(byName);
-        const totalCards = nameKeys.reduce((s, k) => s + byName[k].length, 0);
-        packGroup.innerHTML = `<div class="pack-header"><div class="pack-title">${escapeHtml(packName)}</div><div class="pack-count">${totalCards} blooks</div></div><div class="cards-grid"></div>`;
-        const cardsGrid = packGroup.querySelector('.cards-grid');
-
-        const rows = nameKeys.map(k => {
-          const copies = byName[k];
-          const best = copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
-          const count = copies.length;
-          const maxStars = Math.max(...copies.map(c => c.starsGained || 0));
-          return { name: k, copies, rep: best, count, maxStars };
-        });
-        rows.sort((a, b) => {
-          const rd = raritySortIndex(a.rep.rarity) - raritySortIndex(b.rep.rarity);
-          if (rd !== 0) return rd;
-          return a.name.localeCompare(b.name);
-        });
-
-        rows.forEach(({ rep, count, maxStars }) => {
-          const r = (rep.rarity || 'common').toLowerCase();
-          const countColor = getRarityColor(r);
-          const card = document.createElement('div');
-          card.className = `card-item rarity-${r}`;
-          card.innerHTML = `
-            <div class="card-image-area">
-              ${rep.imageUrl ? `<img src="${rep.imageUrl}" alt="${escapeHtml(rep.itemName)}">` : `<i class="fas fa-gift card-icon-placeholder"></i>`}
-            </div>
-            <div class="card-info-area">
-              <div class="card-name-row">
-                <span class="card-name" title="${escapeHtml(rep.itemName)}">${escapeHtml(rep.itemName)}</span>
-                ${count > 1 ? `<span class="inv-blook-count" style="color:${countColor};">×${count}</span>` : ''}
-              </div>
-              <div class="card-rarity-label">${r}</div>
-              <div class="card-stars"><i class="fas fa-star"></i> ${maxStars}</div>
-            </div>
-            <div class="card-actions-overlay">
-              <button class="card-action-btn send-btn" data-id="${rep.id}" data-name="${escapeHtml(rep.itemName)}" data-rarity="${escapeHtml(rep.rarity)}" data-image="${escapeHtml(rep.imageUrl || '')}"><i class="fas fa-paper-plane"></i> Send</button>
-              <button class="card-action-btn use-btn" data-id="${rep.id}" data-name="${escapeHtml(rep.itemName)}" data-rarity="${escapeHtml(rep.rarity)}" data-type="${escapeHtml(rep.type || 'item')}" data-value="${rep.value || 0}" data-image="${escapeHtml(rep.imageUrl || '')}"><i class="fas fa-bolt"></i> Use</button>
-            </div>
-          `;
-          cardsGrid.appendChild(card);
-        });
-        inventoryContainer.appendChild(packGroup);
+      const rows = Object.keys(byName).map(k => {
+        const copies = byName[k];
+        const rep = copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
+        return { copies, rep, count: copies.length };
+      });
+      rows.sort((a, b) => {
+        const rd = raritySortIndex(a.rep.rarity) - raritySortIndex(b.rep.rarity);
+        if (rd !== 0) return rd;
+        return (a.rep.itemName || '').localeCompare(b.rep.itemName || '');
       });
 
-      document.querySelectorAll('.card-action-btn.send-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentCard = { id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, image: btn.dataset.image };
-        openSendCardModal();
-      }));
-      document.querySelectorAll('.card-action-btn.use-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        useItem({ id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, type: btn.dataset.type, value: btn.dataset.value, image: btn.dataset.image });
-      }));
+      rows.forEach(({ rep, copies, count }) => {
+        const r = (rep.rarity || 'common').toLowerCase();
+        const rc = getRarityColor(r);
+        const cell = document.createElement('div');
+        cell.className = 'inv-blook-cell';
+        cell.innerHTML = `
+          ${count > 1 ? `<span class="inv-blook-qty-badge" style="color:${rc};border-color:${rc}44;">${count}</span>` : ''}
+          <div class="inv-blook-cell-inner">
+            ${rep.imageUrl ? `<img src="${escapeHtml(rep.imageUrl)}" alt="">` : `<span class="inv-blook-ph" style="color:${rc};"><i class="fas fa-dragon"></i></span>`}
+          </div>
+          <div class="inv-blook-cell-name" title="${escapeHtml(rep.itemName)}">${escapeHtml(rep.itemName)}</div>
+        `;
+        cell.addEventListener('click', () => openInvBlookDetail(rep, copies));
+        inventoryContainer.appendChild(cell);
+      });
     }
 
     async function loadInventory(userId) {
@@ -5087,6 +6294,7 @@
     let missionProgressUnsub = null;
     let missionsRenderCache = [];
     let missionProgressMap = {};
+    let missionsPageUserId = null;
 
     function renderMissionsList() {
       missionsContainer.innerHTML = '';
@@ -5133,7 +6341,8 @@
 
         const claimBtn = missionCard.querySelector('.claim-btn');
         if (isCompleted && !userClaimed) {
-          claimBtn.addEventListener('click', () => claimMissionReward(mission, userId));
+          const uid = missionsPageUserId || currentUser?.uid;
+          if (uid) claimBtn.addEventListener('click', () => claimMissionReward(mission, uid));
         }
         missionsContainer.appendChild(missionCard);
       });
@@ -5141,6 +6350,8 @@
 
     async function loadMissions(userId) {
       try {
+        missionsPageUserId = userId || null;
+        refreshDailyRewardUI(userId);
         if (missionsListUnsub) missionsListUnsub();
         if (missionProgressUnsub) missionProgressUnsub();
         missionsListUnsub = onSnapshot(query(collection(db, "missions"), orderBy("createdAt", "desc")), (snapshot) => {
@@ -5566,6 +6777,8 @@
           starsDisplay.textContent = data.stars || 0;
           shopCoins.textContent = data.coins || 0;
           shopStars.textContent = data.stars || 0;
+          const itd = document.getElementById('inv-tokens-display');
+          if (itd) itd.textContent = data.coins || 0;
         }
       });
     }
@@ -5624,20 +6837,25 @@
       const ts = document.getElementById('theme-secondary');
       if (!tp || !ts) return;
       localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ primary: tp.value, secondary: ts.value }));
-      document.documentElement.style.setProperty('--neon-green', tp.value);
-      document.documentElement.style.setProperty('--neon-pink', ts.value);
+      applyAccentColors(tp.value, ts.value);
     }
     document.getElementById('theme-primary')?.addEventListener('input', persistThemeColors);
     document.getElementById('theme-secondary')?.addEventListener('input', persistThemeColors);
-    document.getElementById('theme-reset-btn')?.addEventListener('click', () => {
+    document.getElementById('theme-reset-btn')?.addEventListener('click', async () => {
       localStorage.removeItem(THEME_STORAGE_KEY);
-      document.documentElement.style.removeProperty('--neon-green');
-      document.documentElement.style.removeProperty('--neon-pink');
       const tp = document.getElementById('theme-primary');
       const ts = document.getElementById('theme-secondary');
-      if (tp) tp.value = DEFAULT_NEON_GREEN;
-      if (ts) ts.value = DEFAULT_NEON_PINK;
-      showNotification('Theme reset to default', 'success');
+      await refreshSiteThemeFromServer();
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        const st = s.exists() ? s.data().siteTheme : null;
+        if (tp) tp.value = st?.primary || DEFAULT_NEON_GREEN;
+        if (ts) ts.value = st?.secondary || DEFAULT_NEON_PINK;
+      } catch (e) {
+        if (tp) tp.value = DEFAULT_NEON_GREEN;
+        if (ts) ts.value = DEFAULT_NEON_PINK;
+      }
+      showNotification('Personal theme reset (site defaults applied)', 'success');
     });
 
     saveSettingsBtn.addEventListener('click', async () => {
@@ -5774,6 +6992,131 @@
 
     function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
+    function parseRgbaColorStop(str) {
+      if (!str || typeof str !== 'string') return null;
+      const m = str.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+      if (m) return '#' + [m[1], m[2], m[3]].map(x => (+x).toString(16).padStart(2, '0')).join('');
+      const m2 = str.match(/#([a-f0-9]{6})/i);
+      return m2 ? ('#' + m2[1].toLowerCase()) : null;
+    }
+    function hexToBlooketColorStop(hex, pct) {
+      const h = String(hex || '').replace('#', '');
+      if (h.length !== 6) return null;
+      const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+      return `rgba(${r},${g},${b},1) ${pct}`;
+    }
+    function marketPackFrameColors(pack) {
+      if (!pack) return { inner: '#c8c8c8', outer: '#6e6e6e' };
+      let inner = parseRgbaColorStop(pack.innerColor) || (typeof pack.packInnerColor === 'string' && pack.packInnerColor.startsWith('#') ? pack.packInnerColor : null);
+      let outer = parseRgbaColorStop(pack.outerColor) || (typeof pack.packOuterColor === 'string' && pack.packOuterColor.startsWith('#') ? pack.packOuterColor : null);
+      if (!inner || !outer) {
+        const order = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythical', 'chroma'];
+        const topRarity = (pack.items || []).reduce((best, it) => {
+          const r = (it.rarity || '').toLowerCase();
+          return order.indexOf(r) > order.indexOf(best) ? r : best;
+        }, 'common');
+        const fall = {
+          common: { i: '#c8c8c8', o: '#6e6e6e' },
+          uncommon: { i: '#81c784', o: '#2e7d32' },
+          rare: { i: '#64b5f6', o: '#1565c0' },
+          epic: { i: '#ce93d8', o: '#6a1b9a' },
+          legendary: { i: '#ffe082', o: '#bf8f00' },
+          mythical: { i: '#ef9a9a', o: '#b71c1c' },
+          chroma: { i: '#80deea', o: '#00838f' }
+        };
+        const f = fall[topRarity] || fall.common;
+        inner = inner || f.i;
+        outer = outer || f.o;
+      }
+      return { inner, outer };
+    }
+    function marketPackArtUrl(pack) {
+      const a = (pack.packArtUrl || pack.packUrl || '').trim();
+      if (a) return a;
+      const bg = (pack.backgroundImage || '').trim();
+      if (bg) return bg;
+      return (pack.items && pack.items.find(it => it.imageUrl)?.imageUrl) || '';
+    }
+    function marketPackPatternUrl(pack) {
+      return (pack.patternUrl || pack.packBackground || '').trim();
+    }
+    function buildMarketPackCardEl({ name, price, pack, inner, outer, artUrl, patternUrl, onCardClick, onInfoClick }) {
+      const wrap = document.createElement('div');
+      wrap.className = 'market-pack-card';
+      let ci = inner, co = outer;
+      if (pack && (!ci || !co)) {
+        const fc = marketPackFrameColors(pack);
+        ci = ci || fc.inner;
+        co = co || fc.outer;
+      }
+      if (!ci || !co) {
+        const fc = marketPackFrameColors(null);
+        ci = ci || fc.inner;
+        co = co || fc.outer;
+      }
+      wrap.style.setProperty('--pack-inner', ci);
+      wrap.style.setProperty('--pack-outer', co);
+      const art = artUrl
+        ? `<img class="market-pack-art" src="${escapeHtml(artUrl)}" alt="">`
+        : '<div class="market-pack-art-placeholder"><i class="fas fa-image"></i></div>';
+      const infoBtn = onInfoClick
+        ? '<button type="button" class="market-pack-info" title="Drop rates">?</button>'
+        : '';
+      wrap.innerHTML = `
+        ${infoBtn}
+        <div class="market-pack-frame">
+          <div class="market-pack-inner">
+            <div class="market-pack-pattern"></div>
+            ${art}
+          </div>
+        </div>
+        <div class="market-pack-footer">
+          <span class="market-pack-name">${escapeHtml(name || 'Pack')}</span>
+          <div class="market-pack-price"><i class="fas fa-coins"></i> ${price}</div>
+        </div>`;
+      const patEl = wrap.querySelector('.market-pack-pattern');
+      if (patternUrl && patEl) patEl.style.backgroundImage = `url(${JSON.stringify(String(patternUrl))})`;
+      const ib = wrap.querySelector('.market-pack-info');
+      if (ib && onInfoClick) ib.addEventListener('click', (e) => { e.stopPropagation(); onInfoClick(e); });
+      wrap.addEventListener('click', () => onCardClick && onCardClick());
+      return wrap;
+    }
+    function updateStaffPackMarketPreview() {
+      const box = document.getElementById('staff-pack-market-preview');
+      if (!box) return;
+      const name = document.getElementById('staff-pack-name')?.value?.trim() || 'Preview';
+      const price = parseInt(document.getElementById('staff-pack-price')?.value, 10);
+      const inner = document.getElementById('staff-pack-color-inner')?.value || '#c8c8c8';
+      const outer = document.getElementById('staff-pack-color-outer')?.value || '#6e6e6e';
+      const art = document.getElementById('staff-pack-art-url')?.value?.trim() || '';
+      const pat = document.getElementById('staff-pack-pattern-url')?.value?.trim() || '';
+      box.innerHTML = '';
+      const el = buildMarketPackCardEl({
+        name,
+        price: Number.isFinite(price) ? price : 0,
+        inner, outer, artUrl: art, patternUrl: pat, pack: null,
+        onCardClick: () => {}, onInfoClick: () => {}
+      });
+      box.appendChild(el);
+    }
+    function updateStaffBannerShopPreview() {
+      const box = document.getElementById('staff-banner-shop-preview');
+      if (!box) return;
+      const name = document.getElementById('staff-banner-shop-name')?.value?.trim() || 'Banner';
+      const price = parseInt(document.getElementById('staff-banner-shop-price')?.value, 10);
+      const inner = document.getElementById('staff-banner-shop-inner')?.value || '#5a7a9a';
+      const outer = document.getElementById('staff-banner-shop-outer')?.value || '#1a2a3a';
+      const art = document.getElementById('staff-banner-shop-url')?.value?.trim() || '';
+      box.innerHTML = '';
+      const el = buildMarketPackCardEl({
+        name,
+        price: Number.isFinite(price) ? price : 0,
+        inner, outer, artUrl: art, patternUrl: '', pack: null,
+        onCardClick: () => {}, onInfoClick: () => {}
+      });
+      box.appendChild(el);
+    }
+
     // ========== Staff Panel Main ==========
     async function loadStaffPanel() {
       if (!hasPermission('staff_access')) return;
@@ -5801,6 +7144,7 @@
             case 'staff-missions': loadStaffMissions(); break;
             case 'staff-stars': break;
             case 'staff-chatview': loadStaffChatViewer(); break;
+            case 'staff-rarity': loadStaffRaritySitePanel(); break;
           }
         });
       });
@@ -5910,9 +7254,18 @@
           document.getElementById('staff-banner-shop-name').value = x.name||'';
           document.getElementById('staff-banner-shop-price').value = x.price||0;
           document.getElementById('staff-banner-shop-url').value = x.bannerImageUrl || x.backgroundImage || '';
+          const bfc = marketPackFrameColors(x);
+          const bi = document.getElementById('staff-banner-shop-inner');
+          const bo = document.getElementById('staff-banner-shop-outer');
+          if (bi) bi.value = bfc.inner;
+          if (bo) bo.value = bfc.outer;
         }
+      } else {
+        document.getElementById('staff-banner-shop-inner').value = '#5a7a9a';
+        document.getElementById('staff-banner-shop-outer').value = '#1a2a3a';
       }
       document.getElementById('staff-banner-shop-modal').style.display = 'flex';
+      updateStaffBannerShopPreview();
     }
     async function openStaffEditPack(id) {
       const d = await getDoc(doc(db,'packs',id));
@@ -5921,6 +7274,18 @@
       document.getElementById('staff-pack-id').value = id;
       document.getElementById('staff-pack-name').value = data.name||'';
       document.getElementById('staff-pack-price').value = data.price||0;
+      const fc = marketPackFrameColors(data);
+      const innerEl = document.getElementById('staff-pack-color-inner');
+      const outerEl = document.getElementById('staff-pack-color-outer');
+      if (innerEl) innerEl.value = fc.inner;
+      if (outerEl) outerEl.value = fc.outer;
+      const artEl = document.getElementById('staff-pack-art-url');
+      const patEl = document.getElementById('staff-pack-pattern-url');
+      if (artEl) {
+        const ex = (data.packArtUrl || data.packUrl || '').trim();
+        artEl.value = ex || (data.backgroundImage || '').trim();
+      }
+      if (patEl) patEl.value = (data.patternUrl || data.packBackground || '').trim();
       document.getElementById('staff-pack-bg').value = data.backgroundImage||'';
       document.getElementById('staff-pack-items-json').value = JSON.stringify(data.items||[],null,2);
       packBuilderItems = JSON.parse(JSON.stringify(data.items || []));
@@ -5930,6 +7295,7 @@
       document.getElementById('staff-pack-json-area').style.display = 'none';
       document.getElementById('staff-pack-modal-title').textContent = 'Edit Pack';
       document.getElementById('staff-pack-modal').style.display = 'flex';
+      updateStaffPackMarketPreview();
     }
 
     // ========== Staff Users ==========
@@ -5965,6 +7331,11 @@
       document.getElementById('staff-edit-coins').value = data.coins||0;
       document.getElementById('staff-edit-stars').value = data.stars||0;
       document.getElementById('staff-edit-avatar').value = '';
+      staffEditUserInitialBanner = data.banner || '';
+      const bUrl = document.getElementById('staff-edit-banner-url');
+      if (bUrl) bUrl.value = data.banner || '';
+      const bFile = document.getElementById('staff-edit-banner-file');
+      if (bFile) bFile.value = '';
       document.getElementById('staff-edit-mute').value = data.muteStatus || 'none';
       document.getElementById('staff-edit-ban').value = data.banStatus || 'none';
       document.getElementById('staff-edit-mod-reason').value = data.modReason || '';
@@ -6208,9 +7579,18 @@
       document.getElementById('staff-save-tag-btn')?.addEventListener('click',async()=>{const n=document.getElementById('staff-new-tag-name').value.trim();if(n){await addDoc(collection(db,'tags'),{name:n});document.getElementById('staff-tag-modal').style.display='none';document.getElementById('staff-new-tag-name').value='';loadStaffTags();showNotification('Tag created!','success');}});
 
       // Packs
-      document.getElementById('staff-pack-add-item-btn')?.addEventListener('click', () => {
-        packBuilderItems.push({ name: '', rarity: 'common', chance: 0, starsGained: 0, imageUrl: '', rarityColor: '#888888' });
-        renderPackBuilderItems();
+      document.getElementById('staff-pack-add-item-btn')?.addEventListener('click', () => openStaffBlookEditor(-1));
+      document.getElementById('staff-blook-editor-cancel')?.addEventListener('click', () => { document.getElementById('staff-blook-editor-modal').style.display = 'none'; });
+      document.getElementById('staff-blook-editor-save')?.addEventListener('click', () => applyStaffBlookEditor());
+      document.getElementById('staff-blook-editor-delete')?.addEventListener('click', () => {
+        const idx = parseInt(document.getElementById('staff-blook-editor-idx').value, 10);
+        if (idx >= 0) { packBuilderItems.splice(idx, 1); renderPackBuilderItems(); }
+        document.getElementById('staff-blook-editor-modal').style.display = 'none';
+      });
+      document.getElementById('staff-clear-banner-btn')?.addEventListener('click', () => {
+        document.getElementById('staff-edit-banner-url').value = '';
+        const f = document.getElementById('staff-edit-banner-file');
+        if (f) f.value = '';
       });
       document.getElementById('staff-pack-edit-mode')?.addEventListener('change', e => {
         const isJson = e.target.value === 'json';
@@ -6223,7 +7603,29 @@
           renderPackBuilderItems();
         }
       });
-      document.getElementById('staff-add-pack-btn')?.addEventListener('click',()=>{document.getElementById('staff-pack-id').value='';document.getElementById('staff-pack-form').reset();document.getElementById('staff-pack-modal-title').textContent='Create Pack';packBuilderItems=[];renderPackBuilderItems();document.getElementById('staff-pack-edit-mode').value='builder';document.getElementById('staff-pack-builder-area').style.display='block';document.getElementById('staff-pack-json-area').style.display='none';document.getElementById('staff-pack-modal').style.display='flex';});
+      document.getElementById('staff-add-pack-btn')?.addEventListener('click',()=>{
+        document.getElementById('staff-pack-id').value='';
+        document.getElementById('staff-pack-form').reset();
+        document.getElementById('staff-pack-modal-title').textContent='Create Pack';
+        const pi = document.getElementById('staff-pack-color-inner'); if (pi) pi.value = '#c8c8c8';
+        const po = document.getElementById('staff-pack-color-outer'); if (po) po.value = '#6e6e6e';
+        document.getElementById('staff-pack-art-url') && (document.getElementById('staff-pack-art-url').value = '');
+        document.getElementById('staff-pack-pattern-url') && (document.getElementById('staff-pack-pattern-url').value = '');
+        packBuilderItems=[];renderPackBuilderItems();
+        document.getElementById('staff-pack-edit-mode').value='builder';
+        document.getElementById('staff-pack-builder-area').style.display='block';
+        document.getElementById('staff-pack-json-area').style.display='none';
+        document.getElementById('staff-pack-modal').style.display='flex';
+        updateStaffPackMarketPreview();
+      });
+      ['staff-pack-name','staff-pack-price','staff-pack-color-inner','staff-pack-color-outer','staff-pack-art-url','staff-pack-pattern-url'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateStaffPackMarketPreview);
+        document.getElementById(id)?.addEventListener('change', updateStaffPackMarketPreview);
+      });
+      ['staff-banner-shop-name','staff-banner-shop-price','staff-banner-shop-inner','staff-banner-shop-outer','staff-banner-shop-url'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateStaffBannerShopPreview);
+        document.getElementById(id)?.addEventListener('change', updateStaffBannerShopPreview);
+      });
       document.getElementById('staff-close-pack-modal')?.addEventListener('click',()=>document.getElementById('staff-pack-modal').style.display='none');
       document.getElementById('staff-pack-form')?.addEventListener('submit',async(e)=>{
         e.preventDefault();
@@ -6241,7 +7643,23 @@
             bg = await getDownloadURL(snapshot.ref);
           } catch(err) { showNotification('Background upload failed: '+err.message,'error'); return; }
         }
-        const packData={name:document.getElementById('staff-pack-name').value,price:parseInt(document.getElementById('staff-pack-price').value),backgroundImage:bg,items,updatedAt:serverTimestamp()};
+        const innerHex = document.getElementById('staff-pack-color-inner')?.value || '#c8c8c8';
+        const outerHex = document.getElementById('staff-pack-color-outer')?.value || '#6e6e6e';
+        const packArt = document.getElementById('staff-pack-art-url')?.value.trim() || '';
+        const pattern = document.getElementById('staff-pack-pattern-url')?.value.trim() || '';
+        const packData={
+          name:document.getElementById('staff-pack-name').value,
+          price:parseInt(document.getElementById('staff-pack-price').value),
+          backgroundImage:bg,
+          items,
+          packInnerColor: innerHex,
+          packOuterColor: outerHex,
+          innerColor: hexToBlooketColorStop(innerHex, 0),
+          outerColor: hexToBlooketColorStop(outerHex, 100),
+          packArtUrl: packArt,
+          patternUrl: pattern,
+          updatedAt:serverTimestamp()
+        };
         if(id) await updateDoc(doc(db,'packs',id),packData); else await addDoc(collection(db,'packs'),{...packData,createdAt:serverTimestamp()});
         document.getElementById('staff-pack-modal').style.display='none';
         loadStaffPacks();loadStaffDashboard();
@@ -6264,7 +7682,14 @@
         if (!url) { showNotification('Add image URL or upload','error'); return; }
         const name = document.getElementById('staff-banner-shop-name').value.trim();
         const price = parseInt(document.getElementById('staff-banner-shop-price').value, 10) || 0;
-        const data = { name, price, shopType: 'banner', bannerImageUrl: url, backgroundImage: url, items: [], updatedAt: serverTimestamp() };
+        const bInner = document.getElementById('staff-banner-shop-inner')?.value || '#5a7a9a';
+        const bOuter = document.getElementById('staff-banner-shop-outer')?.value || '#1a2a3a';
+        const data = {
+          name, price, shopType: 'banner', bannerImageUrl: url, backgroundImage: url, items: [],
+          packInnerColor: bInner, packOuterColor: bOuter,
+          innerColor: hexToBlooketColorStop(bInner, 0), outerColor: hexToBlooketColorStop(bOuter, 100),
+          updatedAt: serverTimestamp()
+        };
         if (id) await updateDoc(doc(db,'packs',id), data);
         else await addDoc(collection(db,'packs'), { ...data, createdAt: serverTimestamp() });
         document.getElementById('staff-banner-shop-modal').style.display='none';
@@ -6272,13 +7697,15 @@
         showNotification('Shop banner saved','success');
       });
 
-      document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', async () => {
+      const openRarityOrderModal = async () => {
         const modal = document.getElementById('staff-rarity-order-modal');
         const ta = document.getElementById('staff-rarity-order-input');
         const cur = await getDoc(doc(db,'siteConfig','settings'));
         ta.value = cur.exists() && cur.data().blookRarityOrder ? cur.data().blookRarityOrder : DEFAULT_RARITY_ORDER.join(',');
         modal.style.display = 'flex';
-      });
+      };
+      document.getElementById('staff-rarity-order-open')?.addEventListener('click', openRarityOrderModal);
+      document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', openRarityOrderModal);
       document.getElementById('staff-rarity-order-cancel')?.addEventListener('click', () => document.getElementById('staff-rarity-order-modal').style.display='none');
       document.getElementById('staff-rarity-order-save')?.addEventListener('click', async () => {
         const v = document.getElementById('staff-rarity-order-input').value.trim();
@@ -6288,6 +7715,41 @@
         if (inventoryItems.length) renderInventory();
         document.getElementById('staff-rarity-order-modal').style.display='none';
         showNotification('Rarity order saved','success');
+      });
+
+      document.getElementById('staff-site-theme-save')?.addEventListener('click', async () => {
+        const primary = document.getElementById('staff-site-theme-primary')?.value || DEFAULT_NEON_GREEN;
+        const secondary = document.getElementById('staff-site-theme-secondary')?.value || DEFAULT_NEON_PINK;
+        try {
+          await setDoc(doc(db, 'siteConfig', 'settings'), {
+            siteTheme: { primary, secondary },
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          applyAccentColors(primary, secondary);
+          showNotification('Site theme saved (users can still override locally)', 'success');
+        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
+      });
+      document.getElementById('staff-daily-reward-save')?.addEventListener('click', async () => {
+        const coins = Math.max(0, parseInt(document.getElementById('staff-daily-reward-coins')?.value, 10) || 0);
+        const stars = Math.max(0, parseInt(document.getElementById('staff-daily-reward-stars')?.value, 10) || 0);
+        try {
+          await setDoc(doc(db, 'siteConfig', 'settings'), {
+            dailyReward: { coins, stars },
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          if (currentUser) refreshDailyRewardUI(currentUser.uid);
+          showNotification('Daily reward amounts saved', 'success');
+        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
+      });
+      document.getElementById('staff-rarity-def-add')?.addEventListener('click', () => openStaffRarityDefModal('add'));
+      document.getElementById('staff-rarity-def-gradient')?.addEventListener('change', toggleStaffRarityGradUI);
+      document.getElementById('staff-rarity-def-save')?.addEventListener('click', () => saveStaffRarityDef());
+      document.getElementById('staff-rarity-def-cancel')?.addEventListener('click', () => { document.getElementById('staff-rarity-def-modal').style.display = 'none'; });
+      document.getElementById('staff-rarity-def-delete')?.addEventListener('click', async () => {
+        const k = (document.getElementById('staff-rarity-def-key')?.value || '').trim().toLowerCase();
+        if (!k) return;
+        document.getElementById('staff-rarity-def-modal').style.display = 'none';
+        await deleteStaffRarityDef(k);
       });
 
       // Plays filter
@@ -6304,6 +7766,18 @@
         if(hasPermission('assign_titles')) updates.title=document.getElementById('staff-edit-user-title').value;
         const avatarVal=document.getElementById('staff-edit-avatar').value.trim();
         if(avatarVal && hasPermission('custom_avatar')) updates.avatar=avatarVal;
+        const bannerUrlField = document.getElementById('staff-edit-banner-url')?.value.trim() || '';
+        const bannerFile = document.getElementById('staff-edit-banner-file')?.files?.[0];
+        let bannerVal = bannerUrlField;
+        if (bannerFile) {
+          try {
+            const storageRef = ref(storage, `profile-banners/${uid}_${Date.now()}_${bannerFile.name}`);
+            const snapshot = await uploadBytes(storageRef, bannerFile);
+            bannerVal = await getDownloadURL(snapshot.ref);
+          } catch (err) { showNotification('Banner upload failed: '+err.message,'error'); return; }
+        }
+        if (bannerVal) updates.banner = bannerVal;
+        else if (!bannerFile && bannerUrlField === '' && staffEditUserInitialBanner) updates.banner = null;
         updates.muteStatus=document.getElementById('staff-edit-mute').value;
         updates.banStatus=document.getElementById('staff-edit-ban').value;
         updates.modReason=document.getElementById('staff-edit-mod-reason').value;
@@ -6472,6 +7946,8 @@
     // ========== Initialize the app ==========
     async function init() {
       await refreshRarityOrderFromServer();
+      await refreshSiteThemeFromServer();
+      applyThemeFromStorage();
       const gamesData = await getGames();
       renderTopGamesCarousel(gamesData.topGames);
       renderCategoryBrowsing(gamesData);
@@ -6483,21 +7959,50 @@
     setTimeout(hidePageLoading, 12000);
 
     // ========== Event Listeners ==========
+    document.getElementById('daily-reward-claim-btn')?.addEventListener('click', () => claimDailyReward());
+    document.getElementById('badge-detail-close')?.addEventListener('click', () => {
+      const m = document.getElementById('badge-detail-modal');
+      if (m) m.style.display = 'none';
+    });
+
     globalSendChatBtn.addEventListener('click', sendGlobalChatMessage);
     globalChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendGlobalChatMessage(); });
     friendSendChatBtn.addEventListener('click', sendFriendChatMessage);
     friendChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendFriendChatMessage(); });
     addFriendBtn.addEventListener('click', addFriend);
 
+    document.getElementById('inv-blook-modal-close')?.addEventListener('click', closeInvBlookModal);
+    document.getElementById('inv-blook-sell-btn')?.addEventListener('click', () => sellOneInvBlookFromDetail());
+    document.getElementById('inv-blook-send-btn')?.addEventListener('click', () => openInvSendFromDetail());
+    cancelSendBtn?.addEventListener('click', () => { if (sendCardModal) sendCardModal.style.display = 'none'; currentCard = null; });
+    sendCardBtn?.addEventListener('click', async () => {
+      if (!currentUser || !currentCard) return;
+      const recipientId = recipientEmail?.value;
+      if (!recipientId) { showNotification('Choose a friend to send to', 'error'); return; }
+      try {
+        await sendGiftToFriend(recipientId, currentCard.id, currentCard);
+        if (sendCardModal) sendCardModal.style.display = 'none';
+        currentCard = null;
+      } catch (e) { showNotification('Send failed: ' + (e.message || 'error'), 'error'); }
+    });
+
     // Close modals when clicking outside
     window.addEventListener('click', (e) => {
       if (e.target === confirmModal) confirmModal.style.display = 'none';
-      if (e.target === packOpeningModal) packOpeningModal.style.display = 'none';
+      if (e.target === packOpeningModal) {
+        packOpeningModal.style.display = 'none';
+        resetPackOpeningModalLayout();
+      }
       if (e.target === sendGiftModal) sendGiftModal.style.display = 'none';
       if (e.target === sendingAnimationModal) sendingAnimationModal.style.display = 'none';
       if (e.target === chanceModal) chanceModal.style.display = 'none';
       if (e.target === sendGiftChatModal) sendGiftChatModal.style.display = 'none';
       if (e.target === sendGiftInventoryModal) sendGiftInventoryModal.style.display = 'none';
+      if (e.target === sendCardModal) { sendCardModal.style.display = 'none'; currentCard = null; }
+      const ibm = document.getElementById('inv-blook-modal');
+      if (e.target === ibm) closeInvBlookModal();
+      const bdm = document.getElementById('badge-detail-modal');
+      if (e.target === bdm) bdm.style.display = 'none';
     });
 
     // Close modals with Escape key
@@ -6505,17 +8010,22 @@
       if (e.key === 'Escape') {
         confirmModal.style.display = 'none';
         packOpeningModal.style.display = 'none';
+        resetPackOpeningModalLayout();
         sendGiftModal.style.display = 'none';
         sendingAnimationModal.style.display = 'none';
         chanceModal.style.display = 'none';
         sendGiftChatModal.style.display = 'none';
         sendGiftInventoryModal.style.display = 'none';
+        if (sendCardModal) sendCardModal.style.display = 'none';
+        closeInvBlookModal();
         loginModal.style.display = 'none';
         signupModal.style.display = 'none';
         noticeModal.style.display = 'none';
         document.querySelectorAll('.staff-modal').forEach(m => m.style.display = 'none');
         const bpm = document.getElementById('banner-picker-modal');
         if (bpm) bpm.style.display = 'none';
+        const bdm = document.getElementById('badge-detail-modal');
+        if (bdm) bdm.style.display = 'none';
       }
     });
 
