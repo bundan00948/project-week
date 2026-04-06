@@ -608,7 +608,7 @@
       color: var(--text-secondary);
     }
 
-    /* Shop Page */
+    /* Shop Page — base (inventory etc. may reuse .pack-card legacy) */
     .shop-header {
       display: flex;
       justify-content: space-between;
@@ -636,6 +636,205 @@
       font-weight: 800;
       font-size: 1.2rem;
       color: var(--neon-green);
+    }
+
+    /* —— Blooket-style Market (shop-page) —— */
+    #shop-page {
+      padding: 0 !important;
+    }
+    #shop-page .page-content {
+      padding: 0 !important;
+      max-width: none !important;
+    }
+    .shop-market-wrap {
+      position: relative;
+      min-height: calc(100vh - 80px);
+      width: 100%;
+      overflow: hidden;
+    }
+    .shop-market-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(165deg, #0bc2cf 0%, #349aef 55%, #2a7fd4 100%);
+      z-index: 0;
+    }
+    .shop-market-checkers {
+      position: absolute;
+      inset: 0;
+      opacity: 0.14;
+      background-image: url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png');
+      background-size: 1000px 1000px;
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .shop-market-inner {
+      position: relative;
+      z-index: 2;
+      padding: 24px 5% 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .shop-market-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .shop-market-title {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+      letter-spacing: 0.02em;
+    }
+    .shop-market-balance {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: rgba(0,0,0,0.22);
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .shop-market-balance .balance-item {
+      color: #fff;
+    }
+    .shop-market-balance .balance-value {
+      color: #fff;
+      font-size: 1.15rem;
+    }
+    .shop-market-section-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.92);
+      margin: 32px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .shop-market-section-title:first-of-type { margin-top: 0; }
+    .shop-market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 18px;
+    }
+    @media (min-width: 900px) {
+      .shop-market-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 22px; }
+    }
+    .market-pack-card {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .market-pack-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      filter: brightness(1.05);
+    }
+    .market-pack-info {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 6;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .market-pack-info:hover { background: rgba(0,0,0,0.65); }
+    .market-pack-frame {
+      border-radius: 22px;
+      padding: 5px;
+      background: linear-gradient(145deg, var(--pack-outer, #6e6e6e), var(--pack-inner, #c8c8c8));
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .market-pack-inner {
+      position: relative;
+      border-radius: 18px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.35) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .market-pack-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+    }
+    .market-pack-art {
+      position: relative;
+      z-index: 2;
+      width: 78%;
+      height: 78%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.45));
+      transform: rotate(-6deg);
+      transition: transform 0.2s ease;
+    }
+    .market-pack-card:hover .market-pack-art {
+      transform: rotate(-4deg) scale(1.04);
+    }
+    .market-pack-art-placeholder {
+      position: relative;
+      z-index: 2;
+      font-size: 3.2rem;
+      color: rgba(255,255,255,0.75);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    }
+    .market-pack-footer {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .market-pack-name {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .market-pack-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: #fff;
+      background: rgba(0,0,0,0.35);
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .market-pack-price .fa-coins { color: #ffe066; }
+
+    .staff-pack-preview-box {
+      max-width: 200px;
+      margin: 12px auto 0;
+      pointer-events: none;
+    }
+    .staff-pack-preview-box .market-pack-card {
+      transform: scale(0.92);
+      transform-origin: top center;
     }
 
     .packs-grid {
@@ -678,8 +877,6 @@
       width: 100%;
       height: 100%;
       padding: 25px;
-      display: flex;
-      flex-direction: column;
       height: 100%;
     }
 
@@ -2743,6 +2940,9 @@
       .packs-grid {
         grid-template-columns: 1fr;
       }
+      .shop-market-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
       .cards-grid {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
       }
@@ -2805,62 +3005,6 @@
       font-weight: 700;
       color: var(--text-secondary);
       letter-spacing: 0.06em;
-    }
-
-    /* Shop: visual pack (no title on card) */
-    .shop-section-title {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--neon-green);
-      margin: 28px 0 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .shop-section-title:first-of-type { margin-top: 0; }
-    .pack-card.pack-card-visual {
-      aspect-ratio: 0.85;
-      padding: 20px 12px 18px;
-    }
-    .pack-card.pack-card-visual .pack-visual-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 120px;
-    }
-    .pack-card.pack-card-visual .pack-visual-img,
-    .pack-card.pack-card-visual .pack-visual-placeholder {
-      max-width: 100%;
-      width: 140px;
-      height: 140px;
-      object-fit: contain;
-      transform: rotate(-8deg);
-      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.45));
-      transition: transform 0.25s ease;
-    }
-    .pack-card.pack-card-visual:hover .pack-visual-img,
-    .pack-card.pack-card-visual:hover .pack-visual-placeholder {
-      transform: rotate(-5deg) scale(1.06);
-    }
-    .pack-card.pack-card-visual .pack-visual-placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-      color: rgba(255,255,255,0.85);
-    }
-    .pack-card.pack-card-visual .pack-price-row {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      background: rgba(0,0,0,0.35);
-      padding: 6px 16px;
-      border-radius: 20px;
     }
 
     /* Pack unboxing animation */
@@ -3195,29 +3339,31 @@
       </div>
     </div>
 
-    <!-- Shop Page -->
+    <!-- Shop Page (Blooket-style Market) -->
     <div class="page" id="shop-page">
       <div class="page-content">
-        <div class="shop-header">
-          <h2 class="page-title">Game Shop</h2>
-          <div class="balance-display">
-            <div class="balance-item">
-              <i class="fas fa-coins"></i>
-              <span class="balance-value" id="shop-coins">0</span>
+        <div class="shop-market-wrap">
+          <div class="shop-market-bg" aria-hidden="true"></div>
+          <div class="shop-market-checkers" aria-hidden="true"></div>
+          <div class="shop-market-inner">
+            <div class="shop-market-header">
+              <h2 class="shop-market-title"><i class="fas fa-store" style="margin-right:10px;opacity:0.95;"></i>Market</h2>
+              <div class="shop-market-balance">
+                <div class="balance-item">
+                  <i class="fas fa-coins" style="color:#ffe066;"></i>
+                  <span class="balance-value" id="shop-coins">0</span>
+                </div>
+                <div class="balance-item">
+                  <i class="fas fa-star" style="color:#fff;"></i>
+                  <span class="balance-value" id="shop-stars">0</span>
+                </div>
+              </div>
             </div>
-            <div class="balance-item">
-              <i class="fas fa-star"></i>
-              <span class="balance-value" id="shop-stars">0</span>
-            </div>
+            <div class="shop-market-section-title"><i class="fas fa-cubes"></i> Packs</div>
+            <div class="shop-market-grid" id="shop-packs"></div>
+            <div class="shop-market-section-title"><i class="fas fa-image"></i> Banners</div>
+            <div class="shop-market-grid" id="shop-banners"></div>
           </div>
-        </div>
-        <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
-        <div class="packs-grid" id="shop-packs">
-          <!-- Shop packs will be added here -->
-        </div>
-        <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
-        <div class="packs-grid" id="shop-banners">
-          <!-- Banner shop items -->
         </div>
       </div>
     </div>
@@ -3746,7 +3892,7 @@
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><div class="staff-form-group"><label>Background Image URL</label><input id="staff-pack-bg" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload background</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
   <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Choose another pack to move this blook when you apply (saved packs only).</p></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Rarity color (optional)</label><input id="staff-blook-editor-raritycolor" type="color" value="#888888"></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
 
@@ -3756,7 +3902,7 @@
 
   <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
+  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-4px 0 8px;">Market card uses the same frame as packs; set inner/outer colors to match rarity.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-banner-shop-inner" type="color" value="#5a7a9a"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-banner-shop-outer" type="color" value="#1a2a3a"></div></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div id="staff-banner-shop-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
 
   <div class="staff-modal" id="staff-rarity-order-modal"><div class="staff-modal-content" style="max-width:480px;"><h3>Blook rarity order</h3><p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px;">Comma-separated, lowest to highest (used for inventory sorting). Default: common,uncommon,rare,epic,legendary,mythical,chroma</p><textarea id="staff-rarity-order-input" rows="3" style="width:100%;padding:10px;border-radius:10px;background:rgba(0,0,0,0.4);color:#fff;border:1px solid rgba(42,255,158,0.2);"></textarea><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-order-save">Save</button><button type="button" class="staff-btn" id="staff-rarity-order-cancel">Cancel</button></div></div></div>
 
@@ -4733,37 +4879,24 @@
         const packsQuery = query(collection(db, "packs"), orderBy("createdAt", "desc"));
         shopPacksUnsub = onSnapshot(packsQuery, (snapshot) => {
           shopPacks.innerHTML = '';
-          if (snapshot.empty) { shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>'; return; }
+          if (snapshot.empty) { shopPacks.innerHTML = '<p style="color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.2);">No packs available</p>'; return; }
           let anyPack = false;
           snapshot.forEach(docSnap => {
             const pack = { id: docSnap.id, ...docSnap.data() };
             if (pack.shopType === 'banner') return;
             anyPack = true;
-            const topRarity = pack.items?.reduce((best, it) => { const order = ['common','uncommon','rare','epic','legendary','mythical','chroma']; return order.indexOf((it.rarity||'').toLowerCase()) > order.indexOf(best) ? (it.rarity||'').toLowerCase() : best; }, 'common') || 'common';
-            const gradients = { common:'linear-gradient(135deg,#bdbdbd,#757575)', uncommon:'linear-gradient(135deg,#66bb6a,#2e7d32)', rare:'linear-gradient(135deg,#42a5f5,#1565c0)', epic:'linear-gradient(135deg,#ab47bc,#6a1b9a)', legendary:'linear-gradient(135deg,#ffd54f,#bf8f00)', mythical:'linear-gradient(135deg,#ef5350,#b71c1c)', chroma:'linear-gradient(135deg,#26c6da,#00838f)' };
-            const borders = { common:'#9e9e9e', uncommon:'#81c784', rare:'#64b5f6', epic:'#ce93d8', legendary:'#ffe082', mythical:'#ef9a9a', chroma:'#80deea' };
-            const packCard = document.createElement('div');
-            packCard.className = 'pack-card pack-card-visual';
-            packCard.style.background = gradients[topRarity] || gradients.common;
-            packCard.style.borderColor = borders[topRarity] || borders.common;
-            const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
-            packCard.innerHTML = `
-              <div class="pack-content">
-                <div class="pack-visual-wrap">
-                  ${packImg ? `<img class="pack-visual-img" src="${escapeHtml(packImg)}" alt="">` : '<div class="pack-visual-placeholder"><i class="fas fa-box-open"></i></div>'}
-                </div>
-                <div class="pack-price-row"><i class="fas fa-coins" style="color:#ffd700;"></i> ${pack.price}</div>
-              </div>
-            `;
-            packCard.addEventListener('click', () => purchasePack(pack));
-            const infoBtn = document.createElement('button');
-            infoBtn.style.cssText = 'position:absolute;top:8px;right:8px;z-index:5;background:rgba(0,0,0,0.4);border:none;color:white;width:24px;height:24px;border-radius:50%;font-size:0.7rem;cursor:pointer;';
-            infoBtn.textContent = '?';
-            infoBtn.addEventListener('click', (e) => { e.stopPropagation(); showChanceModal(pack); });
-            packCard.appendChild(infoBtn);
-            shopPacks.appendChild(packCard);
+            const card = buildMarketPackCardEl({
+              name: pack.name,
+              price: pack.price,
+              pack,
+              artUrl: marketPackArtUrl(pack),
+              patternUrl: marketPackPatternUrl(pack),
+              onCardClick: () => purchasePack(pack),
+              onInfoClick: () => showChanceModal(pack)
+            });
+            shopPacks.appendChild(card);
           });
-          if (!anyPack) shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>';
+          if (!anyPack) shopPacks.innerHTML = '<p style="color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.2);">No packs available</p>';
         });
         loadShopBannerOffers();
       } catch(e) { console.error(e); }
@@ -4778,24 +4911,20 @@
         const banners = [];
         snapshot.forEach(d => { const p = { id: d.id, ...d.data() }; if (p.shopType === 'banner') banners.push(p); });
         if (banners.length === 0) {
-          shopBanners.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;">No banners in the shop yet</p>';
+          shopBanners.innerHTML = '<p style="color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.2);grid-column:1/-1;">No banners in the shop yet</p>';
           return;
         }
         banners.forEach(b => {
-          const card = document.createElement('div');
-          card.className = 'pack-card pack-card-visual';
-          card.style.background = 'linear-gradient(135deg,#1a2a3a,#0d1520)';
-          card.style.borderColor = 'rgba(42,255,158,0.35)';
           const img = b.bannerImageUrl || b.backgroundImage || '';
-          card.innerHTML = `
-            <div class="pack-content">
-              <div class="pack-visual-wrap">
-                ${img ? `<img class="pack-visual-img" src="${escapeHtml(img)}" alt="">` : '<div class="pack-visual-placeholder"><i class="fas fa-image"></i></div>'}
-              </div>
-              <div class="pack-price-row"><i class="fas fa-coins" style="color:#ffd700;"></i> ${b.price}</div>
-            </div>
-          `;
-          card.addEventListener('click', () => purchaseBannerOffer(b));
+          const card = buildMarketPackCardEl({
+            name: b.name,
+            price: b.price,
+            pack: b,
+            artUrl: img,
+            patternUrl: '',
+            onCardClick: () => purchaseBannerOffer(b),
+            onInfoClick: null
+          });
           shopBanners.appendChild(card);
         });
       });
@@ -5920,6 +6049,131 @@
 
     function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
+    function parseRgbaColorStop(str) {
+      if (!str || typeof str !== 'string') return null;
+      const m = str.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+      if (m) return '#' + [m[1], m[2], m[3]].map(x => (+x).toString(16).padStart(2, '0')).join('');
+      const m2 = str.match(/#([a-f0-9]{6})/i);
+      return m2 ? ('#' + m2[1].toLowerCase()) : null;
+    }
+    function hexToBlooketColorStop(hex, pct) {
+      const h = String(hex || '').replace('#', '');
+      if (h.length !== 6) return null;
+      const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+      return `rgba(${r},${g},${b},1) ${pct}`;
+    }
+    function marketPackFrameColors(pack) {
+      if (!pack) return { inner: '#c8c8c8', outer: '#6e6e6e' };
+      let inner = parseRgbaColorStop(pack.innerColor) || (typeof pack.packInnerColor === 'string' && pack.packInnerColor.startsWith('#') ? pack.packInnerColor : null);
+      let outer = parseRgbaColorStop(pack.outerColor) || (typeof pack.packOuterColor === 'string' && pack.packOuterColor.startsWith('#') ? pack.packOuterColor : null);
+      if (!inner || !outer) {
+        const order = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythical', 'chroma'];
+        const topRarity = (pack.items || []).reduce((best, it) => {
+          const r = (it.rarity || '').toLowerCase();
+          return order.indexOf(r) > order.indexOf(best) ? r : best;
+        }, 'common');
+        const fall = {
+          common: { i: '#c8c8c8', o: '#6e6e6e' },
+          uncommon: { i: '#81c784', o: '#2e7d32' },
+          rare: { i: '#64b5f6', o: '#1565c0' },
+          epic: { i: '#ce93d8', o: '#6a1b9a' },
+          legendary: { i: '#ffe082', o: '#bf8f00' },
+          mythical: { i: '#ef9a9a', o: '#b71c1c' },
+          chroma: { i: '#80deea', o: '#00838f' }
+        };
+        const f = fall[topRarity] || fall.common;
+        inner = inner || f.i;
+        outer = outer || f.o;
+      }
+      return { inner, outer };
+    }
+    function marketPackArtUrl(pack) {
+      const a = (pack.packArtUrl || pack.packUrl || '').trim();
+      if (a) return a;
+      const bg = (pack.backgroundImage || '').trim();
+      if (bg) return bg;
+      return (pack.items && pack.items.find(it => it.imageUrl)?.imageUrl) || '';
+    }
+    function marketPackPatternUrl(pack) {
+      return (pack.patternUrl || pack.packBackground || '').trim();
+    }
+    function buildMarketPackCardEl({ name, price, pack, inner, outer, artUrl, patternUrl, onCardClick, onInfoClick }) {
+      const wrap = document.createElement('div');
+      wrap.className = 'market-pack-card';
+      let ci = inner, co = outer;
+      if (pack && (!ci || !co)) {
+        const fc = marketPackFrameColors(pack);
+        ci = ci || fc.inner;
+        co = co || fc.outer;
+      }
+      if (!ci || !co) {
+        const fc = marketPackFrameColors(null);
+        ci = ci || fc.inner;
+        co = co || fc.outer;
+      }
+      wrap.style.setProperty('--pack-inner', ci);
+      wrap.style.setProperty('--pack-outer', co);
+      const art = artUrl
+        ? `<img class="market-pack-art" src="${escapeHtml(artUrl)}" alt="">`
+        : '<div class="market-pack-art-placeholder"><i class="fas fa-image"></i></div>';
+      const infoBtn = onInfoClick
+        ? '<button type="button" class="market-pack-info" title="Drop rates">?</button>'
+        : '';
+      wrap.innerHTML = `
+        ${infoBtn}
+        <div class="market-pack-frame">
+          <div class="market-pack-inner">
+            <div class="market-pack-pattern"></div>
+            ${art}
+          </div>
+        </div>
+        <div class="market-pack-footer">
+          <span class="market-pack-name">${escapeHtml(name || 'Pack')}</span>
+          <div class="market-pack-price"><i class="fas fa-coins"></i> ${price}</div>
+        </div>`;
+      const patEl = wrap.querySelector('.market-pack-pattern');
+      if (patternUrl && patEl) patEl.style.backgroundImage = `url(${JSON.stringify(String(patternUrl))})`;
+      const ib = wrap.querySelector('.market-pack-info');
+      if (ib && onInfoClick) ib.addEventListener('click', (e) => { e.stopPropagation(); onInfoClick(e); });
+      wrap.addEventListener('click', () => onCardClick && onCardClick());
+      return wrap;
+    }
+    function updateStaffPackMarketPreview() {
+      const box = document.getElementById('staff-pack-market-preview');
+      if (!box) return;
+      const name = document.getElementById('staff-pack-name')?.value?.trim() || 'Preview';
+      const price = parseInt(document.getElementById('staff-pack-price')?.value, 10);
+      const inner = document.getElementById('staff-pack-color-inner')?.value || '#c8c8c8';
+      const outer = document.getElementById('staff-pack-color-outer')?.value || '#6e6e6e';
+      const art = document.getElementById('staff-pack-art-url')?.value?.trim() || '';
+      const pat = document.getElementById('staff-pack-pattern-url')?.value?.trim() || '';
+      box.innerHTML = '';
+      const el = buildMarketPackCardEl({
+        name,
+        price: Number.isFinite(price) ? price : 0,
+        inner, outer, artUrl: art, patternUrl: pat, pack: null,
+        onCardClick: () => {}, onInfoClick: () => {}
+      });
+      box.appendChild(el);
+    }
+    function updateStaffBannerShopPreview() {
+      const box = document.getElementById('staff-banner-shop-preview');
+      if (!box) return;
+      const name = document.getElementById('staff-banner-shop-name')?.value?.trim() || 'Banner';
+      const price = parseInt(document.getElementById('staff-banner-shop-price')?.value, 10);
+      const inner = document.getElementById('staff-banner-shop-inner')?.value || '#5a7a9a';
+      const outer = document.getElementById('staff-banner-shop-outer')?.value || '#1a2a3a';
+      const art = document.getElementById('staff-banner-shop-url')?.value?.trim() || '';
+      box.innerHTML = '';
+      const el = buildMarketPackCardEl({
+        name,
+        price: Number.isFinite(price) ? price : 0,
+        inner, outer, artUrl: art, patternUrl: '', pack: null,
+        onCardClick: () => {}, onInfoClick: () => {}
+      });
+      box.appendChild(el);
+    }
+
     // ========== Staff Panel Main ==========
     async function loadStaffPanel() {
       if (!hasPermission('staff_access')) return;
@@ -6056,9 +6310,18 @@
           document.getElementById('staff-banner-shop-name').value = x.name||'';
           document.getElementById('staff-banner-shop-price').value = x.price||0;
           document.getElementById('staff-banner-shop-url').value = x.bannerImageUrl || x.backgroundImage || '';
+          const bfc = marketPackFrameColors(x);
+          const bi = document.getElementById('staff-banner-shop-inner');
+          const bo = document.getElementById('staff-banner-shop-outer');
+          if (bi) bi.value = bfc.inner;
+          if (bo) bo.value = bfc.outer;
         }
+      } else {
+        document.getElementById('staff-banner-shop-inner').value = '#5a7a9a';
+        document.getElementById('staff-banner-shop-outer').value = '#1a2a3a';
       }
       document.getElementById('staff-banner-shop-modal').style.display = 'flex';
+      updateStaffBannerShopPreview();
     }
     async function openStaffEditPack(id) {
       const d = await getDoc(doc(db,'packs',id));
@@ -6067,6 +6330,18 @@
       document.getElementById('staff-pack-id').value = id;
       document.getElementById('staff-pack-name').value = data.name||'';
       document.getElementById('staff-pack-price').value = data.price||0;
+      const fc = marketPackFrameColors(data);
+      const innerEl = document.getElementById('staff-pack-color-inner');
+      const outerEl = document.getElementById('staff-pack-color-outer');
+      if (innerEl) innerEl.value = fc.inner;
+      if (outerEl) outerEl.value = fc.outer;
+      const artEl = document.getElementById('staff-pack-art-url');
+      const patEl = document.getElementById('staff-pack-pattern-url');
+      if (artEl) {
+        const ex = (data.packArtUrl || data.packUrl || '').trim();
+        artEl.value = ex || (data.backgroundImage || '').trim();
+      }
+      if (patEl) patEl.value = (data.patternUrl || data.packBackground || '').trim();
       document.getElementById('staff-pack-bg').value = data.backgroundImage||'';
       document.getElementById('staff-pack-items-json').value = JSON.stringify(data.items||[],null,2);
       packBuilderItems = JSON.parse(JSON.stringify(data.items || []));
@@ -6076,6 +6351,7 @@
       document.getElementById('staff-pack-json-area').style.display = 'none';
       document.getElementById('staff-pack-modal-title').textContent = 'Edit Pack';
       document.getElementById('staff-pack-modal').style.display = 'flex';
+      updateStaffPackMarketPreview();
     }
 
     // ========== Staff Users ==========
@@ -6383,7 +6659,29 @@
           renderPackBuilderItems();
         }
       });
-      document.getElementById('staff-add-pack-btn')?.addEventListener('click',()=>{document.getElementById('staff-pack-id').value='';document.getElementById('staff-pack-form').reset();document.getElementById('staff-pack-modal-title').textContent='Create Pack';packBuilderItems=[];renderPackBuilderItems();document.getElementById('staff-pack-edit-mode').value='builder';document.getElementById('staff-pack-builder-area').style.display='block';document.getElementById('staff-pack-json-area').style.display='none';document.getElementById('staff-pack-modal').style.display='flex';});
+      document.getElementById('staff-add-pack-btn')?.addEventListener('click',()=>{
+        document.getElementById('staff-pack-id').value='';
+        document.getElementById('staff-pack-form').reset();
+        document.getElementById('staff-pack-modal-title').textContent='Create Pack';
+        const pi = document.getElementById('staff-pack-color-inner'); if (pi) pi.value = '#c8c8c8';
+        const po = document.getElementById('staff-pack-color-outer'); if (po) po.value = '#6e6e6e';
+        document.getElementById('staff-pack-art-url') && (document.getElementById('staff-pack-art-url').value = '');
+        document.getElementById('staff-pack-pattern-url') && (document.getElementById('staff-pack-pattern-url').value = '');
+        packBuilderItems=[];renderPackBuilderItems();
+        document.getElementById('staff-pack-edit-mode').value='builder';
+        document.getElementById('staff-pack-builder-area').style.display='block';
+        document.getElementById('staff-pack-json-area').style.display='none';
+        document.getElementById('staff-pack-modal').style.display='flex';
+        updateStaffPackMarketPreview();
+      });
+      ['staff-pack-name','staff-pack-price','staff-pack-color-inner','staff-pack-color-outer','staff-pack-art-url','staff-pack-pattern-url'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateStaffPackMarketPreview);
+        document.getElementById(id)?.addEventListener('change', updateStaffPackMarketPreview);
+      });
+      ['staff-banner-shop-name','staff-banner-shop-price','staff-banner-shop-inner','staff-banner-shop-outer','staff-banner-shop-url'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateStaffBannerShopPreview);
+        document.getElementById(id)?.addEventListener('change', updateStaffBannerShopPreview);
+      });
       document.getElementById('staff-close-pack-modal')?.addEventListener('click',()=>document.getElementById('staff-pack-modal').style.display='none');
       document.getElementById('staff-pack-form')?.addEventListener('submit',async(e)=>{
         e.preventDefault();
@@ -6401,7 +6699,23 @@
             bg = await getDownloadURL(snapshot.ref);
           } catch(err) { showNotification('Background upload failed: '+err.message,'error'); return; }
         }
-        const packData={name:document.getElementById('staff-pack-name').value,price:parseInt(document.getElementById('staff-pack-price').value),backgroundImage:bg,items,updatedAt:serverTimestamp()};
+        const innerHex = document.getElementById('staff-pack-color-inner')?.value || '#c8c8c8';
+        const outerHex = document.getElementById('staff-pack-color-outer')?.value || '#6e6e6e';
+        const packArt = document.getElementById('staff-pack-art-url')?.value.trim() || '';
+        const pattern = document.getElementById('staff-pack-pattern-url')?.value.trim() || '';
+        const packData={
+          name:document.getElementById('staff-pack-name').value,
+          price:parseInt(document.getElementById('staff-pack-price').value),
+          backgroundImage:bg,
+          items,
+          packInnerColor: innerHex,
+          packOuterColor: outerHex,
+          innerColor: hexToBlooketColorStop(innerHex, 0),
+          outerColor: hexToBlooketColorStop(outerHex, 100),
+          packArtUrl: packArt,
+          patternUrl: pattern,
+          updatedAt:serverTimestamp()
+        };
         if(id) await updateDoc(doc(db,'packs',id),packData); else await addDoc(collection(db,'packs'),{...packData,createdAt:serverTimestamp()});
         document.getElementById('staff-pack-modal').style.display='none';
         loadStaffPacks();loadStaffDashboard();
@@ -6424,7 +6738,14 @@
         if (!url) { showNotification('Add image URL or upload','error'); return; }
         const name = document.getElementById('staff-banner-shop-name').value.trim();
         const price = parseInt(document.getElementById('staff-banner-shop-price').value, 10) || 0;
-        const data = { name, price, shopType: 'banner', bannerImageUrl: url, backgroundImage: url, items: [], updatedAt: serverTimestamp() };
+        const bInner = document.getElementById('staff-banner-shop-inner')?.value || '#5a7a9a';
+        const bOuter = document.getElementById('staff-banner-shop-outer')?.value || '#1a2a3a';
+        const data = {
+          name, price, shopType: 'banner', bannerImageUrl: url, backgroundImage: url, items: [],
+          packInnerColor: bInner, packOuterColor: bOuter,
+          innerColor: hexToBlooketColorStop(bInner, 0), outerColor: hexToBlooketColorStop(bOuter, 100),
+          updatedAt: serverTimestamp()
+        };
         if (id) await updateDoc(doc(db,'packs',id), data);
         else await addDoc(collection(db,'packs'), { ...data, createdAt: serverTimestamp() });
         document.getElementById('staff-banner-shop-modal').style.display='none';
