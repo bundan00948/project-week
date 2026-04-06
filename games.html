@@ -6354,9 +6354,9 @@
             icon = await getDownloadURL(snapshot.ref);
           } catch(err) { showNotification('Icon upload failed: '+err.message,'error'); return; }
         }
-        const isFa = /^fa[srb]? /.test(icon) || icon.startsWith('fa-');
+        const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || icon.includes('fa-');
         if (!iconFile && !icon) { showNotification('Set icon URL or upload an image','error'); return; }
-        if (!iconFile && !isFa && !/^https?:\/\//i.test(icon)) { showNotification('Icon must be a URL, upload, or Font Awesome class','error'); return; }
+        if (!iconFile && !isFa && !/^https?:\/\//i.test(icon)) { showNotification('Icon must be a URL, upload, or Font Awesome classes','error'); return; }
         const badgeData={name:document.getElementById('staff-badge-name').value,icon,bgColor:document.getElementById('staff-badge-bg').value,textColor:document.getElementById('staff-badge-text-color').value,description:document.getElementById('staff-badge-desc').value,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'badges',id),badgeData); else await addDoc(collection(db,'badges'),{...badgeData,createdAt:serverTimestamp()});
         document.getElementById('staff-badge-modal').style.display='none';
