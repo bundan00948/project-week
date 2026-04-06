@@ -1757,6 +1757,142 @@
       height: 400px;
     }
 
+    /* Full-viewport pack unbox (purchase flow) */
+    .modal-content.pack-opening-modal-unbox {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+    .pack-opening-modal-unbox .modal-background {
+      filter: none;
+      background-size: cover;
+      background-position: center;
+    }
+    .pack-unbox-body {
+      justify-content: center;
+      gap: 12px;
+      padding: 24px 16px 32px;
+    }
+    .pack-unbox-hint {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      text-shadow: 0 0 12px rgba(42, 255, 158, 0.45);
+      animation: packUnboxHintPulse 1.4s ease-in-out infinite;
+    }
+    .pack-unbox-hint.is-hidden {
+      display: none !important;
+    }
+    @keyframes packUnboxHintPulse {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .gift-animation.pack-unbox-stage {
+      width: min(78vw, 340px);
+      height: min(78vw, 340px);
+      max-height: 48vh;
+      margin-bottom: 8px;
+      position: relative;
+      overflow: visible;
+      background: transparent;
+      border-radius: 20px;
+    }
+    .pack-unbox-art {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
+      pointer-events: none;
+    }
+    .pack-unbox-zipper-layer {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 6%;
+      width: 108%;
+      height: 32%;
+      cursor: pointer;
+      z-index: 3;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pack-unbox-zipper-layer:focus-visible {
+      outline: 2px solid var(--neon-green);
+      outline-offset: 4px;
+      border-radius: 8px;
+    }
+    .pack-unbox-zipper-half {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .pack-unbox-zipper-top { transform-origin: 50% 100%; }
+    .pack-unbox-zipper-bot { transform-origin: 50% 0%; }
+    .pack-unbox-zipper-half img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      user-select: none;
+      pointer-events: none;
+    }
+    .pack-unbox-zipper-top img {
+      clip-path: inset(0 0 50% 0);
+    }
+    .pack-unbox-zipper-bot img {
+      clip-path: inset(50% 0 0 0);
+    }
+    .pack-unbox-stage:not(.torn) .pack-unbox-zipper-layer {
+      animation: packZipperIdle 1.25s ease-in-out infinite;
+    }
+    @keyframes packZipperIdle {
+      0%, 100% { transform: translateX(-50%) translateY(0); filter: brightness(1); }
+      50% { transform: translateX(-50%) translateY(-3px); filter: brightness(1.15); }
+    }
+    .pack-unbox-stage.torn .pack-unbox-zipper-layer {
+      animation: none;
+      transform: translateX(-50%);
+      pointer-events: none;
+      cursor: default;
+    }
+    .pack-unbox-stage.torn .pack-unbox-zipper-top {
+      animation: packZipperTearTop 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .pack-unbox-stage.torn .pack-unbox-zipper-bot {
+      animation: packZipperTearBot 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes packZipperTearTop {
+      to {
+        transform: translate(-42%, -95%) rotate(-14deg);
+        opacity: 0;
+      }
+    }
+    @keyframes packZipperTearBot {
+      to {
+        transform: translate(42%, 110%) rotate(12deg);
+        opacity: 0;
+      }
+    }
+    .pack-unbox-reveal {
+      animation: packUnboxRevealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes packUnboxRevealPop {
+      from { opacity: 0; transform: scale(0.88); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     .modal-background {
       position: absolute;
       top: 0;
@@ -4049,13 +4185,14 @@
 
     <!-- Pack Opening Modal -->
     <div class="modal" id="pack-opening-modal">
-      <div class="modal-content pack-opening-modal">
+      <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
         <div class="modal-background" id="opening-modal-bg"></div>
-        <div class="modal-body">
+        <div class="modal-body" id="pack-opening-modal-body">
           <div class="gift-animation" id="gift-animation">
             <!-- Animation will be shown here -->
           </div>
-          <div class="gift-details">
+          <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
+            <p class="pack-unbox-hint" id="pack-unbox-hint" style="display:none;">Tap the zipper to open</p>
             <div class="gift-name" id="opened-gift-name">Gift Name</div>
             <div class="gift-rarity" id="opened-gift-rarity">Rarity</div>
             <div class="gift-value" id="opened-gift-value">Value: 0</div>
@@ -4426,6 +4563,9 @@
     const shopStars = document.getElementById('shop-stars');
     const giftWallContainer = document.getElementById('gift-wall-container');
     const packOpeningModal = document.getElementById('pack-opening-modal');
+    const packOpeningModalInner = document.getElementById('pack-opening-modal-inner');
+    const packOpeningModalBody = document.getElementById('pack-opening-modal-body');
+    const packUnboxHint = document.getElementById('pack-unbox-hint');
     const openingModalBg = document.getElementById('opening-modal-bg');
     const giftAnimation = document.getElementById('gift-animation');
     const openedGiftName = document.getElementById('opened-gift-name');
@@ -5663,9 +5803,42 @@
       modal.style.display = 'flex';
     }
 
+    const PACK_UNBOX_ZIPPER_URL = 'https://ac.blooket.com/dashboard/ded3e1029e7cae327bf35eda2a5b46e616bab256/_next/static/media/packGlow.7ae463c1.png';
+
+    function resetPackOpeningModalLayout() {
+      packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
+      packOpeningModalBody?.classList.remove('pack-unbox-body');
+      giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
+      if (packUnboxHint) {
+        packUnboxHint.classList.add('is-hidden');
+        packUnboxHint.style.display = 'none';
+      }
+      openingModalBg.style.backgroundImage = '';
+      openingModalBg.style.backgroundSize = '';
+      openingModalBg.style.backgroundRepeat = '';
+      openingModalBg.style.backgroundPosition = '';
+    }
+
     function showPackOpeningModal(pack, item) {
-      const bgUrl = (pack.backgroundImage || 'https://placehold.co/600x400?text=Pack').replace(/\\/g, '/');
-      openingModalBg.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("${bgUrl.replace(/"/g, '%22')}")`;
+      resetPackOpeningModalLayout();
+
+      const fc = marketPackFrameColors(pack);
+      const inner = fc.inner || '#5a6a8a';
+      const outer = fc.outer || '#1a2233';
+      const patternUrl = marketPackPatternUrl(pack);
+      const layers = [
+        'linear-gradient(ellipse 82% 58% at 50% 40%, rgba(255,255,255,0.14), transparent 62%)',
+        patternUrl ? `url(${JSON.stringify(String(patternUrl))})` : '',
+        `linear-gradient(155deg, ${inner} 0%, ${outer} 48%, #06080d 100%)`
+      ].filter(Boolean);
+      openingModalBg.style.backgroundImage = layers.join(', ');
+      openingModalBg.style.backgroundSize = patternUrl ? '100% 100%, 320px 320px, 100% 100%' : '100% 100%, 100% 100%';
+      openingModalBg.style.backgroundRepeat = patternUrl ? 'no-repeat, repeat, no-repeat' : 'no-repeat, no-repeat';
+      openingModalBg.style.backgroundPosition = 'center, center, center';
+
+      packOpeningModalInner?.classList.add('pack-opening-modal-unbox');
+      packOpeningModalBody?.classList.add('pack-unbox-body');
+
       openedGiftName.textContent = item.name;
       openedGiftRarity.textContent = (item.rarity || 'common').toUpperCase();
       openedGiftRarity.className = `gift-rarity ${item.rarity || 'common'}`;
@@ -5678,25 +5851,56 @@
       collectBtn.style.opacity = '0';
       collectBtn.style.pointerEvents = 'none';
 
-      giftAnimation.classList.remove('pack-unbox-anim');
-      void giftAnimation.offsetWidth;
-      giftAnimation.innerHTML = '';
-      const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
-      if (packImg) {
-        giftAnimation.innerHTML = `<img src="${packImg.replace(/"/g, '&quot;')}" alt="" class="pack-unbox-pack-img" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
-      } else {
-        giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:#fff;"><i class="fas fa-box-open"></i></div>`;
+      if (packUnboxHint) {
+        packUnboxHint.classList.remove('is-hidden');
+        packUnboxHint.style.display = 'block';
       }
-      giftAnimation.classList.add('pack-unbox-anim');
 
-      packOpeningModal.style.display = 'flex';
+      giftAnimation.innerHTML = '';
+      giftAnimation.classList.add('pack-unbox-stage');
 
-      setTimeout(() => {
-        giftAnimation.classList.remove('pack-unbox-anim');
+      const artUrl = marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || '';
+      const art = document.createElement('img');
+      art.className = 'pack-unbox-art';
+      art.alt = '';
+      art.src = artUrl || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack';
+      giftAnimation.appendChild(art);
+
+      const zipperLayer = document.createElement('button');
+      zipperLayer.type = 'button';
+      zipperLayer.className = 'pack-unbox-zipper-layer';
+      zipperLayer.setAttribute('aria-label', 'Tear open pack seal');
+
+      const zipTop = document.createElement('div');
+      zipTop.className = 'pack-unbox-zipper-half pack-unbox-zipper-top';
+      const zipTopImg = document.createElement('img');
+      zipTopImg.src = PACK_UNBOX_ZIPPER_URL;
+      zipTopImg.alt = '';
+      zipTop.appendChild(zipTopImg);
+
+      const zipBot = document.createElement('div');
+      zipBot.className = 'pack-unbox-zipper-half pack-unbox-zipper-bot';
+      const zipBotImg = document.createElement('img');
+      zipBotImg.src = PACK_UNBOX_ZIPPER_URL;
+      zipBotImg.alt = '';
+      zipBot.appendChild(zipBotImg);
+
+      zipperLayer.appendChild(zipTop);
+      zipperLayer.appendChild(zipBot);
+      giftAnimation.appendChild(zipperLayer);
+
+      const revealPrize = () => {
+        giftAnimation.innerHTML = '';
+        giftAnimation.classList.remove('torn');
+        giftAnimation.classList.add('pack-unbox-reveal');
         if (item.imageUrl) {
-          giftAnimation.innerHTML = `<img src="${item.imageUrl.replace(/"/g, '&quot;')}" alt="${(item.name||'').replace(/"/g, '&quot;')}" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
+          const prize = document.createElement('img');
+          prize.src = item.imageUrl;
+          prize.alt = item.name || '';
+          prize.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:12px;display:block;';
+          giftAnimation.appendChild(prize);
         } else {
-          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:${getRarityColor(item.rarity)};"><i class="fas fa-gift"></i></div>`;
+          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;"><i class="fas fa-gift" style="color:${getRarityColor(item.rarity)};"></i></div>`;
         }
         openedGiftName.style.opacity = '1';
         openedGiftRarity.style.opacity = '1';
@@ -5704,7 +5908,21 @@
         openedGiftStars.style.opacity = '1';
         collectBtn.style.opacity = '1';
         collectBtn.style.pointerEvents = '';
-      }, 900);
+      };
+
+      const onZipperClick = () => {
+        if (giftAnimation.classList.contains('torn')) return;
+        giftAnimation.classList.add('torn');
+        if (packUnboxHint) {
+          packUnboxHint.classList.add('is-hidden');
+          packUnboxHint.style.display = 'none';
+        }
+        zipperLayer.removeEventListener('click', onZipperClick);
+        setTimeout(revealPrize, 560);
+      };
+      zipperLayer.addEventListener('click', onZipperClick);
+
+      packOpeningModal.style.display = 'flex';
     }
 
     collectBtn.addEventListener('click', async () => {
@@ -5721,6 +5939,7 @@
           timestamp: serverTimestamp()
         });
         packOpeningModal.style.display = 'none';
+        resetPackOpeningModalLayout();
         showNotification(`You received: ${currentGiftCard.name}!`, "success");
       } catch(e) { showNotification("Error collecting item: " + e.message, "error"); }
     });
@@ -7770,7 +7989,10 @@
     // Close modals when clicking outside
     window.addEventListener('click', (e) => {
       if (e.target === confirmModal) confirmModal.style.display = 'none';
-      if (e.target === packOpeningModal) packOpeningModal.style.display = 'none';
+      if (e.target === packOpeningModal) {
+        packOpeningModal.style.display = 'none';
+        resetPackOpeningModalLayout();
+      }
       if (e.target === sendGiftModal) sendGiftModal.style.display = 'none';
       if (e.target === sendingAnimationModal) sendingAnimationModal.style.display = 'none';
       if (e.target === chanceModal) chanceModal.style.display = 'none';
@@ -7788,6 +8010,7 @@
       if (e.key === 'Escape') {
         confirmModal.style.display = 'none';
         packOpeningModal.style.display = 'none';
+        resetPackOpeningModalLayout();
         sendGiftModal.style.display = 'none';
         sendingAnimationModal.style.display = 'none';
         chanceModal.style.display = 'none';
