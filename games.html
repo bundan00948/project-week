@@ -13,6 +13,7 @@
       --card-bg: #1A1F2A;
       --neon-green: #2AFF9E;
       --neon-pink: #FF3D6C;
+      --theme-grey: #8A9BB5;
       --text-primary: #FFFFFF;
       --text-secondary: #8A9BB5;
       --star-filled: #FFC107;
@@ -2594,6 +2595,48 @@
       color: var(--text-secondary);
     }
 
+    .daily-reward-card {
+      max-width: 420px;
+      margin: 0 auto 28px;
+      padding: 22px 24px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(42,255,158,0.12), rgba(255,61,108,0.08));
+      border: 1px solid rgba(42,255,158,0.35);
+      text-align: center;
+    }
+    .daily-reward-card h3 {
+      font-size: 1.05rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: var(--neon-green);
+    }
+    .daily-reward-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .daily-reward-btn {
+      background: var(--neon-green);
+      color: #000;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 999px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .daily-reward-btn:disabled {
+      background: #2E3A48;
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    .daily-reward-pill {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
     /* Star Icons */
     .star-icon {
       margin-right: 5px;
@@ -2642,14 +2685,47 @@
       margin: 2px;
     }
     .up-badges-row {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
+      display: flex; flex-wrap: nowrap;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      flex: 0 0 auto;
+      max-width: 42%;
+      overflow-x: auto;
+      padding: 2px 0;
+      scrollbar-width: thin;
+    }
+    .up-header-banner-wrap {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      min-width: 0;
+    }
+    .up-header-banner-wrap .up-banner {
+      flex: 1;
+      min-width: 0;
     }
     .up-badge-icon {
-      width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
-      object-fit: contain; transition: transform 0.15s;
-      border: 2px solid rgba(255,255,255,0.15);
+      width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+      object-fit: contain; transition: transform 0.15s, box-shadow 0.15s;
+      border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      padding: 0;
+      display: block;
+      background: transparent;
     }
-    .up-badge-icon:hover { transform: scale(1.15); }
+    .up-badge-icon:hover { transform: scale(1.12); box-shadow: 0 0 0 2px rgba(42,255,158,0.35); }
+    .up-badge-icon img {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 6px; display: block;
+    }
+    .up-badge-fa {
+      width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0; transition: transform 0.15s;
+    }
+    .up-badge-fa:hover { transform: scale(1.12); }
     .badge-tooltip {
       position: fixed; z-index: 9999; background: #11161F;
       border: 1px solid var(--neon-green); border-radius: 12px;
@@ -2936,7 +3012,6 @@
       background-clip: text; font-weight: 900; font-size: 0.65rem;
     }
     .up-member { font-size: 0.65rem; color: rgba(255,255,255,0.85); }
-    .up-badges-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
     .up-stats-row {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 10px; margin-bottom: 16px;
@@ -3089,6 +3164,8 @@
         grid-template-columns: 1fr;
       }
       .up-header { flex-direction: column; }
+      .up-header-banner-wrap { flex-direction: column; max-width: 100%; }
+      .up-badges-row { max-width: 100%; flex-wrap: wrap; margin-bottom: 10px; }
       .up-avatar { width: 60px; height: 60px; }
       .up-banner { max-width: 100%; height: 60px; }
       .up-blooks-grid { grid-template-columns: repeat(3, 1fr); }
@@ -3390,18 +3467,20 @@
         <div class="up-container" id="profile-container">
           <div class="up-header">
             <div class="up-avatar"><img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-banner" id="profile-banner-wrap">
-              <div class="up-banner-pattern"></div>
-              <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-              <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                <span class="up-title-badge" id="profile-title">User</span>
-                <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                <span id="member-since" style="display:none;">2024</span>
+            <div class="up-header-banner-wrap">
+              <div class="up-banner" id="profile-banner-wrap">
+                <div class="up-banner-pattern"></div>
+                <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
+                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                  <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                  <span class="up-title-badge" id="profile-title">User</span>
+                  <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  <span id="member-since" style="display:none;">2024</span>
+                </div>
               </div>
+              <div id="profile-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
-          <div id="profile-badges" class="up-badges-row"></div>
           <div class="up-stats-row">
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="profile-playtime-val">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
@@ -3431,18 +3510,20 @@
         <div class="up-container" id="vp-container">
           <div class="up-header">
             <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-banner" id="vp-banner-wrap">
-              <div class="up-banner-pattern"></div>
-              <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-              <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                <span class="up-title-badge" id="vp-title">User</span>
-                <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                <span id="vp-member-since" style="display:none;">2024</span>
+            <div class="up-header-banner-wrap">
+              <div class="up-banner" id="vp-banner-wrap">
+                <div class="up-banner-pattern"></div>
+                <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
+                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                  <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                  <span class="up-title-badge" id="vp-title">User</span>
+                  <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  <span id="vp-member-since" style="display:none;">2024</span>
+                </div>
               </div>
+              <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
-          <div id="vp-badges" class="up-badges-row"></div>
           <div class="up-stats-row">
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
@@ -3540,6 +3621,12 @@
     <div class="page" id="missions-page">
       <div class="page-content">
         <h2 class="page-title">Daily Missions</h2>
+        <div class="daily-reward-card" id="daily-reward-card">
+          <h3><i class="fas fa-gift"></i> Daily reward</h3>
+          <p id="daily-reward-desc">Claim your free bonus once per day.</p>
+          <button type="button" class="daily-reward-btn" id="daily-reward-claim-btn">Claim</button>
+          <div class="daily-reward-pill" id="daily-reward-status"></div>
+        </div>
         <div class="missions-container" id="missions-container">
           <!-- Missions will be added here -->
         </div>
@@ -3606,6 +3693,7 @@
             <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
             <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
             <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
             <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
             <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
@@ -3644,7 +3732,7 @@
           <!-- Staff Packs & Items -->
           <div class="staff-section" id="staff-packs">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-set-rarity-order-btn" title="Global blook rarity sort order"><i class="fas fa-sort"></i> Rarity order</button><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
+              <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
               <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Profile banners (sold in Shop)</h4>
               <div id="staff-banner-shop-list" style="margin-bottom:20px;"></div>
               <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Packs</h4>
@@ -3699,6 +3787,37 @@
             <div class="staff-card">
               <div class="staff-card-header"><h3>Badge Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-badge-btn"><i class="fas fa-plus"></i> Create Badge</button></div>
               <div id="staff-badges-list"></div>
+            </div>
+          </div>
+
+          <!-- Staff: Rarity styles + site theme (accents) -->
+          <div class="staff-section" id="staff-rarity">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Site accent colors</h3></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Default green and grey/pink accents for every visitor. Users can still override in Settings (local only).</p>
+              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
+                <div class="staff-form-group" style="margin:0;"><label>Primary (green)</label><input type="color" id="staff-site-theme-primary" value="#2AFF9E"></div>
+                <div class="staff-form-group" style="margin:0;"><label>Secondary (grey accent)</label><input type="color" id="staff-site-theme-secondary" value="#FF3D6C"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-site-theme-save">Save site theme</button>
+              </div>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Daily login reward</h3></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Coins and stars granted once per calendar day when users claim on the Missions page.</p>
+              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
+                <div class="staff-form-group" style="margin:0;"><label>Coins</label><input type="number" id="staff-daily-reward-coins" value="50" min="0"></div>
+                <div class="staff-form-group" style="margin:0;"><label>Stars</label><input type="number" id="staff-daily-reward-stars" value="10" min="0"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-daily-reward-save">Save daily reward</button>
+              </div>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Rarity order</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-order-open"><i class="fas fa-sort"></i> Edit order</button></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);">Sort order for inventory and pack editor lists.</p>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Rarity appearance</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-def-add"><i class="fas fa-plus"></i> Add rarity</button></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Solid color, optional gradient, optional animation. Used for blook highlights and inventory.</p>
+              <div id="staff-rarity-defs-list"></div>
             </div>
           </div>
 
@@ -4050,7 +4169,9 @@
 
   <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
-  <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Choose another pack to move this blook when you apply (saved packs only).</p></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Rarity color (optional)</label><input id="staff-blook-editor-raritycolor" type="color" value="#888888"></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
+  <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-rarity-def-modal"><div class="staff-modal-content" style="max-width:440px;"><h3 id="staff-rarity-def-modal-title">Rarity style</h3><input type="hidden" id="staff-rarity-def-key"><div class="staff-form-group"><label>Rarity id (slug)</label><input id="staff-rarity-def-key-input" placeholder="e.g. legendary"></div><div class="staff-form-group"><label>Solid color</label><input id="staff-rarity-def-solid" type="color" value="#c0c0c0"></div><div class="staff-form-group"><label>Use gradient</label><select id="staff-rarity-def-gradient"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-form-group" id="staff-rarity-def-grad-wrap" style="display:none;"><label>Gradient colors (comma-separated hex)</label><input id="staff-rarity-def-grad-colors" placeholder="#aabbcc, #112233"></div><div class="staff-form-group" id="staff-rarity-def-run-wrap" style="display:none;"><label>Animated gradient</label><select id="staff-rarity-def-running"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-flex-row" style="margin-top:16px;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-def-save">Save</button><button type="button" class="staff-btn staff-btn-danger" id="staff-rarity-def-delete" style="display:none;">Delete</button><button type="button" class="staff-btn" id="staff-rarity-def-cancel">Cancel</button></div></div></div>
 
   <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
 
@@ -4071,6 +4192,17 @@
         <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">Pick a banner you already own, or the default look.</p>
         <div class="banner-picker-grid" id="banner-picker-grid"></div>
         <button type="button" class="collect-btn" id="banner-picker-close" style="margin-top:16px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="badge-detail-modal" style="z-index:11001;display:none;">
+    <div class="modal-content" style="max-width:360px;">
+      <div class="modal-body" style="align-items:center;text-align:center;">
+        <div id="badge-detail-icon-wrap" style="width:64px;height:64px;margin:0 auto 12px;border-radius:14px;display:flex;align-items:center;justify-content:center;"></div>
+        <h2 id="badge-detail-name" style="font-size:1.1rem;margin-bottom:8px;">Badge</h2>
+        <p id="badge-detail-desc" style="font-size:0.88rem;color:var(--text-secondary);line-height:1.4;">—</p>
+        <button type="button" class="collect-btn" id="badge-detail-close" style="margin-top:18px;">Close</button>
       </div>
     </div>
   </div>
@@ -4109,7 +4241,8 @@
       writeBatch,    
       deleteDoc,    
       increment,
-      runTransaction
+      runTransaction,
+      deleteField
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { 
       getStorage,     
@@ -4140,8 +4273,19 @@
     const THEME_STORAGE_KEY = 'gu_theme_colors';
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
+    const DEFAULT_THEME_GREY = '#8A9BB5';
     const DEFAULT_RARITY_ORDER = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
     let effectiveRarityOrder = [...DEFAULT_RARITY_ORDER];
+    let blookRarityDefs = {};
+    const DEFAULT_RARITY_DEFS = {
+      common: { solid: '#c0c0c0', isGradient: false, gradientColors: [], isRunning: false },
+      uncommon: { solid: '#2e7d32', isGradient: false, gradientColors: [], isRunning: false },
+      rare: { solid: '#1565c0', isGradient: false, gradientColors: [], isRunning: false },
+      epic: { solid: '#6a1b9a', isGradient: false, gradientColors: [], isRunning: false },
+      legendary: { solid: '#bf8f00', isGradient: false, gradientColors: [], isRunning: false },
+      mythical: { solid: '#c62828', isGradient: false, gradientColors: [], isRunning: false },
+      chroma: { solid: '#00bcd4', isGradient: false, gradientColors: [], isRunning: false }
+    };
     function raritySortIndex(r) {
       const x = (r || 'common').toLowerCase();
       const i = effectiveRarityOrder.indexOf(x);
@@ -4152,13 +4296,43 @@
       try {
         const s = await getDoc(doc(db, 'siteConfig', 'settings'));
         if (s.exists()) {
-          const ro = s.data().blookRarityOrder;
+          const d = s.data();
+          const ro = d.blookRarityOrder;
           if (ro) {
             const arr = String(ro).split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
             if (arr.length) effectiveRarityOrder = arr;
           }
+          const rd = d.blookRarityDefs;
+          if (rd && typeof rd === 'object') blookRarityDefs = { ...DEFAULT_RARITY_DEFS, ...rd };
+          else blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+        } else {
+          blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+        }
+      } catch (e) {
+        blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+      }
+    }
+
+    function applyAccentColors(primary, secondary) {
+      const p = primary || DEFAULT_NEON_GREEN;
+      const s = secondary || DEFAULT_NEON_PINK;
+      document.documentElement.style.setProperty('--neon-green', p);
+      document.documentElement.style.setProperty('--neon-pink', s);
+      document.documentElement.style.setProperty('--theme-grey', s);
+    }
+
+    async function refreshSiteThemeFromServer() {
+      try {
+        const docSnap = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (docSnap.exists()) {
+          const st = docSnap.data().siteTheme;
+          if (st && (st.primary || st.secondary)) {
+            applyAccentColors(st.primary, st.secondary);
+            return;
+          }
         }
       } catch (e) {}
+      applyAccentColors(DEFAULT_NEON_GREEN, DEFAULT_NEON_PINK);
     }
 
     function applyThemeFromStorage() {
@@ -4166,11 +4340,9 @@
         const raw = localStorage.getItem(THEME_STORAGE_KEY);
         if (!raw) return;
         const j = JSON.parse(raw);
-        if (j.primary) document.documentElement.style.setProperty('--neon-green', j.primary);
-        if (j.secondary) document.documentElement.style.setProperty('--neon-pink', j.secondary);
+        applyAccentColors(j.primary, j.secondary);
       } catch (e) {}
     }
-    applyThemeFromStorage();
 
     function hidePageLoading() {
       const el = document.getElementById('page-loading-overlay');
@@ -4434,29 +4606,44 @@
       try {
         const badgesSnap = await getDocs(collection(db, 'badges'));
         const allBadges = badgesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        container.innerHTML = badgeNames.map(bn => {
+        container.innerHTML = '';
+        badgeNames.forEach(bn => {
           const bd = allBadges.find(b => b.name === bn);
-          if (!bd) return '';
-          const iconSrc = bd.icon || '';
-          return `<img class="up-badge-icon" src="${escapeHtml(iconSrc)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}" data-badge-name="${escapeHtml(bd.name)}" data-badge-desc="${escapeHtml(bd.description || '')}" style="background:${bd.bgColor};">`;
-        }).join('');
-        container.querySelectorAll('.up-badge-icon').forEach(img => {
-          img.addEventListener('click', (e) => {
-            document.querySelectorAll('.badge-tooltip').forEach(t => t.remove());
-            const tip = document.createElement('div');
-            tip.className = 'badge-tooltip';
-            tip.innerHTML = `<div class="bt-name">${img.dataset.badgeName}</div><div class="bt-desc">${img.dataset.badgeDesc || 'No description'}</div>`;
-            tip.style.left = e.clientX + 10 + 'px';
-            tip.style.top = e.clientY + 10 + 'px';
-            document.body.appendChild(tip);
-            setTimeout(() => tip.remove(), 3000);
-          });
+          if (!bd) return;
+          const icon = bd.icon || '';
+          const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
+          if (isFa) {
+            const safeFa = icon.split(/\s+/).filter(t => /^[a-zA-Z0-9_-]+$/.test(t)).join(' ');
+            const wrap = document.createElement('button');
+            wrap.type = 'button';
+            wrap.className = 'up-badge-fa';
+            wrap.style.background = bd.bgColor || 'var(--neon-green)';
+            wrap.style.color = bd.textColor || '#000';
+            wrap.setAttribute('aria-label', bd.name || 'Badge');
+            const iel = document.createElement('i');
+            iel.className = safeFa;
+            iel.setAttribute('aria-hidden', 'true');
+            wrap.appendChild(iel);
+            wrap.addEventListener('click', () => openBadgeDetailModal(bd));
+            container.appendChild(wrap);
+          } else {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'up-badge-icon';
+            btn.style.background = bd.bgColor || 'rgba(0,0,0,0.25)';
+            btn.setAttribute('aria-label', bd.name || 'Badge');
+            const img = document.createElement('img');
+            img.src = /^https?:\/\//i.test(icon) ? icon : '';
+            img.alt = '';
+            if (!img.src) {
+              btn.innerHTML = '<i class="fas fa-award" aria-hidden="true" style="font-size:0.95rem;color:#000;"></i>';
+            } else btn.appendChild(img);
+            btn.addEventListener('click', () => openBadgeDetailModal(bd));
+            container.appendChild(btn);
+          }
         });
       } catch(e) { container.innerHTML = ''; }
     }
-    document.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('up-badge-icon')) document.querySelectorAll('.badge-tooltip').forEach(t => t.remove());
-    });
 
     // ========== Update stats (plays, friends) ==========
     async function updateStats(uid) {
@@ -5167,7 +5354,9 @@
 
     async function openPack(pack, userId) {
       const item = getItemFromPack(pack);
-      const starsGained = getStarsForRarity(item.rarity);
+      const starsGained = typeof item.starsGained === 'number' && item.starsGained >= 0
+        ? item.starsGained
+        : getStarsForRarity(item.rarity);
       
       // Award stars immediately to the user
       await updateDoc(doc(db, "users", userId), { stars: increment(starsGained) });
@@ -5182,17 +5371,296 @@
       showPackOpeningModal(pack, currentGiftCard);
     }
 
+    function getRarityDef(r) {
+      const key = (r || 'common').toLowerCase();
+      return blookRarityDefs[key] || DEFAULT_RARITY_DEFS[key] || { solid: '#ffffff', isGradient: false, gradientColors: [], isRunning: false };
+    }
     function getRarityColor(rarity) {
-      switch(rarity) {
-        case 'common': return '#c0c0c0'; 
-        case 'uncommon': return '#2e7d32'; 
-        case 'rare': return '#1565c0';
-        case 'epic': return '#6a1b9a'; 
-        case 'legendary': return '#bf8f00'; 
-        case 'chroma': return '#00bcd4';
-        case 'mythical': return '#c62828';
-        default: return '#ffffff';
+      const d = getRarityDef(rarity);
+      return d.solid || '#ffffff';
+    }
+    function getRarityColorCss(rarity) {
+      const d = getRarityDef(rarity);
+      if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
+        const g = d.gradientColors.join(', ');
+        const base = `linear-gradient(135deg, ${g})`;
+        if (d.isRunning) {
+          return `${base} 0% 50% / 200% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: runGradient 3s linear infinite`;
+        }
+        return `${base}; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent`;
       }
+      return d.solid || '#ffffff';
+    }
+
+    function ymdUTC(d) {
+      return d.toISOString().slice(0, 10);
+    }
+
+    function normalizeStaffRarityDef(raw) {
+      const solid = raw && raw.solid ? String(raw.solid) : '#c0c0c0';
+      const isGradient = !!(raw && (raw.isGradient === true || raw.isGradient === 'true'));
+      let gradientColors = [];
+      if (raw && Array.isArray(raw.gradientColors)) gradientColors = raw.gradientColors.map(String).filter(Boolean);
+      else if (raw && typeof raw.gradientColors === 'string') gradientColors = String(raw.gradientColors).split(',').map(x => x.trim()).filter(Boolean);
+      const isRunning = !!(raw && (raw.isRunning === true || raw.isRunning === 'true'));
+      return { solid, isGradient, gradientColors, isRunning };
+    }
+
+    function toggleStaffRarityGradUI() {
+      const g = document.getElementById('staff-rarity-def-gradient')?.value === 'true';
+      const gw = document.getElementById('staff-rarity-def-grad-wrap');
+      const rw = document.getElementById('staff-rarity-def-run-wrap');
+      if (gw) gw.style.display = g ? 'block' : 'none';
+      if (rw) rw.style.display = g ? 'block' : 'none';
+    }
+
+    function renderStaffRarityDefsList() {
+      const list = document.getElementById('staff-rarity-defs-list');
+      if (!list) return;
+      const keysSet = new Set([...Object.keys(DEFAULT_RARITY_DEFS), ...Object.keys(blookRarityDefs || {})]);
+      const keys = Array.from(keysSet);
+      keys.sort((a, b) => {
+        const ia = raritySortIndex(a);
+        const ib = raritySortIndex(b);
+        if (ia !== ib) return ia - ib;
+        return a.localeCompare(b);
+      });
+      list.innerHTML = keys.map(k => {
+        const def = normalizeStaffRarityDef(getRarityDef(k));
+        const gradHint = def.isGradient ? (def.gradientColors.slice(0, 3).join(', ') || '—') : 'solid';
+        const anim = def.isGradient && def.isRunning ? ' · animated' : '';
+        return `<div class="staff-user-row" style="margin-bottom:8px;align-items:center;">
+          <div style="flex:1;min-width:0;"><strong>${escapeHtml(k)}</strong>
+          <span style="font-size:0.75rem;color:var(--text-secondary);display:block;">${escapeHtml(gradHint)}${anim}</span></div>
+          <button type="button" class="staff-btn staff-btn-primary staff-btn-sm staff-rarity-def-edit" data-rarity-key="${escapeHtml(k)}">Edit</button>
+          <button type="button" class="staff-btn staff-btn-danger staff-btn-sm staff-rarity-def-del" data-rarity-key="${escapeHtml(k)}">Delete</button>
+        </div>`;
+      }).join('');
+      list.querySelectorAll('.staff-rarity-def-edit').forEach(b => b.addEventListener('click', () => openStaffRarityDefModal('edit', b.dataset.rarityKey)));
+      list.querySelectorAll('.staff-rarity-def-del').forEach(b => b.addEventListener('click', () => deleteStaffRarityDef(b.dataset.rarityKey)));
+    }
+
+    async function deleteStaffRarityDef(key) {
+      const k = (key || '').toLowerCase().trim();
+      if (!k || !confirm(`Remove custom style for "${k}"? Built-in default will be used.`)) return;
+      try {
+        await updateDoc(doc(db, 'siteConfig', 'settings'), {
+          [`blookRarityDefs.${k}`]: deleteField(),
+          updatedAt: serverTimestamp()
+        });
+        await refreshRarityOrderFromServer();
+        renderStaffRarityDefsList();
+        if (inventoryItems.length) renderInventory();
+        showNotification('Rarity style removed', 'success');
+      } catch (e) {
+        showNotification('Delete failed: ' + e.message, 'error');
+      }
+    }
+
+    function openStaffRarityDefModal(mode, key) {
+      const modal = document.getElementById('staff-rarity-def-modal');
+      const keyInp = document.getElementById('staff-rarity-def-key-input');
+      const keyHid = document.getElementById('staff-rarity-def-key');
+      const delBtn = document.getElementById('staff-rarity-def-delete');
+      const title = document.getElementById('staff-rarity-def-modal-title');
+      if (!modal || !keyInp || !keyHid) return;
+      if (mode === 'add') {
+        if (title) title.textContent = 'Add rarity style';
+        keyHid.value = '';
+        keyInp.value = '';
+        keyInp.disabled = false;
+        document.getElementById('staff-rarity-def-solid').value = '#c0c0c0';
+        document.getElementById('staff-rarity-def-gradient').value = 'false';
+        document.getElementById('staff-rarity-def-grad-colors').value = '';
+        document.getElementById('staff-rarity-def-running').value = 'false';
+        if (delBtn) delBtn.style.display = 'none';
+        toggleStaffRarityGradUI();
+        modal.style.display = 'flex';
+        return;
+      }
+      const k = (key || '').toLowerCase().trim();
+      const def = normalizeStaffRarityDef(getRarityDef(k));
+      if (title) title.textContent = 'Edit rarity style';
+      keyHid.value = k;
+      keyInp.value = k;
+      keyInp.disabled = true;
+      const solidEl = document.getElementById('staff-rarity-def-solid');
+      if (solidEl) solidEl.value = /^#[0-9a-fA-F]{6}$/.test(def.solid) ? def.solid : '#c0c0c0';
+      document.getElementById('staff-rarity-def-gradient').value = def.isGradient ? 'true' : 'false';
+      document.getElementById('staff-rarity-def-grad-colors').value = def.gradientColors.join(', ');
+      document.getElementById('staff-rarity-def-running').value = def.isRunning ? 'true' : 'false';
+      if (delBtn) delBtn.style.display = 'inline-flex';
+      toggleStaffRarityGradUI();
+      modal.style.display = 'flex';
+    }
+
+    async function saveStaffRarityDef() {
+      const keyHid = (document.getElementById('staff-rarity-def-key')?.value || '').trim().toLowerCase();
+      let key = keyHid;
+      if (!key) {
+        key = (document.getElementById('staff-rarity-def-key-input')?.value || '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '');
+      }
+      if (!key) { showNotification('Enter a rarity id (letters, numbers, _ or -)', 'error'); return; }
+      const solid = document.getElementById('staff-rarity-def-solid')?.value || '#c0c0c0';
+      const isGradient = document.getElementById('staff-rarity-def-gradient')?.value === 'true';
+      const gradStr = document.getElementById('staff-rarity-def-grad-colors')?.value || '';
+      const gradientColors = gradStr.split(',').map(x => x.trim()).filter(Boolean);
+      const isRunning = document.getElementById('staff-rarity-def-running')?.value === 'true';
+      if (isGradient && gradientColors.length < 2) { showNotification('Gradient needs at least two hex colors', 'error'); return; }
+      const payload = {
+        solid,
+        isGradient,
+        gradientColors: isGradient ? gradientColors : [],
+        isRunning: !!(isGradient && isRunning)
+      };
+      try {
+        const sref = doc(db, 'siteConfig', 'settings');
+        const prevSnap = await getDoc(sref);
+        const prevDefs = prevSnap.exists() && typeof prevSnap.data().blookRarityDefs === 'object'
+          ? { ...prevSnap.data().blookRarityDefs }
+          : {};
+        prevDefs[key] = payload;
+        await setDoc(sref, {
+          blookRarityDefs: prevDefs,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        await refreshRarityOrderFromServer();
+        renderStaffRarityDefsList();
+        if (inventoryItems.length) renderInventory();
+        document.getElementById('staff-rarity-def-modal').style.display = 'none';
+        showNotification('Rarity style saved', 'success');
+      } catch (e) {
+        showNotification('Save failed: ' + e.message, 'error');
+      }
+    }
+
+    async function loadStaffRaritySitePanel() {
+      await refreshRarityOrderFromServer();
+      renderStaffRarityDefsList();
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        const d = s.exists() ? s.data() : {};
+        const st = d.siteTheme || {};
+        const pr = document.getElementById('staff-site-theme-primary');
+        const sc = document.getElementById('staff-site-theme-secondary');
+        if (pr) pr.value = st.primary || DEFAULT_NEON_GREEN;
+        if (sc) sc.value = st.secondary || DEFAULT_NEON_PINK;
+        const dr = d.dailyReward || {};
+        const cEl = document.getElementById('staff-daily-reward-coins');
+        const sEl = document.getElementById('staff-daily-reward-stars');
+        if (cEl) cEl.value = dr.coins != null ? dr.coins : 50;
+        if (sEl) sEl.value = dr.stars != null ? dr.stars : 10;
+      } catch (e) {}
+    }
+
+    async function refreshDailyRewardUI(userId) {
+      const btn = document.getElementById('daily-reward-claim-btn');
+      const status = document.getElementById('daily-reward-status');
+      const desc = document.getElementById('daily-reward-desc');
+      if (!btn || !userId) return;
+      let coins = 50;
+      let stars = 10;
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (s.exists()) {
+          const dr = s.data().dailyReward;
+          if (dr && typeof dr === 'object') {
+            const c = parseInt(dr.coins, 10);
+            const st = parseInt(dr.stars, 10);
+            if (Number.isFinite(c)) coins = Math.max(0, c);
+            if (Number.isFinite(st)) stars = Math.max(0, st);
+          }
+        }
+      } catch (e) {}
+      if (desc) desc.textContent = `Claim ${coins} coins and ${stars} stars once per calendar day (UTC).`;
+      try {
+        const u = await getDoc(doc(db, 'users', userId));
+        const last = u.exists() ? u.data().lastDailyRewardDate : null;
+        const today = ymdUTC(new Date());
+        const claimed = last === today;
+        btn.disabled = claimed;
+        btn.textContent = claimed ? 'Come back tomorrow' : 'Claim';
+        if (status) status.textContent = claimed ? `Claimed for ${today}` : 'Ready to claim';
+      } catch (e) {
+        btn.disabled = true;
+        if (status) status.textContent = 'Could not load status';
+      }
+    }
+
+    async function claimDailyReward() {
+      if (!currentUser) return;
+      const uid = currentUser.uid;
+      let coins = 50;
+      let stars = 10;
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (s.exists()) {
+          const dr = s.data().dailyReward;
+          if (dr && typeof dr === 'object') {
+            const c = parseInt(dr.coins, 10);
+            const st = parseInt(dr.stars, 10);
+            if (Number.isFinite(c)) coins = Math.max(0, c);
+            if (Number.isFinite(st)) stars = Math.max(0, st);
+          }
+        }
+      } catch (e) {}
+      const today = ymdUTC(new Date());
+      try {
+        await runTransaction(db, async tx => {
+          const uref = doc(db, 'users', uid);
+          const snap = await tx.get(uref);
+          if (!snap.exists()) throw new Error('nouser');
+          const d = snap.data();
+          if (d.lastDailyRewardDate === today) throw new Error('already');
+          tx.update(uref, {
+            coins: (d.coins || 0) + coins,
+            stars: (d.stars || 0) + stars,
+            lastDailyRewardDate: today
+          });
+        });
+        showNotification(`Daily reward: +${coins} coins, +${stars} stars`, 'success');
+        loadUserBalance(uid);
+        refreshDailyRewardUI(uid);
+      } catch (e) {
+        if (e.message === 'already') showNotification('Already claimed today', 'error');
+        else if (e.message === 'nouser') showNotification('User not found', 'error');
+        else showNotification('Could not claim: ' + (e.message || 'error'), 'error');
+      }
+    }
+
+    function openBadgeDetailModal(bd) {
+      const modal = document.getElementById('badge-detail-modal');
+      const wrap = document.getElementById('badge-detail-icon-wrap');
+      const nm = document.getElementById('badge-detail-name');
+      const dc = document.getElementById('badge-detail-desc');
+      if (!modal || !wrap) return;
+      wrap.innerHTML = '';
+      wrap.style.background = bd.bgColor || 'var(--neon-green)';
+      const icon = bd.icon || '';
+      const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
+      if (isFa) {
+        const safeFa = icon.replace(/[^a-zA-Z0-9_\- ]/g, '').trim();
+        const iel = document.createElement('i');
+        iel.className = safeFa;
+        iel.setAttribute('aria-hidden', 'true');
+        iel.style.fontSize = '1.75rem';
+        iel.style.color = bd.textColor || '#000';
+        wrap.appendChild(iel);
+      } else if (/^https?:\/\//i.test(icon)) {
+        const img = document.createElement('img');
+        img.src = icon;
+        img.alt = bd.name || '';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        img.style.borderRadius = '10px';
+        wrap.appendChild(img);
+      } else {
+        wrap.innerHTML = '<i class="fas fa-award" style="font-size:1.75rem;color:#000;"></i>';
+      }
+      if (nm) nm.textContent = bd.name || 'Badge';
+      if (dc) dc.textContent = bd.description || 'No description';
+      modal.style.display = 'flex';
     }
 
     function showPackOpeningModal(pack, item) {
@@ -5607,6 +6075,7 @@
     let missionProgressUnsub = null;
     let missionsRenderCache = [];
     let missionProgressMap = {};
+    let missionsPageUserId = null;
 
     function renderMissionsList() {
       missionsContainer.innerHTML = '';
@@ -5653,7 +6122,8 @@
 
         const claimBtn = missionCard.querySelector('.claim-btn');
         if (isCompleted && !userClaimed) {
-          claimBtn.addEventListener('click', () => claimMissionReward(mission, userId));
+          const uid = missionsPageUserId || currentUser?.uid;
+          if (uid) claimBtn.addEventListener('click', () => claimMissionReward(mission, uid));
         }
         missionsContainer.appendChild(missionCard);
       });
@@ -5661,6 +6131,8 @@
 
     async function loadMissions(userId) {
       try {
+        missionsPageUserId = userId || null;
+        refreshDailyRewardUI(userId);
         if (missionsListUnsub) missionsListUnsub();
         if (missionProgressUnsub) missionProgressUnsub();
         missionsListUnsub = onSnapshot(query(collection(db, "missions"), orderBy("createdAt", "desc")), (snapshot) => {
@@ -6146,20 +6618,25 @@
       const ts = document.getElementById('theme-secondary');
       if (!tp || !ts) return;
       localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ primary: tp.value, secondary: ts.value }));
-      document.documentElement.style.setProperty('--neon-green', tp.value);
-      document.documentElement.style.setProperty('--neon-pink', ts.value);
+      applyAccentColors(tp.value, ts.value);
     }
     document.getElementById('theme-primary')?.addEventListener('input', persistThemeColors);
     document.getElementById('theme-secondary')?.addEventListener('input', persistThemeColors);
-    document.getElementById('theme-reset-btn')?.addEventListener('click', () => {
+    document.getElementById('theme-reset-btn')?.addEventListener('click', async () => {
       localStorage.removeItem(THEME_STORAGE_KEY);
-      document.documentElement.style.removeProperty('--neon-green');
-      document.documentElement.style.removeProperty('--neon-pink');
       const tp = document.getElementById('theme-primary');
       const ts = document.getElementById('theme-secondary');
-      if (tp) tp.value = DEFAULT_NEON_GREEN;
-      if (ts) ts.value = DEFAULT_NEON_PINK;
-      showNotification('Theme reset to default', 'success');
+      await refreshSiteThemeFromServer();
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        const st = s.exists() ? s.data().siteTheme : null;
+        if (tp) tp.value = st?.primary || DEFAULT_NEON_GREEN;
+        if (ts) ts.value = st?.secondary || DEFAULT_NEON_PINK;
+      } catch (e) {
+        if (tp) tp.value = DEFAULT_NEON_GREEN;
+        if (ts) ts.value = DEFAULT_NEON_PINK;
+      }
+      showNotification('Personal theme reset (site defaults applied)', 'success');
     });
 
     saveSettingsBtn.addEventListener('click', async () => {
@@ -6448,6 +6925,7 @@
             case 'staff-missions': loadStaffMissions(); break;
             case 'staff-stars': break;
             case 'staff-chatview': loadStaffChatViewer(); break;
+            case 'staff-rarity': loadStaffRaritySitePanel(); break;
           }
         });
       });
@@ -7000,13 +7478,15 @@
         showNotification('Shop banner saved','success');
       });
 
-      document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', async () => {
+      const openRarityOrderModal = async () => {
         const modal = document.getElementById('staff-rarity-order-modal');
         const ta = document.getElementById('staff-rarity-order-input');
         const cur = await getDoc(doc(db,'siteConfig','settings'));
         ta.value = cur.exists() && cur.data().blookRarityOrder ? cur.data().blookRarityOrder : DEFAULT_RARITY_ORDER.join(',');
         modal.style.display = 'flex';
-      });
+      };
+      document.getElementById('staff-rarity-order-open')?.addEventListener('click', openRarityOrderModal);
+      document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', openRarityOrderModal);
       document.getElementById('staff-rarity-order-cancel')?.addEventListener('click', () => document.getElementById('staff-rarity-order-modal').style.display='none');
       document.getElementById('staff-rarity-order-save')?.addEventListener('click', async () => {
         const v = document.getElementById('staff-rarity-order-input').value.trim();
@@ -7016,6 +7496,41 @@
         if (inventoryItems.length) renderInventory();
         document.getElementById('staff-rarity-order-modal').style.display='none';
         showNotification('Rarity order saved','success');
+      });
+
+      document.getElementById('staff-site-theme-save')?.addEventListener('click', async () => {
+        const primary = document.getElementById('staff-site-theme-primary')?.value || DEFAULT_NEON_GREEN;
+        const secondary = document.getElementById('staff-site-theme-secondary')?.value || DEFAULT_NEON_PINK;
+        try {
+          await setDoc(doc(db, 'siteConfig', 'settings'), {
+            siteTheme: { primary, secondary },
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          applyAccentColors(primary, secondary);
+          showNotification('Site theme saved (users can still override locally)', 'success');
+        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
+      });
+      document.getElementById('staff-daily-reward-save')?.addEventListener('click', async () => {
+        const coins = Math.max(0, parseInt(document.getElementById('staff-daily-reward-coins')?.value, 10) || 0);
+        const stars = Math.max(0, parseInt(document.getElementById('staff-daily-reward-stars')?.value, 10) || 0);
+        try {
+          await setDoc(doc(db, 'siteConfig', 'settings'), {
+            dailyReward: { coins, stars },
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          if (currentUser) refreshDailyRewardUI(currentUser.uid);
+          showNotification('Daily reward amounts saved', 'success');
+        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
+      });
+      document.getElementById('staff-rarity-def-add')?.addEventListener('click', () => openStaffRarityDefModal('add'));
+      document.getElementById('staff-rarity-def-gradient')?.addEventListener('change', toggleStaffRarityGradUI);
+      document.getElementById('staff-rarity-def-save')?.addEventListener('click', () => saveStaffRarityDef());
+      document.getElementById('staff-rarity-def-cancel')?.addEventListener('click', () => { document.getElementById('staff-rarity-def-modal').style.display = 'none'; });
+      document.getElementById('staff-rarity-def-delete')?.addEventListener('click', async () => {
+        const k = (document.getElementById('staff-rarity-def-key')?.value || '').trim().toLowerCase();
+        if (!k) return;
+        document.getElementById('staff-rarity-def-modal').style.display = 'none';
+        await deleteStaffRarityDef(k);
       });
 
       // Plays filter
@@ -7212,6 +7727,8 @@
     // ========== Initialize the app ==========
     async function init() {
       await refreshRarityOrderFromServer();
+      await refreshSiteThemeFromServer();
+      applyThemeFromStorage();
       const gamesData = await getGames();
       renderTopGamesCarousel(gamesData.topGames);
       renderCategoryBrowsing(gamesData);
@@ -7223,6 +7740,12 @@
     setTimeout(hidePageLoading, 12000);
 
     // ========== Event Listeners ==========
+    document.getElementById('daily-reward-claim-btn')?.addEventListener('click', () => claimDailyReward());
+    document.getElementById('badge-detail-close')?.addEventListener('click', () => {
+      const m = document.getElementById('badge-detail-modal');
+      if (m) m.style.display = 'none';
+    });
+
     globalSendChatBtn.addEventListener('click', sendGlobalChatMessage);
     globalChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendGlobalChatMessage(); });
     friendSendChatBtn.addEventListener('click', sendFriendChatMessage);
@@ -7256,6 +7779,8 @@
       if (e.target === sendCardModal) { sendCardModal.style.display = 'none'; currentCard = null; }
       const ibm = document.getElementById('inv-blook-modal');
       if (e.target === ibm) closeInvBlookModal();
+      const bdm = document.getElementById('badge-detail-modal');
+      if (e.target === bdm) bdm.style.display = 'none';
     });
 
     // Close modals with Escape key
@@ -7276,6 +7801,8 @@
         document.querySelectorAll('.staff-modal').forEach(m => m.style.display = 'none');
         const bpm = document.getElementById('banner-picker-modal');
         if (bpm) bpm.style.display = 'none';
+        const bdm = document.getElementById('badge-detail-modal');
+        if (bdm) bdm.style.display = 'none';
       }
     });
 
