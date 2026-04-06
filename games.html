@@ -1766,6 +1766,7 @@
       border-radius: 0;
       border: none;
       background: transparent;
+      overflow: visible;
     }
     .pack-opening-modal-unbox .modal-background {
       filter: none;
@@ -1775,7 +1776,7 @@
     .pack-unbox-body {
       justify-content: center;
       gap: 12px;
-      padding: 24px 16px 32px;
+      padding: 20px 12px 28px;
     }
     .pack-unbox-hint {
       margin: 0;
@@ -1795,49 +1796,74 @@
       50% { opacity: 1; transform: scale(1.02); }
     }
     .gift-animation.pack-unbox-stage {
-      width: min(78vw, 340px);
-      height: min(78vw, 340px);
-      max-height: 48vh;
+      width: auto;
+      height: auto;
+      max-width: min(92vw, 440px);
+      max-height: min(72vh, 620px);
+      min-width: 0;
+      min-height: 0;
       margin-bottom: 8px;
       position: relative;
       overflow: visible;
       background: transparent;
-      border-radius: 20px;
-    }
-    .pack-unbox-art {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
-      pointer-events: none;
-    }
-    .pack-unbox-zipper-layer {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 6%;
-      width: 108%;
-      height: 32%;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
       cursor: pointer;
-      z-index: 3;
       -webkit-tap-highlight-color: transparent;
     }
-    .pack-unbox-zipper-layer:focus-visible {
+    .gift-animation.pack-unbox-stage:focus-visible {
       outline: 2px solid var(--neon-green);
-      outline-offset: 4px;
-      border-radius: 8px;
+      outline-offset: 6px;
+      border-radius: 12px;
     }
-    .pack-unbox-zipper-half {
+    .pack-unbox-stack {
+      position: relative;
+      display: block;
+      line-height: 0;
+      margin: 0 auto;
+      border: none;
+      box-shadow: none;
+    }
+    .pack-unbox-stack img {
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .pack-unbox-blook-under {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease 0.25s;
+    }
+    .pack-unbox-stage.torn .pack-unbox-blook-under {
+      opacity: 1;
+    }
+    .pack-unbox-blook-under img {
+      max-width: 88%;
+      max-height: 88%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+    }
+    .pack-unbox-half {
       position: absolute;
       left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
     }
-    .pack-unbox-zipper-top { transform-origin: 50% 100%; }
-    .pack-unbox-zipper-bot { transform-origin: 50% 0%; }
-    .pack-unbox-zipper-half img {
+    .pack-unbox-half img {
       position: absolute;
       left: 0;
       top: 0;
@@ -1845,45 +1871,49 @@
       height: 100%;
       object-fit: contain;
       object-position: center center;
-      user-select: none;
-      pointer-events: none;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
     }
-    .pack-unbox-zipper-top img {
-      clip-path: inset(0 0 50% 0);
+    .pack-unbox-half-top img {
+      /* slight overlap at seam = no bright hairline between halves */
+      clip-path: inset(0 0 49.2% 0);
     }
-    .pack-unbox-zipper-bot img {
-      clip-path: inset(50% 0 0 0);
+    .pack-unbox-half-bot img {
+      clip-path: inset(50.8% 0 0 0);
     }
-    .pack-unbox-stage:not(.torn) .pack-unbox-zipper-layer {
-      animation: packZipperIdle 1.25s ease-in-out infinite;
+    .pack-unbox-half-top {
+      z-index: 3;
+      transform-origin: 50% 100%;
     }
-    @keyframes packZipperIdle {
-      0%, 100% { transform: translateX(-50%) translateY(0); filter: brightness(1); }
-      50% { transform: translateX(-50%) translateY(-3px); filter: brightness(1.15); }
+    .pack-unbox-half-bot {
+      z-index: 2;
     }
-    .pack-unbox-stage.torn .pack-unbox-zipper-layer {
+    .pack-unbox-stage:not(.torn) {
+      animation: packWholeNudge 2s ease-in-out infinite;
+    }
+    @keyframes packWholeNudge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .pack-unbox-stage.torn {
       animation: none;
-      transform: translateX(-50%);
-      pointer-events: none;
       cursor: default;
     }
-    .pack-unbox-stage.torn .pack-unbox-zipper-top {
-      animation: packZipperTearTop 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    .pack-unbox-stage.torn .pack-unbox-half-top {
+      animation: packRipTopFlap 0.65s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
-    .pack-unbox-stage.torn .pack-unbox-zipper-bot {
-      animation: packZipperTearBot 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    .pack-unbox-stage.torn .pack-unbox-half-bot {
+      animation: packRipBottomFade 0.45s ease 0.2s forwards;
     }
-    @keyframes packZipperTearTop {
-      to {
-        transform: translate(-42%, -95%) rotate(-14deg);
+    @keyframes packRipTopFlap {
+      0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+      100% {
+        transform: translate(-8%, -108%) rotate(-18deg);
         opacity: 0;
       }
     }
-    @keyframes packZipperTearBot {
-      to {
-        transform: translate(42%, 110%) rotate(12deg);
-        opacity: 0;
-      }
+    @keyframes packRipBottomFade {
+      to { opacity: 0; }
     }
     .pack-unbox-reveal {
       animation: packUnboxRevealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -5803,12 +5833,23 @@
       modal.style.display = 'flex';
     }
 
-    const PACK_UNBOX_ZIPPER_URL = 'https://ac.blooket.com/dashboard/ded3e1029e7cae327bf35eda2a5b46e616bab256/_next/static/media/packGlow.7ae463c1.png';
+    let packUnboxClickHandler = null;
+    let packUnboxKeyHandler = null;
 
     function resetPackOpeningModalLayout() {
+      if (giftAnimation && packUnboxClickHandler) {
+        giftAnimation.removeEventListener('click', packUnboxClickHandler);
+        giftAnimation.removeEventListener('keydown', packUnboxKeyHandler);
+        packUnboxClickHandler = null;
+        packUnboxKeyHandler = null;
+      }
+      giftAnimation?.removeAttribute('role');
+      giftAnimation?.removeAttribute('tabindex');
+      giftAnimation?.removeAttribute('aria-label');
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.remove('pack-unbox-body');
       giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
+      giftAnimation.innerHTML = '';
       if (packUnboxHint) {
         packUnboxHint.classList.add('is-hidden');
         packUnboxHint.style.display = 'none';
@@ -5826,10 +5867,11 @@
       const inner = fc.inner || '#5a6a8a';
       const outer = fc.outer || '#1a2233';
       const patternUrl = marketPackPatternUrl(pack);
+      const softLight = 'radial-gradient(ellipse 95% 75% at 50% 38%, rgba(255,255,255,0.055), transparent 58%), radial-gradient(ellipse 80% 45% at 50% 92%, rgba(0,0,0,0.28), transparent 55%)';
       const layers = [
-        'linear-gradient(ellipse 82% 58% at 50% 40%, rgba(255,255,255,0.14), transparent 62%)',
+        softLight,
         patternUrl ? `url(${JSON.stringify(String(patternUrl))})` : '',
-        `linear-gradient(155deg, ${inner} 0%, ${outer} 48%, #06080d 100%)`
+        `linear-gradient(155deg, ${inner} 0%, ${outer} 52%, #05070c 100%)`
       ].filter(Boolean);
       openingModalBg.style.backgroundImage = layers.join(', ');
       openingModalBg.style.backgroundSize = patternUrl ? '100% 100%, 320px 320px, 100% 100%' : '100% 100%, 100% 100%';
@@ -5854,54 +5896,62 @@
       if (packUnboxHint) {
         packUnboxHint.classList.remove('is-hidden');
         packUnboxHint.style.display = 'block';
+        packUnboxHint.textContent = 'Click the pack to open';
       }
 
       giftAnimation.innerHTML = '';
       giftAnimation.classList.add('pack-unbox-stage');
+      giftAnimation.setAttribute('role', 'button');
+      giftAnimation.setAttribute('tabindex', '0');
+      giftAnimation.setAttribute('aria-label', 'Open pack');
 
-      const artUrl = marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || '';
-      const art = document.createElement('img');
-      art.className = 'pack-unbox-art';
-      art.alt = '';
-      art.src = artUrl || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack';
-      giftAnimation.appendChild(art);
+      const artUrl = (marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack').replace(/\\/g, '/');
 
-      const zipperLayer = document.createElement('button');
-      zipperLayer.type = 'button';
-      zipperLayer.className = 'pack-unbox-zipper-layer';
-      zipperLayer.setAttribute('aria-label', 'Tear open pack seal');
+      const stack = document.createElement('div');
+      stack.className = 'pack-unbox-stack';
 
-      const zipTop = document.createElement('div');
-      zipTop.className = 'pack-unbox-zipper-half pack-unbox-zipper-top';
-      const zipTopImg = document.createElement('img');
-      zipTopImg.src = PACK_UNBOX_ZIPPER_URL;
-      zipTopImg.alt = '';
-      zipTop.appendChild(zipTopImg);
+      const setStackSize = (nw, nh) => {
+        const maxW = Math.min(window.innerWidth * 0.92, 440);
+        const maxH = Math.min(window.innerHeight * 0.72, 620);
+        const w = nw > 0 ? nw : 280;
+        const h = nh > 0 ? nh : 280;
+        const scale = Math.min(1, maxW / w, maxH / h);
+        stack.style.width = `${Math.round(w * scale)}px`;
+        stack.style.height = `${Math.round(h * scale)}px`;
+      };
 
-      const zipBot = document.createElement('div');
-      zipBot.className = 'pack-unbox-zipper-half pack-unbox-zipper-bot';
-      const zipBotImg = document.createElement('img');
-      zipBotImg.src = PACK_UNBOX_ZIPPER_URL;
-      zipBotImg.alt = '';
-      zipBot.appendChild(zipBotImg);
+      const blookUnder = document.createElement('div');
+      blookUnder.className = 'pack-unbox-blook-under';
+      if (item.imageUrl) {
+        const bi = document.createElement('img');
+        bi.src = item.imageUrl;
+        bi.alt = item.name || '';
+        blookUnder.appendChild(bi);
+      } else {
+        blookUnder.innerHTML = `<i class="fas fa-gift" style="font-size:min(26vw,6.5rem);color:${getRarityColor(item.rarity)};"></i>`;
+      }
 
-      zipperLayer.appendChild(zipTop);
-      zipperLayer.appendChild(zipBot);
-      giftAnimation.appendChild(zipperLayer);
+      const makeHalfImg = () => {
+        const im = document.createElement('img');
+        im.src = artUrl;
+        im.alt = '';
+        im.draggable = false;
+        return im;
+      };
 
-      const revealPrize = () => {
-        giftAnimation.innerHTML = '';
-        giftAnimation.classList.remove('torn');
-        giftAnimation.classList.add('pack-unbox-reveal');
-        if (item.imageUrl) {
-          const prize = document.createElement('img');
-          prize.src = item.imageUrl;
-          prize.alt = item.name || '';
-          prize.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:12px;display:block;';
-          giftAnimation.appendChild(prize);
-        } else {
-          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;"><i class="fas fa-gift" style="color:${getRarityColor(item.rarity)};"></i></div>`;
-        }
+      const halfBot = document.createElement('div');
+      halfBot.className = 'pack-unbox-half pack-unbox-half-bot';
+      halfBot.appendChild(makeHalfImg());
+
+      const halfTop = document.createElement('div');
+      halfTop.className = 'pack-unbox-half pack-unbox-half-top';
+      halfTop.appendChild(makeHalfImg());
+
+      stack.appendChild(blookUnder);
+      stack.appendChild(halfBot);
+      stack.appendChild(halfTop);
+
+      const revealDetails = () => {
         openedGiftName.style.opacity = '1';
         openedGiftRarity.style.opacity = '1';
         openedGiftValue.style.opacity = '1';
@@ -5910,17 +5960,41 @@
         collectBtn.style.pointerEvents = '';
       };
 
-      const onZipperClick = () => {
+      const tearOpen = () => {
         if (giftAnimation.classList.contains('torn')) return;
         giftAnimation.classList.add('torn');
+        giftAnimation.removeAttribute('tabindex');
+        giftAnimation.removeAttribute('role');
         if (packUnboxHint) {
           packUnboxHint.classList.add('is-hidden');
           packUnboxHint.style.display = 'none';
         }
-        zipperLayer.removeEventListener('click', onZipperClick);
-        setTimeout(revealPrize, 560);
+        setTimeout(revealDetails, 420);
       };
-      zipperLayer.addEventListener('click', onZipperClick);
+
+      const onPackActivate = (e) => {
+        e.preventDefault();
+        tearOpen();
+      };
+      packUnboxKeyHandler = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') onPackActivate(e);
+      };
+      packUnboxClickHandler = onPackActivate;
+
+      const probe = new Image();
+      probe.onload = () => {
+        setStackSize(probe.naturalWidth, probe.naturalHeight);
+        giftAnimation.appendChild(stack);
+        giftAnimation.addEventListener('click', packUnboxClickHandler);
+        giftAnimation.addEventListener('keydown', packUnboxKeyHandler);
+      };
+      probe.onerror = () => {
+        setStackSize(280, 280);
+        giftAnimation.appendChild(stack);
+        giftAnimation.addEventListener('click', packUnboxClickHandler);
+        giftAnimation.addEventListener('keydown', packUnboxKeyHandler);
+      };
+      probe.src = artUrl;
 
       packOpeningModal.style.display = 'flex';
     }
