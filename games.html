@@ -1000,6 +1000,37 @@
       font-size: 0.8rem;
       color: var(--text-secondary);
     }
+    .inv-split-layout {
+      display: flex; gap: 20px;
+    }
+    .inv-items-panel { flex: 3; min-width: 0; }
+    .inv-detail-panel {
+      flex: 1; min-width: 240px; max-width: 300px;
+      background: rgba(0,0,0,0.3); border-radius: 16px;
+      padding: 20px; border: 1px solid rgba(42,255,158,0.1);
+      position: sticky; top: 20px; align-self: flex-start;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .inv-detail-empty { color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 40px 10px; }
+    .inv-detail-img { width: 100%; aspect-ratio: 1; border-radius: 14px; object-fit: contain; background: rgba(0,0,0,0.3); margin-bottom: 14px; }
+    .inv-detail-name { font-size: 1.1rem; font-weight: 900; margin-bottom: 6px; }
+    .inv-detail-rarity { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; padding: 3px 10px; border-radius: 12px; display: inline-block; }
+    .inv-detail-stat { font-size: 0.85rem; margin-bottom: 4px; color: var(--text-secondary); }
+    .inv-detail-actions { margin-top: 14px; display: flex; gap: 8px; }
+    .inv-pack-row { margin-bottom: 20px; }
+    .inv-pack-label { font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; color: var(--text-primary); padding-left: 4px; }
+    .inv-items-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .inv-item-thumb {
+      width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
+      cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .inv-item-thumb:hover { transform: scale(1.08); }
+    .inv-item-thumb.selected { border-color: var(--neon-green); box-shadow: 0 0 12px rgba(42,255,158,0.4); }
+    .inv-item-thumb img { width: 100%; height: 100%; object-fit: contain; }
+    .inv-item-thumb .inv-thumb-icon { font-size: 1.5rem; color: rgba(255,255,255,0.6); }
 
     /* Gift Wall */
     .gift-wall {
@@ -2758,6 +2789,8 @@
       .up-blooks-grid { grid-template-columns: repeat(3, 1fr); }
       .up-stats-row { grid-template-columns: 1fr 1fr; }
       .up-friends-list { grid-template-columns: repeat(2, 1fr); }
+      .inv-split-layout { flex-direction: column; }
+      .inv-detail-panel { max-width: 100%; position: static; }
       .staff-sub-tabs { gap: 4px; }
       .staff-sub-tab { font-size: 0.72rem; padding: 6px 10px; }
       .staff-stats-grid { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
@@ -2773,7 +2806,7 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <i class="fas fa-user"></i>
-      <h2>PANEL</h2>
+      <h2>USER PANEL</h2>
     </div>
     
     <div class="sidebar-tabs">
@@ -2800,6 +2833,9 @@
       </button>
       <button class="tab-button" data-page="friends-page">
         <i class="fas fa-user-friends"></i> Friends
+      </button>
+      <button class="tab-button" data-page="banner-shop-page">
+        <i class="fas fa-image"></i> Banner Shop
       </button>
       <button class="tab-button" data-page="settings-page">
         <i class="fas fa-cog"></i> Settings
@@ -2972,8 +3008,13 @@
         <h2 class="page-title">My Blooks</h2>
         <div class="inventory-stats-bar" id="inventory-stats-bar"></div>
         <div class="inventory-filter-bar" id="inventory-filter-bar"></div>
-        <div class="inventory-list" id="inventory-container">
-          <!-- Inventory items will be added here -->
+        <div class="inv-split-layout">
+          <div class="inv-items-panel" id="inventory-container">
+            <!-- Inventory items will be added here -->
+          </div>
+          <div class="inv-detail-panel" id="inv-detail-panel">
+            <div class="inv-detail-empty">Click a blook to view details</div>
+          </div>
         </div>
       </div>
     </div>
@@ -3048,9 +3089,11 @@
             <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
             <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
             <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-banners"><i class="fas fa-image"></i> Banners</button>
             <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
             <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-logs"><i class="fas fa-clipboard-list"></i> Logs</button>
           </div>
 
           <!-- Staff Dashboard -->
@@ -3116,6 +3159,22 @@
             </div>
           </div>
 
+          <!-- Staff Banners -->
+          <div class="staff-section" id="staff-banners">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Banner Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-banner-btn"><i class="fas fa-plus"></i> Add Banner</button></div>
+              <div id="staff-banners-list"></div>
+            </div>
+            <div class="staff-card" style="margin-top:16px;">
+              <div class="staff-card-header"><h3>Assign Custom Banner to User</h3></div>
+              <div class="staff-flex-row" style="gap:10px;align-items:flex-end;">
+                <div class="staff-form-group" style="flex:2;"><label>User Email</label><input id="staff-banner-assign-email" placeholder="user@example.com"></div>
+                <div class="staff-form-group" style="flex:3;"><label>Banner Image URL</label><input id="staff-banner-assign-url" placeholder="https://..."></div>
+                <button class="staff-btn staff-btn-primary" id="staff-banner-assign-btn" style="margin-bottom:14px;">Assign</button>
+              </div>
+            </div>
+          </div>
+
           <!-- Staff Missions -->
           <div class="staff-section" id="staff-missions">
             <div class="staff-card">
@@ -3150,6 +3209,25 @@
               </div>
             </div>
           </div>
+          <!-- Staff Logs -->
+          <div class="staff-section" id="staff-logs">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Action Logs</h3><span style="font-size:0.75rem;color:var(--text-secondary);">Logs cannot be deleted</span></div>
+              <div style="overflow-x:auto;max-height:500px;overflow-y:auto;" id="staff-logs-container">
+                <table class="staff-table" id="staff-logs-table"><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody></tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner Shop Page -->
+    <div class="page" id="banner-shop-page">
+      <div class="page-content">
+        <h2 class="page-title">Banner Shop</h2>
+        <div class="packs-grid" id="banner-shop-grid">
+          <!-- Banners loaded dynamically -->
         </div>
       </div>
     </div>
@@ -3787,6 +3865,7 @@
           case 'missions-page': loadMissions(user.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(user.uid); break;
+          case 'banner-shop-page': loadBannerShop(); break;
           case 'settings-page': loadSettings(user.uid); break;
           case 'staff-page': loadStaffPanel(); break;
         }
@@ -4043,6 +4122,7 @@
           case 'missions-page': loadMissions(currentUser.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(currentUser.uid); break;
+          case 'banner-shop-page': loadBannerShop(); break;
           case 'settings-page': loadSettings(currentUser.uid); break;
           case 'staff-page': loadStaffPanel(); break;
         }
@@ -4108,8 +4188,16 @@
       const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
       const ownedNames = new Set(blooksSnap.docs.map(d => d.data().itemName));
       const blookCurrent = ownedNames.size;
+      let blookTotal = 150;
+      try {
+        const packsSnap = await getDocs(collection(db, 'packs'));
+        const allItemNames = new Set();
+        packsSnap.docs.forEach(d => (d.data().items||[]).forEach(it => allItemNames.add(it.name)));
+        if (allItemNames.size > 0) blookTotal = allItemNames.size;
+      } catch(e) {}
       document.getElementById(ids.blookCount).textContent = blookCurrent;
-      const blookPercent = (blookCurrent / 150) * 100;
+      document.getElementById(ids.blookTotal).textContent = blookTotal;
+      const blookPercent = (blookCurrent / blookTotal) * 100;
       document.getElementById(ids.blookProgress).style.width = blookPercent + '%';
 
       const top5 = blooksSnap.docs.sort((a, b) => (b.data().starsGained || 0) - (a.data().starsGained || 0)).slice(0, 5);
@@ -4362,10 +4450,39 @@
       list.querySelectorAll('.pbi-del').forEach(b => b.addEventListener('click', () => { packBuilderItems.splice(parseInt(b.dataset.idx), 1); renderPackBuilderItems(); }));
     }
 
+    function showItemDetail(item) {
+      const panel = document.getElementById('inv-detail-panel');
+      const r = (item.rarity || 'common').toLowerCase();
+      const rarityColors = { common:'#9e9e9e', uncommon:'#43a047', rare:'#1e88e5', epic:'#8e24aa', legendary:'#f9a825', mythical:'#e53935', chroma:'#00acc1' };
+      panel.innerHTML = `
+        ${item.imageUrl ? `<img class="inv-detail-img" src="${item.imageUrl}" alt="${item.itemName}">` : `<div class="inv-detail-img" style="display:flex;align-items:center;justify-content:center;font-size:3rem;color:${rarityColors[r]||'#fff'};"><i class="fas fa-gift"></i></div>`}
+        <div class="inv-detail-name">${item.itemName}</div>
+        <div class="inv-detail-rarity" style="background:${rarityColors[r]||'#333'};color:#fff;">${r}</div>
+        <div class="inv-detail-stat"><i class="fas fa-star" style="color:#FFC107;"></i> ${item.starsGained || 0} Stars</div>
+        <div class="inv-detail-stat"><i class="fas fa-box-open" style="color:var(--neon-green);"></i> ${item.packName}</div>
+        <div class="inv-detail-actions">
+          <button class="staff-btn staff-btn-primary staff-btn-sm" id="inv-detail-send"><i class="fas fa-paper-plane"></i> Send</button>
+          <button class="staff-btn staff-btn-danger staff-btn-sm" id="inv-detail-use"><i class="fas fa-bolt"></i> Use</button>
+        </div>
+      `;
+      document.getElementById('inv-detail-send')?.addEventListener('click', () => {
+        currentCard = { id: item.id, name: item.itemName, rarity: item.rarity, image: item.imageUrl || '' };
+        openSendCardModal();
+      });
+      document.getElementById('inv-detail-use')?.addEventListener('click', () => {
+        useItem({ id: item.id, name: item.itemName, rarity: item.rarity, type: item.type || 'item', value: item.value || 0, image: item.imageUrl || '' });
+      });
+      document.querySelectorAll('.inv-item-thumb').forEach(t => t.classList.remove('selected'));
+      const sel = document.querySelector(`.inv-item-thumb[data-item-id="${item.id}"]`);
+      if (sel) sel.classList.add('selected');
+    }
+
     function renderInventory() {
       inventoryContainer.innerHTML = '';
       const statsBar = document.getElementById('inventory-stats-bar');
       const filterBar = document.getElementById('inventory-filter-bar');
+      const detailPanel = document.getElementById('inv-detail-panel');
+      detailPanel.innerHTML = '<div class="inv-detail-empty">Click a blook to view details</div>';
 
       if (inventoryItems.length === 0) {
         statsBar.innerHTML = '';
@@ -4374,17 +4491,16 @@
         return;
       }
 
-      const rarityCounts = {};
+      const uniqueNames = new Set(inventoryItems.map(i => i.itemName));
       const packCounts = {};
       inventoryItems.forEach(item => {
-        rarityCounts[item.rarity] = (rarityCounts[item.rarity] || 0) + 1;
         packCounts[item.packName] = (packCounts[item.packName] || 0) + 1;
       });
 
       statsBar.innerHTML = `
         <div class="inv-stat"><i class="fas fa-th inv-stat-icon"></i><div><div class="inv-stat-value">${inventoryItems.length}</div><div class="inv-stat-label">Total Blooks</div></div></div>
+        <div class="inv-stat"><i class="fas fa-fingerprint inv-stat-icon"></i><div><div class="inv-stat-value">${uniqueNames.size}</div><div class="inv-stat-label">Unique</div></div></div>
         <div class="inv-stat"><i class="fas fa-box-open inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(packCounts).length}</div><div class="inv-stat-label">Packs</div></div></div>
-        <div class="inv-stat"><i class="fas fa-gem inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(rarityCounts).length}</div><div class="inv-stat-label">Rarities</div></div></div>
       `;
 
       const packNames = Object.keys(packCounts).sort();
@@ -4393,14 +4509,10 @@
         filterBar.innerHTML += `<button class="filter-btn ${currentInventoryFilter === pn ? 'active' : ''}" data-filter="${pn}">${pn} (${packCounts[pn]})</button>`;
       });
       filterBar.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentInventoryFilter = btn.dataset.filter;
-          renderInventory();
-        });
+        btn.addEventListener('click', () => { currentInventoryFilter = btn.dataset.filter; renderInventory(); });
       });
 
       const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => i.packName === currentInventoryFilter);
-
       const grouped = {};
       filtered.forEach(item => {
         if (!grouped[item.packName]) grouped[item.packName] = [];
@@ -4409,43 +4521,21 @@
 
       Object.keys(grouped).sort().forEach(packName => {
         const items = grouped[packName];
-        const packGroup = document.createElement('div');
-        packGroup.className = 'pack-group';
-        packGroup.innerHTML = `<div class="pack-header"><div class="pack-title">${packName}</div><div class="pack-count">${items.length} blooks</div></div><div class="cards-grid"></div>`;
-        const cardsGrid = packGroup.querySelector('.cards-grid');
-
+        const row = document.createElement('div');
+        row.className = 'inv-pack-row';
+        row.innerHTML = `<div class="inv-pack-label">${packName} <span style="color:var(--text-secondary);font-weight:600;font-size:0.75rem;">(${items.length})</span></div><div class="inv-items-row"></div>`;
+        const itemsRow = row.querySelector('.inv-items-row');
         items.forEach(item => {
           const r = (item.rarity || 'common').toLowerCase();
-          const card = document.createElement('div');
-          card.className = `card-item rarity-${r}`;
-          card.innerHTML = `
-            <div class="card-image-area">
-              ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.itemName}">` : `<i class="fas fa-gift card-icon-placeholder"></i>`}
-            </div>
-            <div class="card-info-area">
-              <div class="card-name" title="${item.itemName}">${item.itemName}</div>
-              <div class="card-rarity-label">${r}</div>
-              <div class="card-stars"><i class="fas fa-star"></i> ${item.starsGained || 0}</div>
-            </div>
-            <div class="card-actions-overlay">
-              <button class="card-action-btn send-btn" data-id="${item.id}" data-name="${item.itemName}" data-rarity="${item.rarity}" data-image="${item.imageUrl || ''}"><i class="fas fa-paper-plane"></i> Send</button>
-              <button class="card-action-btn use-btn" data-id="${item.id}" data-name="${item.itemName}" data-rarity="${item.rarity}" data-type="${item.type || 'item'}" data-value="${item.value || 0}" data-image="${item.imageUrl || ''}"><i class="fas fa-bolt"></i> Use</button>
-            </div>
-          `;
-          cardsGrid.appendChild(card);
+          const thumb = document.createElement('div');
+          thumb.className = `inv-item-thumb rarity-${r}`;
+          thumb.dataset.itemId = item.id;
+          thumb.innerHTML = item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.itemName}">` : `<i class="fas fa-gift inv-thumb-icon"></i>`;
+          thumb.addEventListener('click', () => showItemDetail(item));
+          itemsRow.appendChild(thumb);
         });
-        inventoryContainer.appendChild(packGroup);
+        inventoryContainer.appendChild(row);
       });
-
-      document.querySelectorAll('.card-action-btn.send-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentCard = { id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, image: btn.dataset.image };
-        openSendCardModal();
-      }));
-      document.querySelectorAll('.card-action-btn.use-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        useItem({ id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, type: btn.dataset.type, value: btn.dataset.value, image: btn.dataset.image });
-      }));
     }
 
     async function loadInventory(userId) {
@@ -4623,8 +4713,9 @@
 
     async function renderChatMessages(container, snapshot) {
       container.innerHTML = '';
-      const messages = snapshot.docs.map(d => d.data()).reverse();
-      for (const msg of messages) {
+      const messagesWithIds = snapshot.docs.map(d => ({id: d.id, ...d.data()})).reverse();
+      const canDelete = hasPermission('delete_chats');
+      for (const msg of messagesWithIds) {
         const div = document.createElement('div');
         div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
         if (msg.type === 'system') {
@@ -4660,6 +4751,7 @@
               <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">${msg.senderName}</span>
               ${topBadgeHtml}
               <span class="message-time">${formatMessageTime(msg.timestamp)}</span>
+              ${canDelete ? `<i class="fas fa-trash-alt chat-del-msg" data-msg-id="${msg.id}" style="cursor:pointer;color:var(--neon-pink);font-size:0.65rem;margin-left:auto;opacity:0.5;"></i>` : ''}
             </div>
             <div class="message-content">${msg.message}</div>
           `;
@@ -4668,6 +4760,14 @@
       }
       container.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
         el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
+      });
+      container.querySelectorAll('.chat-del-msg').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (confirm('Delete this message?')) {
+            await deleteDoc(doc(db, 'chats', btn.dataset.msgId));
+            await addToLog('delete_chat', `Deleted chat message ${btn.dataset.msgId}`);
+          }
+        });
       });
       container.scrollTop = container.scrollHeight;
     }
@@ -5071,9 +5171,11 @@
             case 'staff-users': loadStaffUsers(); break;
             case 'staff-titles': loadStaffTitles(); break;
             case 'staff-badges': loadStaffBadges(); break;
+            case 'staff-banners': loadStaffBanners(); break;
             case 'staff-missions': loadStaffMissions(); break;
             case 'staff-stars': break;
             case 'staff-chatview': loadStaffChatViewer(); break;
+            case 'staff-logs': loadStaffLogs(); break;
           }
         });
       });
@@ -5364,6 +5466,85 @@
       });
     }
 
+    // ========== Action Logging ==========
+    async function addToLog(action, details) {
+      try {
+        await addDoc(collection(db, 'logs'), {
+          userId: currentUser?.uid || 'system',
+          userEmail: currentUser?.email || 'system',
+          action,
+          details,
+          timestamp: serverTimestamp()
+        });
+      } catch(e) { console.error('Log error:', e); }
+    }
+
+    async function loadStaffLogs() {
+      try {
+        const snap = await getDocs(query(collection(db, 'logs'), orderBy('timestamp', 'desc'), limit(200)));
+        const tbody = document.querySelector('#staff-logs-table tbody');
+        tbody.innerHTML = snap.docs.map(d => {
+          const l = d.data();
+          const time = l.timestamp?.toDate ? l.timestamp.toDate().toLocaleString() : '';
+          return `<tr><td style="font-size:0.75rem;white-space:nowrap;">${time}</td><td style="font-size:0.75rem;">${escapeHtml(l.userEmail)}</td><td><span class="staff-badge">${escapeHtml(l.action)}</span></td><td style="font-size:0.75rem;max-width:300px;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(l.details)}</td></tr>`;
+        }).join('') || '<tr><td colspan="4" style="color:var(--text-secondary);">No logs yet.</td></tr>';
+      } catch(e) { console.error(e); }
+    }
+
+    // ========== Banner Shop ==========
+    async function loadBannerShop() {
+      const grid = document.getElementById('banner-shop-grid');
+      try {
+        const snap = await getDocs(collection(db, 'banners'));
+        if (snap.empty) { grid.innerHTML = '<p style="color:var(--text-secondary);">No banners available yet.</p>'; return; }
+        grid.innerHTML = snap.docs.map(d => {
+          const b = { id: d.id, ...d.data() };
+          return `<div class="pack-card" style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a);border-color:rgba(42,255,158,0.3);aspect-ratio:2/1;">
+            <div class="pack-content" style="padding:0;">
+              <img src="${b.imageUrl}" style="width:100%;height:60%;object-fit:cover;border-radius:14px 14px 0 0;">
+              <div style="padding:10px;text-align:center;">
+                <div style="font-weight:800;font-size:0.9rem;">${escapeHtml(b.name)}</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:0.85rem;margin-top:4px;"><i class="fas fa-coins" style="color:#ffd700;"></i> ${b.price}</div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+        grid.querySelectorAll('.pack-card').forEach((card, i) => {
+          card.style.cursor = 'pointer';
+          card.addEventListener('click', async () => {
+            const banner = { id: snap.docs[i].id, ...snap.docs[i].data() };
+            if (!currentUser) return;
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (!userDoc.exists()) return;
+            if (userDoc.data().coins < banner.price) { showNotification('Not enough coins!', 'error'); return; }
+            if (confirm(`Buy "${banner.name}" for ${banner.price} coins?`)) {
+              await updateDoc(doc(db, 'users', currentUser.uid), { coins: increment(-banner.price), banner: banner.imageUrl });
+              showNotification('Banner purchased!', 'success');
+              await addToLog('purchase_banner', `Bought banner: ${banner.name}`);
+              loadUserBalance(currentUser.uid);
+            }
+          });
+        });
+      } catch(e) { grid.innerHTML = '<p style="color:var(--text-secondary);">Error loading banners.</p>'; }
+    }
+
+    async function loadStaffBanners() {
+      const container = document.getElementById('staff-banners-list');
+      try {
+        const snap = await getDocs(collection(db, 'banners'));
+        container.innerHTML = snap.docs.map(d => {
+          const b = d.data();
+          return `<div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:12px;"><img src="${b.imageUrl}" style="width:80px;height:40px;border-radius:8px;object-fit:cover;"> <div><strong>${escapeHtml(b.name)}</strong><br><span style="font-size:0.75rem;color:var(--text-secondary);">${b.price} coins</span></div></div>
+            <button class="staff-btn staff-btn-danger staff-btn-sm sb-del-banner" data-id="${d.id}">Del</button>
+          </div>`;
+        }).join('') || '<p style="color:var(--text-secondary);">No banners.</p>';
+        container.querySelectorAll('.sb-del-banner').forEach(b => b.addEventListener('click', async () => {
+          if (confirm('Delete banner?')) { await deleteDoc(doc(db, 'banners', b.dataset.id)); await addToLog('delete_banner', `Deleted banner ${b.dataset.id}`); loadStaffBanners(); }
+        }));
+      } catch(e) {}
+    }
+
     // ========== Staff Missions ==========
     async function loadStaffMissions() {
       const container = document.getElementById('staff-missions-list');
@@ -5388,6 +5569,7 @@
         if(id) await updateDoc(doc(db,'games',id),gameData); else await addDoc(collection(db,'games'),{...gameData,createdAt:serverTimestamp()});
         document.getElementById('staff-game-modal').style.display='none';
         loadStaffGames();loadStaffDashboard();
+        await addToLog('save_game', `Saved game: ${gameData.title}`);
         showNotification('Game saved!','success');
       });
       document.getElementById('staff-search-game')?.addEventListener('input',e=>{const t=e.target.value.toLowerCase();renderStaffGames(staffGamesCache.filter(g=>g.title.toLowerCase().includes(t)));});
@@ -5426,6 +5608,7 @@
         if(id) await updateDoc(doc(db,'packs',id),packData); else await addDoc(collection(db,'packs'),{...packData,createdAt:serverTimestamp()});
         document.getElementById('staff-pack-modal').style.display='none';
         loadStaffPacks();loadStaffDashboard();
+        await addToLog('save_pack', `Saved pack: ${packData.name}`);
         showNotification('Pack saved!','success');
       });
 
@@ -5451,6 +5634,7 @@
         await updateDoc(doc(db,'users',uid),updates);
         document.getElementById('staff-user-modal').style.display='none';
         loadStaffUsers();
+        await addToLog('update_user', `Updated user ${uid}: ${JSON.stringify(updates).substring(0,200)}`);
         showNotification('User updated!','success');
       });
       document.getElementById('staff-assign-badge-btn')?.addEventListener('click',async()=>{
@@ -5476,6 +5660,7 @@
         if(id) await updateDoc(doc(db,'titles',id),titleData); else await addDoc(collection(db,'titles'),{...titleData,createdAt:serverTimestamp()});
         document.getElementById('staff-title-modal').style.display='none';
         loadStaffTitles();
+        await addToLog('save_title', `Saved title: ${titleData.name}`);
         showNotification('Title saved!','success');
       });
 
@@ -5488,6 +5673,7 @@
         if(id) await updateDoc(doc(db,'badges',id),badgeData); else await addDoc(collection(db,'badges'),{...badgeData,createdAt:serverTimestamp()});
         document.getElementById('staff-badge-modal').style.display='none';
         loadStaffBadges();
+        await addToLog('save_badge', `Saved badge: ${badgeData.name}`);
         showNotification('Badge saved!','success');
       });
 
@@ -5499,6 +5685,27 @@
       document.getElementById('staff-quick-add-game')?.addEventListener('click',()=>document.getElementById('staff-add-game-btn')?.click());
       document.getElementById('staff-quick-add-pack')?.addEventListener('click',()=>document.getElementById('staff-add-pack-btn')?.click());
       document.getElementById('staff-quick-add-title')?.addEventListener('click',()=>document.getElementById('staff-add-title-btn')?.click());
+
+      // Banners
+      document.getElementById('staff-add-banner-btn')?.addEventListener('click', async () => {
+        const name = prompt('Banner name:'); if (!name) return;
+        const imageUrl = prompt('Banner image URL:'); if (!imageUrl) return;
+        const price = parseInt(prompt('Price (coins):') || '500');
+        await addDoc(collection(db,'banners'),{name,imageUrl,price,createdAt:serverTimestamp()});
+        await addToLog('create_banner', `Created banner: ${name}`);
+        loadStaffBanners();
+        showNotification('Banner added!','success');
+      });
+      document.getElementById('staff-banner-assign-btn')?.addEventListener('click', async () => {
+        const email = document.getElementById('staff-banner-assign-email').value.trim();
+        const url = document.getElementById('staff-banner-assign-url').value.trim();
+        if (!email || !url) { showNotification('Fill both fields','error'); return; }
+        const snap = await getDocs(query(collection(db,'users'),where('email','==',email)));
+        if (snap.empty) { showNotification('User not found','error'); return; }
+        await updateDoc(doc(db,'users',snap.docs[0].id),{banner:url});
+        await addToLog('assign_banner', `Assigned custom banner to ${email}`);
+        showNotification('Banner assigned!','success');
+      });
 
       // Missions
       document.getElementById('staff-add-mission-btn')?.addEventListener('click', async () => {
@@ -5529,6 +5736,7 @@
         else if (action === 'remove') newVal = Math.max(0, current - amount);
         await updateDoc(doc(db,'users',uid),{stars:newVal});
         document.getElementById('staff-stars-result').innerHTML = `<span style="color:var(--neon-green);">✓ ${snap.docs[0].data().username}: ${current} → ${newVal} stars</span>`;
+        await addToLog('modify_stars', `${email}: ${current} → ${newVal} stars (${action} ${amount})`);
         showNotification('Stars updated!','success');
       });
 
