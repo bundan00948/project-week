@@ -638,93 +638,16 @@
       color: var(--neon-green);
     }
 
-    /* —— Blooket-style Market (shop-page) —— */
-    #shop-page {
-      padding: 0 !important;
-    }
-    #shop-page .page-content {
-      padding: 0 !important;
-      max-width: none !important;
-    }
-    .shop-market-wrap {
-      position: relative;
-      min-height: calc(100vh - 80px);
-      width: 100%;
-      overflow: hidden;
-    }
-    .shop-market-bg {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(165deg, #0bc2cf 0%, #349aef 55%, #2a7fd4 100%);
-      z-index: 0;
-    }
-    .shop-market-checkers {
-      position: absolute;
-      inset: 0;
-      opacity: 0.14;
-      background-image: url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png');
-      background-size: 1000px 1000px;
-      background-repeat: repeat;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .shop-market-inner {
-      position: relative;
-      z-index: 2;
-      padding: 24px 5% 48px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .shop-market-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .shop-market-title {
-      font-size: 1.75rem;
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.25);
-      letter-spacing: 0.02em;
-    }
-    .shop-market-balance {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      background: rgba(0,0,0,0.22);
-      padding: 10px 22px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .shop-market-balance .balance-item {
-      color: #fff;
-    }
-    .shop-market-balance .balance-value {
-      color: #fff;
-      font-size: 1.15rem;
-    }
-    .shop-market-section-title {
-      font-size: 0.95rem;
+    .shop-section-title {
+      font-size: 1rem;
       font-weight: 800;
-      color: rgba(255,255,255,0.92);
-      margin: 32px 0 16px;
+      color: var(--neon-green);
+      margin: 28px 0 14px;
       display: flex;
       align-items: center;
       gap: 10px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
-    .shop-market-section-title:first-of-type { margin-top: 0; }
-    .shop-market-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-      gap: 18px;
-    }
-    @media (min-width: 900px) {
-      .shop-market-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 22px; }
-    }
+    .shop-section-title:first-of-type { margin-top: 0; }
     .market-pack-card {
       position: relative;
       cursor: pointer;
@@ -806,8 +729,7 @@
       display: block;
       font-size: 0.82rem;
       font-weight: 800;
-      color: #fff;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+      color: var(--text-primary);
       margin-bottom: 4px;
       white-space: nowrap;
       overflow: hidden;
@@ -819,11 +741,11 @@
       gap: 6px;
       font-weight: 900;
       font-size: 0.95rem;
-      color: #fff;
-      background: rgba(0,0,0,0.35);
+      color: var(--text-primary);
+      background: rgba(0,0,0,0.25);
       padding: 5px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(42,255,158,0.2);
     }
     .market-pack-price .fa-coins { color: #ffe066; }
 
@@ -1196,6 +1118,223 @@
     .inv-stat-label {
       font-size: 0.8rem;
       color: var(--text-secondary);
+    }
+
+    /* My Blooks page (Blooket-style layout; site background unchanged) */
+    .inv-blooks-page .inv-blooks-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .inv-blooks-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin: 0 0 20px;
+      max-width: 520px;
+    }
+    .inv-blooks-tokens .inv-token-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(42,255,158,0.25);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--neon-green);
+    }
+    .inv-blooks-tokens .fa-coins { color: #ffe066; }
+    .inv-pack-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+    .inv-pack-tab {
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .inv-pack-tab:hover {
+      border-color: rgba(42,255,158,0.35);
+      color: var(--text-primary);
+    }
+    .inv-pack-tab.active {
+      background: var(--neon-green);
+      color: #000;
+      border-color: var(--neon-green);
+    }
+    .inv-blooks-grid-wrap {
+      min-height: 200px;
+    }
+    .inv-blooks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px 10px;
+    }
+    @media (min-width: 600px) {
+      .inv-blooks-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 16px 14px; }
+    }
+    .inv-blook-cell {
+      position: relative;
+      cursor: pointer;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.1);
+      padding: 10px 8px 8px;
+      text-align: center;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+    }
+    .inv-blook-cell:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+      border-color: rgba(42,255,158,0.35);
+    }
+    .inv-blook-cell-inner {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .inv-blook-cell-inner img {
+      width: 88%;
+      height: 88%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+    }
+    .inv-blook-cell-inner .inv-blook-ph {
+      font-size: 2.4rem;
+      opacity: 0.75;
+    }
+    .inv-blook-cell-name {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.2em;
+    }
+    .inv-blook-qty-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .inv-blook-modal .inv-blook-modal-content {
+      max-width: 400px;
+      border-radius: 20px;
+      border: 1px solid rgba(42,255,158,0.25);
+    }
+    .inv-blook-modal-body {
+      position: relative;
+      align-items: center;
+      text-align: center;
+      padding: 28px 22px 22px;
+    }
+    .inv-blook-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-primary);
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .inv-blook-modal-close:hover { background: rgba(255,255,255,0.15); }
+    .inv-blook-modal-visual {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .inv-blook-modal-visual img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+    }
+    .inv-blook-modal-name {
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin: 0 0 6px;
+    }
+    .inv-blook-modal-rarity {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.1);
+    }
+    .inv-blook-modal-meta {
+      width: 100%;
+      text-align: left;
+      background: rgba(0,0,0,0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+    .inv-blook-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.88rem;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .inv-blook-meta-row:last-child { border-bottom: none; }
+    .inv-blook-meta-label { color: var(--text-secondary); font-weight: 600; }
+    .inv-blook-modal-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .inv-blook-modal-actions .collect-btn,
+    .inv-blook-modal-actions .cancel-btn {
+      flex: 1;
+      min-width: 120px;
     }
 
     /* Gift Wall */
@@ -2940,9 +3079,6 @@
       .packs-grid {
         grid-template-columns: 1fr;
       }
-      .shop-market-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
       .cards-grid {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
       }
@@ -3339,43 +3475,63 @@
       </div>
     </div>
 
-    <!-- Shop Page (Blooket-style Market) -->
+    <!-- Shop Page -->
     <div class="page" id="shop-page">
       <div class="page-content">
-        <div class="shop-market-wrap">
-          <div class="shop-market-bg" aria-hidden="true"></div>
-          <div class="shop-market-checkers" aria-hidden="true"></div>
-          <div class="shop-market-inner">
-            <div class="shop-market-header">
-              <h2 class="shop-market-title"><i class="fas fa-store" style="margin-right:10px;opacity:0.95;"></i>Market</h2>
-              <div class="shop-market-balance">
-                <div class="balance-item">
-                  <i class="fas fa-coins" style="color:#ffe066;"></i>
-                  <span class="balance-value" id="shop-coins">0</span>
-                </div>
-                <div class="balance-item">
-                  <i class="fas fa-star" style="color:#fff;"></i>
-                  <span class="balance-value" id="shop-stars">0</span>
-                </div>
-              </div>
+        <div class="shop-header">
+          <h2 class="page-title">Game Shop</h2>
+          <div class="balance-display">
+            <div class="balance-item">
+              <i class="fas fa-coins"></i>
+              <span class="balance-value" id="shop-coins">0</span>
             </div>
-            <div class="shop-market-section-title"><i class="fas fa-cubes"></i> Packs</div>
-            <div class="shop-market-grid" id="shop-packs"></div>
-            <div class="shop-market-section-title"><i class="fas fa-image"></i> Banners</div>
-            <div class="shop-market-grid" id="shop-banners"></div>
+            <div class="balance-item">
+              <i class="fas fa-star"></i>
+              <span class="balance-value" id="shop-stars">0</span>
+            </div>
           </div>
+        </div>
+        <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
+        <div class="packs-grid" id="shop-packs"></div>
+        <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
+        <div class="packs-grid" id="shop-banners"></div>
+      </div>
+    </div>
+
+    <!-- Inventory Page (Blooket My Blooks–style layout) -->
+    <div class="page" id="inventory-page">
+      <div class="page-content inv-blooks-page">
+        <div class="inv-blooks-top">
+          <h2 class="page-title">My Blooks</h2>
+          <div class="inv-blooks-tokens" id="inv-blooks-tokens" aria-live="polite">
+            <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
+          </div>
+        </div>
+        <p class="inv-blooks-sub">View and manage your blooks. Tap a blook for details.</p>
+        <div class="inv-pack-tabs" id="inv-pack-tabs"></div>
+        <div class="inv-blooks-grid-wrap">
+          <div class="inv-blooks-grid" id="inventory-container"></div>
         </div>
       </div>
     </div>
 
-    <!-- Inventory Page -->
-    <div class="page" id="inventory-page">
-      <div class="page-content">
-        <h2 class="page-title">My Blooks</h2>
-        <div class="inventory-stats-bar" id="inventory-stats-bar"></div>
-        <div class="inventory-filter-bar" id="inventory-filter-bar"></div>
-        <div class="inventory-list" id="inventory-container">
-          <!-- Inventory items will be added here -->
+    <div class="modal inv-blook-modal" id="inv-blook-modal" style="display:none;z-index:9500;">
+      <div class="modal-content inv-blook-modal-content">
+        <div class="modal-body inv-blook-modal-body">
+          <button type="button" class="inv-blook-modal-close" id="inv-blook-modal-close" aria-label="Close">&times;</button>
+          <div class="inv-blook-modal-visual" id="inv-blook-modal-visual"></div>
+          <h2 class="inv-blook-modal-name" id="inv-blook-modal-name">Blook</h2>
+          <div class="inv-blook-modal-rarity" id="inv-blook-modal-rarity">Common</div>
+          <div class="inv-blook-modal-meta">
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Pack</span><span id="inv-blook-modal-pack">—</span></div>
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Quantity</span><span id="inv-blook-modal-qty">1</span></div>
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Star value</span><span id="inv-blook-modal-stars">0</span></div>
+            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Sell for</span><span id="inv-blook-modal-sell">0 tokens</span></div>
+          </div>
+          <div class="inv-blook-modal-actions">
+            <button type="button" class="collect-btn inv-blook-sell-btn" id="inv-blook-sell-btn">Sell</button>
+            <button type="button" class="cancel-btn inv-blook-send-btn" id="inv-blook-send-btn">Send</button>
+          </div>
         </div>
       </div>
     </div>
@@ -4352,7 +4508,7 @@
           case 'profile-page': loadProfilePage(user.uid); break;
           case 'history-page': loadPlayHistory(user.uid); break;
           case 'shop-page': loadShopPacks(); loadUserBalance(user.uid); break;
-          case 'inventory-page': loadInventory(user.uid); break;
+          case 'inventory-page': loadInventory(user.uid); loadFriends(user.uid); break;
           case 'missions-page': loadMissions(user.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(user.uid); break;
@@ -4664,7 +4820,7 @@
           case 'profile-page': loadProfilePage(currentUser.uid); break;
           case 'history-page': loadPlayHistory(currentUser.uid); break;
           case 'shop-page': loadShopPacks(); loadUserBalance(currentUser.uid); break;
-          case 'inventory-page': loadInventory(currentUser.uid); break;
+          case 'inventory-page': loadInventory(currentUser.uid); loadFriends(currentUser.uid); break;
           case 'missions-page': loadMissions(currentUser.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(currentUser.uid); break;
@@ -4879,7 +5035,7 @@
         const packsQuery = query(collection(db, "packs"), orderBy("createdAt", "desc"));
         shopPacksUnsub = onSnapshot(packsQuery, (snapshot) => {
           shopPacks.innerHTML = '';
-          if (snapshot.empty) { shopPacks.innerHTML = '<p style="color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.2);">No packs available</p>'; return; }
+          if (snapshot.empty) { shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>'; return; }
           let anyPack = false;
           snapshot.forEach(docSnap => {
             const pack = { id: docSnap.id, ...docSnap.data() };
@@ -4896,7 +5052,7 @@
             });
             shopPacks.appendChild(card);
           });
-          if (!anyPack) shopPacks.innerHTML = '<p style="color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.2);">No packs available</p>';
+          if (!anyPack) shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>';
         });
         loadShopBannerOffers();
       } catch(e) { console.error(e); }
@@ -4911,7 +5067,7 @@
         const banners = [];
         snapshot.forEach(d => { const p = { id: d.id, ...d.data() }; if (p.shopType === 'banner') banners.push(p); });
         if (banners.length === 0) {
-          shopBanners.innerHTML = '<p style="color:rgba(255,255,255,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.2);grid-column:1/-1;">No banners in the shop yet</p>';
+          shopBanners.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;">No banners in the shop yet</p>';
           return;
         }
         banners.forEach(b => {
@@ -5104,8 +5260,130 @@
     // ========== Blooket-style Inventory ==========
     let currentInventoryFilter = 'all';
     let inventoryItems = [];
+    let invBlookDetailContext = null;
     let packBuilderItems = [];
     let staffEditUserInitialBanner = '';
+
+    function invSellPriceForStars(stars) {
+      const n = Number(stars) || 0;
+      return Math.max(1, Math.floor(n * 0.5));
+    }
+
+    function closeInvBlookModal() {
+      const m = document.getElementById('inv-blook-modal');
+      if (m) m.style.display = 'none';
+      invBlookDetailContext = null;
+    }
+
+    function populateRecipientSelectForInvSend() {
+      if (!recipientEmail) return;
+      recipientEmail.innerHTML = '<option value="">Select a friend</option>';
+      (friendsData || []).forEach(f => {
+        const o = document.createElement('option');
+        o.value = f.id;
+        o.textContent = f.username || f.email || f.id;
+        recipientEmail.appendChild(o);
+      });
+    }
+
+    function openInvBlookDetail(rep, copies) {
+      invBlookDetailContext = { rep, copies: copies || [rep] };
+      const r = (rep.rarity || 'common').toLowerCase();
+      const qty = (copies && copies.length) ? copies.length : 1;
+      const stars = rep.starsGained || 0;
+      const sell = invSellPriceForStars(stars);
+      const rc = getRarityColor(r);
+
+      const vis = document.getElementById('inv-blook-modal-visual');
+      if (vis) {
+        vis.innerHTML = rep.imageUrl
+          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="">`
+          : `<span class="inv-blook-ph" style="color:${rc};"><i class="fas fa-dragon"></i></span>`;
+      }
+      const nm = document.getElementById('inv-blook-modal-name');
+      if (nm) nm.textContent = rep.itemName || 'Blook';
+      const rr = document.getElementById('inv-blook-modal-rarity');
+      if (rr) {
+        rr.textContent = r;
+        rr.style.color = rc;
+        rr.style.border = `1px solid ${rc}55`;
+        rr.style.background = `${rc}22`;
+      }
+      const pk = document.getElementById('inv-blook-modal-pack');
+      if (pk) pk.textContent = rep.packName || '—';
+      const q = document.getElementById('inv-blook-modal-qty');
+      if (q) q.textContent = String(qty);
+      const st = document.getElementById('inv-blook-modal-stars');
+      if (st) st.textContent = String(stars);
+      const sl = document.getElementById('inv-blook-modal-sell');
+      if (sl) sl.textContent = `${sell} tokens (each)`;
+
+      const m = document.getElementById('inv-blook-modal');
+      if (m) m.style.display = 'flex';
+    }
+
+    async function sellOneInvBlookFromDetail() {
+      if (!currentUser || !invBlookDetailContext) return;
+      const { copies } = invBlookDetailContext;
+      const docId = copies[0].id;
+      const rep = copies[0];
+      const price = invSellPriceForStars(rep.starsGained || 0);
+      if (!confirm(`Sell one ${rep.itemName || 'blook'} for ${price} tokens?`)) return;
+      try {
+        const ref = doc(db, 'inventory', docId);
+        const uref = doc(db, 'users', currentUser.uid);
+        await runTransaction(db, async (transaction) => {
+          const snap = await transaction.get(ref);
+          if (!snap.exists()) throw new Error('missing');
+          transaction.delete(ref);
+          transaction.update(uref, { coins: increment(price) });
+        });
+        showNotification(`Sold for ${price} tokens`, 'success');
+        closeInvBlookModal();
+      } catch (e) {
+        showNotification('Could not sell: ' + (e.message || 'error'), 'error');
+      }
+    }
+
+    function openInvSendFromDetail() {
+      if (!invBlookDetailContext || !currentUser) return;
+      const { copies } = invBlookDetailContext;
+      const rep = copies[0];
+      currentCard = {
+        id: rep.id,
+        name: rep.itemName,
+        rarity: rep.rarity,
+        image: rep.imageUrl || '',
+        starsGained: rep.starsGained || 0
+      };
+      closeInvBlookModal();
+      populateRecipientSelectForInvSend();
+      if (sendCardName) sendCardName.textContent = rep.itemName || 'Blook';
+      if (sendCardType) {
+        sendCardType.innerHTML = `${escapeHtml((rep.rarity || '').toString())} · <i class="fas fa-star"></i> ${rep.starsGained || 0} · Send 1 copy`;
+      }
+      if (sendCardIcon) {
+        sendCardIcon.innerHTML = rep.imageUrl
+          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
+          : '🎁';
+      }
+      if (sendCardModal) sendCardModal.style.display = 'flex';
+    }
+
+    function openSendCardModal() {
+      if (!currentCard) return;
+      populateRecipientSelectForInvSend();
+      if (sendCardName) sendCardName.textContent = currentCard.name || 'Blook';
+      if (sendCardType) {
+        sendCardType.innerHTML = `${escapeHtml((currentCard.rarity || '').toString())} · <i class="fas fa-star"></i> ${currentCard.starsGained || 0}`;
+      }
+      if (sendCardIcon) {
+        sendCardIcon.innerHTML = currentCard.image
+          ? `<img src="${escapeHtml(currentCard.image)}" alt="" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
+          : '🎁';
+      }
+      if (sendCardModal) sendCardModal.style.display = 'flex';
+    }
 
     async function staffAppendBlookToPackDoc(packId, entry) {
       const d = await getDoc(doc(db, 'packs', packId));
@@ -5227,111 +5505,78 @@
     }
 
     function renderInventory() {
+      if (!inventoryContainer) return;
       inventoryContainer.innerHTML = '';
-      const statsBar = document.getElementById('inventory-stats-bar');
-      const filterBar = document.getElementById('inventory-filter-bar');
+      const packTabs = document.getElementById('inv-pack-tabs');
 
       if (inventoryItems.length === 0) {
-        statsBar.innerHTML = '';
-        filterBar.innerHTML = '';
+        if (packTabs) packTabs.innerHTML = '';
         inventoryContainer.innerHTML = '<p class="empty-message">No blooks yet — open some packs!</p>';
         return;
       }
 
-      const rarityCounts = {};
       const packCounts = {};
       inventoryItems.forEach(item => {
-        rarityCounts[item.rarity] = (rarityCounts[item.rarity] || 0) + 1;
-        packCounts[item.packName] = (packCounts[item.packName] || 0) + 1;
-      });
-
-      statsBar.innerHTML = `
-        <div class="inv-stat"><i class="fas fa-th inv-stat-icon"></i><div><div class="inv-stat-value">${inventoryItems.length}</div><div class="inv-stat-label">Total Blooks</div></div></div>
-        <div class="inv-stat"><i class="fas fa-box-open inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(packCounts).length}</div><div class="inv-stat-label">Packs</div></div></div>
-        <div class="inv-stat"><i class="fas fa-gem inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(rarityCounts).length}</div><div class="inv-stat-label">Rarities</div></div></div>
-      `;
-
-      const packNames = Object.keys(packCounts).sort();
-      filterBar.innerHTML = `<button class="filter-btn ${currentInventoryFilter === 'all' ? 'active' : ''}" data-filter="all">All</button>`;
-      packNames.forEach(pn => {
-        filterBar.innerHTML += `<button class="filter-btn ${currentInventoryFilter === pn ? 'active' : ''}" data-filter="${pn}">${pn} (${packCounts[pn]})</button>`;
-      });
-      filterBar.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentInventoryFilter = btn.dataset.filter;
-          renderInventory();
-        });
-      });
-
-      const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => i.packName === currentInventoryFilter);
-
-      const grouped = {};
-      filtered.forEach(item => {
         const pn = item.packName || 'Unknown pack';
-        if (!grouped[pn]) grouped[pn] = {};
+        packCounts[pn] = (packCounts[pn] || 0) + 1;
+      });
+      const packNames = Object.keys(packCounts).sort();
+      if (!packNames.includes(currentInventoryFilter) && currentInventoryFilter !== 'all') {
+        currentInventoryFilter = 'all';
+      }
+
+      if (packTabs) {
+        packTabs.innerHTML = '';
+        const mkTab = (label, filter, count) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = `inv-pack-tab${currentInventoryFilter === filter ? ' active' : ''}`;
+          b.dataset.filter = filter;
+          b.textContent = count != null ? `${label} (${count})` : label;
+          b.addEventListener('click', () => {
+            currentInventoryFilter = filter;
+            renderInventory();
+          });
+          packTabs.appendChild(b);
+        };
+        mkTab('All', 'all', inventoryItems.length);
+        packNames.forEach(pn => mkTab(pn, pn, packCounts[pn]));
+      }
+
+      const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => (i.packName || 'Unknown pack') === currentInventoryFilter);
+      const byName = {};
+      filtered.forEach(item => {
         const key = item.itemName || '?';
-        if (!grouped[pn][key]) grouped[pn][key] = [];
-        grouped[pn][key].push(item);
+        if (!byName[key]) byName[key] = [];
+        byName[key].push(item);
       });
 
-      Object.keys(grouped).sort().forEach(packName => {
-        const byName = grouped[packName];
-        const packGroup = document.createElement('div');
-        packGroup.className = 'pack-group';
-        const nameKeys = Object.keys(byName);
-        const totalCards = nameKeys.reduce((s, k) => s + byName[k].length, 0);
-        packGroup.innerHTML = `<div class="pack-header"><div class="pack-title">${escapeHtml(packName)}</div><div class="pack-count">${totalCards} blooks</div></div><div class="cards-grid"></div>`;
-        const cardsGrid = packGroup.querySelector('.cards-grid');
-
-        const rows = nameKeys.map(k => {
-          const copies = byName[k];
-          const best = copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
-          const count = copies.length;
-          const maxStars = Math.max(...copies.map(c => c.starsGained || 0));
-          return { name: k, copies, rep: best, count, maxStars };
-        });
-        rows.sort((a, b) => {
-          const rd = raritySortIndex(a.rep.rarity) - raritySortIndex(b.rep.rarity);
-          if (rd !== 0) return rd;
-          return a.name.localeCompare(b.name);
-        });
-
-        rows.forEach(({ rep, count, maxStars }) => {
-          const r = (rep.rarity || 'common').toLowerCase();
-          const countColor = getRarityColor(r);
-          const card = document.createElement('div');
-          card.className = `card-item rarity-${r}`;
-          card.innerHTML = `
-            <div class="card-image-area">
-              ${rep.imageUrl ? `<img src="${rep.imageUrl}" alt="${escapeHtml(rep.itemName)}">` : `<i class="fas fa-gift card-icon-placeholder"></i>`}
-            </div>
-            <div class="card-info-area">
-              <div class="card-name-row">
-                <span class="card-name" title="${escapeHtml(rep.itemName)}">${escapeHtml(rep.itemName)}</span>
-                ${count > 1 ? `<span class="inv-blook-count" style="color:${countColor};">×${count}</span>` : ''}
-              </div>
-              <div class="card-rarity-label">${r}</div>
-              <div class="card-stars"><i class="fas fa-star"></i> ${maxStars}</div>
-            </div>
-            <div class="card-actions-overlay">
-              <button class="card-action-btn send-btn" data-id="${rep.id}" data-name="${escapeHtml(rep.itemName)}" data-rarity="${escapeHtml(rep.rarity)}" data-image="${escapeHtml(rep.imageUrl || '')}"><i class="fas fa-paper-plane"></i> Send</button>
-              <button class="card-action-btn use-btn" data-id="${rep.id}" data-name="${escapeHtml(rep.itemName)}" data-rarity="${escapeHtml(rep.rarity)}" data-type="${escapeHtml(rep.type || 'item')}" data-value="${rep.value || 0}" data-image="${escapeHtml(rep.imageUrl || '')}"><i class="fas fa-bolt"></i> Use</button>
-            </div>
-          `;
-          cardsGrid.appendChild(card);
-        });
-        inventoryContainer.appendChild(packGroup);
+      const rows = Object.keys(byName).map(k => {
+        const copies = byName[k];
+        const rep = copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
+        return { copies, rep, count: copies.length };
+      });
+      rows.sort((a, b) => {
+        const rd = raritySortIndex(a.rep.rarity) - raritySortIndex(b.rep.rarity);
+        if (rd !== 0) return rd;
+        return (a.rep.itemName || '').localeCompare(b.rep.itemName || '');
       });
 
-      document.querySelectorAll('.card-action-btn.send-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentCard = { id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, image: btn.dataset.image };
-        openSendCardModal();
-      }));
-      document.querySelectorAll('.card-action-btn.use-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        useItem({ id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, type: btn.dataset.type, value: btn.dataset.value, image: btn.dataset.image });
-      }));
+      rows.forEach(({ rep, copies, count }) => {
+        const r = (rep.rarity || 'common').toLowerCase();
+        const rc = getRarityColor(r);
+        const cell = document.createElement('div');
+        cell.className = 'inv-blook-cell';
+        cell.innerHTML = `
+          ${count > 1 ? `<span class="inv-blook-qty-badge" style="color:${rc};border-color:${rc}44;">${count}</span>` : ''}
+          <div class="inv-blook-cell-inner">
+            ${rep.imageUrl ? `<img src="${escapeHtml(rep.imageUrl)}" alt="">` : `<span class="inv-blook-ph" style="color:${rc};"><i class="fas fa-dragon"></i></span>`}
+          </div>
+          <div class="inv-blook-cell-name" title="${escapeHtml(rep.itemName)}">${escapeHtml(rep.itemName)}</div>
+        `;
+        cell.addEventListener('click', () => openInvBlookDetail(rep, copies));
+        inventoryContainer.appendChild(cell);
+      });
     }
 
     async function loadInventory(userId) {
@@ -5841,6 +6086,8 @@
           starsDisplay.textContent = data.stars || 0;
           shopCoins.textContent = data.coins || 0;
           shopStars.textContent = data.stars || 0;
+          const itd = document.getElementById('inv-tokens-display');
+          if (itd) itd.textContent = data.coins || 0;
         }
       });
     }
@@ -6982,6 +7229,21 @@
     friendChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendFriendChatMessage(); });
     addFriendBtn.addEventListener('click', addFriend);
 
+    document.getElementById('inv-blook-modal-close')?.addEventListener('click', closeInvBlookModal);
+    document.getElementById('inv-blook-sell-btn')?.addEventListener('click', () => sellOneInvBlookFromDetail());
+    document.getElementById('inv-blook-send-btn')?.addEventListener('click', () => openInvSendFromDetail());
+    cancelSendBtn?.addEventListener('click', () => { if (sendCardModal) sendCardModal.style.display = 'none'; currentCard = null; });
+    sendCardBtn?.addEventListener('click', async () => {
+      if (!currentUser || !currentCard) return;
+      const recipientId = recipientEmail?.value;
+      if (!recipientId) { showNotification('Choose a friend to send to', 'error'); return; }
+      try {
+        await sendGiftToFriend(recipientId, currentCard.id, currentCard);
+        if (sendCardModal) sendCardModal.style.display = 'none';
+        currentCard = null;
+      } catch (e) { showNotification('Send failed: ' + (e.message || 'error'), 'error'); }
+    });
+
     // Close modals when clicking outside
     window.addEventListener('click', (e) => {
       if (e.target === confirmModal) confirmModal.style.display = 'none';
@@ -6991,6 +7253,9 @@
       if (e.target === chanceModal) chanceModal.style.display = 'none';
       if (e.target === sendGiftChatModal) sendGiftChatModal.style.display = 'none';
       if (e.target === sendGiftInventoryModal) sendGiftInventoryModal.style.display = 'none';
+      if (e.target === sendCardModal) { sendCardModal.style.display = 'none'; currentCard = null; }
+      const ibm = document.getElementById('inv-blook-modal');
+      if (e.target === ibm) closeInvBlookModal();
     });
 
     // Close modals with Escape key
@@ -7003,6 +7268,8 @@
         chanceModal.style.display = 'none';
         sendGiftChatModal.style.display = 'none';
         sendGiftInventoryModal.style.display = 'none';
+        if (sendCardModal) sendCardModal.style.display = 'none';
+        closeInvBlookModal();
         loginModal.style.display = 'none';
         signupModal.style.display = 'none';
         noticeModal.style.display = 'none';
