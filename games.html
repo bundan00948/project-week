@@ -1000,37 +1000,6 @@
       font-size: 0.8rem;
       color: var(--text-secondary);
     }
-    .inv-split-layout {
-      display: flex; gap: 20px;
-    }
-    .inv-items-panel { flex: 3; min-width: 0; }
-    .inv-detail-panel {
-      flex: 1; min-width: 240px; max-width: 300px;
-      background: rgba(0,0,0,0.3); border-radius: 16px;
-      padding: 20px; border: 1px solid rgba(42,255,158,0.1);
-      position: sticky; top: 20px; align-self: flex-start;
-      max-height: 80vh; overflow-y: auto;
-    }
-    .inv-detail-empty { color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 40px 10px; }
-    .inv-detail-img { width: 100%; aspect-ratio: 1; border-radius: 14px; object-fit: contain; background: rgba(0,0,0,0.3); margin-bottom: 14px; }
-    .inv-detail-name { font-size: 1.1rem; font-weight: 900; margin-bottom: 6px; }
-    .inv-detail-rarity { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; padding: 3px 10px; border-radius: 12px; display: inline-block; }
-    .inv-detail-stat { font-size: 0.85rem; margin-bottom: 4px; color: var(--text-secondary); }
-    .inv-detail-actions { margin-top: 14px; display: flex; gap: 8px; }
-    .inv-pack-row { margin-bottom: 20px; }
-    .inv-pack-label { font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; color: var(--text-primary); padding-left: 4px; }
-    .inv-items-row {
-      display: flex; gap: 10px; flex-wrap: wrap;
-    }
-    .inv-item-thumb {
-      width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
-      cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .inv-item-thumb:hover { transform: scale(1.08); }
-    .inv-item-thumb.selected { border-color: var(--neon-green); box-shadow: 0 0 12px rgba(42,255,158,0.4); }
-    .inv-item-thumb img { width: 100%; height: 100%; object-fit: contain; }
-    .inv-item-thumb .inv-thumb-icon { font-size: 1.5rem; color: rgba(255,255,255,0.6); }
 
     /* Gift Wall */
     .gift-wall {
@@ -2789,8 +2758,6 @@
       .up-blooks-grid { grid-template-columns: repeat(3, 1fr); }
       .up-stats-row { grid-template-columns: 1fr 1fr; }
       .up-friends-list { grid-template-columns: repeat(2, 1fr); }
-      .inv-split-layout { flex-direction: column; }
-      .inv-detail-panel { max-width: 100%; position: static; }
       .staff-sub-tabs { gap: 4px; }
       .staff-sub-tab { font-size: 0.72rem; padding: 6px 10px; }
       .staff-stats-grid { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
@@ -2799,9 +2766,205 @@
       .chat-viewer-sidebar { width: 100%; max-height: 200px; }
       .title-perm-grid { grid-template-columns: 1fr; }
     }
+
+    /* Full-page loading (Game Universe) */
+    .page-loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20000;
+      background: rgba(10, 12, 16, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .page-loading-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loading-universe-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid var(--neon-green);
+      border-top-color: transparent;
+      border-right-color: var(--neon-pink);
+      background: radial-gradient(circle at 30% 30%, rgba(42,255,158,0.15), transparent 60%),
+        url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png') center/48px repeat;
+      animation: spinUniverse 0.9s linear infinite;
+      box-shadow: 0 0 24px rgba(42, 255, 158, 0.35);
+    }
+    @keyframes spinUniverse {
+      to { transform: rotate(360deg); }
+    }
+    .loading-universe-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+    }
+
+    /* Shop: visual pack (no title on card) */
+    .shop-section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--neon-green);
+      margin: 28px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shop-section-title:first-of-type { margin-top: 0; }
+    .pack-card.pack-card-visual {
+      aspect-ratio: 0.85;
+      padding: 20px 12px 18px;
+    }
+    .pack-card.pack-card-visual .pack-visual-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 120px;
+    }
+    .pack-card.pack-card-visual .pack-visual-img,
+    .pack-card.pack-card-visual .pack-visual-placeholder {
+      max-width: 100%;
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      transform: rotate(-8deg);
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.45));
+      transition: transform 0.25s ease;
+    }
+    .pack-card.pack-card-visual:hover .pack-visual-img,
+    .pack-card.pack-card-visual:hover .pack-visual-placeholder {
+      transform: rotate(-5deg) scale(1.06);
+    }
+    .pack-card.pack-card-visual .pack-visual-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .pack-card.pack-card-visual .pack-price-row {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      background: rgba(0,0,0,0.35);
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    /* Pack unboxing animation */
+    .gift-animation.pack-unbox-anim {
+      animation: packUnboxShake 0.85s ease-in-out, packUnboxPop 0.6s ease 0.5s forwards;
+    }
+    @keyframes packUnboxShake {
+      0%, 100% { transform: translateX(0) rotate(0); }
+      20% { transform: translateX(-6px) rotate(-3deg); }
+      40% { transform: translateX(6px) rotate(3deg); }
+      60% { transform: translateX(-4px) rotate(-2deg); }
+      80% { transform: translateX(4px) rotate(2deg); }
+    }
+    @keyframes packUnboxPop {
+      0% { transform: scale(0.92); opacity: 0.85; }
+      60% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Inventory: single card + rarity-colored count */
+    .card-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .inv-blook-count {
+      font-weight: 900;
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+
+    /* Own profile: container left, no green avatar ring */
+    #profile-page .page-content {
+      display: flex;
+      justify-content: flex-start;
+    }
+    #profile-page .up-container {
+      margin-left: 0;
+      margin-right: auto;
+    }
+    #profile-page .up-avatar {
+      border: none;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    #profile-banner-wrap { cursor: default; }
+    #profile-banner-wrap.profile-banner-clickable { cursor: pointer; }
+    #profile-banner-wrap.profile-banner-clickable:hover {
+      box-shadow: 0 0 0 2px rgba(42,255,158,0.35);
+    }
+
+    /* Banner picker modal */
+    .banner-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      max-height: 360px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+    .banner-picker-item {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+      aspect-ratio: 16/5;
+      background: #1a2a3a;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .banner-picker-item:hover, .banner-picker-item.selected {
+      border-color: var(--neon-green);
+      transform: translateY(-2px);
+    }
+    .banner-picker-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .banner-picker-item.default-pattern {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 8px;
+    }
+
+    /* Staff: quick moderation */
+    .staff-mod-quick {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
   </style>
 </head>
 <body>
+  <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
+    <div class="loading-universe-icon" role="presentation"></div>
+    <div class="loading-universe-label">GAME UNIVERSE</div>
+  </div>
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -2834,9 +2997,6 @@
       <button class="tab-button" data-page="friends-page">
         <i class="fas fa-user-friends"></i> Friends
       </button>
-      <button class="tab-button" data-page="banner-shop-page">
-        <i class="fas fa-image"></i> Banner Shop
-      </button>
       <button class="tab-button" data-page="settings-page">
         <i class="fas fa-cog"></i> Settings
       </button>
@@ -2853,6 +3013,7 @@
       <div class="profile-username" id="sidebar-username">Username</div>
       <div class="user-title" id="sidebar-title">User</div>
       <div class="profile-email" id="sidebar-email">user@example.com</div>
+      <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;font-weight:700;letter-spacing:0.04em;" id="sidebar-public-id"></div>
       
       <div class="profile-stats" style="margin-top: 20px;">
         <div class="stat-item">
@@ -2903,6 +3064,7 @@
               <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
                 <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
                 <span class="up-title-badge" id="profile-title">User</span>
+                <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
                 <span id="member-since" style="display:none;">2024</span>
               </div>
             </div>
@@ -2943,6 +3105,7 @@
               <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
                 <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
                 <span class="up-title-badge" id="vp-title">User</span>
+                <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
                 <span id="vp-member-since" style="display:none;">2024</span>
               </div>
             </div>
@@ -2996,8 +3159,13 @@
             </div>
           </div>
         </div>
+        <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
         <div class="packs-grid" id="shop-packs">
           <!-- Shop packs will be added here -->
+        </div>
+        <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
+        <div class="packs-grid" id="shop-banners">
+          <!-- Banner shop items -->
         </div>
       </div>
     </div>
@@ -3008,13 +3176,8 @@
         <h2 class="page-title">My Blooks</h2>
         <div class="inventory-stats-bar" id="inventory-stats-bar"></div>
         <div class="inventory-filter-bar" id="inventory-filter-bar"></div>
-        <div class="inv-split-layout">
-          <div class="inv-items-panel" id="inventory-container">
-            <!-- Inventory items will be added here -->
-          </div>
-          <div class="inv-detail-panel" id="inv-detail-panel">
-            <div class="inv-detail-empty">Click a blook to view details</div>
-          </div>
+        <div class="inventory-list" id="inventory-container">
+          <!-- Inventory items will be added here -->
         </div>
       </div>
     </div>
@@ -3089,11 +3252,9 @@
             <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
             <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
             <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-banners"><i class="fas fa-image"></i> Banners</button>
             <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
             <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-logs"><i class="fas fa-clipboard-list"></i> Logs</button>
           </div>
 
           <!-- Staff Dashboard -->
@@ -3129,7 +3290,10 @@
           <!-- Staff Packs & Items -->
           <div class="staff-section" id="staff-packs">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>Packs & Items</h3><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div>
+              <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-set-rarity-order-btn" title="Global blook rarity sort order"><i class="fas fa-sort"></i> Rarity order</button><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
+              <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Profile banners (sold in Shop)</h4>
+              <div id="staff-banner-shop-list" style="margin-bottom:20px;"></div>
+              <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Packs</h4>
               <div id="staff-packs-list"></div>
             </div>
           </div>
@@ -3137,7 +3301,32 @@
           <!-- Staff Users -->
           <div class="staff-section" id="staff-users">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>User Accounts</h3><input type="text" class="staff-search" id="staff-search-user" placeholder="Search by username/email..."></div>
+              <div class="staff-card-header"><h3>User Accounts</h3><input type="text" class="staff-search" id="staff-search-user" placeholder="Search by username/email/ID..."></div>
+              <div class="staff-mod-quick" id="staff-mod-quick-panel">
+                <div class="staff-form-group" style="margin:0;">
+                  <label>Quick lookup (6-digit ID, email, or username)</label>
+                  <input type="text" id="staff-mod-lookup" placeholder="e.g. 123456 or user@email.com">
+                </div>
+                <div class="staff-form-group" style="margin:0;">
+                  <label>Action</label>
+                  <select id="staff-mod-action">
+                    <option value="open">Open user editor</option>
+                    <option value="mute_1h">Mute 1 hour</option>
+                    <option value="mute_24h">Mute 24 hours</option>
+                    <option value="mute_perm">Mute permanently</option>
+                    <option value="unmute">Clear mute</option>
+                    <option value="ban_24h">Ban 24 hours</option>
+                    <option value="ban_7d">Ban 7 days</option>
+                    <option value="ban_perm">Ban permanently</option>
+                    <option value="unban">Clear ban</option>
+                  </select>
+                </div>
+                <div class="staff-form-group" style="margin:0;flex:2;">
+                  <label>Reason (optional)</label>
+                  <input type="text" id="staff-mod-reason-quick" placeholder="Shown to the user if banned">
+                </div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-mod-apply-btn" style="align-self:flex-end;margin-bottom:2px;">Apply</button>
+              </div>
               <div style="overflow-x:auto;" id="staff-users-table"></div>
             </div>
           </div>
@@ -3156,22 +3345,6 @@
             <div class="staff-card">
               <div class="staff-card-header"><h3>Badge Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-badge-btn"><i class="fas fa-plus"></i> Create Badge</button></div>
               <div id="staff-badges-list"></div>
-            </div>
-          </div>
-
-          <!-- Staff Banners -->
-          <div class="staff-section" id="staff-banners">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Banner Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-banner-btn"><i class="fas fa-plus"></i> Add Banner</button></div>
-              <div id="staff-banners-list"></div>
-            </div>
-            <div class="staff-card" style="margin-top:16px;">
-              <div class="staff-card-header"><h3>Assign Custom Banner to User</h3></div>
-              <div class="staff-flex-row" style="gap:10px;align-items:flex-end;">
-                <div class="staff-form-group" style="flex:2;"><label>User Email</label><input id="staff-banner-assign-email" placeholder="user@example.com"></div>
-                <div class="staff-form-group" style="flex:3;"><label>Banner Image URL</label><input id="staff-banner-assign-url" placeholder="https://..."></div>
-                <button class="staff-btn staff-btn-primary" id="staff-banner-assign-btn" style="margin-bottom:14px;">Assign</button>
-              </div>
             </div>
           </div>
 
@@ -3209,25 +3382,6 @@
               </div>
             </div>
           </div>
-          <!-- Staff Logs -->
-          <div class="staff-section" id="staff-logs">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Action Logs</h3><span style="font-size:0.75rem;color:var(--text-secondary);">Logs cannot be deleted</span></div>
-              <div style="overflow-x:auto;max-height:500px;overflow-y:auto;" id="staff-logs-container">
-                <table class="staff-table" id="staff-logs-table"><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody></tbody></table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Banner Shop Page -->
-    <div class="page" id="banner-shop-page">
-      <div class="page-content">
-        <h2 class="page-title">Banner Shop</h2>
-        <div class="packs-grid" id="banner-shop-grid">
-          <!-- Banners loaded dynamically -->
         </div>
       </div>
     </div>
@@ -3252,10 +3406,25 @@
             
             <div class="form-group">
               <label for="avatar-upload">Change Avatar</label>
+              <input type="url" id="avatar-url-input" class="auth-input" placeholder="Or paste image URL" style="margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
               <label class="file-label">
                 <i class="fas fa-upload"></i> Choose Image
                 <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
               </label>
+            </div>
+
+            <div class="settings-section" style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(42,255,158,0.15);">
+              <h3 style="font-size:1rem;margin-bottom:12px;color:var(--neon-green);">Theme colors</h3>
+              <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;">Adjust the two accent colors used across the site. This device only (saved in your browser).</p>
+              <div class="form-group">
+                <label for="theme-primary">Primary accent</label>
+                <input type="color" id="theme-primary" value="#2AFF9E">
+              </div>
+              <div class="form-group">
+                <label for="theme-secondary">Secondary accent</label>
+                <input type="color" id="theme-secondary" value="#FF3D6C">
+              </div>
+              <button type="button" class="settings-btn" id="theme-reset-btn" style="margin-top:8px;background:rgba(255,255,255,0.08);">Reset to default theme</button>
             </div>
             
             <div class="form-group">
@@ -3289,8 +3458,9 @@
             <div class="form-group"><label>YOUR NAME</label><input type="text" id="suggestName" required></div>
             <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="suggestEmail" required></div>
             <div class="form-group"><label>GAME TITLE</label><input type="text" id="gameTitle" required></div>
-            <div class="form-group"><label>GAME BANNER (URL)</label><input type="url" id="gameBanner" required></div>
-            <div class="form-group"><label>GAME LINK</label><input type="url" id="gameLink" required></div>
+            <div class="form-group"><label>GAME BANNER</label><input type="text" id="gameBanner" placeholder="Image URL or leave blank and upload below"></div>
+            <div class="form-group"><label>OR UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
+            <div class="form-group"><label>GAME LINK</label><input type="text" id="gameLink" placeholder="https://..." required></div>
             <div class="form-group"><label>GAME DESCRIPTION</label><textarea id="gameDescription" required></textarea></div>
             <button type="submit" class="submit-btn">SUBMIT SUGGESTION</button>
             <div id="suggestMessage" class="form-message"></div>
@@ -3339,13 +3509,20 @@
     <div id="signupModal" class="auth-modal">
       <div class="auth-modal-content">
         <h3><i class="fas fa-user-plus"></i> Sign Up</h3>
+        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.45;margin-bottom:12px;text-align:left;">
+          Welcome to <strong style="color:var(--neon-green);">Game Universe</strong>. After you join: use the sidebar to browse games, open the <strong>Shop</strong> for packs and profile banners, collect blooks in <strong>Inventory</strong>, complete <strong>Daily Missions</strong>, and chat in <strong>Chat</strong> or <strong>Friends</strong>. Your profile shows stats, badges, and friends. Each account has a public <strong>6-digit ID</strong> for moderation. Have fun and play fair.
+        </p>
         <input type="text" id="signupUsername" class="auth-input" placeholder="Username">
         <input type="email" id="signupEmail" class="auth-input" placeholder="Email">
         <input type="password" id="signupPassword" class="auth-input" placeholder="Password">
+        <div class="form-group" style="margin:10px 0 6px;">
+          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — URL or upload</label>
+          <input type="url" id="signupAvatarUrl" class="auth-input" placeholder="Optional: image URL">
+        </div>
         <label class="file-label"><i class="fas fa-upload"></i> Upload Profile Picture (optional)
           <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
         </label>
-        <img id="avatarPreview" style="display: none;">
+        <img id="avatarPreview" style="display: none; max-width: 100px; border-radius: 50%; margin-top: 10px;">
         <button id="signupBtn" class="auth-btn">Create Account</button>
         <div class="switch-auth">Already have an account? <a id="showLogin">Login</a></div>
         <button class="close-modal" id="closeSignupModal">Cancel</button>
@@ -3513,17 +3690,34 @@
   </div>
 
   <!-- Staff Panel Modals -->
-  <div class="staff-modal" id="staff-game-modal"><div class="staff-modal-content"><h3 id="staff-game-modal-title">Add Game</h3><form id="staff-game-form"><input type="hidden" id="staff-game-id"><div class="staff-form-group"><label>Title</label><input id="staff-game-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-game-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Image URL</label><input id="staff-game-image" required></div><div class="staff-form-group"><label>Game URL (iframe)</label><input id="staff-game-url" required></div><div class="staff-form-group"><label>Rating (0-5)</label><input id="staff-game-rating" type="number" step="0.1" value="3"></div><div class="staff-form-group"><label>Multiplayer</label><select id="staff-game-multi"><option value="false">Single Player</option><option value="true">Multiplayer</option></select></div><div class="staff-form-group"><label>Tags (comma separated)</label><input id="staff-game-tags" placeholder="action, arcade, puzzle"></div><div class="staff-flex-row"><button type="submit" class="staff-btn staff-btn-primary">Save Game</button><button type="button" class="staff-btn" id="staff-close-game-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-game-modal"><div class="staff-modal-content"><h3 id="staff-game-modal-title">Add Game</h3><form id="staff-game-form"><input type="hidden" id="staff-game-id"><div class="staff-form-group"><label>Title</label><input id="staff-game-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-game-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Image URL</label><input id="staff-game-image" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload cover image</label><input type="file" id="staff-game-image-file" accept="image/*"></div><div class="staff-form-group"><label>Game URL (iframe)</label><input id="staff-game-url" required></div><div class="staff-form-group"><label>Rating (0-5)</label><input id="staff-game-rating" type="number" step="0.1" value="3"></div><div class="staff-form-group"><label>Multiplayer</label><select id="staff-game-multi"><option value="false">Single Player</option><option value="true">Multiplayer</option></select></div><div class="staff-form-group"><label>Tags (comma separated)</label><input id="staff-game-tags" placeholder="action, arcade, puzzle"></div><div class="staff-flex-row"><button type="submit" class="staff-btn staff-btn-primary">Save Game</button><button type="button" class="staff-btn" id="staff-close-game-modal">Cancel</button></div></form></div></div>
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><div class="staff-form-group"><label>Background Image URL</label><input id="staff-pack-bg"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-card-header" style="margin-top:12px;"><h3 style="font-size:0.9rem;">Items</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add Item</button></div><div id="staff-pack-items-list" style="max-height:300px;overflow-y:auto;"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><div class="staff-form-group"><label>Background Image URL</label><input id="staff-pack-bg" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload background</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-card-header" style="margin-top:12px;"><h3 style="font-size:0.9rem;">Items</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add Item</button></div><div id="staff-pack-items-list" style="max-height:300px;overflow-y:auto;"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
-  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
+  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
 
   <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon Image URL</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
+  <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-rarity-order-modal"><div class="staff-modal-content" style="max-width:480px;"><h3>Blook rarity order</h3><p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px;">Comma-separated, lowest to highest (used for inventory sorting). Default: common,uncommon,rare,epic,legendary,mythical,chroma</p><textarea id="staff-rarity-order-input" rows="3" style="width:100%;padding:10px;border-radius:10px;background:rgba(0,0,0,0.4);color:#fff;border:1px solid rgba(42,255,158,0.2);"></textarea><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-order-save">Save</button><button type="button" class="staff-btn" id="staff-rarity-order-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-mission-form-modal"><div class="staff-modal-content" style="max-width:520px;"><h3>Create / edit mission</h3><input type="hidden" id="staff-mission-form-id"><div class="staff-form-group"><label>Title</label><input id="staff-mission-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-mission-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Type</label><select id="staff-mission-type"><option value="gametime">Gametime (seconds played)</option><option value="chatting">Chat messages</option><option value="spending">Coins spent</option></select></div><div class="staff-form-group"><label>Target</label><input id="staff-mission-target" type="number" value="10" required></div><div class="staff-form-group"><label>Reward coins</label><input id="staff-mission-rcoins" type="number" value="100"></div><div class="staff-form-group"><label>Reward stars</label><input id="staff-mission-rstars" type="number" value="50"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-mission-form-save">Save mission</button><button type="button" class="staff-btn" id="staff-mission-form-cancel">Cancel</button></div></div></div>
+
+  <div class="modal" id="banner-picker-modal" style="z-index:11000;">
+    <div class="modal-content" style="max-width:520px;">
+      <div class="modal-body" style="align-items:stretch;">
+        <h2 style="margin-bottom:8px;">Choose banner</h2>
+        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">Pick a banner you already own, or the default look.</p>
+        <div class="banner-picker-grid" id="banner-picker-grid"></div>
+        <button type="button" class="collect-btn" id="banner-picker-close" style="margin-top:16px;">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Firebase SDK -->
   <script type="module">
@@ -3558,7 +3752,8 @@
       serverTimestamp,     
       writeBatch,    
       deleteDoc,    
-      increment
+      increment,
+      runTransaction
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { 
       getStorage,     
@@ -3586,6 +3781,70 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    const THEME_STORAGE_KEY = 'gu_theme_colors';
+    const DEFAULT_NEON_GREEN = '#2AFF9E';
+    const DEFAULT_NEON_PINK = '#FF3D6C';
+    const DEFAULT_RARITY_ORDER = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
+    let effectiveRarityOrder = [...DEFAULT_RARITY_ORDER];
+    function raritySortIndex(r) {
+      const x = (r || 'common').toLowerCase();
+      const i = effectiveRarityOrder.indexOf(x);
+      return i === -1 ? 999 : i;
+    }
+
+    async function refreshRarityOrderFromServer() {
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (s.exists()) {
+          const ro = s.data().blookRarityOrder;
+          if (ro) {
+            const arr = String(ro).split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+            if (arr.length) effectiveRarityOrder = arr;
+          }
+        }
+      } catch (e) {}
+    }
+
+    function applyThemeFromStorage() {
+      try {
+        const raw = localStorage.getItem(THEME_STORAGE_KEY);
+        if (!raw) return;
+        const j = JSON.parse(raw);
+        if (j.primary) document.documentElement.style.setProperty('--neon-green', j.primary);
+        if (j.secondary) document.documentElement.style.setProperty('--neon-pink', j.secondary);
+      } catch (e) {}
+    }
+    applyThemeFromStorage();
+
+    function hidePageLoading() {
+      const el = document.getElementById('page-loading-overlay');
+      if (el) {
+        el.classList.add('hidden');
+        el.setAttribute('aria-busy', 'false');
+      }
+    }
+
+    async function ensureUniqueDisplayId() {
+      for (let attempt = 0; attempt < 80; attempt++) {
+        const n = Math.floor(100000 + Math.random() * 900000);
+        const idStr = String(n);
+        const snap = await getDocs(query(collection(db, 'users'), where('displayId', '==', idStr)));
+        if (snap.empty) return idStr;
+      }
+      return String(Math.floor(100000 + Math.random() * 900000));
+    }
+
+    async function ensureDisplayIdForUser(uid) {
+      const ref = doc(db, 'users', uid);
+      const u = await getDoc(ref);
+      if (!u.exists()) return null;
+      const d = u.data();
+      if (d.displayId && String(d.displayId).length === 6) return d.displayId;
+      const newId = await ensureUniqueDisplayId();
+      await updateDoc(ref, { displayId: newId });
+      return newId;
+    }
+
     // DOM elements (abbreviated for brevity – all exist in the HTML)
     const noticeModal = document.getElementById('noticeModal');
     const loginModal = document.getElementById('loginModal');
@@ -3608,6 +3867,7 @@
     const memberSince = document.getElementById('member-since');
     const playHistoryList = document.getElementById('play-history-list');
     const shopPacks = document.getElementById('shop-packs');
+    const shopBanners = document.getElementById('shop-banners');
     const inventoryContainer = document.getElementById('inventory-container');
     const friendsList = document.getElementById('friends-list');
     const globalChatContainer = document.getElementById('global-chat-container');
@@ -3690,6 +3950,10 @@
     let pendingGame = null;
     let selectedFriend = null;
     let currentUser = null;
+    let shopPacksUnsub = null;
+    let shopBannersUnsub = null;
+    let globalChatRenderedIds = new Set();
+    let friendChatRenderedIds = new Set();
     let currentCard = null;
     let inventoryUnsubscribe = null;
     let giftWallUnsubscribe = null;
@@ -3716,6 +3980,7 @@
       let coins = 0;
       let title = "User";
       if (email === "chonhouliu@gmail.com") { coins = 999999; title = "Owner"; }
+      const displayId = await ensureUniqueDisplayId();
       await setDoc(doc(db, "users", uid), {
         email,
         username: username || email.split('@')[0],
@@ -3724,6 +3989,8 @@
         stars: 0,
         title,
         badges: [],
+        displayId,
+        ownedBannerIds: [],
         createdAt: serverTimestamp()
       }, { merge: true });
     }
@@ -3770,9 +4037,26 @@
         sidebarUsername.textContent = data.username || user.email;
         applyTitleStyle(sidebarTitle, data.title || "User");
         sidebarEmail.textContent = user.email;
+        const sid = document.getElementById('sidebar-public-id');
+        if (sid) {
+          const did = data.displayId ? String(data.displayId) : '';
+          sid.textContent = did && did.length === 6 ? `ID ${did}` : '';
+        }
+        ensureDisplayIdForUser(user.uid).then(did => {
+          if (did) {
+            if (sid) sid.textContent = `ID ${did}`;
+            const pp = document.getElementById('profile-public-id');
+            if (pp) pp.textContent = `ID ${did}`;
+          }
+        });
         profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         profileUsername.textContent = data.username || user.email;
         applyTitleStyle(profileTitle, data.title || "User");
+        const pid = document.getElementById('profile-public-id');
+        if (pid) {
+          const did = data.displayId ? String(data.displayId) : '';
+          pid.textContent = did && did.length === 6 ? `ID ${did}` : 'ID —';
+        }
         renderProfileBadges(data.badges || []);
         if (data.createdAt) {
           const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
@@ -3833,8 +4117,15 @@
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (!userDoc.exists()) {
           await saveUserProfile(user.uid, user.email, user.email.split('@')[0], null);
-        } else if (user.email === "chonhouliu@gmail.com") {
-          await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner" });
+        } else {
+          const patch = {};
+          const d0 = userDoc.data();
+          if (!d0.displayId || String(d0.displayId).length !== 6) patch.displayId = await ensureUniqueDisplayId();
+          if (!Array.isArray(d0.ownedBannerIds)) patch.ownedBannerIds = [];
+          if (Object.keys(patch).length) await updateDoc(doc(db, "users", user.uid), patch);
+          if (user.email === "chonhouliu@gmail.com") {
+            await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner" });
+          }
         }
         const banCheck = await getDoc(doc(db, "users", user.uid));
         if (banCheck.exists()) {
@@ -3865,7 +4156,6 @@
           case 'missions-page': loadMissions(user.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(user.uid); break;
-          case 'banner-shop-page': loadBannerShop(); break;
           case 'settings-page': loadSettings(user.uid); break;
           case 'staff-page': loadStaffPanel(); break;
         }
@@ -3878,16 +4168,28 @@
         if (inventoryUnsubscribe) inventoryUnsubscribe();
         if (giftWallUnsubscribe) giftWallUnsubscribe();
         if (userUnsubscribe) userUnsubscribe();
+        if (missionsListUnsub) { missionsListUnsub(); missionsListUnsub = null; }
+        if (missionProgressUnsub) { missionProgressUnsub(); missionProgressUnsub = null; }
       }
     });
 
     // ========== Sign up, login, logout (unchanged) ==========
+    avatarUpload?.addEventListener('change', () => {
+      const f = avatarUpload.files[0];
+      if (f && avatarPreview) {
+        avatarPreview.src = URL.createObjectURL(f);
+        avatarPreview.style.display = 'block';
+      }
+    });
+
     document.getElementById('signupBtn').addEventListener('click', async () => {
       const username = document.getElementById('signupUsername').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
+      const urlField = document.getElementById('signupAvatarUrl');
+      const urlAvatar = urlField ? urlField.value.trim() : '';
       const avatarFile = avatarUpload.files[0];
-      let avatarUrl = null;
+      let avatarUrl = urlAvatar || null;
       if (avatarFile) {
         try {
           const storageRef = ref(storage, `avatars/${Date.now()}_${avatarFile.name}`);
@@ -3949,8 +4251,10 @@
     async function logGamePlay(gameId, gameTitle) {
       if (!currentUser) return;
       try {
-        await addDoc(collection(db, "plays"), { gameId, gameTitle, userId: currentUser.uid, userEmail: currentUser.email, timestamp: serverTimestamp() });
+        const durationSec = 300;
+        await addDoc(collection(db, "plays"), { gameId, gameTitle, userId: currentUser.uid, userEmail: currentUser.email, duration: durationSec, timestamp: serverTimestamp() });
         updateStats(currentUser.uid);
+        updateMissionProgress('gametime', durationSec);
       } catch (error) { console.error("Error logging game play: ", error); }
     }
 
@@ -4105,6 +4409,48 @@
       document.getElementById('report-form-container').style.display = 'block';
     });
 
+    document.getElementById('suggestGameForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgEl = document.getElementById('suggestMessage');
+      const title = document.getElementById('gameTitle')?.value.trim();
+      let bannerUrl = document.getElementById('gameBanner')?.value.trim() || '';
+      const link = document.getElementById('gameLink')?.value.trim();
+      const file = document.getElementById('gameBannerFile')?.files?.[0];
+      if (!title || !link) {
+        if (msgEl) { msgEl.textContent = 'Please fill title and game link.'; msgEl.style.color = '#FF3D6C'; }
+        return;
+      }
+      if (file) {
+        try {
+          const storageRef = ref(storage, `suggestions/banners/${Date.now()}_${file.name}`);
+          const snapshot = await uploadBytes(storageRef, file);
+          bannerUrl = await getDownloadURL(snapshot.ref);
+        } catch (err) {
+          if (msgEl) { msgEl.textContent = 'Banner upload failed: ' + err.message; msgEl.style.color = '#FF3D6C'; }
+          return;
+        }
+      }
+      if (!bannerUrl) {
+        if (msgEl) { msgEl.textContent = 'Provide a banner image URL or upload a file.'; msgEl.style.color = '#FF3D6C'; }
+        return;
+      }
+      try {
+        await addDoc(collection(db, 'gameSuggestions'), {
+          suggesterName: document.getElementById('suggestName')?.value.trim(),
+          suggesterEmail: document.getElementById('suggestEmail')?.value.trim(),
+          gameTitle: title,
+          gameBanner: bannerUrl,
+          gameLink: link,
+          gameDescription: document.getElementById('gameDescription')?.value.trim(),
+          createdAt: serverTimestamp()
+        });
+        if (msgEl) { msgEl.textContent = 'Thanks! Your suggestion was sent.'; msgEl.style.color = 'var(--neon-green)'; }
+        e.target.reset();
+      } catch (err) {
+        if (msgEl) { msgEl.textContent = 'Could not submit: ' + err.message; msgEl.style.color = '#FF3D6C'; }
+      }
+    });
+
     // ========== Sidebar page switching ==========
     document.querySelectorAll('.tab-button').forEach(button => {
       button.addEventListener('click', () => {
@@ -4122,7 +4468,6 @@
           case 'missions-page': loadMissions(currentUser.uid); break;
           case 'chat-page': loadGlobalChat(); break;
           case 'friends-page': loadFriends(currentUser.uid); break;
-          case 'banner-shop-page': loadBannerShop(); break;
           case 'settings-page': loadSettings(currentUser.uid); break;
           case 'staff-page': loadStaffPanel(); break;
         }
@@ -4135,6 +4480,7 @@
         await populateProfileLayout(userId, {
           avatar: 'profile-avatar', banner: 'profile-banner', bannerWrap: 'profile-banner-wrap',
           username: 'profile-username', title: 'profile-title',
+          publicId: 'profile-public-id',
           memberSince: 'member-since', badges: 'profile-badges',
           starsVal: 'profile-stars-val', playtimeVal: 'profile-playtime-val',
           playCount: 'play-count', friendCount: 'friend-count',
@@ -4142,6 +4488,7 @@
           blookProgress: 'profile-blook-progress',
           topBlooks: 'profile-top-blooks', friendsList: 'profile-friends-list',
         });
+        setupOwnProfileBannerPicker(userId);
       } catch(e) { console.error(e); }
     }
 
@@ -4165,6 +4512,16 @@
       }
       document.getElementById(ids.username).textContent = data.username || data.email;
       applyTitleStyle(document.getElementById(ids.title), data.title || "User");
+      if (ids.publicId) {
+        const pel = document.getElementById(ids.publicId);
+        if (pel) {
+          let did = data.displayId ? String(data.displayId) : '';
+          if (!did || did.length !== 6) {
+            ensureDisplayIdForUser(userId).then(nid => { if (nid && pel) pel.textContent = `ID ${nid}`; });
+            pel.textContent = 'ID —';
+          } else pel.textContent = `ID ${did}`;
+        }
+      }
       if (ids.memberSince) {
         if (data.createdAt) {
           const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
@@ -4188,16 +4545,8 @@
       const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
       const ownedNames = new Set(blooksSnap.docs.map(d => d.data().itemName));
       const blookCurrent = ownedNames.size;
-      let blookTotal = 150;
-      try {
-        const packsSnap = await getDocs(collection(db, 'packs'));
-        const allItemNames = new Set();
-        packsSnap.docs.forEach(d => (d.data().items||[]).forEach(it => allItemNames.add(it.name)));
-        if (allItemNames.size > 0) blookTotal = allItemNames.size;
-      } catch(e) {}
       document.getElementById(ids.blookCount).textContent = blookCurrent;
-      document.getElementById(ids.blookTotal).textContent = blookTotal;
-      const blookPercent = (blookCurrent / blookTotal) * 100;
+      const blookPercent = (blookCurrent / 150) * 100;
       document.getElementById(ids.blookProgress).style.width = blookPercent + '%';
 
       const top5 = blooksSnap.docs.sort((a, b) => (b.data().starsGained || 0) - (a.data().starsGained || 0)).slice(0, 5);
@@ -4237,6 +4586,72 @@
       }
     }
 
+    let bannerPickerSetupUid = null;
+    function setupOwnProfileBannerPicker(userId) {
+      if (!currentUser || userId !== currentUser.uid) return;
+      const wrap = document.getElementById('profile-banner-wrap');
+      if (!wrap) return;
+      wrap.classList.add('profile-banner-clickable');
+      if (bannerPickerSetupUid === userId) return;
+      bannerPickerSetupUid = userId;
+      wrap.addEventListener('click', () => openBannerPickerModal(userId));
+    }
+
+    async function openBannerPickerModal(userId) {
+      const modal = document.getElementById('banner-picker-modal');
+      const grid = document.getElementById('banner-picker-grid');
+      if (!modal || !grid) return;
+      const u = await getDoc(doc(db, 'users', userId));
+      if (!u.exists()) return;
+      const d = u.data();
+      const ownedIds = d.ownedBannerIds || [];
+      const packsSnap = await getDocs(collection(db, 'packs'));
+      const byId = {};
+      packsSnap.docs.forEach(docu => { if (docu.data().shopType === 'banner') byId[docu.id] = { id: docu.id, ...docu.data() }; });
+      grid.innerHTML = '';
+      const def = document.createElement('div');
+      def.className = 'banner-picker-item default-pattern';
+      def.dataset.banner = '';
+      def.textContent = 'Default pattern';
+      grid.appendChild(def);
+      ownedIds.forEach(pid => {
+        const p = byId[pid];
+        if (!p) return;
+        const url = p.bannerImageUrl || p.backgroundImage || '';
+        if (!url) return;
+        const el = document.createElement('div');
+        el.className = 'banner-picker-item';
+        el.dataset.banner = url;
+        el.innerHTML = `<img src="${escapeHtml(url)}" alt="">`;
+        grid.appendChild(el);
+      });
+      const curBanner = d.banner || '';
+      grid.querySelectorAll('.banner-picker-item').forEach(x => {
+        x.classList.toggle('selected', (x.dataset.banner || '') === curBanner);
+      });
+      grid.querySelectorAll('.banner-picker-item').forEach(el => {
+        el.addEventListener('click', async () => {
+          const url = el.dataset.banner || '';
+          const ref = doc(db, 'users', userId);
+          if (url) await updateDoc(ref, { banner: url });
+          else await updateDoc(ref, { banner: null });
+          grid.querySelectorAll('.banner-picker-item').forEach(x => x.classList.remove('selected'));
+          el.classList.add('selected');
+          await loadProfilePage(userId);
+          showNotification(url ? 'Banner updated' : 'Using default banner', 'success');
+        });
+      });
+      modal.style.display = 'flex';
+    }
+
+    document.getElementById('banner-picker-close')?.addEventListener('click', () => {
+      const m = document.getElementById('banner-picker-modal');
+      if (m) m.style.display = 'none';
+    });
+    document.getElementById('banner-picker-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'banner-picker-modal') e.target.style.display = 'none';
+    });
+
     // ========== Load play history with simple timestamp ==========
     async function loadPlayHistory(userId) {
       try {
@@ -4257,28 +4672,33 @@
       } catch(e) { console.error(e); }
     }
 
-    // ========== Shop packs ==========
+    // ========== Shop packs & banners ==========
     async function loadShopPacks() {
       try {
+        if (shopPacksUnsub) { shopPacksUnsub(); shopPacksUnsub = null; }
         const packsQuery = query(collection(db, "packs"), orderBy("createdAt", "desc"));
-        const unsubscribe = onSnapshot(packsQuery, (snapshot) => {
+        shopPacksUnsub = onSnapshot(packsQuery, (snapshot) => {
           shopPacks.innerHTML = '';
           if (snapshot.empty) { shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>'; return; }
+          let anyPack = false;
           snapshot.forEach(docSnap => {
             const pack = { id: docSnap.id, ...docSnap.data() };
-            const topRarity = pack.items?.reduce((best, it) => { const order = ['common','uncommon','rare','epic','legendary','mythical','chroma']; return order.indexOf(it.rarity) > order.indexOf(best) ? it.rarity : best; }, 'common') || 'common';
+            if (pack.shopType === 'banner') return;
+            anyPack = true;
+            const topRarity = pack.items?.reduce((best, it) => { const order = ['common','uncommon','rare','epic','legendary','mythical','chroma']; return order.indexOf((it.rarity||'').toLowerCase()) > order.indexOf(best) ? (it.rarity||'').toLowerCase() : best; }, 'common') || 'common';
             const gradients = { common:'linear-gradient(135deg,#bdbdbd,#757575)', uncommon:'linear-gradient(135deg,#66bb6a,#2e7d32)', rare:'linear-gradient(135deg,#42a5f5,#1565c0)', epic:'linear-gradient(135deg,#ab47bc,#6a1b9a)', legendary:'linear-gradient(135deg,#ffd54f,#bf8f00)', mythical:'linear-gradient(135deg,#ef5350,#b71c1c)', chroma:'linear-gradient(135deg,#26c6da,#00838f)' };
             const borders = { common:'#9e9e9e', uncommon:'#81c784', rare:'#64b5f6', epic:'#ce93d8', legendary:'#ffe082', mythical:'#ef9a9a', chroma:'#80deea' };
             const packCard = document.createElement('div');
-            packCard.className = 'pack-card';
+            packCard.className = 'pack-card pack-card-visual';
             packCard.style.background = gradients[topRarity] || gradients.common;
             packCard.style.borderColor = borders[topRarity] || borders.common;
             const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
             packCard.innerHTML = `
               <div class="pack-content">
-                <div style="font-size:1rem;font-weight:900;margin-bottom:8px;text-shadow:0 2px 4px rgba(0,0,0,0.4);">${pack.name}</div>
-                ${packImg ? `<img src="${packImg}" style="width:80px;height:80px;object-fit:contain;border-radius:12px;margin-bottom:10px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));">` : '<div style="width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:10px;"><i class="fas fa-box-open"></i></div>'}
-                <div style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:0.9rem;background:rgba(0,0,0,0.3);padding:4px 14px;border-radius:20px;"><i class="fas fa-coins" style="color:#ffd700;"></i> ${pack.price}</div>
+                <div class="pack-visual-wrap">
+                  ${packImg ? `<img class="pack-visual-img" src="${escapeHtml(packImg)}" alt="">` : '<div class="pack-visual-placeholder"><i class="fas fa-box-open"></i></div>'}
+                </div>
+                <div class="pack-price-row"><i class="fas fa-coins" style="color:#ffd700;"></i> ${pack.price}</div>
               </div>
             `;
             packCard.addEventListener('click', () => purchasePack(pack));
@@ -4289,8 +4709,62 @@
             packCard.appendChild(infoBtn);
             shopPacks.appendChild(packCard);
           });
+          if (!anyPack) shopPacks.innerHTML = '<p style="color:var(--text-secondary);">No packs available</p>';
         });
+        loadShopBannerOffers();
       } catch(e) { console.error(e); }
+    }
+
+    async function loadShopBannerOffers() {
+      if (shopBannersUnsub) { shopBannersUnsub(); shopBannersUnsub = null; }
+      if (!shopBanners) return;
+      const packsQuery = query(collection(db, "packs"), orderBy("createdAt", "desc"));
+      shopBannersUnsub = onSnapshot(packsQuery, (snapshot) => {
+        shopBanners.innerHTML = '';
+        const banners = [];
+        snapshot.forEach(d => { const p = { id: d.id, ...d.data() }; if (p.shopType === 'banner') banners.push(p); });
+        if (banners.length === 0) {
+          shopBanners.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;">No banners in the shop yet</p>';
+          return;
+        }
+        banners.forEach(b => {
+          const card = document.createElement('div');
+          card.className = 'pack-card pack-card-visual';
+          card.style.background = 'linear-gradient(135deg,#1a2a3a,#0d1520)';
+          card.style.borderColor = 'rgba(42,255,158,0.35)';
+          const img = b.bannerImageUrl || b.backgroundImage || '';
+          card.innerHTML = `
+            <div class="pack-content">
+              <div class="pack-visual-wrap">
+                ${img ? `<img class="pack-visual-img" src="${escapeHtml(img)}" alt="">` : '<div class="pack-visual-placeholder"><i class="fas fa-image"></i></div>'}
+              </div>
+              <div class="pack-price-row"><i class="fas fa-coins" style="color:#ffd700;"></i> ${b.price}</div>
+            </div>
+          `;
+          card.addEventListener('click', () => purchaseBannerOffer(b));
+          shopBanners.appendChild(card);
+        });
+      });
+    }
+
+    async function purchaseBannerOffer(bannerPack) {
+      if (!currentUser) return;
+      try {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (!userDoc.exists()) return;
+        const userData = userDoc.data();
+        const owned = userData.ownedBannerIds || [];
+        if (owned.includes(bannerPack.id)) { showNotification('You already own this banner', 'error'); return; }
+        if ((userData.coins || 0) < bannerPack.price) { showNotification('Not enough coins!', 'error'); return; }
+        const url = bannerPack.bannerImageUrl || bannerPack.backgroundImage || '';
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          coins: userData.coins - bannerPack.price,
+          ownedBannerIds: arrayUnion(bannerPack.id)
+        });
+        updateMissionProgress('spending', bannerPack.price);
+        loadUserBalance(currentUser.uid);
+        showNotification('Banner unlocked! Equip it from your profile banner.', 'success');
+      } catch (e) { showNotification('Error: ' + e.message, 'error'); }
     }
 
     function showChanceModal(pack) {
@@ -4316,6 +4790,7 @@
         const userData = userDoc.data();
         if (userData.coins < pack.price) { showNotification("Not enough coins!", "error"); return; }
         await updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins - pack.price });
+        updateMissionProgress('spending', pack.price);
         loadUserBalance(currentUser.uid);
         openPack(pack, currentUser.uid);
       } catch(e) { showNotification("Error purchasing pack: " + e.message, "error"); }
@@ -4382,21 +4857,47 @@
     }
 
     function showPackOpeningModal(pack, item) {
-      openingModalBg.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${pack.backgroundImage || 'https://placehold.co/600x400?text=Pack+Image'}')`;
+      const bgUrl = (pack.backgroundImage || 'https://placehold.co/600x400?text=Pack').replace(/\\/g, '/');
+      openingModalBg.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("${bgUrl.replace(/"/g, '%22')}")`;
       openedGiftName.textContent = item.name;
-      openedGiftRarity.textContent = item.rarity.toUpperCase();
-      openedGiftRarity.className = `gift-rarity ${item.rarity}`;
-      openedGiftValue.textContent = `Chance: ${item.chance}%`;
+      openedGiftRarity.textContent = (item.rarity || 'common').toUpperCase();
+      openedGiftRarity.className = `gift-rarity ${item.rarity || 'common'}`;
+      openedGiftValue.textContent = `Chance: ${item.chance != null ? item.chance : '?'}%`;
       openedGiftStars.textContent = `Stars: ${item.starsGained}`;
-      
+      openedGiftName.style.opacity = '0';
+      openedGiftRarity.style.opacity = '0';
+      openedGiftValue.style.opacity = '0';
+      openedGiftStars.style.opacity = '0';
+      collectBtn.style.opacity = '0';
+      collectBtn.style.pointerEvents = 'none';
+
+      giftAnimation.classList.remove('pack-unbox-anim');
+      void giftAnimation.offsetWidth;
       giftAnimation.innerHTML = '';
-      if (item.imageUrl) {
-        giftAnimation.innerHTML = `<img src="${item.imageUrl}" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
+      const packImg = pack.backgroundImage || (pack.items?.find(it=>it.imageUrl)?.imageUrl) || '';
+      if (packImg) {
+        giftAnimation.innerHTML = `<img src="${packImg.replace(/"/g, '&quot;')}" alt="" class="pack-unbox-pack-img" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
       } else {
-        giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:${getRarityColor(item.rarity)};"><i class="fas fa-gift"></i></div>`;
+        giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:#fff;"><i class="fas fa-box-open"></i></div>`;
       }
-      
+      giftAnimation.classList.add('pack-unbox-anim');
+
       packOpeningModal.style.display = 'flex';
+
+      setTimeout(() => {
+        giftAnimation.classList.remove('pack-unbox-anim');
+        if (item.imageUrl) {
+          giftAnimation.innerHTML = `<img src="${item.imageUrl.replace(/"/g, '&quot;')}" alt="${(item.name||'').replace(/"/g, '&quot;')}" style="width:100%;height:100%;object-fit:contain;padding:12px;">`;
+        } else {
+          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:${getRarityColor(item.rarity)};"><i class="fas fa-gift"></i></div>`;
+        }
+        openedGiftName.style.opacity = '1';
+        openedGiftRarity.style.opacity = '1';
+        openedGiftValue.style.opacity = '1';
+        openedGiftStars.style.opacity = '1';
+        collectBtn.style.opacity = '1';
+        collectBtn.style.pointerEvents = '';
+      }, 900);
     }
 
     collectBtn.addEventListener('click', async () => {
@@ -4421,15 +4922,15 @@
     let currentInventoryFilter = 'all';
     let inventoryItems = [];
     let packBuilderItems = [];
-    const RARITIES = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
     function renderPackBuilderItems() {
       const list = document.getElementById('staff-pack-items-list');
       if (!list) return;
+      const RAR_OPTS = effectiveRarityOrder.length ? effectiveRarityOrder : DEFAULT_RARITY_ORDER;
       list.innerHTML = packBuilderItems.map((item, i) => `
         <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.08);">
           <div class="staff-flex-row" style="gap:6px;align-items:flex-end;">
             <div class="staff-form-group" style="flex:2;margin:0;"><label style="font-size:0.7rem;">Name</label><input value="${escapeHtml(item.name)}" data-idx="${i}" data-field="name" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
-            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity</label><select data-idx="${i}" data-field="rarity" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;">${RARITIES.map(r=>`<option value="${r}" ${item.rarity===r?'selected':''}>${r}</option>`).join('')}</select></div>
+            <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Rarity</label><select data-idx="${i}" data-field="rarity" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;">${RAR_OPTS.map(r=>`<option value="${r}" ${(item.rarity||'').toLowerCase()===r?'selected':''}>${r}</option>`).join('')}</select></div>
             <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Chance %</label><input type="number" step="0.01" value="${item.chance||0}" data-idx="${i}" data-field="chance" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
             <div class="staff-form-group" style="flex:1;margin:0;"><label style="font-size:0.7rem;">Stars</label><input type="number" value="${item.starsGained||0}" data-idx="${i}" data-field="starsGained" class="pbi-field" style="padding:6px 10px;font-size:0.8rem;"></div>
           </div>
@@ -4450,39 +4951,10 @@
       list.querySelectorAll('.pbi-del').forEach(b => b.addEventListener('click', () => { packBuilderItems.splice(parseInt(b.dataset.idx), 1); renderPackBuilderItems(); }));
     }
 
-    function showItemDetail(item) {
-      const panel = document.getElementById('inv-detail-panel');
-      const r = (item.rarity || 'common').toLowerCase();
-      const rarityColors = { common:'#9e9e9e', uncommon:'#43a047', rare:'#1e88e5', epic:'#8e24aa', legendary:'#f9a825', mythical:'#e53935', chroma:'#00acc1' };
-      panel.innerHTML = `
-        ${item.imageUrl ? `<img class="inv-detail-img" src="${item.imageUrl}" alt="${item.itemName}">` : `<div class="inv-detail-img" style="display:flex;align-items:center;justify-content:center;font-size:3rem;color:${rarityColors[r]||'#fff'};"><i class="fas fa-gift"></i></div>`}
-        <div class="inv-detail-name">${item.itemName}</div>
-        <div class="inv-detail-rarity" style="background:${rarityColors[r]||'#333'};color:#fff;">${r}</div>
-        <div class="inv-detail-stat"><i class="fas fa-star" style="color:#FFC107;"></i> ${item.starsGained || 0} Stars</div>
-        <div class="inv-detail-stat"><i class="fas fa-box-open" style="color:var(--neon-green);"></i> ${item.packName}</div>
-        <div class="inv-detail-actions">
-          <button class="staff-btn staff-btn-primary staff-btn-sm" id="inv-detail-send"><i class="fas fa-paper-plane"></i> Send</button>
-          <button class="staff-btn staff-btn-danger staff-btn-sm" id="inv-detail-use"><i class="fas fa-bolt"></i> Use</button>
-        </div>
-      `;
-      document.getElementById('inv-detail-send')?.addEventListener('click', () => {
-        currentCard = { id: item.id, name: item.itemName, rarity: item.rarity, image: item.imageUrl || '' };
-        openSendCardModal();
-      });
-      document.getElementById('inv-detail-use')?.addEventListener('click', () => {
-        useItem({ id: item.id, name: item.itemName, rarity: item.rarity, type: item.type || 'item', value: item.value || 0, image: item.imageUrl || '' });
-      });
-      document.querySelectorAll('.inv-item-thumb').forEach(t => t.classList.remove('selected'));
-      const sel = document.querySelector(`.inv-item-thumb[data-item-id="${item.id}"]`);
-      if (sel) sel.classList.add('selected');
-    }
-
     function renderInventory() {
       inventoryContainer.innerHTML = '';
       const statsBar = document.getElementById('inventory-stats-bar');
       const filterBar = document.getElementById('inventory-filter-bar');
-      const detailPanel = document.getElementById('inv-detail-panel');
-      detailPanel.innerHTML = '<div class="inv-detail-empty">Click a blook to view details</div>';
 
       if (inventoryItems.length === 0) {
         statsBar.innerHTML = '';
@@ -4491,16 +4963,17 @@
         return;
       }
 
-      const uniqueNames = new Set(inventoryItems.map(i => i.itemName));
+      const rarityCounts = {};
       const packCounts = {};
       inventoryItems.forEach(item => {
+        rarityCounts[item.rarity] = (rarityCounts[item.rarity] || 0) + 1;
         packCounts[item.packName] = (packCounts[item.packName] || 0) + 1;
       });
 
       statsBar.innerHTML = `
         <div class="inv-stat"><i class="fas fa-th inv-stat-icon"></i><div><div class="inv-stat-value">${inventoryItems.length}</div><div class="inv-stat-label">Total Blooks</div></div></div>
-        <div class="inv-stat"><i class="fas fa-fingerprint inv-stat-icon"></i><div><div class="inv-stat-value">${uniqueNames.size}</div><div class="inv-stat-label">Unique</div></div></div>
         <div class="inv-stat"><i class="fas fa-box-open inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(packCounts).length}</div><div class="inv-stat-label">Packs</div></div></div>
+        <div class="inv-stat"><i class="fas fa-gem inv-stat-icon"></i><div><div class="inv-stat-value">${Object.keys(rarityCounts).length}</div><div class="inv-stat-label">Rarities</div></div></div>
       `;
 
       const packNames = Object.keys(packCounts).sort();
@@ -4509,33 +4982,81 @@
         filterBar.innerHTML += `<button class="filter-btn ${currentInventoryFilter === pn ? 'active' : ''}" data-filter="${pn}">${pn} (${packCounts[pn]})</button>`;
       });
       filterBar.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => { currentInventoryFilter = btn.dataset.filter; renderInventory(); });
+        btn.addEventListener('click', () => {
+          currentInventoryFilter = btn.dataset.filter;
+          renderInventory();
+        });
       });
 
       const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => i.packName === currentInventoryFilter);
+
       const grouped = {};
       filtered.forEach(item => {
-        if (!grouped[item.packName]) grouped[item.packName] = [];
-        grouped[item.packName].push(item);
+        const pn = item.packName || 'Unknown pack';
+        if (!grouped[pn]) grouped[pn] = {};
+        const key = item.itemName || '?';
+        if (!grouped[pn][key]) grouped[pn][key] = [];
+        grouped[pn][key].push(item);
       });
 
       Object.keys(grouped).sort().forEach(packName => {
-        const items = grouped[packName];
-        const row = document.createElement('div');
-        row.className = 'inv-pack-row';
-        row.innerHTML = `<div class="inv-pack-label">${packName} <span style="color:var(--text-secondary);font-weight:600;font-size:0.75rem;">(${items.length})</span></div><div class="inv-items-row"></div>`;
-        const itemsRow = row.querySelector('.inv-items-row');
-        items.forEach(item => {
-          const r = (item.rarity || 'common').toLowerCase();
-          const thumb = document.createElement('div');
-          thumb.className = `inv-item-thumb rarity-${r}`;
-          thumb.dataset.itemId = item.id;
-          thumb.innerHTML = item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.itemName}">` : `<i class="fas fa-gift inv-thumb-icon"></i>`;
-          thumb.addEventListener('click', () => showItemDetail(item));
-          itemsRow.appendChild(thumb);
+        const byName = grouped[packName];
+        const packGroup = document.createElement('div');
+        packGroup.className = 'pack-group';
+        const nameKeys = Object.keys(byName);
+        const totalCards = nameKeys.reduce((s, k) => s + byName[k].length, 0);
+        packGroup.innerHTML = `<div class="pack-header"><div class="pack-title">${escapeHtml(packName)}</div><div class="pack-count">${totalCards} blooks</div></div><div class="cards-grid"></div>`;
+        const cardsGrid = packGroup.querySelector('.cards-grid');
+
+        const rows = nameKeys.map(k => {
+          const copies = byName[k];
+          const best = copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
+          const count = copies.length;
+          const maxStars = Math.max(...copies.map(c => c.starsGained || 0));
+          return { name: k, copies, rep: best, count, maxStars };
         });
-        inventoryContainer.appendChild(row);
+        rows.sort((a, b) => {
+          const rd = raritySortIndex(a.rep.rarity) - raritySortIndex(b.rep.rarity);
+          if (rd !== 0) return rd;
+          return a.name.localeCompare(b.name);
+        });
+
+        rows.forEach(({ rep, count, maxStars }) => {
+          const r = (rep.rarity || 'common').toLowerCase();
+          const countColor = getRarityColor(r);
+          const card = document.createElement('div');
+          card.className = `card-item rarity-${r}`;
+          card.innerHTML = `
+            <div class="card-image-area">
+              ${rep.imageUrl ? `<img src="${rep.imageUrl}" alt="${escapeHtml(rep.itemName)}">` : `<i class="fas fa-gift card-icon-placeholder"></i>`}
+            </div>
+            <div class="card-info-area">
+              <div class="card-name-row">
+                <span class="card-name" title="${escapeHtml(rep.itemName)}">${escapeHtml(rep.itemName)}</span>
+                ${count > 1 ? `<span class="inv-blook-count" style="color:${countColor};">×${count}</span>` : ''}
+              </div>
+              <div class="card-rarity-label">${r}</div>
+              <div class="card-stars"><i class="fas fa-star"></i> ${maxStars}</div>
+            </div>
+            <div class="card-actions-overlay">
+              <button class="card-action-btn send-btn" data-id="${rep.id}" data-name="${escapeHtml(rep.itemName)}" data-rarity="${escapeHtml(rep.rarity)}" data-image="${escapeHtml(rep.imageUrl || '')}"><i class="fas fa-paper-plane"></i> Send</button>
+              <button class="card-action-btn use-btn" data-id="${rep.id}" data-name="${escapeHtml(rep.itemName)}" data-rarity="${escapeHtml(rep.rarity)}" data-type="${escapeHtml(rep.type || 'item')}" data-value="${rep.value || 0}" data-image="${escapeHtml(rep.imageUrl || '')}"><i class="fas fa-bolt"></i> Use</button>
+            </div>
+          `;
+          cardsGrid.appendChild(card);
+        });
+        inventoryContainer.appendChild(packGroup);
       });
+
+      document.querySelectorAll('.card-action-btn.send-btn').forEach(btn => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentCard = { id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, image: btn.dataset.image };
+        openSendCardModal();
+      }));
+      document.querySelectorAll('.card-action-btn.use-btn').forEach(btn => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        useItem({ id: btn.dataset.id, name: btn.dataset.name, rarity: btn.dataset.rarity, type: btn.dataset.type, value: btn.dataset.value, image: btn.dataset.image });
+      }));
     }
 
     async function loadInventory(userId) {
@@ -4562,97 +5083,143 @@
       } catch(e) { showNotification("Error using item: " + e.message, "error"); }
     }
 
-    // ========== Missions Page ==========
+    let missionsListUnsub = null;
+    let missionProgressUnsub = null;
+    let missionsRenderCache = [];
+    let missionProgressMap = {};
+
+    function renderMissionsList() {
+      missionsContainer.innerHTML = '';
+      if (!missionsRenderCache.length) {
+        missionsContainer.innerHTML = '<div class="no-missions">No missions available yet. Check back later!</div>';
+        return;
+      }
+      const sorted = [...missionsRenderCache].sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+      sorted.forEach(mission => {
+        const progDoc = missionProgressMap[`${mission.id}`] || {};
+        const rawProg = typeof progDoc.progress === 'number' ? progDoc.progress : 0;
+        const target = Math.max(1, mission.target || 1);
+        const progressVal = Math.min(rawProg, target);
+        const progressPercent = Math.min(100, progressVal / target * 100);
+        const userClaimed = !!progDoc.claimed;
+        const isCompleted = progressVal >= target && !userClaimed;
+
+        const missionCard = document.createElement('div');
+        missionCard.className = 'mission-card';
+        missionCard.innerHTML = `
+          <div class="mission-header">
+            <div class="mission-title">${escapeHtml(mission.title)}</div>
+            <div class="mission-type ${escapeHtml(mission.type || 'gametime')}">${escapeHtml((mission.type || 'gametime').toUpperCase())}</div>
+          </div>
+          <div class="mission-description">${escapeHtml(mission.description || '')}</div>
+          <div class="mission-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="progress-text">${progressVal} / ${target}</div>
+          </div>
+          <div class="mission-rewards">
+            <div class="reward-item">
+              <i class="fas fa-coins reward-icon"></i>
+              <span>${mission.rewardCoins || 0} coins</span>
+            </div>
+            <div class="reward-item">
+              <i class="fas fa-star reward-icon"></i>
+              <span>${mission.rewardStars || 0} stars</span>
+            </div>
+          </div>
+          <button class="claim-btn" ${userClaimed || !isCompleted ? 'disabled' : ''}>${userClaimed ? 'CLAIMED' : (isCompleted ? 'CLAIM REWARD' : 'IN PROGRESS')}</button>
+        `;
+
+        const claimBtn = missionCard.querySelector('.claim-btn');
+        if (isCompleted && !userClaimed) {
+          claimBtn.addEventListener('click', () => claimMissionReward(mission, userId));
+        }
+        missionsContainer.appendChild(missionCard);
+      });
+    }
+
     async function loadMissions(userId) {
       try {
-        const missionsQuery = query(collection(db, "missions"), orderBy("createdAt", "desc"));
-        const unsubscribe = onSnapshot(missionsQuery, (snapshot) => {
-          missionsContainer.innerHTML = '';
-          if (snapshot.empty) {
-            missionsContainer.innerHTML = '<div class="no-missions">No missions available yet. Check back later!</div>';
-            return;
-          }
-          
-          snapshot.forEach(doc => {
-            const mission = { id: doc.id, ...doc.data() };
-            const missionCard = document.createElement('div');
-            missionCard.className = 'mission-card';
-            
-            // Calculate progress percentage
-            let progressPercent = 0;
-            if (mission.type === 'gametime') {
-              progressPercent = Math.min(100, (mission.progress || 0) / mission.target * 100);
-            } else if (mission.type === 'chatting') {
-              progressPercent = Math.min(100, (mission.progress || 0) / mission.target * 100);
-            } else if (mission.type === 'spending') {
-              progressPercent = Math.min(100, (mission.progress || 0) / mission.target * 100);
-            }
-            
-            const isCompleted = progressPercent >= 100;
-            
-            missionCard.innerHTML = `
-              <div class="mission-header">
-                <div class="mission-title">${mission.title}</div>
-                <div class="mission-type ${mission.type}">${mission.type.toUpperCase()}</div>
-              </div>
-              <div class="mission-description">${mission.description}</div>
-              <div class="mission-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: ${progressPercent}%"></div>
-                </div>
-                <div class="progress-text">${mission.progress || 0} / ${mission.target}</div>
-              </div>
-              <div class="mission-rewards">
-                <div class="reward-item">
-                  <i class="fas fa-coins reward-icon"></i>
-                  <span>${mission.rewardCoins || 0} coins</span>
-                </div>
-                <div class="reward-item">
-                  <i class="fas fa-star reward-icon"></i>
-                  <span>${mission.rewardStars || 0} stars</span>
-                </div>
-              </div>
-              <button class="claim-btn" ${isCompleted ? '' : 'disabled'}>${isCompleted ? 'CLAIM REWARD' : 'IN PROGRESS'}</button>
-            `;
-            
-            const claimBtn = missionCard.querySelector('.claim-btn');
-            if (isCompleted) {
-              claimBtn.addEventListener('click', () => claimMissionReward(mission, userId));
-            }
-            
-            missionsContainer.appendChild(missionCard);
-          });
+        if (missionsListUnsub) missionsListUnsub();
+        if (missionProgressUnsub) missionProgressUnsub();
+        missionsListUnsub = onSnapshot(query(collection(db, "missions"), orderBy("createdAt", "desc")), (snapshot) => {
+          missionsRenderCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderMissionsList();
         });
-      } catch(e) { 
+        missionProgressUnsub = onSnapshot(query(collection(db, "userMissionProgress"), where("userId", "==", userId)), (snap) => {
+          missionProgressMap = {};
+          snap.forEach(d => {
+            const data = d.data();
+            if (data.missionId) missionProgressMap[data.missionId] = data;
+          });
+          renderMissionsList();
+        });
+      } catch(e) {
         console.error(e);
         missionsContainer.innerHTML = '<div class="no-missions">Error loading missions. Please try again later.</div>';
       }
     }
 
+    async function updateMissionProgress(type, amount) {
+      if (!currentUser || !amount || amount <= 0) return;
+      try {
+        const mq = query(collection(db, "missions"), where("type", "==", type));
+        const msnap = await getDocs(mq);
+        for (const d of msnap.docs) {
+          const mission = d.data();
+          const target = Math.max(1, mission.target || 1);
+          const progRef = doc(db, "userMissionProgress", `${currentUser.uid}_${d.id}`);
+          await runTransaction(db, async (transaction) => {
+            const p = await transaction.get(progRef);
+            const cur = p.exists() ? p.data() : {};
+            if (cur.claimed) return;
+            const prev = typeof cur.progress === 'number' ? cur.progress : 0;
+            const next = Math.min(prev + amount, target);
+            transaction.set(progRef, {
+              userId: currentUser.uid,
+              missionId: d.id,
+              progress: next,
+              claimed: false,
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          });
+        }
+      } catch (e) { console.warn('Mission progress update:', e); }
+    }
+
     async function claimMissionReward(mission, userId) {
       try {
-        // Update user's coins and stars
-        const userDoc = await getDoc(doc(db, "users", userId));
-        if (!userDoc.exists()) return;
-        
-        const userData = userDoc.data();
-        const newCoins = (userData.coins || 0) + (mission.rewardCoins || 0);
-        const newStars = (userData.stars || 0) + (mission.rewardStars || 0);
-        
-        await updateDoc(doc(db, "users", userId), {
-          coins: newCoins,   
-          stars: newStars
+        const progRef = doc(db, "userMissionProgress", `${userId}_${mission.id}`);
+        await runTransaction(db, async (transaction) => {
+          const p = await transaction.get(progRef);
+          const cur = p.exists() ? p.data() : {};
+          if (cur.claimed) throw new Error('already');
+          const target = Math.max(1, mission.target || 1);
+          const prog = typeof cur.progress === 'number' ? cur.progress : 0;
+          if (prog < target) throw new Error('notdone');
+          const userRef = doc(db, "users", userId);
+          const u = await transaction.get(userRef);
+          if (!u.exists()) throw new Error('nouser');
+          const userData = u.data();
+          transaction.update(userRef, {
+            coins: (userData.coins || 0) + (mission.rewardCoins || 0),
+            stars: (userData.stars || 0) + (mission.rewardStars || 0)
+          });
+          transaction.set(progRef, {
+            userId,
+            missionId: mission.id,
+            progress: target,
+            claimed: true,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
         });
-        
-        // Mark mission as claimed
-        await updateDoc(doc(db, "missions", mission.id), {
-          claimed: true
-        });
-        
         showNotification(`Mission completed! You received ${mission.rewardCoins || 0} coins and ${mission.rewardStars || 0} stars!`, "success");
         loadUserBalance(userId);
       } catch(e) {
-        showNotification("Error claiming reward: " + e.message, "error");
+        if (e.message === 'already') showNotification('Reward already claimed', 'error');
+        else if (e.message === 'notdone') showNotification('Mission not complete yet', 'error');
+        else showNotification("Error claiming reward: " + e.message, "error");
       }
     }
 
@@ -4711,73 +5278,88 @@
       return null;
     }
 
-    async function renderChatMessages(container, snapshot) {
-      container.innerHTML = '';
-      const messagesWithIds = snapshot.docs.map(d => ({id: d.id, ...d.data()})).reverse();
-      const canDelete = hasPermission('delete_chats');
-      for (const msg of messagesWithIds) {
-        const div = document.createElement('div');
-        div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
-        if (msg.type === 'system') {
-          div.innerHTML = `<div class="message-content">${msg.message}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
-        } else {
-          const userData = await getChatUserData(msg.senderId);
-          const titleColor = 'var(--neon-green)';
-          let titleStyle = `color:${titleColor};`;
-          let topBadgeHtml = '';
-          if (userData) {
-            try {
-              const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', userData.title || 'User')));
-              if (!titlesSnap.empty) {
-                const td = titlesSnap.docs[0].data();
-                if (td.isGradient && td.gradientColors?.length >= 2) {
-                  titleStyle = `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
-                } else if (td.color) {
-                  titleStyle = `color:${td.color};`;
-                }
-              }
-            } catch(e) {}
-            if (userData.badges?.length > 0) {
-              try {
-                const badgesSnap = await getDocs(collection(db, 'badges'));
-                const bd = badgesSnap.docs.map(d=>d.data()).find(b=>b.name===userData.badges[0]);
-                if (bd?.icon) topBadgeHtml = `<img class="chat-msg-badge" src="${bd.icon}" alt="${bd.name}" title="${bd.name}">`;
-              } catch(e) {}
+    async function buildChatMessageElement(docSnap) {
+      const msg = docSnap.data();
+      const div = document.createElement('div');
+      div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
+      div.dataset.msgId = docSnap.id;
+      if (msg.type === 'system') {
+        div.innerHTML = `<div class="message-content">${escapeHtml(msg.message || '')}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
+        return div;
+      }
+      const userData = await getChatUserData(msg.senderId);
+      let titleStyle = 'color:var(--neon-green);';
+      let topBadgeHtml = '';
+      if (userData) {
+        try {
+          const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', userData.title || 'User')));
+          if (!titlesSnap.empty) {
+            const td = titlesSnap.docs[0].data();
+            if (td.isGradient && td.gradientColors?.length >= 2) {
+              titleStyle = `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
+            } else if (td.color) {
+              titleStyle = `color:${td.color};`;
             }
           }
-          div.innerHTML = `
-            <div class="chat-msg-header">
-              <img class="chat-avatar" src="${msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg'}" alt="${msg.senderName}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">
-              <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${msg.senderId}" data-username="${msg.senderName}">${msg.senderName}</span>
-              ${topBadgeHtml}
-              <span class="message-time">${formatMessageTime(msg.timestamp)}</span>
-              ${canDelete ? `<i class="fas fa-trash-alt chat-del-msg" data-msg-id="${msg.id}" style="cursor:pointer;color:var(--neon-pink);font-size:0.65rem;margin-left:auto;opacity:0.5;"></i>` : ''}
-            </div>
-            <div class="message-content">${msg.message}</div>
-          `;
+        } catch(e) {}
+        if (userData.badges?.length > 0) {
+          try {
+            const badgesSnap = await getDocs(collection(db, 'badges'));
+            const bd = badgesSnap.docs.map(d=>d.data()).find(b=>b.name===userData.badges[0]);
+            if (bd?.icon) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}">`;
+          } catch(e) {}
         }
-        container.appendChild(div);
       }
-      container.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
+      const safeName = escapeHtml(msg.senderName || '');
+      const av = escapeHtml(msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg');
+      div.innerHTML = `
+        <div class="chat-msg-header">
+          <img class="chat-avatar" src="${av}" alt="${safeName}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">
+          <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">${safeName}</span>
+          ${topBadgeHtml}
+          <span class="message-time">${formatMessageTime(msg.timestamp)}</span>
+        </div>
+        <div class="message-content chat-msg-body"></div>
+      `;
+      const body = div.querySelector('.chat-msg-body');
+      if (body) body.textContent = msg.message || '';
+      div.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
         el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
       });
-      container.querySelectorAll('.chat-del-msg').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          if (confirm('Delete this message?')) {
-            await deleteDoc(doc(db, 'chats', btn.dataset.msgId));
-            await addToLog('delete_chat', `Deleted chat message ${btn.dataset.msgId}`);
-          }
-        });
+      return div;
+    }
+
+    async function applyChatSnapshot(container, snapshot, renderedIdSet) {
+      const changes = snapshot.docChanges();
+      for (const ch of changes) {
+        if (ch.type === 'removed') {
+          const el = container.querySelector(`[data-msg-id="${ch.doc.id}"]`);
+          if (el) el.remove();
+          renderedIdSet.delete(ch.doc.id);
+        }
+      }
+      const added = changes.filter(c => c.type === 'added').map(c => c.doc);
+      added.sort((a, b) => {
+        const ta = a.data().timestamp?.toMillis ? a.data().timestamp.toMillis() : 0;
+        const tb = b.data().timestamp?.toMillis ? b.data().timestamp.toMillis() : 0;
+        return ta - tb;
       });
+      for (const d of added) {
+        if (renderedIdSet.has(d.id)) continue;
+        renderedIdSet.add(d.id);
+        container.appendChild(await buildChatMessageElement(d));
+      }
       container.scrollTop = container.scrollHeight;
     }
 
     // ========== Global Chat ==========
     async function loadGlobalChat() {
       if (globalChatUnsubscribe) globalChatUnsubscribe();
+      globalChatRenderedIds = new Set();
+      globalChatContainer.innerHTML = '';
       const chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
       globalChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        renderChatMessages(globalChatContainer, snapshot);
+        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds).catch(e => console.warn(e));
       });
     }
 
@@ -4824,11 +5406,13 @@
       }
       friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${selectedFriend.avatar}" alt="${selectedFriend.username}">` : '<i class="fas fa-user"></i>'} <span>${selectedFriend.username}</span>`;
       friendChatInputArea.style.display = 'flex';
+      friendChatRenderedIds = new Set();
+      friendChatContainer.innerHTML = '';
       const uids = [currentUser.uid, selectedFriend.id].sort();
       const chatId = `${uids[0]}_${uids[1]}`;
       const chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
       friendChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        renderChatMessages(friendChatContainer, snapshot);
+        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds).catch(e => console.warn(e));
       });
     }
 
@@ -4889,6 +5473,7 @@
         await populateProfileLayout(userId, {
           avatar: 'vp-avatar', banner: 'vp-banner', bannerWrap: 'vp-banner-wrap',
           username: 'vp-username', title: 'vp-title',
+          publicId: 'vp-public-id',
           memberSince: 'vp-member-since', badges: 'vp-badges',
           starsVal: 'vp-stars', playtimeVal: 'vp-playtime',
           playCount: 'vp-plays', friendCount: 'vp-friends',
@@ -5014,7 +5599,46 @@
         currentAvatar.src = userDoc.data().avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         usernameInput.value = userDoc.data().username || "";
       }
+      const urlIn = document.getElementById('avatar-url-input');
+      if (urlIn) urlIn.value = '';
+      const tp = document.getElementById('theme-primary');
+      const ts = document.getElementById('theme-secondary');
+      try {
+        const raw = localStorage.getItem(THEME_STORAGE_KEY);
+        if (raw) {
+          const j = JSON.parse(raw);
+          if (tp && j.primary) tp.value = j.primary;
+          if (ts && j.secondary) ts.value = j.secondary;
+        } else {
+          if (tp) tp.value = DEFAULT_NEON_GREEN;
+          if (ts) ts.value = DEFAULT_NEON_PINK;
+        }
+      } catch (e) {
+        if (tp) tp.value = DEFAULT_NEON_GREEN;
+        if (ts) ts.value = DEFAULT_NEON_PINK;
+      }
     }
+
+    function persistThemeColors() {
+      const tp = document.getElementById('theme-primary');
+      const ts = document.getElementById('theme-secondary');
+      if (!tp || !ts) return;
+      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ primary: tp.value, secondary: ts.value }));
+      document.documentElement.style.setProperty('--neon-green', tp.value);
+      document.documentElement.style.setProperty('--neon-pink', ts.value);
+    }
+    document.getElementById('theme-primary')?.addEventListener('input', persistThemeColors);
+    document.getElementById('theme-secondary')?.addEventListener('input', persistThemeColors);
+    document.getElementById('theme-reset-btn')?.addEventListener('click', () => {
+      localStorage.removeItem(THEME_STORAGE_KEY);
+      document.documentElement.style.removeProperty('--neon-green');
+      document.documentElement.style.removeProperty('--neon-pink');
+      const tp = document.getElementById('theme-primary');
+      const ts = document.getElementById('theme-secondary');
+      if (tp) tp.value = DEFAULT_NEON_GREEN;
+      if (ts) ts.value = DEFAULT_NEON_PINK;
+      showNotification('Theme reset to default', 'success');
+    });
 
     saveSettingsBtn.addEventListener('click', async () => {
       if (!currentUser) return;
@@ -5052,6 +5676,9 @@
           }
         }
         
+        const avatarUrlField = document.getElementById('avatar-url-input')?.value.trim();
+        if (avatarUrlField) updates.avatar = avatarUrlField;
+
         const avatarFile = avatarUploadInput.files[0];
         if (avatarFile) {
           try {
@@ -5111,7 +5738,7 @@
       const defaults = [
         { name: 'Owner', color: '#FFD700', isGradient: true, gradientColors: ['#FFD700','#FF6B35','#FF1744'], priority: 1000, permissions: ALL_PERMISSIONS.map(p => p.key) },
         { name: 'Admin', color: '#FF3D6C', isGradient: false, gradientColors: [], priority: 500, permissions: ALL_PERMISSIONS.filter(p => p.key !== 'manage_permissions' && p.key !== 'create_gradient_titles').map(p => p.key) },
-        { name: 'Moderator', color: '#42A5F5', isGradient: false, gradientColors: [], priority: 100, permissions: ['staff_access','view_dashboard','manage_users','view_plays','view_chats','delete_chats','assign_titles','assign_badges'] },
+        { name: 'Moderator', color: '#42A5F5', isGradient: false, gradientColors: [], priority: 100, permissions: ['staff_access','view_dashboard','manage_users','view_plays','view_chats','delete_chats','assign_titles','assign_badges','mute_users','ban_users'] },
         { name: 'User', color: '#2AFF9E', isGradient: false, gradientColors: [], priority: 0, permissions: [] },
       ];
       for (const def of defaults) {
@@ -5171,11 +5798,9 @@
             case 'staff-users': loadStaffUsers(); break;
             case 'staff-titles': loadStaffTitles(); break;
             case 'staff-badges': loadStaffBadges(); break;
-            case 'staff-banners': loadStaffBanners(); break;
             case 'staff-missions': loadStaffMissions(); break;
             case 'staff-stars': break;
             case 'staff-chatview': loadStaffChatViewer(); break;
-            case 'staff-logs': loadStaffLogs(); break;
           }
         });
       });
@@ -5250,14 +5875,44 @@
       document.querySelectorAll('.sp-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete play record?')){await deleteDoc(doc(db,'plays',b.dataset.id));loadStaffPlays();loadStaffDashboard();}}));
     }
 
-    // ========== Staff Packs ==========
+    // ========== Staff Packs & banner shop ==========
     async function loadStaffPacks() {
-      if (!hasPermission('manage_packs')) { document.getElementById('staff-packs-list').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
+      if (!hasPermission('manage_packs')) {
+        document.getElementById('staff-packs-list').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        document.getElementById('staff-banner-shop-list').innerHTML = '';
+        return;
+      }
       const snap = await getDocs(collection(db,'packs'));
-      const packs = snap.docs.map(d=>({id:d.id,...d.data()}));
+      const all = snap.docs.map(d=>({id:d.id,...d.data()}));
+      const banners = all.filter(p => p.shopType === 'banner');
+      const packs = all.filter(p => p.shopType !== 'banner');
+      document.getElementById('staff-banner-shop-list').innerHTML = banners.length ? banners.map(p=>{
+        const img = p.bannerImageUrl || p.backgroundImage || '';
+        return `<div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px;"><div style="width:120px;height:44px;border-radius:8px;overflow:hidden;background:#1a2a3a;flex-shrink:0;">${img?`<img src="${escapeHtml(img)}" style="width:100%;height:100%;object-fit:cover;">`:''}</div><div style="flex:1;"><strong>${escapeHtml(p.name)}</strong> — ${p.price} coins</div><div><button class="staff-btn staff-btn-primary staff-btn-sm sbn-edit" data-id="${p.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sbn-del" data-id="${p.id}">Del</button></div></div>`;
+      }).join('') : '<p style="color:var(--text-secondary);font-size:0.85rem;">No shop banners.</p>';
+      document.querySelectorAll('.sbn-edit').forEach(b=>b.addEventListener('click',()=>openStaffBannerShopModal(b.dataset.id)));
+      document.querySelectorAll('.sbn-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete banner from shop?')){await deleteDoc(doc(db,'packs',b.dataset.id));loadStaffPacks();loadStaffDashboard();}}));
       document.getElementById('staff-packs-list').innerHTML = packs.map(p=>`<div class="staff-card" style="margin-bottom:12px;"><div class="staff-card-header"><h3>${escapeHtml(p.name)}</h3><div><button class="staff-btn staff-btn-primary staff-btn-sm spk-edit" data-id="${p.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm spk-del" data-id="${p.id}">Del</button></div></div><div style="font-size:0.85rem;"><strong>Price:</strong> ${p.price} coins | <strong>Items:</strong> ${p.items?.length||0}</div><div style="margin-top:8px;">${(p.items||[]).map(i=>`<span class="staff-badge">${escapeHtml(i.name)} (${i.rarity} ${i.chance}%)</span>`).join(' ')}</div></div>`).join('');
       document.querySelectorAll('.spk-edit').forEach(b=>b.addEventListener('click',()=>openStaffEditPack(b.dataset.id)));
       document.querySelectorAll('.spk-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete pack?')){await deleteDoc(doc(db,'packs',b.dataset.id));loadStaffPacks();loadStaffDashboard();}}));
+    }
+    async function openStaffBannerShopModal(id) {
+      document.getElementById('staff-banner-shop-id').value = id || '';
+      document.getElementById('staff-banner-shop-modal-title').textContent = id ? 'Edit shop banner' : 'New shop banner';
+      document.getElementById('staff-banner-shop-name').value = '';
+      document.getElementById('staff-banner-shop-price').value = '500';
+      document.getElementById('staff-banner-shop-url').value = '';
+      document.getElementById('staff-banner-shop-file').value = '';
+      if (id) {
+        const d = await getDoc(doc(db,'packs',id));
+        if (d.exists()) {
+          const x = d.data();
+          document.getElementById('staff-banner-shop-name').value = x.name||'';
+          document.getElementById('staff-banner-shop-price').value = x.price||0;
+          document.getElementById('staff-banner-shop-url').value = x.bannerImageUrl || x.backgroundImage || '';
+        }
+      }
+      document.getElementById('staff-banner-shop-modal').style.display = 'flex';
     }
     async function openStaffEditPack(id) {
       const d = await getDoc(doc(db,'packs',id));
@@ -5285,8 +5940,12 @@
       renderStaffUsers(users);
     }
     function renderStaffUsers(users, filter='') {
-      const filtered = users.filter(u=>(u.username||u.email||'').toLowerCase().includes(filter.toLowerCase()));
-      document.getElementById('staff-users-table').innerHTML = `<table class="staff-table"><thead><tr><th>User</th><th>Email</th><th>Coins</th><th>Stars</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>${filtered.map(u=>{const muteTag=u.muteStatus&&u.muteStatus!=='none'?`<span style="color:#FFB347;font-size:0.7rem;">🔇${u.muteStatus}</span>`:'';const banTag=u.banStatus&&u.banStatus!=='none'?`<span style="color:#FF3D6C;font-size:0.7rem;">🚫${u.banStatus}</span>`:'';return `<tr><td>${escapeHtml(u.username||'?')}</td><td>${escapeHtml(u.email)}</td><td>${u.coins||0}</td><td>${u.stars||0}</td><td>${escapeHtml(u.title||'User')}</td><td>${muteTag} ${banTag}${!muteTag&&!banTag?'<span style="color:var(--neon-green);font-size:0.7rem;">✓</span>':''}</td><td><button class="staff-btn staff-btn-primary staff-btn-sm su-edit" data-id="${u.id}">Edit</button></td></tr>`;}).join('')}</tbody></table>`;
+      const q = filter.toLowerCase().trim();
+      const filtered = users.filter(u => {
+        const idStr = u.displayId != null ? String(u.displayId) : '';
+        return (u.username||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q) || idStr.includes(q);
+      });
+      document.getElementById('staff-users-table').innerHTML = `<table class="staff-table"><thead><tr><th>User</th><th>ID</th><th>Email</th><th>Coins</th><th>Stars</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>${filtered.map(u=>{const muteTag=u.muteStatus&&u.muteStatus!=='none'?`<span style="color:#FFB347;font-size:0.7rem;">🔇${u.muteStatus}</span>`:'';const banTag=u.banStatus&&u.banStatus!=='none'?`<span style="color:#FF3D6C;font-size:0.7rem;">🚫${u.banStatus}</span>`:'';const did=(u.displayId!=null&&String(u.displayId).length===6)?String(u.displayId):'—';return `<tr><td>${escapeHtml(u.username||'?')}</td><td style="font-weight:800;">${escapeHtml(did)}</td><td>${escapeHtml(u.email)}</td><td>${u.coins||0}</td><td>${u.stars||0}</td><td>${escapeHtml(u.title||'User')}</td><td>${muteTag} ${banTag}${!muteTag&&!banTag?'<span style="color:var(--neon-green);font-size:0.7rem;">✓</span>':''}</td><td><button class="staff-btn staff-btn-primary staff-btn-sm su-edit" data-id="${u.id}">Edit</button></td></tr>`;}).join('')}</tbody></table>`;
       document.querySelectorAll('.su-edit').forEach(b=>b.addEventListener('click',()=>openStaffEditUser(b.dataset.id)));
     }
     async function openStaffEditUser(uid) {
@@ -5294,6 +5953,14 @@
       if(!userDoc.exists()) return;
       const data = userDoc.data();
       document.getElementById('staff-edit-user-id').value = uid;
+      const didEl = document.getElementById('staff-edit-display-id');
+      if (didEl) {
+        let did = data.displayId != null ? String(data.displayId) : '';
+        if (!did || did.length !== 6) {
+          ensureDisplayIdForUser(uid).then(nid => { if (didEl && nid) didEl.value = nid; });
+          didEl.value = '…';
+        } else didEl.value = did;
+      }
       document.getElementById('staff-edit-username').value = data.username||'';
       document.getElementById('staff-edit-coins').value = data.coins||0;
       document.getElementById('staff-edit-stars').value = data.stars||0;
@@ -5466,94 +6133,46 @@
       });
     }
 
-    // ========== Action Logging ==========
-    async function addToLog(action, details) {
-      try {
-        await addDoc(collection(db, 'logs'), {
-          userId: currentUser?.uid || 'system',
-          userEmail: currentUser?.email || 'system',
-          action,
-          details,
-          timestamp: serverTimestamp()
-        });
-      } catch(e) { console.error('Log error:', e); }
-    }
-
-    async function loadStaffLogs() {
-      try {
-        const snap = await getDocs(query(collection(db, 'logs'), orderBy('timestamp', 'desc'), limit(200)));
-        const tbody = document.querySelector('#staff-logs-table tbody');
-        tbody.innerHTML = snap.docs.map(d => {
-          const l = d.data();
-          const time = l.timestamp?.toDate ? l.timestamp.toDate().toLocaleString() : '';
-          return `<tr><td style="font-size:0.75rem;white-space:nowrap;">${time}</td><td style="font-size:0.75rem;">${escapeHtml(l.userEmail)}</td><td><span class="staff-badge">${escapeHtml(l.action)}</span></td><td style="font-size:0.75rem;max-width:300px;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(l.details)}</td></tr>`;
-        }).join('') || '<tr><td colspan="4" style="color:var(--text-secondary);">No logs yet.</td></tr>';
-      } catch(e) { console.error(e); }
-    }
-
-    // ========== Banner Shop ==========
-    async function loadBannerShop() {
-      const grid = document.getElementById('banner-shop-grid');
-      try {
-        const snap = await getDocs(collection(db, 'banners'));
-        if (snap.empty) { grid.innerHTML = '<p style="color:var(--text-secondary);">No banners available yet.</p>'; return; }
-        grid.innerHTML = snap.docs.map(d => {
-          const b = { id: d.id, ...d.data() };
-          return `<div class="pack-card" style="background:linear-gradient(135deg,#1a2a3a,#0a1a2a);border-color:rgba(42,255,158,0.3);aspect-ratio:2/1;">
-            <div class="pack-content" style="padding:0;">
-              <img src="${b.imageUrl}" style="width:100%;height:60%;object-fit:cover;border-radius:14px 14px 0 0;">
-              <div style="padding:10px;text-align:center;">
-                <div style="font-weight:800;font-size:0.9rem;">${escapeHtml(b.name)}</div>
-                <div style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:0.85rem;margin-top:4px;"><i class="fas fa-coins" style="color:#ffd700;"></i> ${b.price}</div>
-              </div>
-            </div>
-          </div>`;
-        }).join('');
-        grid.querySelectorAll('.pack-card').forEach((card, i) => {
-          card.style.cursor = 'pointer';
-          card.addEventListener('click', async () => {
-            const banner = { id: snap.docs[i].id, ...snap.docs[i].data() };
-            if (!currentUser) return;
-            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            if (!userDoc.exists()) return;
-            if (userDoc.data().coins < banner.price) { showNotification('Not enough coins!', 'error'); return; }
-            if (confirm(`Buy "${banner.name}" for ${banner.price} coins?`)) {
-              await updateDoc(doc(db, 'users', currentUser.uid), { coins: increment(-banner.price), banner: banner.imageUrl });
-              showNotification('Banner purchased!', 'success');
-              await addToLog('purchase_banner', `Bought banner: ${banner.name}`);
-              loadUserBalance(currentUser.uid);
-            }
-          });
-        });
-      } catch(e) { grid.innerHTML = '<p style="color:var(--text-secondary);">Error loading banners.</p>'; }
-    }
-
-    async function loadStaffBanners() {
-      const container = document.getElementById('staff-banners-list');
-      try {
-        const snap = await getDocs(collection(db, 'banners'));
-        container.innerHTML = snap.docs.map(d => {
-          const b = d.data();
-          return `<div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px;justify-content:space-between;">
-            <div style="display:flex;align-items:center;gap:12px;"><img src="${b.imageUrl}" style="width:80px;height:40px;border-radius:8px;object-fit:cover;"> <div><strong>${escapeHtml(b.name)}</strong><br><span style="font-size:0.75rem;color:var(--text-secondary);">${b.price} coins</span></div></div>
-            <button class="staff-btn staff-btn-danger staff-btn-sm sb-del-banner" data-id="${d.id}">Del</button>
-          </div>`;
-        }).join('') || '<p style="color:var(--text-secondary);">No banners.</p>';
-        container.querySelectorAll('.sb-del-banner').forEach(b => b.addEventListener('click', async () => {
-          if (confirm('Delete banner?')) { await deleteDoc(doc(db, 'banners', b.dataset.id)); await addToLog('delete_banner', `Deleted banner ${b.dataset.id}`); loadStaffBanners(); }
-        }));
-      } catch(e) {}
-    }
-
     // ========== Staff Missions ==========
     async function loadStaffMissions() {
       const container = document.getElementById('staff-missions-list');
       try {
         const snap = await getDocs(query(collection(db,'missions'),orderBy('createdAt','desc')));
         const missions = snap.docs.map(d=>({id:d.id,...d.data()}));
-        container.innerHTML = missions.length ? missions.map(m=>`<div class="staff-card" style="margin-bottom:10px;"><div class="staff-card-header"><h3 style="font-size:0.9rem;">${escapeHtml(m.title)}</h3><div><button class="staff-btn staff-btn-danger staff-btn-sm sm-del" data-id="${m.id}">Delete</button></div></div><div style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(m.description||'')} | Type: ${m.type} | Target: ${m.target} | Reward: ${m.rewardCoins||0} coins, ${m.rewardStars||0} stars</div></div>`).join('') : '<p style="color:var(--text-secondary);">No missions.</p>';
+        container.innerHTML = missions.length ? missions.map(m=>`<div class="staff-card" style="margin-bottom:10px;"><div class="staff-card-header"><h3 style="font-size:0.9rem;">${escapeHtml(m.title)}</h3><div><button class="staff-btn staff-btn-primary staff-btn-sm sm-edit" data-id="${m.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sm-del" data-id="${m.id}">Delete</button></div></div><div style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(m.description||'')} | Type: ${m.type} | Target: ${m.target} | Reward: ${m.rewardCoins||0} coins, ${m.rewardStars||0} stars</div></div>`).join('') : '<p style="color:var(--text-secondary);">No missions.</p>';
+        container.querySelectorAll('.sm-edit').forEach(b=>b.addEventListener('click',async()=>{
+          const d = await getDoc(doc(db,'missions',b.dataset.id));
+          if(!d.exists()) return;
+          const x = d.data();
+          document.getElementById('staff-mission-form-id').value = b.dataset.id;
+          document.getElementById('staff-mission-title').value = x.title||'';
+          document.getElementById('staff-mission-desc').value = x.description||'';
+          document.getElementById('staff-mission-type').value = x.type||'gametime';
+          document.getElementById('staff-mission-target').value = x.target||10;
+          document.getElementById('staff-mission-rcoins').value = x.rewardCoins||0;
+          document.getElementById('staff-mission-rstars').value = x.rewardStars||0;
+          document.getElementById('staff-mission-form-modal').style.display='flex';
+        }));
         container.querySelectorAll('.sm-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete mission?')){await deleteDoc(doc(db,'missions',b.dataset.id));loadStaffMissions();}}));
       } catch(e) { container.innerHTML = '<p style="color:var(--neon-pink);">Error loading missions.</p>'; }
+    }
+
+    async function findUserByStaffLookup(raw) {
+      const q = raw.trim();
+      if (!q) return null;
+      if (/^\d{6}$/.test(q)) {
+        const s = await getDocs(query(collection(db,'users'),where('displayId','==',q)));
+        if (!s.empty) return s.docs[0].id;
+      }
+      if (q.includes('@')) {
+        const s = await getDocs(query(collection(db,'users'),where('email','==',q)));
+        if (!s.empty) return s.docs[0].id;
+      }
+      const all = await getDocs(collection(db,'users'));
+      const low = q.toLowerCase();
+      let m = all.docs.find(d => (d.data().username||'').toLowerCase() === low);
+      if (!m) m = all.docs.find(d => (d.data().username||'').toLowerCase().includes(low));
+      return m ? m.id : null;
     }
 
     // ========== Staff Panel Event Listeners ==========
@@ -5565,11 +6184,20 @@
         e.preventDefault();
         const id=document.getElementById('staff-game-id').value;
         const tagsArr=document.getElementById('staff-game-tags').value.split(',').map(t=>t.trim()).filter(t=>t);
-        const gameData={title:document.getElementById('staff-game-title').value,description:document.getElementById('staff-game-desc').value,image:document.getElementById('staff-game-image').value,url:document.getElementById('staff-game-url').value,rating:parseFloat(document.getElementById('staff-game-rating').value),multiplayer:document.getElementById('staff-game-multi').value==='true',tags:tagsArr,updatedAt:serverTimestamp()};
+        let imageUrl = document.getElementById('staff-game-image').value.trim();
+        const imgFile = document.getElementById('staff-game-image-file')?.files?.[0];
+        if (imgFile) {
+          try {
+            const storageRef = ref(storage, `games/covers/${Date.now()}_${imgFile.name}`);
+            const snapshot = await uploadBytes(storageRef, imgFile);
+            imageUrl = await getDownloadURL(snapshot.ref);
+          } catch(err) { showNotification('Image upload failed: '+err.message,'error'); return; }
+        }
+        if (!imageUrl) { showNotification('Add a cover image URL or upload a file','error'); return; }
+        const gameData={title:document.getElementById('staff-game-title').value,description:document.getElementById('staff-game-desc').value,image:imageUrl,url:document.getElementById('staff-game-url').value,rating:parseFloat(document.getElementById('staff-game-rating').value),multiplayer:document.getElementById('staff-game-multi').value==='true',tags:tagsArr,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'games',id),gameData); else await addDoc(collection(db,'games'),{...gameData,createdAt:serverTimestamp()});
         document.getElementById('staff-game-modal').style.display='none';
         loadStaffGames();loadStaffDashboard();
-        await addToLog('save_game', `Saved game: ${gameData.title}`);
         showNotification('Game saved!','success');
       });
       document.getElementById('staff-search-game')?.addEventListener('input',e=>{const t=e.target.value.toLowerCase();renderStaffGames(staffGamesCache.filter(g=>g.title.toLowerCase().includes(t)));});
@@ -5604,12 +6232,62 @@
         let items=[];
         if(mode==='json'){try{items=JSON.parse(document.getElementById('staff-pack-items-json').value);}catch(err){showNotification('Invalid JSON','error');return;}}
         else{items=packBuilderItems.filter(it=>it.name);}
-        const packData={name:document.getElementById('staff-pack-name').value,price:parseInt(document.getElementById('staff-pack-price').value),backgroundImage:document.getElementById('staff-pack-bg').value,items,updatedAt:serverTimestamp()};
+        let bg = document.getElementById('staff-pack-bg').value.trim();
+        const bgFile = document.getElementById('staff-pack-bg-file')?.files?.[0];
+        if (bgFile) {
+          try {
+            const storageRef = ref(storage, `packs/bg/${Date.now()}_${bgFile.name}`);
+            const snapshot = await uploadBytes(storageRef, bgFile);
+            bg = await getDownloadURL(snapshot.ref);
+          } catch(err) { showNotification('Background upload failed: '+err.message,'error'); return; }
+        }
+        const packData={name:document.getElementById('staff-pack-name').value,price:parseInt(document.getElementById('staff-pack-price').value),backgroundImage:bg,items,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'packs',id),packData); else await addDoc(collection(db,'packs'),{...packData,createdAt:serverTimestamp()});
         document.getElementById('staff-pack-modal').style.display='none';
         loadStaffPacks();loadStaffDashboard();
-        await addToLog('save_pack', `Saved pack: ${packData.name}`);
         showNotification('Pack saved!','success');
+      });
+
+      document.getElementById('staff-add-banner-shop-btn')?.addEventListener('click', () => openStaffBannerShopModal(''));
+      document.getElementById('staff-close-banner-shop-modal')?.addEventListener('click', () => document.getElementById('staff-banner-shop-modal').style.display='none');
+      document.getElementById('staff-save-banner-shop-btn')?.addEventListener('click', async () => {
+        const id = document.getElementById('staff-banner-shop-id').value;
+        let url = document.getElementById('staff-banner-shop-url').value.trim();
+        const f = document.getElementById('staff-banner-shop-file')?.files?.[0];
+        if (f) {
+          try {
+            const storageRef = ref(storage, `shop/banners/${Date.now()}_${f.name}`);
+            const snapshot = await uploadBytes(storageRef, f);
+            url = await getDownloadURL(snapshot.ref);
+          } catch(err) { showNotification('Upload failed: '+err.message,'error'); return; }
+        }
+        if (!url) { showNotification('Add image URL or upload','error'); return; }
+        const name = document.getElementById('staff-banner-shop-name').value.trim();
+        const price = parseInt(document.getElementById('staff-banner-shop-price').value, 10) || 0;
+        const data = { name, price, shopType: 'banner', bannerImageUrl: url, backgroundImage: url, items: [], updatedAt: serverTimestamp() };
+        if (id) await updateDoc(doc(db,'packs',id), data);
+        else await addDoc(collection(db,'packs'), { ...data, createdAt: serverTimestamp() });
+        document.getElementById('staff-banner-shop-modal').style.display='none';
+        loadStaffPacks(); loadStaffDashboard();
+        showNotification('Shop banner saved','success');
+      });
+
+      document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', async () => {
+        const modal = document.getElementById('staff-rarity-order-modal');
+        const ta = document.getElementById('staff-rarity-order-input');
+        const cur = await getDoc(doc(db,'siteConfig','settings'));
+        ta.value = cur.exists() && cur.data().blookRarityOrder ? cur.data().blookRarityOrder : DEFAULT_RARITY_ORDER.join(',');
+        modal.style.display = 'flex';
+      });
+      document.getElementById('staff-rarity-order-cancel')?.addEventListener('click', () => document.getElementById('staff-rarity-order-modal').style.display='none');
+      document.getElementById('staff-rarity-order-save')?.addEventListener('click', async () => {
+        const v = document.getElementById('staff-rarity-order-input').value.trim();
+        await setDoc(doc(db,'siteConfig','settings'), { blookRarityOrder: v, updatedAt: serverTimestamp() }, { merge: true });
+        await refreshRarityOrderFromServer();
+        renderPackBuilderItems();
+        if (inventoryItems.length) renderInventory();
+        document.getElementById('staff-rarity-order-modal').style.display='none';
+        showNotification('Rarity order saved','success');
       });
 
       // Plays filter
@@ -5634,7 +6312,6 @@
         await updateDoc(doc(db,'users',uid),updates);
         document.getElementById('staff-user-modal').style.display='none';
         loadStaffUsers();
-        await addToLog('update_user', `Updated user ${uid}: ${JSON.stringify(updates).substring(0,200)}`);
         showNotification('User updated!','success');
       });
       document.getElementById('staff-assign-badge-btn')?.addEventListener('click',async()=>{
@@ -5660,20 +6337,30 @@
         if(id) await updateDoc(doc(db,'titles',id),titleData); else await addDoc(collection(db,'titles'),{...titleData,createdAt:serverTimestamp()});
         document.getElementById('staff-title-modal').style.display='none';
         loadStaffTitles();
-        await addToLog('save_title', `Saved title: ${titleData.name}`);
         showNotification('Title saved!','success');
       });
 
       // Badges
-      document.getElementById('staff-add-badge-btn')?.addEventListener('click',()=>{document.getElementById('staff-badge-id').value='';document.getElementById('staff-badge-name').value='';document.getElementById('staff-badge-icon').value='';document.getElementById('staff-badge-bg').value='#2AFF9E';document.getElementById('staff-badge-text-color').value='#000000';document.getElementById('staff-badge-desc').value='';document.getElementById('staff-badge-modal-title').textContent='Create Badge';document.getElementById('staff-badge-modal').style.display='flex';});
+      document.getElementById('staff-add-badge-btn')?.addEventListener('click',()=>{document.getElementById('staff-badge-id').value='';document.getElementById('staff-badge-name').value='';document.getElementById('staff-badge-icon').value='';const bif=document.getElementById('staff-badge-icon-file');if(bif)bif.value='';document.getElementById('staff-badge-bg').value='#2AFF9E';document.getElementById('staff-badge-text-color').value='#000000';document.getElementById('staff-badge-desc').value='';document.getElementById('staff-badge-modal-title').textContent='Create Badge';document.getElementById('staff-badge-modal').style.display='flex';});
       document.getElementById('staff-close-badge-modal')?.addEventListener('click',()=>document.getElementById('staff-badge-modal').style.display='none');
       document.getElementById('staff-save-badge-btn')?.addEventListener('click',async()=>{
         const id=document.getElementById('staff-badge-id').value;
-        const badgeData={name:document.getElementById('staff-badge-name').value,icon:document.getElementById('staff-badge-icon').value,bgColor:document.getElementById('staff-badge-bg').value,textColor:document.getElementById('staff-badge-text-color').value,description:document.getElementById('staff-badge-desc').value,updatedAt:serverTimestamp()};
+        let icon = document.getElementById('staff-badge-icon').value.trim();
+        const iconFile = document.getElementById('staff-badge-icon-file')?.files?.[0];
+        if (iconFile) {
+          try {
+            const storageRef = ref(storage, `badges/icons/${Date.now()}_${iconFile.name}`);
+            const snapshot = await uploadBytes(storageRef, iconFile);
+            icon = await getDownloadURL(snapshot.ref);
+          } catch(err) { showNotification('Icon upload failed: '+err.message,'error'); return; }
+        }
+        const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || icon.includes('fa-');
+        if (!iconFile && !icon) { showNotification('Set icon URL or upload an image','error'); return; }
+        if (!iconFile && !isFa && !/^https?:\/\//i.test(icon)) { showNotification('Icon must be a URL, upload, or Font Awesome classes','error'); return; }
+        const badgeData={name:document.getElementById('staff-badge-name').value,icon,bgColor:document.getElementById('staff-badge-bg').value,textColor:document.getElementById('staff-badge-text-color').value,description:document.getElementById('staff-badge-desc').value,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'badges',id),badgeData); else await addDoc(collection(db,'badges'),{...badgeData,createdAt:serverTimestamp()});
         document.getElementById('staff-badge-modal').style.display='none';
         loadStaffBadges();
-        await addToLog('save_badge', `Saved badge: ${badgeData.name}`);
         showNotification('Badge saved!','success');
       });
 
@@ -5686,38 +6373,76 @@
       document.getElementById('staff-quick-add-pack')?.addEventListener('click',()=>document.getElementById('staff-add-pack-btn')?.click());
       document.getElementById('staff-quick-add-title')?.addEventListener('click',()=>document.getElementById('staff-add-title-btn')?.click());
 
-      // Banners
-      document.getElementById('staff-add-banner-btn')?.addEventListener('click', async () => {
-        const name = prompt('Banner name:'); if (!name) return;
-        const imageUrl = prompt('Banner image URL:'); if (!imageUrl) return;
-        const price = parseInt(prompt('Price (coins):') || '500');
-        await addDoc(collection(db,'banners'),{name,imageUrl,price,createdAt:serverTimestamp()});
-        await addToLog('create_banner', `Created banner: ${name}`);
-        loadStaffBanners();
-        showNotification('Banner added!','success');
+      // Missions
+      document.getElementById('staff-add-mission-btn')?.addEventListener('click', () => {
+        document.getElementById('staff-mission-form-id').value = '';
+        document.getElementById('staff-mission-title').value = '';
+        document.getElementById('staff-mission-desc').value = '';
+        document.getElementById('staff-mission-type').value = 'gametime';
+        document.getElementById('staff-mission-target').value = '300';
+        document.getElementById('staff-mission-rcoins').value = '100';
+        document.getElementById('staff-mission-rstars').value = '50';
+        document.getElementById('staff-mission-form-modal').style.display = 'flex';
       });
-      document.getElementById('staff-banner-assign-btn')?.addEventListener('click', async () => {
-        const email = document.getElementById('staff-banner-assign-email').value.trim();
-        const url = document.getElementById('staff-banner-assign-url').value.trim();
-        if (!email || !url) { showNotification('Fill both fields','error'); return; }
-        const snap = await getDocs(query(collection(db,'users'),where('email','==',email)));
-        if (snap.empty) { showNotification('User not found','error'); return; }
-        await updateDoc(doc(db,'users',snap.docs[0].id),{banner:url});
-        await addToLog('assign_banner', `Assigned custom banner to ${email}`);
-        showNotification('Banner assigned!','success');
+      document.getElementById('staff-mission-form-cancel')?.addEventListener('click', () => document.getElementById('staff-mission-form-modal').style.display = 'none');
+      document.getElementById('staff-mission-form-save')?.addEventListener('click', async () => {
+        const mid = document.getElementById('staff-mission-form-id').value;
+        const payload = {
+          title: document.getElementById('staff-mission-title').value.trim(),
+          description: document.getElementById('staff-mission-desc').value.trim(),
+          type: document.getElementById('staff-mission-type').value,
+          target: parseInt(document.getElementById('staff-mission-target').value, 10) || 1,
+          rewardCoins: parseInt(document.getElementById('staff-mission-rcoins').value, 10) || 0,
+          rewardStars: parseInt(document.getElementById('staff-mission-rstars').value, 10) || 0,
+          updatedAt: serverTimestamp()
+        };
+        if (!payload.title) { showNotification('Mission needs a title','error'); return; }
+        if (mid) await updateDoc(doc(db,'missions',mid), payload);
+        else await addDoc(collection(db,'missions'), { ...payload, createdAt: serverTimestamp() });
+        document.getElementById('staff-mission-form-modal').style.display = 'none';
+        loadStaffMissions();
+        showNotification('Mission saved','success');
       });
 
-      // Missions
-      document.getElementById('staff-add-mission-btn')?.addEventListener('click', async () => {
-        const title = prompt('Mission title:'); if (!title) return;
-        const description = prompt('Description:') || '';
-        const type = prompt('Type (gametime/chatting/spending):') || 'gametime';
-        const target = parseInt(prompt('Target value:') || '10');
-        const rewardCoins = parseInt(prompt('Reward coins:') || '100');
-        const rewardStars = parseInt(prompt('Reward stars:') || '50');
-        await addDoc(collection(db,'missions'),{title,description,type,target,progress:0,rewardCoins,rewardStars,claimed:false,createdAt:serverTimestamp()});
-        loadStaffMissions();
-        showNotification('Mission created!','success');
+      document.getElementById('staff-mod-apply-btn')?.addEventListener('click', async () => {
+        const lookup = document.getElementById('staff-mod-lookup')?.value || '';
+        const action = document.getElementById('staff-mod-action')?.value || 'open';
+        const reason = document.getElementById('staff-mod-reason-quick')?.value.trim() || '';
+        const uid = await findUserByStaffLookup(lookup);
+        if (!uid) { showNotification('User not found — try 6-digit ID, email, or exact username','error'); return; }
+        if (action === 'open') { openStaffEditUser(uid); return; }
+        const updates = { modReason: reason };
+        const now = new Date();
+        const addHours = (h) => new Date(now.getTime() + h * 3600000);
+        const addDays = (d) => new Date(now.getTime() + d * 86400000);
+        if (action === 'mute_1h') {
+          if (!hasPermission('mute_users')) { showNotification('No mute permission','error'); return; }
+          Object.assign(updates, { muteStatus: 'temp', muteUntil: addHours(1), banStatus: 'none', banUntil: null });
+        } else if (action === 'mute_24h') {
+          if (!hasPermission('mute_users')) { showNotification('No mute permission','error'); return; }
+          Object.assign(updates, { muteStatus: 'temp', muteUntil: addHours(24), banStatus: 'none', banUntil: null });
+        } else if (action === 'mute_perm') {
+          if (!hasPermission('mute_users')) { showNotification('No mute permission','error'); return; }
+          Object.assign(updates, { muteStatus: 'perm', muteUntil: null, banStatus: 'none', banUntil: null });
+        } else if (action === 'unmute') {
+          if (!hasPermission('mute_users')) { showNotification('No mute permission','error'); return; }
+          Object.assign(updates, { muteStatus: 'none', muteUntil: null });
+        } else if (action === 'ban_24h') {
+          if (!hasPermission('ban_users')) { showNotification('No ban permission','error'); return; }
+          Object.assign(updates, { banStatus: 'temp', banUntil: addHours(24), muteStatus: 'none', muteUntil: null });
+        } else if (action === 'ban_7d') {
+          if (!hasPermission('ban_users')) { showNotification('No ban permission','error'); return; }
+          Object.assign(updates, { banStatus: 'temp', banUntil: addDays(7), muteStatus: 'none', muteUntil: null });
+        } else if (action === 'ban_perm') {
+          if (!hasPermission('ban_users')) { showNotification('No ban permission','error'); return; }
+          Object.assign(updates, { banStatus: 'perm', banUntil: null, muteStatus: 'none', muteUntil: null });
+        } else if (action === 'unban') {
+          if (!hasPermission('ban_users')) { showNotification('No ban permission','error'); return; }
+          Object.assign(updates, { banStatus: 'none', banUntil: null });
+        }
+        await updateDoc(doc(db,'users',uid), updates);
+        showNotification('Moderation updated','success');
+        loadStaffUsers();
       });
 
       // Stars
@@ -5736,7 +6461,6 @@
         else if (action === 'remove') newVal = Math.max(0, current - amount);
         await updateDoc(doc(db,'users',uid),{stars:newVal});
         document.getElementById('staff-stars-result').innerHTML = `<span style="color:var(--neon-green);">✓ ${snap.docs[0].data().username}: ${current} → ${newVal} stars</span>`;
-        await addToLog('modify_stars', `${email}: ${current} → ${newVal} stars (${action} ${amount})`);
         showNotification('Stars updated!','success');
       });
 
@@ -5747,13 +6471,16 @@
 
     // ========== Initialize the app ==========
     async function init() {
+      await refreshRarityOrderFromServer();
       const gamesData = await getGames();
       renderTopGamesCarousel(gamesData.topGames);
       renderCategoryBrowsing(gamesData);
       renderFullGamesList(gamesData.allGames);
+      hidePageLoading();
     }
 
-    init();
+    init().catch(() => hidePageLoading());
+    setTimeout(hidePageLoading, 12000);
 
     // ========== Event Listeners ==========
     globalSendChatBtn.addEventListener('click', sendGlobalChatMessage);
@@ -5787,6 +6514,8 @@
         signupModal.style.display = 'none';
         noticeModal.style.display = 'none';
         document.querySelectorAll('.staff-modal').forEach(m => m.style.display = 'none');
+        const bpm = document.getElementById('banner-picker-modal');
+        if (bpm) bpm.style.display = 'none';
       }
     });
 
