@@ -571,13 +571,15 @@
       flex-shrink: 0; border: none;
     }
     .star-slot-badge-wrap {
-      border: 1px solid rgba(42,255,158,0.28);
-      border-radius: 7px;
-      padding: 1px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+    }
+    .star-slot-badge-wrap--badged {
+      border: 1px solid rgba(42,255,158,0.28);
+      border-radius: 7px;
+      padding: 1px;
       background: rgba(0,0,0,0.2);
     }
     #sidebar-stars-icon-wrap .star-slot-badge-img,
@@ -1589,13 +1591,46 @@
       padding: 15px;
       margin-bottom: 15px;
       max-height: 400px;
+      position: relative;
+      min-height: 120px;
     }
+    .chat-loading-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.35);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+    .chat-loading-overlay.hidden { display: none !important; }
+    .chat-loading-spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid rgba(42,255,158,0.2);
+      border-top-color: var(--neon-green);
+      animation: chatSpin 0.75s linear infinite;
+    }
+    @keyframes chatSpin { to { transform: rotate(360deg); } }
 
     .chat-message {
       margin-bottom: 6px;
       padding: 6px 10px;
       border-radius: 10px;
       font-size: 0.82rem;
+    }
+    .chat-message.chat-msg-grouped {
+      margin-top: -2px;
+      padding-top: 2px;
+    }
+    .chat-message.chat-msg-grouped .chat-msg-header {
+      display: none;
+    }
+    .chat-message.chat-msg-grouped .message-content {
+      margin-left: 0;
     }
 
     .chat-message.user {
@@ -1640,6 +1675,16 @@
       word-break: break-word;
       margin-left: 28px;
       font-size: 0.82rem;
+    }
+    .chat-at-mention {
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 4px;
+      padding: 0 2px;
+    }
+    .chat-at-mention:hover {
+      text-decoration: underline;
     }
 
     .message-time {
@@ -1806,21 +1851,31 @@
     }
     .pack-unbox-body {
       position: relative;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
-      gap: 12px;
-      padding: 16px 12px 24px;
-      min-height: min(88vh, 720px);
+      gap: 0;
+      padding: 0;
+      min-height: 100vh;
       flex: 1;
     }
-    .pack-unbox-body .gift-animation.pack-unbox-stage {
-      flex: 1;
+    .pack-unbox-pack-center {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .pack-unbox-body .gift-animation.pack-unbox-stage {
+      flex: none;
+      display: block;
+      width: auto;
       min-height: 0;
       margin: 0;
+    }
+    .pack-unbox-body.pack-unbox-revealed .gift-animation.pack-unbox-stage {
+      display: none;
     }
     .pack-unbox-details-wrap {
       position: relative;
@@ -1828,6 +1883,78 @@
       width: 100%;
       max-width: 420px;
       flex-shrink: 0;
+      display: none;
+    }
+    .pack-unbox-body.pack-unbox-revealed .pack-unbox-details-wrap {
+      display: flex;
+    }
+    .pack-reveal-card {
+      width: min(92vw, 400px);
+      min-height: min(72vh, 520px);
+      margin: 0 auto;
+      border-radius: 16px;
+      border: 2px solid rgba(42,255,158,0.35);
+      padding: 18px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.55);
+      background: rgba(12, 16, 22, 0.94);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .pack-reveal-card-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 0;
+    }
+    .pack-reveal-name {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .pack-reveal-rarity {
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+    .pack-reveal-blook-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 200px;
+    }
+    .pack-reveal-blook-wrap img {
+      max-width: 88%;
+      max-height: min(38vh, 280px);
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5));
+    }
+    .pack-reveal-chance {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.92);
+      margin-top: auto;
+      padding-top: 10px;
+    }
+    .pack-reveal-stars-note {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
     }
     .pack-unbox-click-layer {
       position: absolute;
@@ -1965,7 +2092,7 @@
     .pack-unbox-half-bot {
       z-index: 2;
     }
-    .pack-unbox-stage:not(.torn) {
+    .pack-unbox-stage:not(.torn) .pack-unbox-stack {
       animation: packWholeNudge 2s ease-in-out infinite;
     }
     @keyframes packWholeNudge {
@@ -3312,7 +3439,7 @@
     /* Friends list in profile - 4 per row */
     .up-friends-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .up-friend-row {
-      display: flex; align-items: center; gap: 6px; padding: 5px 8px;
+      display: flex; align-items: stretch; gap: 6px; padding: 5px 8px;
       background: rgba(0,0,0,0.2); border-radius: 10px; cursor: pointer;
       transition: background 0.15s; border: 1px solid rgba(42,255,158,0.06);
     }
@@ -3341,6 +3468,9 @@
     .up-friend-banner-bg {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       object-fit: cover; z-index: 1; filter: brightness(0.5); display: none;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
     .up-friend-banner.has-custom-banner .up-friend-banner-bg { display: block; }
     .up-friend-banner.has-custom-banner .up-friend-pattern { display: none; }
@@ -3754,11 +3884,8 @@
                 <div class="up-banner-content" style="text-align:center;">
                   <div class="up-banner-name-block">
                     <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                    <span id="member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
                   </div>
-                  <div class="up-banner-mid">
-                    <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                  </div>
+                  <div class="up-banner-mid" style="min-height:4px;"></div>
                   <span class="up-title-badge" id="profile-title">User</span>
                 </div>
               </div>
@@ -3790,7 +3917,10 @@
     <!-- View Other User Profile Page (navigated, not popup) -->
     <div class="page" id="view-profile-page">
       <div class="page-content">
-        <button class="staff-btn staff-btn-primary" id="vp-back-btn" style="margin-bottom:16px;"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="staff-flex-row" style="margin-bottom:16px;gap:10px;flex-wrap:wrap;align-items:center;">
+          <button class="staff-btn staff-btn-primary" id="vp-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+          <button type="button" class="staff-btn staff-btn-primary" id="vp-add-friend-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add friend</button>
+        </div>
         <div class="up-container" id="vp-container">
           <div class="up-header">
             <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
@@ -3801,11 +3931,8 @@
                 <div class="up-banner-content" style="text-align:center;">
                   <div class="up-banner-name-block">
                     <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                    <span id="vp-member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
                   </div>
-                  <div class="up-banner-mid">
-                    <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                  </div>
+                  <div class="up-banner-mid" style="min-height:4px;"></div>
                   <span class="up-title-badge" id="vp-title">User</span>
                 </div>
               </div>
@@ -3929,7 +4056,7 @@
         <h2 class="page-title">Global Chat</h2>
         <div class="global-chat-panel">
           <div class="chat-container" id="global-chat-container">
-            <!-- Global chat messages will be added here -->
+            <div class="chat-loading-overlay" id="global-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
           </div>
           <div class="chat-input">
             <input type="text" id="global-chat-input" placeholder="Type a message...">
@@ -3946,9 +4073,10 @@
         <div class="friends-panel-container">
           <div class="friends-sidebar-section">
             <div class="add-friend-form">
-              <input type="email" id="friend-email" placeholder="Friend's email">
+              <input type="text" id="friend-email" placeholder="Friend's username" autocomplete="username">
               <button id="add-friend-btn">Add</button>
             </div>
+            <div id="friend-requests-incoming" style="margin-bottom:16px;"></div>
             <div class="friends-list" id="friends-list">
               <!-- Friends will be added here -->
             </div>
@@ -3958,7 +4086,7 @@
               <span class="friend-chat-placeholder">Select a friend to start chatting</span>
             </div>
             <div class="chat-container" id="friend-chat-container">
-              <!-- Friend chat messages will be added here -->
+              <div class="chat-loading-overlay hidden" id="friend-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
             </div>
             <div class="chat-input" id="friend-chat-input-area" style="display:none;">
               <input type="text" id="friend-chat-input" placeholder="Type a message...">
@@ -4341,15 +4469,22 @@
         <div class="modal-body" id="pack-opening-modal-body">
           <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
           <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
-          <div class="gift-animation" id="gift-animation">
-            <!-- Animation will be shown here -->
+          <div class="pack-unbox-pack-center" id="pack-unbox-pack-center">
+            <div class="gift-animation" id="gift-animation">
+              <!-- Pack stage -->
+            </div>
           </div>
           <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
-            <div class="gift-name" id="opened-gift-name">Gift Name</div>
-            <div class="gift-rarity" id="opened-gift-rarity">Rarity</div>
-            <div class="gift-value" id="opened-gift-value">Value: 0</div>
-            <div class="gift-stars" id="opened-gift-stars">Stars: 0</div>
-            <button class="collect-btn" id="collect-btn">COLLECT</button>
+            <div class="pack-reveal-card" id="pack-reveal-card">
+              <div class="pack-reveal-card-inner">
+                <div class="pack-reveal-name" id="opened-gift-name">Gift Name</div>
+                <div class="pack-reveal-rarity gift-rarity" id="opened-gift-rarity">Rarity</div>
+                <div class="pack-reveal-blook-wrap" id="pack-reveal-blook-slot"></div>
+                <div class="pack-reveal-chance" id="opened-gift-chance">0%</div>
+                <div class="pack-reveal-stars-note" id="opened-gift-stars">Stars: 0</div>
+              </div>
+              <button class="collect-btn" id="collect-btn" style="margin-top:14px;">COLLECT</button>
+            </div>
           </div>
         </div>
       </div>
@@ -4456,7 +4591,7 @@
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div class="staff-form-group"><label>Reveal card background (URL)</label><input id="staff-pack-reveal-bg-url" placeholder="Optional — image behind the square result card after opening"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
   <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
 
@@ -4720,7 +4855,6 @@
     const sidebarEmail = document.getElementById('sidebar-email');
     const playCount = document.getElementById('play-count');
     const friendCount = document.getElementById('friend-count');
-    const memberSince = document.getElementById('member-since');
     const playHistoryList = document.getElementById('play-history-list');
     const shopPacks = document.getElementById('shop-packs');
     const shopBanners = document.getElementById('shop-banners');
@@ -4762,7 +4896,10 @@
     const giftAnimation = document.getElementById('gift-animation');
     const openedGiftName = document.getElementById('opened-gift-name');
     const openedGiftRarity = document.getElementById('opened-gift-rarity');
-    const openedGiftValue = document.getElementById('opened-gift-value');
+    const openedGiftChance = document.getElementById('opened-gift-chance');
+    const packRevealCard = document.getElementById('pack-reveal-card');
+    const packRevealBlookSlot = document.getElementById('pack-reveal-blook-slot');
+    const packUnboxPackCenter = document.getElementById('pack-unbox-pack-center');
     const openedGiftStars = document.getElementById('opened-gift-stars');
     const collectBtn = document.getElementById('collect-btn');
     const sendGiftModal = document.getElementById('send-gift-modal');
@@ -4958,6 +5095,7 @@
           iel.style.color = bd.textColor || '#000';
           wrap.appendChild(iel);
         } else if (/^https?:\/\//i.test(icon)) {
+          wrap.classList.add('star-slot-badge-wrap--badged');
           const img = document.createElement('img');
           img.className = 'star-slot-badge-img';
           img.src = icon;
@@ -5013,27 +5151,13 @@
           sid.textContent = did && did.length === 6 ? `ID ${did}` : '';
         }
         ensureDisplayIdForUser(user.uid).then(did => {
-          if (did) {
-            if (sid) sid.textContent = `ID ${did}`;
-            const pp = document.getElementById('profile-public-id');
-            if (pp) pp.textContent = `ID ${did}`;
-          }
+          if (did && sid) sid.textContent = `ID ${did}`;
         });
         profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         profileUsername.textContent = data.username || user.email;
         applyTitleStyle(profileTitle, data.title || "User");
-        const pid = document.getElementById('profile-public-id');
-        if (pid) {
-          const did = data.displayId ? String(data.displayId) : '';
-          pid.textContent = did && did.length === 6 ? `ID ${did}` : 'ID —';
-        }
         renderProfileBadges(data.badges || []);
         refreshStarDisplayBadges(data.badges || []);
-        if (data.createdAt && memberSince) {
-          const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          memberSince.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-          memberSince.style.display = 'block';
-        }
       } else {
         await saveUserProfile(user.uid, user.email, user.email.split('@')[0], null);
         await loadUserProfile(user);
@@ -5467,8 +5591,7 @@
         await populateProfileLayout(userId, {
           avatar: 'profile-avatar', banner: 'profile-banner', bannerWrap: 'profile-banner-wrap',
           username: 'profile-username', title: 'profile-title',
-          publicId: 'profile-public-id',
-          memberSince: 'member-since', badges: 'profile-badges',
+          badges: 'profile-badges',
           starsVal: 'profile-stars-val', playtimeVal: 'profile-playtime-val',
           playCount: 'play-count', friendCount: 'friend-count',
           blookCount: 'profile-blook-count', blookTotal: 'profile-blook-total',
@@ -5499,24 +5622,6 @@
       }
       document.getElementById(ids.username).textContent = data.username || data.email;
       applyTitleStyle(document.getElementById(ids.title), data.title || "User");
-      if (ids.publicId) {
-        const pel = document.getElementById(ids.publicId);
-        if (pel) {
-          let did = data.displayId ? String(data.displayId) : '';
-          if (!did || did.length !== 6) {
-            ensureDisplayIdForUser(userId).then(nid => { if (nid && pel) pel.textContent = `ID ${nid}`; });
-            pel.textContent = 'ID —';
-          } else pel.textContent = `ID ${did}`;
-        }
-      }
-      if (ids.memberSince) {
-        const ms = document.getElementById(ids.memberSince);
-        if (ms && data.createdAt) {
-          const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          ms.textContent = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-          ms.style.display = 'block';
-        } else if (ms) ms.style.display = 'none';
-      }
       renderProfileBadges(data.badges || [], ids.badges);
       refreshStarDisplayBadges(data.badges || []);
       document.getElementById(ids.starsVal).textContent = data.stars || 0;
@@ -6192,9 +6297,15 @@
       if (packUnboxClickLayer) packUnboxClickLayer.style.display = 'none';
       if (packUnboxBoost) packUnboxBoost.style.display = 'none';
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
-      packOpeningModalBody?.classList.remove('pack-unbox-body');
+      packOpeningModalBody?.classList.remove('pack-unbox-body', 'pack-unbox-revealed');
+      if (packUnboxPackCenter) packUnboxPackCenter.style.display = '';
       giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
       giftAnimation.innerHTML = '';
+      if (packRevealBlookSlot) packRevealBlookSlot.innerHTML = '';
+      if (packRevealCard) {
+        packRevealCard.style.backgroundImage = '';
+        packRevealCard.style.backgroundColor = '';
+      }
       openingModalBg.style.backgroundImage = '';
       openingModalBg.style.backgroundSize = '';
       openingModalBg.style.backgroundRepeat = '';
@@ -6228,14 +6339,38 @@
       packOpeningModalInner?.classList.add('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.add('pack-unbox-body');
 
-      openedGiftName.textContent = item.name;
+      openedGiftName.textContent = item.name || '';
+      const rKey = (item.rarity || 'common').toLowerCase();
       openedGiftRarity.textContent = (item.rarity || 'common').toUpperCase();
-      openedGiftRarity.className = `gift-rarity ${item.rarity || 'common'}`;
-      openedGiftValue.textContent = `Chance: ${item.chance != null ? item.chance : '?'}%`;
-      openedGiftStars.textContent = `Stars: ${item.starsGained}`;
+      openedGiftRarity.className = 'pack-reveal-rarity';
+      openedGiftRarity.style.cssText = `color:${getRarityColor(rKey)};background:none;-webkit-text-fill-color:initial;`;
+      const pct = item.chance != null && item.chance !== '' ? Number(item.chance) : null;
+      openedGiftChance.textContent = pct != null && Number.isFinite(pct) ? `${pct}%` : '—';
+      openedGiftStars.textContent = `Stars: ${item.starsGained != null ? item.starsGained : 0}`;
+      const revealUrl = (pack.revealCardBgUrl || '').trim();
+      if (packRevealCard) {
+        if (revealUrl) {
+          packRevealCard.style.backgroundColor = 'rgba(10,14,20,0.88)';
+          packRevealCard.style.backgroundImage = `linear-gradient(rgba(10,14,20,0.82), rgba(10,14,20,0.88)), url(${JSON.stringify(revealUrl)})`;
+        } else {
+          packRevealCard.style.backgroundImage = '';
+          packRevealCard.style.backgroundColor = 'rgba(12, 16, 22, 0.94)';
+        }
+      }
+      if (packRevealBlookSlot) {
+        packRevealBlookSlot.innerHTML = '';
+        if (item.imageUrl) {
+          const im = document.createElement('img');
+          im.src = item.imageUrl;
+          im.alt = item.name || '';
+          packRevealBlookSlot.appendChild(im);
+        } else {
+          packRevealBlookSlot.innerHTML = `<i class="fas fa-gift" style="font-size:4.5rem;color:${getRarityColor(item.rarity)};"></i>`;
+        }
+      }
       openedGiftName.style.opacity = '0';
       openedGiftRarity.style.opacity = '0';
-      openedGiftValue.style.opacity = '0';
+      openedGiftChance.style.opacity = '0';
       openedGiftStars.style.opacity = '0';
       collectBtn.style.opacity = '0';
       collectBtn.style.pointerEvents = 'none';
@@ -6293,9 +6428,11 @@
       stack.appendChild(halfTop);
 
       const revealDetails = () => {
+        packOpeningModalBody?.classList.add('pack-unbox-revealed');
+        if (packUnboxPackCenter) packUnboxPackCenter.style.display = 'none';
         openedGiftName.style.opacity = '1';
         openedGiftRarity.style.opacity = '1';
-        openedGiftValue.style.opacity = '1';
+        openedGiftChance.style.opacity = '1';
         openedGiftStars.style.opacity = '1';
         collectBtn.style.opacity = '1';
         collectBtn.style.pointerEvents = '';
@@ -6839,45 +6976,89 @@
       }
     }
 
+    let friendsListUnsub = null;
+    let friendRequestsUnsub = null;
+
     // ========== Friends List ==========
     async function loadFriends(userId) {
       try {
+        if (friendsListUnsub) { friendsListUnsub(); friendsListUnsub = null; }
+        if (friendRequestsUnsub) { friendRequestsUnsub(); friendRequestsUnsub = null; }
+        const reqBox = document.getElementById('friend-requests-incoming');
         const friendsQuery = query(collection(db, "friends"), where("userId", "==", userId));
-        const unsubscribe = onSnapshot(friendsQuery, async (snapshot) => {
+        friendsListUnsub = onSnapshot(friendsQuery, async (snapshot) => {
           friendsList.innerHTML = '';
           friendsData = [];
-          if (snapshot.empty) { friendsList.innerHTML = '<p>No friends yet</p>'; return; }
-          const friendIds = snapshot.docs.map(doc => doc.data().friendId);
-          const usersQuery = query(collection(db, "users"), where("__name__", "in", friendIds));
-          const usersSnapshot = await getDocs(usersQuery);
-          usersSnapshot.forEach(doc => {
-            const friend = { id: doc.id, ...doc.data() };
-            friendsData.push(friend);
-            const friendItem = document.createElement('div');
-            friendItem.className = `friend-item${selectedFriend && selectedFriend.id === friend.id ? ' active' : ''}`;
-            friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.username}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${friend.username}</div>`;
-            friendItem.addEventListener('click', () => {
-              document.querySelectorAll('.friend-item').forEach(i => i.classList.remove('active'));
-              friendItem.classList.add('active');
-              selectedFriend = friend;
-              loadFriendChat();
-            });
-            friendsList.appendChild(friendItem);
-          });
+          if (snapshot.empty) {
+            friendsList.innerHTML = '<p>No friends yet</p>';
+          } else {
+            const friendIds = snapshot.docs.map(doc => doc.data().friendId);
+            for (let i = 0; i < friendIds.length; i += 10) {
+              const batch = friendIds.slice(i, i + 10);
+              const usersSnapshot = await getDocs(query(collection(db, "users"), where("__name__", "in", batch)));
+              usersSnapshot.forEach(docu => {
+                const friend = { id: docu.id, ...docu.data() };
+                friendsData.push(friend);
+                const friendItem = document.createElement('div');
+                friendItem.className = `friend-item${selectedFriend && selectedFriend.id === friend.id ? ' active' : ''}`;
+                friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.username}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${escapeHtml(friend.username || '')}</div>`;
+                friendItem.addEventListener('click', () => {
+                  document.querySelectorAll('.friend-item').forEach(el => el.classList.remove('active'));
+                  friendItem.classList.add('active');
+                  selectedFriend = friend;
+                  loadFriendChat();
+                });
+                friendsList.appendChild(friendItem);
+              });
+            }
+          }
         });
+        friendRequestsUnsub = onSnapshot(
+          query(collection(db, 'friendRequests'), where('toUserId', '==', userId), where('status', '==', 'pending')),
+          async (snap) => {
+            if (!reqBox) return;
+            reqBox.innerHTML = '';
+            if (snap.empty) return;
+            const title = document.createElement('div');
+            title.style.cssText = 'font-weight:800;font-size:0.82rem;color:var(--neon-green);margin-bottom:8px;';
+            title.textContent = 'Friend requests';
+            reqBox.appendChild(title);
+            for (const d of snap.docs) {
+              const r = d.data();
+              const fromId = r.fromUserId;
+              if (!fromId) continue;
+              const udoc = await getDoc(doc(db, 'users', fromId));
+              const un = udoc.exists() ? (udoc.data().username || fromId) : fromId;
+              const row = document.createElement('div');
+              row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:rgba(0,0,0,0.25);border-radius:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.15);';
+              row.innerHTML = `<span style="font-size:0.88rem;">${escapeHtml(un)}</span><span style="display:flex;gap:6px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm fr-acc" data-req="${d.id}" data-from="${fromId}">Accept</button><button type="button" class="staff-btn staff-btn-sm fr-dec" data-req="${d.id}">Decline</button></span>`;
+              reqBox.appendChild(row);
+            }
+            reqBox.querySelectorAll('.fr-acc').forEach(b => b.addEventListener('click', () => acceptFriendRequest(b.dataset.req, b.dataset.from)));
+            reqBox.querySelectorAll('.fr-dec').forEach(b => b.addEventListener('click', () => declineFriendRequest(b.dataset.req)));
+          }
+        );
       } catch(e) { console.error(e); }
     }
 
     function formatMessageTime(timestamp) {
-      if (!timestamp) return '';
+      if (!timestamp) return 'Just now';
       let date;
       if (typeof timestamp.toDate === 'function') date = timestamp.toDate();
       else if (typeof timestamp.seconds === 'number') date = new Date(timestamp.seconds * 1000 + Math.floor((timestamp.nanoseconds || 0) / 1e6));
       else date = new Date(timestamp);
-      if (Number.isNaN(date.getTime())) return '';
+      if (Number.isNaN(date.getTime())) return 'Just now';
       const now = new Date();
-      const diffSec = Math.floor((now - date) / 1000);
-      if (diffSec < 120) return 'Just now';
+      const diffMs = now - date;
+      const diffSec = Math.floor(diffMs / 1000);
+      if (diffSec < 300 || diffMs < 0) return 'Just now';
+      const startOfWeek = new Date(now);
+      startOfWeek.setHours(0, 0, 0, 0);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      if (date >= startOfWeek && date <= now) {
+        return `${days[date.getDay()]}, ${date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+      }
       const isToday = date.toDateString() === now.toDateString();
       if (isToday) return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
       const yy = date.getFullYear().toString().slice(-2);
@@ -6886,6 +7067,61 @@
       const hh = date.getHours().toString().padStart(2, '0');
       const min = date.getMinutes().toString().padStart(2, '0');
       return `${yy}/${mm}/${dd} ${hh}:${min}`;
+    }
+
+    let chatMentionDir = null;
+    let chatMentionDirPromise = null;
+    async function ensureChatMentionDirectory() {
+      if (chatMentionDir) return chatMentionDir;
+      if (chatMentionDirPromise) return chatMentionDirPromise;
+      chatMentionDirPromise = (async () => {
+        const dir = {};
+        try {
+          const [usersSnap, titlesSnap] = await Promise.all([
+            getDocs(collection(db, 'users')),
+            getDocs(collection(db, 'titles'))
+          ]);
+          const titlesByName = {};
+          titlesSnap.docs.forEach(d => { const t = d.data(); if (t.name) titlesByName[t.name] = t; });
+          usersSnap.docs.forEach(d => {
+            const u = d.data();
+            const un = (u.username || '').trim();
+            if (!un) return;
+            const key = un.toLowerCase();
+            let titleStyle = 'color:var(--neon-green);font-weight:800;';
+            const td = titlesByName[u.title || 'User'];
+            if (td?.isGradient && td.gradientColors?.length >= 2) {
+              titleStyle = `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
+            } else if (td?.color) titleStyle = `color:${td.color};font-weight:800;`;
+            dir[key] = { id: d.id, display: un, titleStyle };
+          });
+        } catch (e) { console.warn('chat mention dir', e); }
+        chatMentionDir = dir;
+        return dir;
+      })();
+      return chatMentionDirPromise;
+    }
+
+    function renderChatMessageBodyHtml(rawText) {
+      const text = rawText == null ? '' : String(rawText);
+      const dir = chatMentionDir || {};
+      const re = /@([\w.\-]{2,40})/g;
+      let out = '';
+      let last = 0;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        out += escapeHtml(text.slice(last, m.index));
+        const key = m[1].toLowerCase();
+        const info = dir[key];
+        if (info) {
+          out += `<span class="chat-at-mention" role="link" tabindex="0" data-user-id="${escapeHtml(info.id)}" style="${info.titleStyle}">@${escapeHtml(info.display)}</span>`;
+        } else {
+          out += escapeHtml(m[0]);
+        }
+        last = m.index + m[0].length;
+      }
+      out += escapeHtml(text.slice(last));
+      return out;
     }
 
     let chatUserCache = {};
@@ -6898,11 +7134,13 @@
       return null;
     }
 
-    async function buildChatMessageElement(docSnap) {
+    async function buildChatMessageElement(docSnap, options) {
+      const opts = options || {};
       const msg = docSnap.data();
       const div = document.createElement('div');
       div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
       div.dataset.msgId = docSnap.id;
+      div.dataset.senderId = msg.senderId || '';
       if (msg.type === 'system') {
         div.innerHTML = `<div class="message-content">${escapeHtml(msg.message || '')}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
         return div;
@@ -6926,12 +7164,14 @@
           try {
             const badgesSnap = await getDocs(collection(db, 'badges'));
             const bd = badgesSnap.docs.map(d=>d.data()).find(b=>b.name===userData.badges[0]);
-            if (bd?.icon) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}">`;
+            if (bd?.icon && /^https?:\/\//i.test(bd.icon)) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}">`;
           } catch(e) {}
         }
       }
       const safeName = escapeHtml(msg.senderName || '');
       const av = escapeHtml(msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg');
+      const hideHeader = !!opts.groupWithPrevious;
+      if (hideHeader) div.classList.add('chat-msg-grouped');
       div.innerHTML = `
         <div class="chat-msg-header">
           <img class="chat-avatar" src="${av}" alt="${safeName}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">
@@ -6942,14 +7182,20 @@
         <div class="message-content chat-msg-body"></div>
       `;
       const body = div.querySelector('.chat-msg-body');
-      if (body) body.textContent = msg.message || '';
+      if (body) body.innerHTML = renderChatMessageBodyHtml(msg.message || '');
       div.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
         el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
+      });
+      div.querySelectorAll('.chat-at-mention').forEach(el => {
+        const uid = el.dataset.userId;
+        const open = () => { if (uid) navigateToUserProfile(uid); };
+        el.addEventListener('click', open);
+        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
       });
       return div;
     }
 
-    async function applyChatSnapshot(container, snapshot, renderedIdSet) {
+    async function applyChatSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
       const changes = snapshot.docChanges();
       for (const ch of changes) {
         if (ch.type === 'removed') {
@@ -6967,19 +7213,29 @@
       for (const d of added) {
         if (renderedIdSet.has(d.id)) continue;
         renderedIdSet.add(d.id);
-        container.appendChild(await buildChatMessageElement(d));
+        const msg = d.data();
+        const last = container.lastElementChild;
+        const group = last && last.dataset.senderId && msg.senderId === last.dataset.senderId && msg.type !== 'system';
+        container.appendChild(await buildChatMessageElement(d, { groupWithPrevious: group }));
       }
-      container.scrollTop = container.scrollHeight;
+      requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+      if (loadingOverlay) loadingOverlay.classList.add('hidden');
     }
 
     // ========== Global Chat ==========
     async function loadGlobalChat() {
       if (globalChatUnsubscribe) globalChatUnsubscribe();
       globalChatRenderedIds = new Set();
+      const loadingEl = document.getElementById('global-chat-loading');
       globalChatContainer.innerHTML = '';
+      if (loadingEl) {
+        globalChatContainer.appendChild(loadingEl);
+        loadingEl.classList.remove('hidden');
+      }
+      await ensureChatMentionDirectory();
       const chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
       globalChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds).catch(e => console.warn(e));
+        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds, loadingEl).catch(e => console.warn(e));
       });
     }
 
@@ -7012,6 +7268,8 @@
         type: 'global'
       });
       globalChatInput.value = '';
+      chatMentionDir = null;
+      chatMentionDirPromise = null;
       updateMissionProgress('chatting', 1);
     }
 
@@ -7022,17 +7280,24 @@
         friendChatHeader.innerHTML = '<span class="friend-chat-placeholder">Select a friend to start chatting</span>';
         friendChatContainer.innerHTML = '';
         friendChatInputArea.style.display = 'none';
+        document.getElementById('friend-chat-loading')?.classList.add('hidden');
         return;
       }
       friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${selectedFriend.avatar}" alt="${selectedFriend.username}">` : '<i class="fas fa-user"></i>'} <span>${selectedFriend.username}</span>`;
       friendChatInputArea.style.display = 'flex';
       friendChatRenderedIds = new Set();
+      const fLoad = document.getElementById('friend-chat-loading');
       friendChatContainer.innerHTML = '';
+      if (fLoad) {
+        friendChatContainer.appendChild(fLoad);
+        fLoad.classList.remove('hidden');
+      }
+      await ensureChatMentionDirectory();
       const uids = [currentUser.uid, selectedFriend.id].sort();
       const chatId = `${uids[0]}_${uids[1]}`;
       const chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
       friendChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds).catch(e => console.warn(e));
+        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds, fLoad).catch(e => console.warn(e));
       });
     }
 
@@ -7054,27 +7319,73 @@
         participants: [currentUser.uid, selectedFriend.id]
       });
       friendChatInput.value = '';
+      chatMentionDir = null;
+      chatMentionDirPromise = null;
       updateMissionProgress('chatting', 1);
     }
 
+    async function findUserIdByUsername(username) {
+      const q = (username || '').trim();
+      if (!q) return null;
+      const exact = await getDocs(query(collection(db, 'users'), where('username', '==', q)));
+      if (!exact.empty) return exact.docs[0].id;
+      const lower = q.toLowerCase();
+      const all = await getDocs(collection(db, 'users'));
+      const hit = all.docs.find(d => (d.data().username || '').toLowerCase() === lower);
+      return hit ? hit.id : null;
+    }
+
+    async function sendFriendRequestToUserId(targetUid) {
+      if (!currentUser || !targetUid || targetUid === currentUser.uid) return;
+      const dup = await getDocs(query(collection(db, 'friendRequests'),
+        where('fromUserId', '==', currentUser.uid),
+        where('toUserId', '==', targetUid),
+        where('status', '==', 'pending')));
+      if (!dup.empty) { showNotification('Request already sent', 'error'); return; }
+      const already = await getDocs(query(collection(db, 'friends'), where('userId', '==', currentUser.uid), where('friendId', '==', targetUid)));
+      if (!already.empty) { showNotification('Already friends', 'error'); return; }
+      await addDoc(collection(db, 'friendRequests'), {
+        fromUserId: currentUser.uid,
+        toUserId: targetUid,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+      showNotification('Friend request sent', 'success');
+    }
+
     async function addFriend() {
-      const email = friendEmailInput.value.trim();
-      if (!email || !currentUser) return;
-      const userQuery = query(collection(db, "users"), where("email", "==", email));
-      const userSnap = await getDocs(userQuery);
-      if (userSnap.empty) { showNotification("User not found", "error"); return; }
-      const friendId = userSnap.docs[0].id;
-      const existing = await getDocs(query(collection(db, "friends"), where("userId", "==", currentUser.uid), where("friendId", "==", friendId)));
-      if (!existing.empty) { showNotification("Already friends", "error"); return; }
-      await addDoc(collection(db, "friends"), { userId: currentUser.uid, friendId, createdAt: serverTimestamp() });
-      await addDoc(collection(db, "friends"), { userId: friendId, friendId: currentUser.uid, createdAt: serverTimestamp() });
-      showNotification(`Friend added: ${email}`, "success");
+      const raw = friendEmailInput.value.trim();
+      if (!raw || !currentUser) return;
+      const friendId = await findUserIdByUsername(raw);
+      if (!friendId) { showNotification('User not found', 'error'); return; }
+      await sendFriendRequestToUserId(friendId);
       friendEmailInput.value = '';
-      updateStats(currentUser.uid);
+    }
+
+    async function acceptFriendRequest(reqId, fromUid) {
+      if (!currentUser || !fromUid) return;
+      try {
+        const batch = writeBatch(db);
+        batch.update(doc(db, 'friendRequests', reqId), { status: 'accepted', respondedAt: serverTimestamp() });
+        batch.set(doc(collection(db, 'friends')), { userId: currentUser.uid, friendId: fromUid, createdAt: serverTimestamp() });
+        batch.set(doc(collection(db, 'friends')), { userId: fromUid, friendId: currentUser.uid, createdAt: serverTimestamp() });
+        await batch.commit();
+        showNotification('You are now friends', 'success');
+        loadFriends(currentUser.uid);
+        updateStats(currentUser.uid);
+      } catch (e) { showNotification('Could not accept: ' + e.message, 'error'); }
+    }
+
+    async function declineFriendRequest(reqId) {
+      try {
+        await updateDoc(doc(db, 'friendRequests', reqId), { status: 'declined', respondedAt: serverTimestamp() });
+        loadFriends(currentUser.uid);
+      } catch (e) { showNotification(e.message, 'error'); }
     }
 
     // ===== Navigate to user profile page (full page, not popup) =====
     let previousPageId = null;
+    let viewProfileTargetUid = null;
     async function navigateToUserProfile(userId) {
       if (!userId) return;
       if (currentUser && userId === currentUser.uid) {
@@ -7089,18 +7400,28 @@
       document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('view-profile-page').classList.add('active');
+      viewProfileTargetUid = userId;
+      const addBtn = document.getElementById('vp-add-friend-btn');
       try {
         await populateProfileLayout(userId, {
           avatar: 'vp-avatar', banner: 'vp-banner', bannerWrap: 'vp-banner-wrap',
           username: 'vp-username', title: 'vp-title',
-          publicId: 'vp-public-id',
-          memberSince: 'vp-member-since', badges: 'vp-badges',
+          badges: 'vp-badges',
           starsVal: 'vp-stars', playtimeVal: 'vp-playtime',
           playCount: 'vp-plays', friendCount: 'vp-friends',
           blookCount: 'vp-blook-count', blookTotal: 'vp-blook-total',
           blookProgress: 'vp-blook-progress',
           topBlooks: 'vp-top-blooks', friendsList: 'vp-friends-list',
         });
+        if (addBtn && currentUser) {
+          if (userId === currentUser.uid) addBtn.style.display = 'none';
+          else {
+            addBtn.style.display = 'inline-flex';
+            const fr = await getDocs(query(collection(db, 'friends'), where('userId', '==', currentUser.uid), where('friendId', '==', userId)));
+            addBtn.textContent = fr.empty ? 'Add friend' : 'Friends';
+            addBtn.disabled = !fr.empty;
+          }
+        }
       } catch(e) { console.error(e); showNotification("Could not load profile", "error"); }
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
@@ -7113,6 +7434,11 @@
       const tabBtn = document.querySelector(`[data-page="${target}"]`);
       if (tabBtn) { document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active')); tabBtn.classList.add('active'); }
       previousPageId = null;
+      viewProfileTargetUid = null;
+    });
+    document.getElementById('vp-add-friend-btn')?.addEventListener('click', async () => {
+      if (!currentUser || !viewProfileTargetUid || viewProfileTargetUid === currentUser.uid) return;
+      await sendFriendRequestToUserId(viewProfileTargetUid);
     });
 
     // ========== Send gift from chat (fully implemented) ==========
@@ -7656,6 +7982,8 @@
         artEl.value = ex || (data.backgroundImage || '').trim();
       }
       if (patEl) patEl.value = (data.patternUrl || data.packBackground || '').trim();
+      const revEl = document.getElementById('staff-pack-reveal-bg-url');
+      if (revEl) revEl.value = (data.revealCardBgUrl || '').trim();
       document.getElementById('staff-pack-bg').value = data.backgroundImage||'';
       document.getElementById('staff-pack-items-json').value = JSON.stringify(data.items||[],null,2);
       packBuilderItems = JSON.parse(JSON.stringify(data.items || []));
@@ -7981,6 +8309,7 @@
         const po = document.getElementById('staff-pack-color-outer'); if (po) po.value = '#6e6e6e';
         document.getElementById('staff-pack-art-url') && (document.getElementById('staff-pack-art-url').value = '');
         document.getElementById('staff-pack-pattern-url') && (document.getElementById('staff-pack-pattern-url').value = '');
+        document.getElementById('staff-pack-reveal-bg-url') && (document.getElementById('staff-pack-reveal-bg-url').value = '');
         packBuilderItems=[];renderPackBuilderItems();
         document.getElementById('staff-pack-edit-mode').value='builder';
         document.getElementById('staff-pack-builder-area').style.display='block';
@@ -7988,7 +8317,7 @@
         document.getElementById('staff-pack-modal').style.display='flex';
         updateStaffPackMarketPreview();
       });
-      ['staff-pack-name','staff-pack-price','staff-pack-color-inner','staff-pack-color-outer','staff-pack-art-url','staff-pack-pattern-url'].forEach(id => {
+      ['staff-pack-name','staff-pack-price','staff-pack-color-inner','staff-pack-color-outer','staff-pack-art-url','staff-pack-pattern-url','staff-pack-reveal-bg-url'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', updateStaffPackMarketPreview);
         document.getElementById(id)?.addEventListener('change', updateStaffPackMarketPreview);
       });
@@ -8017,6 +8346,7 @@
         const outerHex = document.getElementById('staff-pack-color-outer')?.value || '#6e6e6e';
         const packArt = document.getElementById('staff-pack-art-url')?.value.trim() || '';
         const pattern = document.getElementById('staff-pack-pattern-url')?.value.trim() || '';
+        const revealBg = document.getElementById('staff-pack-reveal-bg-url')?.value.trim() || '';
         const packData={
           name:document.getElementById('staff-pack-name').value,
           price:parseInt(document.getElementById('staff-pack-price').value),
@@ -8028,6 +8358,7 @@
           outerColor: hexToBlooketColorStop(outerHex, 100),
           packArtUrl: packArt,
           patternUrl: pattern,
+          revealCardBgUrl: revealBg,
           updatedAt:serverTimestamp()
         };
         if(id) await updateDoc(doc(db,'packs',id),packData); else await addDoc(collection(db,'packs'),{...packData,createdAt:serverTimestamp()});
