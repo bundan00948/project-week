@@ -1,0 +1,222 @@
+    <!-- Notice Modal (unlogged users) -->
+    <div id="noticeModal" class="notice-modal">
+      <div class="notice-modal-content">
+        <h3><i class="fas fa-exclamation-triangle"></i> Login Required</h3>
+        <p>You need to be logged in to access this page.<br>Please login or sign up to continue.</p>
+        <div class="confirm-buttons" style="margin-top: 20px;">
+          <button id="noticeLoginBtn" class="confirm-yes">Login</button>
+          <button id="noticeSignupBtn" class="confirm-no">Sign Up</button>
+          <button id="noticeCancelBtn" class="confirm-no" style="background: #3a3f4a;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="auth-modal">
+      <div class="auth-modal-content">
+        <h3><i class="fas fa-sign-in-alt"></i> Login</h3>
+        <input type="email" id="loginEmail" class="auth-input" placeholder="Email">
+        <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
+        <button id="loginBtn" class="auth-btn">Login</button>
+        <div class="switch-auth">Don't have an account? <a id="showSignup">Sign up</a></div>
+        <button class="close-modal" id="closeLoginModal">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Signup Modal with file upload -->
+    <div id="signupModal" class="auth-modal">
+      <div class="auth-modal-content">
+        <h3><i class="fas fa-user-plus"></i> Sign Up</h3>
+        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.45;margin-bottom:12px;text-align:left;">
+          Welcome to <strong style="color:var(--neon-green);">Game Universe</strong>. After you join: use the sidebar to browse games, open the <strong>Shop</strong> for packs and profile banners, collect blooks in <strong>Inventory</strong>, complete <strong>Daily Missions</strong>, and chat in <strong>Chat</strong> or <strong>Friends</strong>. Your profile shows stats, badges, and friends. Each account has a public <strong>6-digit ID</strong> for moderation. Have fun and play fair.
+        </p>
+        <input type="text" id="signupUsername" class="auth-input" placeholder="Username">
+        <input type="email" id="signupEmail" class="auth-input" placeholder="Email">
+        <input type="password" id="signupPassword" class="auth-input" placeholder="Password">
+        <div class="form-group staff-only-signup-url" style="margin:10px 0 6px;display:none;">
+          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — image URL (staff)</label>
+          <input type="url" id="signupAvatarUrl" class="auth-input" placeholder="Optional: image URL">
+        </div>
+        <label class="file-label"><i class="fas fa-upload"></i> Upload Profile Picture (optional)
+          <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+        </label>
+        <img id="avatarPreview" style="display: none; max-width: 100px; border-radius: 50%; margin-top: 10px;">
+        <button id="signupBtn" class="auth-btn">Create Account</button>
+        <div class="switch-auth">Already have an account? <a id="showLogin">Login</a></div>
+        <button class="close-modal" id="closeSignupModal">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Confirm Game Modal -->
+    <div id="confirmModal" class="confirm-modal">
+      <div class="confirm-modal-content">
+        <h3>Play this game?</h3>
+        <p id="confirmGameName"></p>
+        <div class="confirm-buttons">
+          <button id="confirmYes" class="confirm-yes">Yes</button>
+          <button id="confirmNo" class="confirm-no">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Gift Card Modal -->
+    <div id="sendCardModal" class="send-card-modal">
+      <div class="send-card-modal-content">
+        <h3>Send Gift Card</h3>
+        <div class="send-card-info">
+          <div class="send-card-icon" id="send-card-icon">🎁</div>
+          <div class="send-card-details">
+            <div class="send-card-name" id="send-card-name">Gift Card Name</div>
+            <div class="send-card-type" id="send-card-type">Type: Coins</div>
+          </div>
+        </div>
+        <div class="send-form-group">
+          <label for="recipient-email">Send to: </label>
+          <select id="recipient-email">
+            <option value="">Select a friend or send to yourself</option>
+            <!-- Friends will be added here -->
+          </select>
+        </div>
+        <div class="send-card-buttons">
+          <button class="send-card-btn send" id="send-card-btn">Send</button>
+          <button class="send-card-btn cancel" id="cancel-send-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Popup -->
+    <div class="notification-popup" id="notification-popup">
+      <div class="notification-content">
+        <div class="notification-icon" id="notification-icon">✓</div>
+        <div class="notification-text" id="notification-text">Operation successful!</div>
+      </div>
+    </div>
+
+    <!-- Pack Opening Modal -->
+    <div class="modal" id="pack-opening-modal">
+      <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
+        <div class="modal-background" id="opening-modal-bg"></div>
+        <div class="pack-bg-fx" id="pack-bg-fx" aria-hidden="true">
+          <div class="pack-bg-aurora"></div>
+          <div class="pack-bg-mesh"></div>
+          <div class="pack-bg-rays"></div>
+          <div class="pack-bg-vignette"></div>
+        </div>
+        <div class="modal-body" id="pack-opening-modal-body">
+          <div class="pack-confetti-layer" id="pack-confetti-layer" aria-hidden="true" style="display:none;"></div>
+          <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
+          <button type="button" class="pack-unbox-dismiss-layer" id="pack-unbox-dismiss-layer" style="display:none;" aria-label="Collect and close"></button>
+          <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
+          <div class="pack-unbox-pack-center" id="pack-unbox-pack-center">
+            <div class="gift-animation" id="gift-animation">
+              <!-- Pack stage -->
+            </div>
+          </div>
+          <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
+            <div class="pack-reveal-card" id="pack-reveal-card">
+              <div class="pack-reveal-card-inner">
+                <div class="pack-reveal-name" id="opened-gift-name">Gift Name</div>
+                <div class="pack-reveal-rarity gift-rarity" id="opened-gift-rarity">Rarity</div>
+                <div class="pack-reveal-blook-wrap" id="pack-reveal-blook-slot"></div>
+                <div class="pack-reveal-chance" id="opened-gift-chance">0%</div>
+                <div class="pack-reveal-stars-note" id="opened-gift-stars">Stars: 0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Gift Modal -->
+    <div class="modal" id="send-gift-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2>SEND GIFT</h2>
+          <div class="gift-animation" id="send-gift-preview">
+            <!-- Gift preview will be shown here -->
+          </div>
+          <div class="send-form">
+            <div class="form-group">
+              <label for="friend-email-send">Friend's Email</label>
+              <input type="email" id="friend-email-send" placeholder="Enter friend's email">
+            </div>
+            <div class="buttons-row">
+              <button class="confirm-btn" id="confirm-send-btn">CONFIRM</button>
+              <button class="cancel-btn" id="cancel-send-gift-btn">CANCEL</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sending Animation Modal -->
+    <div class="modal" id="sending-animation-modal">
+      <div class="modal-content pack-opening-modal">
+        <div class="modal-background" id="sending-modal-bg"></div>
+        <div class="modal-body">
+          <div class="gift-animation" id="sending-animation">
+            <!-- Animation will be shown here -->
+          </div>
+          <div class="gift-details">
+            <div class="gift-name" id="sending-message">Sending gift...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chance Modal -->
+    <div class="modal chance-modal" id="chance-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2>Pack Drop Chances</h2>
+          <div class="chance-list" id="chance-list">
+            <!-- Chances will be added here -->
+          </div>
+          <button class="cancel-btn" id="close-chance-modal">CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile modals removed - now uses full page navigation -->
+
+    <!-- Send Gift from Chat Modal -->
+    <div class="modal send-gift-modal" id="send-gift-chat-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="send-gift-header">
+            <div class="send-gift-avatar">
+              <img id="send-gift-user-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="User Avatar">
+            </div>
+            <div class="send-gift-info">
+              <h3 id="send-gift-username">Username</h3>
+              <div>Send a gift</div>
+            </div>
+          </div>
+          
+          <h4>Select a gift to send: </h4>
+          <div class="gift-cards-list" id="gift-cards-list">
+            <!-- Gift cards will be added here -->
+          </div>
+          
+          <button class="cancel-btn" id="close-send-gift-chat-modal">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Gift from Inventory Modal -->
+    <div class="modal send-gift-inventory-modal" id="send-gift-inventory-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2>Send Gift</h2>
+          <h3>Select a gift to send: </h3>
+          <div class="gift-cards-list" id="sender-gift-cards-list">
+            <!-- Sender's gift cards will be populated here -->
+          </div>
+          <div class="buttons-row">
+            <button class="cancel-btn" id="cancel-send-gift-inventory-btn">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" frameborder="0"></iframe></div></div>
