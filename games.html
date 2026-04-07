@@ -625,18 +625,12 @@
       flex-wrap: wrap; margin-bottom: 4px; min-height: 1.35rem;
     }
     .star-slot-badge-img {
-      border-radius: 6px; object-fit: contain; display: block; border: none;
-    }
-    .star-slot-badge-img.star-slot-badge-img--badged {
-      border: 1px solid rgba(42,255,158,0.28);
-      border-radius: 7px;
-      padding: 1px;
-      background: rgba(0,0,0,0.2);
-      box-sizing: border-box;
+      border-radius: 0; object-fit: contain; display: block; border: none !important;
+      padding: 0 !important; background: transparent !important; box-shadow: none !important;
     }
     .star-slot-badge-fa {
-      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
-      flex-shrink: 0; border: none;
+      border-radius: 0; display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0; border: none !important; padding: 0 !important; box-shadow: none !important;
     }
     #sidebar-stars-icon-wrap .star-slot-badge-img,
     #sidebar-stars-icon-wrap .star-slot-badge-fa { width: 22px; height: 22px; font-size: 0.72rem; }
@@ -838,6 +832,75 @@
       border: 1px solid rgba(42,255,158,0.2);
     }
     .market-pack-price .fa-coins { color: #ffe066; }
+
+    /* Shop: banner offers — flat wide cards, 2 per row, full art upright */
+    #shop-banners.shop-banners-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 16px;
+      align-items: stretch;
+    }
+    @media (max-width: 640px) {
+      #shop-banners.shop-banners-row { grid-template-columns: 1fr; }
+    }
+    .shop-banner-card {
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(42,255,158,0.18);
+      background: rgba(0,0,0,0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .shop-banner-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+      border-color: rgba(42,255,158,0.45);
+    }
+    .shop-banner-card-visual {
+      width: 100%;
+      height: 72px;
+      background: #121820;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .shop-banner-card-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transform: none !important;
+      filter: none;
+    }
+    .shop-banner-card-foot {
+      padding: 8px 10px 10px;
+      text-align: center;
+    }
+    .shop-banner-card-name {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .shop-banner-card-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      background: rgba(0,0,0,0.28);
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(42,255,158,0.15);
+    }
 
     .staff-pack-preview-box {
       max-width: 200px;
@@ -1752,6 +1815,10 @@
       margin-left: 28px;
       font-size: 0.82rem;
     }
+    .chat-msg-text {
+      white-space: pre-wrap;
+      display: block;
+    }
     .chat-msg-img {
       display: block;
       max-width: min(100%, 320px);
@@ -2014,6 +2081,13 @@
     .pack-unbox-body.pack-unbox-revealed .pack-unbox-details-wrap {
       display: flex;
     }
+    .pack-reveal-card.pack-unbox-reveal-anim {
+      animation: packRevealCardIn 0.55s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+    }
+    @keyframes packRevealCardIn {
+      from { opacity: 0; transform: scale(0.92) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
     .pack-reveal-card {
       width: min(92vw, 400px);
       min-height: min(72vh, 520px);
@@ -2098,6 +2172,21 @@
       -webkit-tap-highlight-color: transparent;
     }
     .pack-unbox-click-layer:focus-visible {
+      outline: 2px solid var(--neon-green);
+      outline-offset: -4px;
+    }
+    .pack-unbox-dismiss-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 18;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pack-unbox-dismiss-layer:focus-visible {
       outline: 2px solid var(--neon-green);
       outline-offset: -4px;
     }
@@ -2243,9 +2332,10 @@
       animation: packRipBottomFade 0.45s ease 0.2s forwards;
     }
     @keyframes packRipTopFlap {
-      0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+      0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+      35% { transform: translate(2%, -6%) rotate(4deg) scale(1.03); opacity: 1; }
       100% {
-        transform: translate(-8%, -108%) rotate(-18deg);
+        transform: translate(-12%, -115%) rotate(-22deg) scale(0.92);
         opacity: 0;
       }
     }
@@ -3253,23 +3343,32 @@
       border-radius: 16px;
     }
     .staff-sub-tab {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(42,255,158,0.2);
-      background: rgba(255,255,255,0.03);
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(42,255,158,0.22);
+      background: linear-gradient(180deg, rgba(36,44,58,0.95), rgba(18,22,30,0.98));
       color: var(--text-secondary);
-      font-weight: 700;
-      font-size: 0.82rem;
+      font-weight: 800;
+      font-size: 0.84rem;
       cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s, color 0.18s;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+      font-family: 'Nunito', sans-serif;
     }
-    .staff-sub-tab:hover, .staff-sub-tab.active {
-      background: var(--neon-green);
-      color: #000;
-      border-color: var(--neon-green);
+    .staff-sub-tab:hover {
+      transform: translateY(-2px);
+      border-color: rgba(42,255,158,0.45);
+      color: var(--neon-green);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    }
+    .staff-sub-tab.active {
+      background: linear-gradient(145deg, #3dffb0 0%, #2AFF9E 50%, #12c77a 100%);
+      color: #04120c;
+      border-color: rgba(42,255,158,0.65);
+      box-shadow: 0 6px 22px rgba(42,255,158,0.28);
     }
     .staff-section { display: none; }
     .staff-section.active { display: block; }
@@ -3308,26 +3407,53 @@
     .staff-table th { color: var(--neon-green); font-weight: 700; }
     .staff-table tr:hover { background: rgba(42,255,158,0.03); }
     .staff-btn {
-      padding: 8px 18px;
-      border-radius: 20px;
+      padding: 11px 22px;
+      border-radius: 12px;
       font-weight: 800;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, border-color 0.18s;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      line-height: 1.2;
+      font-family: 'Nunito', sans-serif;
     }
-    .staff-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-    .staff-btn:active { transform: translateY(0); }
-    .staff-btn-primary { background: linear-gradient(135deg, #2AFF9E, #1ad47e); color: #000; }
-    .staff-btn-primary:hover { background: linear-gradient(135deg, #3affab, #2AFF9E); box-shadow: 0 4px 16px rgba(42,255,158,0.3); }
-    .staff-btn-danger { background: linear-gradient(135deg, #FF3D6C, #d4294f); color: #fff; }
-    .staff-btn-danger:hover { background: linear-gradient(135deg, #ff5580, #FF3D6C); box-shadow: 0 4px 16px rgba(255,61,108,0.3); }
-    .staff-btn-warning { background: linear-gradient(135deg, #FFB347, #e69a2e); color: #000; }
-    .staff-btn-warning:hover { box-shadow: 0 4px 16px rgba(255,179,71,0.3); }
-    .staff-btn-sm { padding: 5px 12px; font-size: 0.72rem; }
+    .staff-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
+    .staff-btn:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .staff-btn-primary {
+      background: linear-gradient(145deg, #3dffb0 0%, #2AFF9E 40%, #12c77a 100%);
+      color: #04120c;
+      border-color: rgba(42,255,158,0.55);
+    }
+    .staff-btn-primary:hover { filter: brightness(1.06); box-shadow: 0 8px 26px rgba(42,255,158,0.35); }
+    .staff-btn:not(.staff-btn-primary):not(.staff-btn-danger):not(.staff-btn-warning) {
+      background: linear-gradient(180deg, rgba(40,48,62,0.95), rgba(22,28,38,0.98));
+      color: var(--text-primary);
+      border-color: rgba(42,255,158,0.22);
+    }
+    .staff-btn:not(.staff-btn-primary):not(.staff-btn-danger):not(.staff-btn-warning):hover {
+      border-color: rgba(42,255,158,0.45);
+      color: var(--neon-green);
+    }
+    .staff-btn-danger {
+      background: linear-gradient(145deg, #ff5c82 0%, #FF3D6C 45%, #c92a4d 100%);
+      color: #fff;
+      border-color: rgba(255,100,130,0.5);
+    }
+    .staff-btn-danger:hover { filter: brightness(1.05); box-shadow: 0 8px 26px rgba(255,61,108,0.35); }
+    .staff-btn-warning {
+      background: linear-gradient(145deg, #ffd180 0%, #FFB347 50%, #e09520 100%);
+      color: #1a1204;
+      border-color: rgba(255,200,100,0.45);
+    }
+    .staff-btn-warning:hover { filter: brightness(1.05); box-shadow: 0 8px 26px rgba(255,179,71,0.3); }
+    .staff-btn-sm { padding: 7px 14px; font-size: 0.76rem; border-radius: 10px; }
     .staff-badge { background: rgba(42,255,158,0.15); padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; color: var(--neon-green); display: inline-block; margin: 2px; }
     .staff-search { background: rgba(30,38,50,0.8); border: 1px solid rgba(42,255,158,0.2); border-radius: 20px; padding: 8px 16px; color: white; width: 260px; font-size: 0.85rem; }
     .staff-search:focus { outline: none; border-color: var(--neon-green); }
@@ -3355,7 +3481,7 @@
       overflow-y: auto;
     }
     .staff-modal-content h3 { margin-bottom: 16px; font-weight: 800; }
-    .staff-flex-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .staff-flex-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .title-preview {
       padding: 6px 14px;
       border-radius: 12px;
@@ -3575,7 +3701,7 @@
     /* Friends list in profile - 4 per row */
     .up-friends-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .up-friend-row {
-      display: flex; align-items: stretch; gap: 6px; padding: 5px 8px;
+      display: flex; align-items: center; gap: 6px; padding: 4px 8px;
       background: rgba(0,0,0,0.2); border-radius: 10px; cursor: pointer;
       transition: background 0.15s; border: 1px solid rgba(42,255,158,0.06);
     }
@@ -3586,14 +3712,14 @@
     }
     .up-friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .up-friend-banner {
-      flex: 1; min-height: 44px; height: auto; border-radius: 6px; position: relative;
+      flex: 1; min-height: 36px; height: auto; border-radius: 6px; position: relative;
       overflow: hidden; display: flex; flex-direction: column; align-items: stretch;
       justify-content: center; padding: 0; background: #1a2a3a;
     }
     .up-friend-banner-text {
       position: relative; z-index: 3; display: flex; flex-direction: column;
-      align-items: center; justify-content: space-between; text-align: center;
-      width: 100%; min-height: 44px; padding: 4px 6px 5px; box-sizing: border-box;
+      align-items: center; justify-content: center; text-align: center; gap: 1px;
+      width: 100%; min-height: 0; padding: 3px 6px 4px; box-sizing: border-box;
     }
     .up-friend-pattern {
       position: absolute; top: 0; left: 0; width: 200%; height: 200%;
@@ -3614,14 +3740,14 @@
       position: relative; z-index: 3; font-size: 0.68rem; font-weight: 800;
       color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.55);
       width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      line-height: 1.15; flex-shrink: 0;
+      line-height: 1.12; flex-shrink: 0; margin: 0;
     }
     .up-friend-title-tag {
       position: relative; z-index: 3; font-size: 0.52rem; font-weight: 800;
-      margin-top: auto; padding: 2px 6px; border-radius: 10px; max-width: 100%;
-      background: rgba(42,255,158,0.15); color: #2AFF9E; flex-shrink: 0;
+      margin: 0; padding: 0; border-radius: 0; max-width: 100%;
+      background: transparent; color: #2AFF9E; flex-shrink: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      border: 1px solid rgba(42,255,158,0.35);
+      border: none; line-height: 1.1;
     }
     .up-friend-title-tag.gradient-title {
       background: none; border: none;
@@ -4028,7 +4154,7 @@
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="friend-count">0</div><div class="up-stat-lbl">Friends</div></div></div>
           </div>
           <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="profile-blook-count">0</span> / <span id="profile-blook-total">150</span></span></div>
+            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="profile-blook-count">0</span> / <span id="profile-blook-total">0</span></span></div>
             <div class="progress-bar"><div class="progress-fill" id="profile-blook-progress"></div></div>
           </div>
           <div class="up-section">
@@ -4074,7 +4200,7 @@
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
           </div>
           <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">150</span></span></div>
+            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">0</span></span></div>
             <div class="progress-bar"><div class="progress-fill" id="vp-blook-progress"></div></div>
           </div>
           <div class="up-section">
@@ -4120,7 +4246,7 @@
         <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
         <div class="packs-grid" id="shop-packs"></div>
         <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
-        <div class="packs-grid" id="shop-banners"></div>
+        <div class="shop-banners-row" id="shop-banners"></div>
       </div>
     </div>
 
@@ -4605,6 +4731,7 @@
         <div class="modal-background" id="opening-modal-bg"></div>
         <div class="modal-body" id="pack-opening-modal-body">
           <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
+          <button type="button" class="pack-unbox-dismiss-layer" id="pack-unbox-dismiss-layer" style="display:none;" aria-label="Collect and close"></button>
           <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
           <div class="pack-unbox-pack-center" id="pack-unbox-pack-center">
             <div class="gift-animation" id="gift-animation">
@@ -4620,7 +4747,6 @@
                 <div class="pack-reveal-chance" id="opened-gift-chance">0%</div>
                 <div class="pack-reveal-stars-note" id="opened-gift-stars">Stars: 0</div>
               </div>
-              <button class="collect-btn" id="collect-btn" style="margin-top:14px;">COLLECT</button>
             </div>
           </div>
         </div>
@@ -5022,6 +5148,7 @@
     const packOpeningModalInner = document.getElementById('pack-opening-modal-inner');
     const packOpeningModalBody = document.getElementById('pack-opening-modal-body');
     const packUnboxClickLayer = document.getElementById('pack-unbox-click-layer');
+    const packUnboxDismissLayer = document.getElementById('pack-unbox-dismiss-layer');
     const packUnboxBoost = document.getElementById('pack-unbox-boost');
     const openingModalBg = document.getElementById('opening-modal-bg');
     const giftAnimation = document.getElementById('gift-animation');
@@ -5032,7 +5159,6 @@
     const packRevealBlookSlot = document.getElementById('pack-reveal-blook-slot');
     const packUnboxPackCenter = document.getElementById('pack-unbox-pack-center');
     const openedGiftStars = document.getElementById('opened-gift-stars');
-    const collectBtn = document.getElementById('collect-btn');
     const sendGiftModal = document.getElementById('send-gift-modal');
     const sendGiftPreview = document.getElementById('send-gift-preview');
     const friendEmailSend = document.getElementById('friend-email-send');
@@ -5155,7 +5281,9 @@
             }
           } else if (td.color) {
             element.style.color = td.color;
-            element.style.background = `${td.color}20`;
+            if (!element.classList.contains('up-friend-title-tag')) {
+              element.style.background = `${td.color}20`;
+            }
           }
         }
       } catch (e) {}
@@ -5220,12 +5348,12 @@
           iel.className = `star-slot-badge-fa ${safeFa}`;
           iel.setAttribute('aria-hidden', 'true');
           iel.title = bn;
-          iel.style.background = bd.bgColor || 'var(--neon-green)';
-          iel.style.color = bd.textColor || '#000';
+          iel.style.background = 'transparent';
+          iel.style.color = bd.textColor || bd.bgColor || 'var(--neon-green)';
           wrapEl.appendChild(iel);
         } else if (/^https?:\/\//i.test(icon)) {
           const img = document.createElement('img');
-          img.className = 'star-slot-badge-img star-slot-badge-img--badged';
+          img.className = 'star-slot-badge-img';
           img.src = icon;
           img.alt = '';
           img.title = bn;
@@ -5758,10 +5886,12 @@
 
       const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
       const ownedNames = new Set(blooksSnap.docs.map(d => d.data().itemName));
-      const blookCurrent = ownedNames.size;
-      document.getElementById(ids.blookCount).textContent = blookCurrent;
-      const blookPercent = (blookCurrent / 150) * 100;
-      document.getElementById(ids.blookProgress).style.width = blookPercent + '%';
+      const blookUnique = ownedNames.size;
+      const blookCopies = blooksSnap.size;
+      document.getElementById(ids.blookCount).textContent = blookCopies;
+      document.getElementById(ids.blookTotal).textContent = blookUnique;
+      const blookBarPct = Math.min(100, blookUnique * (100 / 45));
+      document.getElementById(ids.blookProgress).style.width = `${blookBarPct}%`;
 
       const top5 = blooksSnap.docs.sort((a, b) => (b.data().starsGained || 0) - (a.data().starsGained || 0)).slice(0, 5);
       document.getElementById(ids.topBlooks).innerHTML = top5.length ? top5.map(d => {
@@ -5941,6 +6071,30 @@
       } catch(e) { console.error(e); }
     }
 
+    function buildShopBannerRowCard(bannerPack) {
+      const wrap = document.createElement('div');
+      wrap.className = 'shop-banner-card';
+      const imgUrl = (bannerPack.bannerImageUrl || bannerPack.backgroundImage || '').trim();
+      const vis = document.createElement('div');
+      vis.className = 'shop-banner-card-visual';
+      if (imgUrl) {
+        const im = document.createElement('img');
+        im.src = imgUrl;
+        im.alt = bannerPack.name || 'Banner';
+        im.loading = 'lazy';
+        vis.appendChild(im);
+      } else {
+        vis.innerHTML = '<i class="fas fa-image" style="font-size:1.6rem;color:rgba(255,255,255,0.35);"></i>';
+      }
+      const foot = document.createElement('div');
+      foot.className = 'shop-banner-card-foot';
+      foot.innerHTML = `<div class="shop-banner-card-name">${escapeHtml(bannerPack.name || 'Banner')}</div><div class="shop-banner-card-price"><i class="fas fa-coins"></i> ${escapeHtml(String(bannerPack.price ?? 0))}</div>`;
+      wrap.appendChild(vis);
+      wrap.appendChild(foot);
+      wrap.addEventListener('click', () => purchaseBannerOffer(bannerPack));
+      return wrap;
+    }
+
     async function loadShopBannerOffers() {
       if (shopBannersUnsub) { shopBannersUnsub(); shopBannersUnsub = null; }
       if (!shopBanners) return;
@@ -5953,19 +6107,7 @@
           shopBanners.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;">No banners in the shop yet</p>';
           return;
         }
-        banners.forEach(b => {
-          const img = b.bannerImageUrl || b.backgroundImage || '';
-          const card = buildMarketPackCardEl({
-            name: b.name,
-            price: b.price,
-            pack: b,
-            artUrl: img,
-            patternUrl: '',
-            onCardClick: () => purchaseBannerOffer(b),
-            onInfoClick: null
-          });
-          shopBanners.appendChild(card);
-        });
+        banners.forEach(b => shopBanners.appendChild(buildShopBannerRowCard(b)));
       });
     }
 
@@ -6407,13 +6549,20 @@
     }
 
     let packUnboxClickHandler = null;
+    let packUnboxDismissHandler = null;
 
     function resetPackOpeningModalLayout() {
       if (packUnboxClickLayer && packUnboxClickHandler) {
         packUnboxClickLayer.removeEventListener('click', packUnboxClickHandler);
         packUnboxClickHandler = null;
       }
+      if (packUnboxDismissLayer && packUnboxDismissHandler) {
+        packUnboxDismissLayer.removeEventListener('click', packUnboxDismissHandler);
+        packUnboxDismissHandler = null;
+      }
       if (packUnboxClickLayer) packUnboxClickLayer.style.display = 'none';
+      if (packUnboxDismissLayer) packUnboxDismissLayer.style.display = 'none';
+      if (packRevealCard) packRevealCard.classList.remove('pack-unbox-reveal-anim');
       if (packUnboxBoost) packUnboxBoost.style.display = 'none';
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.remove('pack-unbox-body', 'pack-unbox-revealed');
@@ -6437,23 +6586,10 @@
       const fc = marketPackFrameColors(pack);
       const inner = fc.inner || '#5a6a8a';
       const outer = fc.outer || '#1a2233';
-      const patternUrl = marketPackPatternUrl(pack);
-      const vivid = `radial-gradient(ellipse 100% 85% at 50% 20%, ${inner}55 0%, transparent 55%), radial-gradient(ellipse 90% 70% at 80% 100%, ${outer}66 0%, transparent 50%), radial-gradient(ellipse 70% 50% at 15% 85%, rgba(255,255,255,0.08) 0%, transparent 45%)`;
-      const softLight = 'radial-gradient(ellipse 95% 75% at 50% 38%, rgba(255,255,255,0.07), transparent 58%), radial-gradient(ellipse 80% 45% at 50% 92%, rgba(0,0,0,0.32), transparent 55%)';
-      const layers = [
-        vivid,
-        softLight,
-        patternUrl ? `url(${JSON.stringify(String(patternUrl))})` : '',
-        `linear-gradient(168deg, ${inner} 0%, ${outer} 42%, #030509 88%)`
-      ].filter(Boolean);
-      openingModalBg.style.backgroundImage = layers.join(', ');
-      openingModalBg.style.backgroundSize = patternUrl
-        ? '100% 100%, 100% 100%, 320px 320px, 100% 100%'
-        : '100% 100%, 100% 100%, 100% 100%';
-      openingModalBg.style.backgroundRepeat = patternUrl
-        ? 'no-repeat, no-repeat, repeat, no-repeat'
-        : 'no-repeat, no-repeat, no-repeat';
-      openingModalBg.style.backgroundPosition = 'center, center, center, center';
+      openingModalBg.style.backgroundImage = `linear-gradient(168deg, ${inner} 0%, ${outer} 42%, #030509 88%)`;
+      openingModalBg.style.backgroundSize = '100% 100%';
+      openingModalBg.style.backgroundRepeat = 'no-repeat';
+      openingModalBg.style.backgroundPosition = 'center';
 
       packOpeningModalInner?.classList.add('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.add('pack-unbox-body');
@@ -6475,7 +6611,7 @@
         } else {
           packRevealCard.style.backgroundColor = '#0b0e14';
           packRevealCard.style.backgroundSize = '100% 100%';
-          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner} 0%, ${outer} 48%, #05070c 100%), radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,255,255,0.14), rgba(5,7,12,0) 55%)`;
+          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner} 0%, ${outer} 55%, #05070c 100%)`;
         }
       }
       if (packRevealBlookSlot) {
@@ -6493,8 +6629,6 @@
       openedGiftRarity.style.opacity = '0';
       openedGiftChance.style.opacity = '0';
       openedGiftStars.style.opacity = '0';
-      collectBtn.style.opacity = '0';
-      collectBtn.style.pointerEvents = 'none';
 
       if (packUnboxClickLayer) packUnboxClickLayer.style.display = 'block';
       if (packUnboxBoost) packUnboxBoost.style.display = 'flex';
@@ -6512,7 +6646,7 @@
         const maxH = Math.min(window.innerHeight * 0.62, 560);
         const w = nw > 0 ? nw : 280;
         const h = nh > 0 ? nh : 280;
-        const scale = Math.min(1, maxW / w, maxH / h);
+        const scale = Math.min(1, maxW / w, maxH / h) * 1.3;
         stack.style.width = `${Math.round(w * scale)}px`;
         stack.style.height = `${Math.round(h * scale)}px`;
       };
@@ -6555,8 +6689,37 @@
         openedGiftRarity.style.opacity = '1';
         openedGiftChance.style.opacity = '1';
         openedGiftStars.style.opacity = '1';
-        collectBtn.style.opacity = '1';
-        collectBtn.style.pointerEvents = '';
+        if (packRevealCard) packRevealCard.classList.add('pack-unbox-reveal-anim');
+        if (packUnboxDismissLayer) {
+          packUnboxDismissLayer.style.display = 'block';
+          packUnboxDismissHandler = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!currentUser || !currentGiftCard) {
+              packOpeningModal.style.display = 'none';
+              resetPackOpeningModalLayout();
+              return;
+            }
+            try {
+              await addDoc(collection(db, 'inventory'), {
+                userId: currentUser.uid,
+                packId: currentGiftCard.packId,
+                packName: currentGiftCard.packName,
+                itemName: currentGiftCard.name,
+                rarity: currentGiftCard.rarity,
+                imageUrl: currentGiftCard.imageUrl || null,
+                starsGained: currentGiftCard.starsGained,
+                timestamp: serverTimestamp()
+              });
+              packOpeningModal.style.display = 'none';
+              resetPackOpeningModalLayout();
+              showNotification(`You received: ${currentGiftCard.name}!`, 'success');
+            } catch (err) {
+              showNotification('Error collecting item: ' + (err.message || 'error'), 'error');
+            }
+          };
+          packUnboxDismissLayer.addEventListener('click', packUnboxDismissHandler);
+        }
       };
 
       const tearOpen = () => {
@@ -6587,25 +6750,6 @@
 
       packOpeningModal.style.display = 'flex';
     }
-
-    collectBtn.addEventListener('click', async () => {
-      if (!currentUser || !currentGiftCard) return;
-      try {
-        await addDoc(collection(db, "inventory"), {
-          userId: currentUser.uid,    
-          packId: currentGiftCard.packId,    
-          packName: currentGiftCard.packName,    
-          itemName: currentGiftCard.name,    
-          rarity: currentGiftCard.rarity,    
-          imageUrl: currentGiftCard.imageUrl || null,    
-          starsGained: currentGiftCard.starsGained,    
-          timestamp: serverTimestamp()
-        });
-        packOpeningModal.style.display = 'none';
-        resetPackOpeningModalLayout();
-        showNotification(`You received: ${currentGiftCard.name}!`, "success");
-      } catch(e) { showNotification("Error collecting item: " + e.message, "error"); }
-    });
 
     // ========== Blooket-style Inventory ==========
     let currentInventoryFilter = 'all';
@@ -7394,7 +7538,35 @@
       return div;
     }
 
+    async function syncChatFromSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
+      renderedIdSet.clear();
+      const fragLoading = loadingOverlay;
+      container.querySelectorAll('.chat-message').forEach(n => n.remove());
+      const docs = snapshot.docs.slice().sort((a, b) => {
+        const ta = a.data().timestamp?.toMillis ? a.data().timestamp.toMillis() : 0;
+        const tb = b.data().timestamp?.toMillis ? b.data().timestamp.toMillis() : 0;
+        return ta - tb;
+      });
+      let prevSender = null;
+      for (const d of docs) {
+        renderedIdSet.add(d.id);
+        const msg = d.data();
+        const group = prevSender && msg.senderId === prevSender && msg.type !== 'system';
+        container.appendChild(await buildChatMessageElement(d, { groupWithPrevious: group }));
+        if (msg.type !== 'system') prevSender = msg.senderId || null;
+        else prevSender = null;
+      }
+      requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+      if (fragLoading) fragLoading.classList.add('hidden');
+    }
+
     async function applyChatSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
+      const fromCache = snapshot.metadata && snapshot.metadata.fromCache === true;
+      const hasLocalAdds = snapshot.docChanges().some(c => c.type === 'added');
+      if (fromCache && hasLocalAdds) {
+        await syncChatFromSnapshot(container, snapshot, renderedIdSet, loadingOverlay);
+        return;
+      }
       const changes = snapshot.docChanges();
       for (const ch of changes) {
         if (ch.type === 'removed') {
@@ -7413,7 +7585,7 @@
         if (renderedIdSet.has(d.id)) continue;
         renderedIdSet.add(d.id);
         const msg = d.data();
-        const last = container.lastElementChild;
+        const last = container.querySelector('.chat-message:last-of-type');
         const group = last && last.dataset.senderId && msg.senderId === last.dataset.senderId && msg.type !== 'system';
         container.appendChild(await buildChatMessageElement(d, { groupWithPrevious: group }));
       }
