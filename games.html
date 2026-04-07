@@ -148,26 +148,6 @@
       font-size: 1.1rem;
     }
 
-    .sidebar-balance-bar {
-      margin-top: auto;
-      padding: 16px 18px 20px;
-      border-top: 1px solid rgba(42, 255, 158, 0.2);
-      background: rgba(0, 0, 0, 0.22);
-    }
-    .sidebar-balance-bar .profile-stats {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: none;
-    }
-    .sidebar-balance-bar .stat-value {
-      font-size: 1.45rem;
-    }
-    .sidebar-balance-bar .stat-label {
-      font-size: 0.88rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-    }
-
     /* Main Content */
     .main-content {
       flex: 1;
@@ -2082,13 +2062,13 @@
       display: flex;
     }
     .pack-reveal-card.pack-unbox-reveal-anim {
-      animation: packRevealCardIn 0.72s cubic-bezier(0.22, 1.15, 0.32, 1) both;
+      animation: packRevealCardIn 0.82s cubic-bezier(0.18, 1.2, 0.28, 1) both;
     }
     @keyframes packRevealCardIn {
-      0% { opacity: 0; transform: scale(0.78) translateY(28px) rotate(-2deg); filter: blur(10px); }
-      45% { opacity: 1; transform: scale(1.06) translateY(-6px) rotate(0.6deg); filter: blur(0); }
-      72% { transform: scale(0.98) translateY(2px) rotate(-0.3deg); }
-      100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); filter: blur(0); }
+      0% { opacity: 0; transform: scale(0.72) translateY(36px) rotate(-3deg); filter: blur(14px); box-shadow: 0 0 0 rgba(42,255,158,0); }
+      38% { opacity: 1; transform: scale(1.09) translateY(-10px) rotate(1deg); filter: blur(0); box-shadow: 0 0 48px rgba(42,255,158,0.35); }
+      65% { transform: scale(0.96) translateY(4px) rotate(-0.5deg); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+      100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); filter: blur(0); box-shadow: 0 16px 48px rgba(0,0,0,0.55); }
     }
     .pack-reveal-card {
       width: min(92vw, 400px);
@@ -2127,8 +2107,9 @@
       animation: packRevealNamePop 0.85s cubic-bezier(0.34, 1.25, 0.64, 1) 0.12s both;
     }
     @keyframes packRevealNamePop {
-      0% { opacity: 0; transform: translateY(14px) scale(0.85); letter-spacing: 0.04em; }
-      100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0.02em; }
+      0% { opacity: 0; transform: translateY(22px) scale(0.8) skewX(-4deg); letter-spacing: 0.08em; }
+      55% { opacity: 1; transform: translateY(-4px) scale(1.05) skewX(0deg); letter-spacing: 0.02em; }
+      100% { opacity: 1; transform: translateY(0) scale(1) skewX(0deg); letter-spacing: 0.02em; }
     }
     .pack-reveal-rarity {
       font-size: 0.95rem;
@@ -2170,8 +2151,9 @@
       animation: packRevealChanceIn 0.7s cubic-bezier(0.34, 1.2, 0.64, 1) 0.35s both;
     }
     @keyframes packRevealChanceIn {
-      0% { opacity: 0; transform: translateY(18px) scale(0.9); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% { opacity: 0; transform: translateY(26px) scale(0.82); filter: blur(4px); }
+      60% { opacity: 1; transform: translateY(-5px) scale(1.06); filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     }
     .pack-reveal-stars-note {
       font-family: 'Titan One', 'Nunito', sans-serif;
@@ -2319,13 +2301,14 @@
       animation: packBlookRevealPop 0.75s cubic-bezier(0.34, 1.25, 0.64, 1) both;
     }
     @keyframes packBlookPeekPulse {
-      0%, 100% { transform: scale(1); filter: brightness(1); }
-      50% { transform: scale(1.03); filter: brightness(1.08); }
+      0%, 100% { transform: scale(1) translateY(0); filter: brightness(1) drop-shadow(0 8px 20px rgba(0,0,0,0.4)); }
+      33% { transform: scale(1.045) translateY(-2px); filter: brightness(1.1) drop-shadow(0 14px 28px rgba(42,255,158,0.2)); }
+      66% { transform: scale(1.02) translateY(1px); filter: brightness(1.05); }
     }
     @keyframes packBlookRevealPop {
-      0% { transform: scale(0.92); filter: brightness(0.85); }
-      60% { transform: scale(1.06); filter: brightness(1.12); }
-      100% { transform: scale(1); filter: brightness(1); }
+      0% { transform: scale(0.88) rotate(-2deg); filter: brightness(0.8); }
+      45% { transform: scale(1.1) rotate(1.5deg); filter: brightness(1.18); }
+      100% { transform: scale(1) rotate(0); filter: brightness(1); }
     }
     .pack-confetti-layer {
       position: absolute;
@@ -2381,17 +2364,18 @@
     }
     @keyframes packWholeNudge {
       0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-      20% { transform: translateY(-8px) scale(1.025) rotate(-1.1deg); }
-      50% { transform: translateY(-4px) scale(1.015) rotate(0.5deg); }
-      80% { transform: translateY(-7px) scale(1.02) rotate(1deg); }
+      15% { transform: translateY(-10px) scale(1.035) rotate(-1.4deg); }
+      40% { transform: translateY(-5px) scale(1.02) rotate(0.6deg); }
+      65% { transform: translateY(-9px) scale(1.028) rotate(1.1deg); }
+      85% { transform: translateY(-3px) scale(1.01) rotate(-0.4deg); }
     }
     .pack-unbox-stage.torn {
       animation: none;
       cursor: default;
     }
     .pack-unbox-stage.torn .pack-unbox-half-top {
-      animation: packRipTopFlap 0.95s cubic-bezier(0.2, 0.95, 0.15, 1) forwards;
-      filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55));
+      animation: packRipTopFlap 1.02s cubic-bezier(0.15, 0.92, 0.1, 1) forwards;
+      filter: drop-shadow(0 12px 32px rgba(0,0,0,0.6));
     }
     /* First rip: bottom cover stays (half blook peek); second phase: bottom falls */
     .pack-unbox-stage.torn.pack-unbox-peek .pack-unbox-half-bot {
@@ -2399,24 +2383,26 @@
       opacity: 1;
     }
     .pack-unbox-stage.torn.pack-unbox-cover-drop .pack-unbox-half-bot {
-      animation: packCoverFallAway 1.05s cubic-bezier(0.5, 0, 0.15, 1) forwards;
+      animation: packCoverFallAway 1.12s cubic-bezier(0.52, -0.02, 0.12, 1) forwards;
     }
     @keyframes packCoverFallAway {
       0% { transform: translateY(0) rotate(0) scale(1); opacity: 1; filter: brightness(1); }
-      30% { transform: translateY(8%) rotate(-2deg) scale(1.02); opacity: 1; }
+      18% { transform: translateY(-4%) rotate(1.5deg) scale(1.03); opacity: 1; }
+      38% { transform: translateY(12%) rotate(-3deg) scale(1.01); opacity: 1; }
       100% {
-        transform: translateY(135%) rotate(14deg) scale(0.88);
+        transform: translateY(145%) rotate(18deg) scale(0.82);
         opacity: 0;
-        filter: brightness(0.4);
+        filter: brightness(0.35);
       }
     }
     @keyframes packRipTopFlap {
       0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
-      12% { transform: translate(0.5%, -2%) rotate(-2deg) scale(1.03); opacity: 1; }
-      28% { transform: translate(-2%, -18%) rotate(-8deg) scale(1.01); opacity: 1; }
-      52% { transform: translate(-8%, -55%) rotate(-16deg) scale(0.95); opacity: 1; }
+      8% { transform: translate(0.3%, -1%) rotate(1deg) scale(1.04); opacity: 1; }
+      22% { transform: translate(-1.5%, -12%) rotate(-6deg) scale(1.02); opacity: 1; }
+      42% { transform: translate(-6%, -42%) rotate(-14deg) scale(0.98); opacity: 1; }
+      68% { transform: translate(-14%, -88%) rotate(-24deg) scale(0.88); opacity: 0.95; }
       100% {
-        transform: translate(-22%, -130%) rotate(-32deg) scale(0.78);
+        transform: translate(-26%, -138%) rotate(-36deg) scale(0.72);
         opacity: 0;
       }
     }
@@ -2445,7 +2431,8 @@
       animation: packBgCelebrateFlash 0.55s ease-out 1;
     }
     @keyframes packBgCelebrateFlash {
-      0% { filter: brightness(1.15) saturate(1.2); }
+      0% { filter: brightness(1.35) saturate(1.45) contrast(1.05); }
+      45% { filter: brightness(1.08) saturate(1.25); }
       100% { filter: brightness(0.92) saturate(1); }
     }
     @keyframes packRarityBgRun {
@@ -4183,21 +4170,10 @@
       </button>
     </div>
     </div>
-
-    <div class="sidebar-balance-bar" aria-label="Coins and stars">
-      <div class="profile-stats">
-        <div class="stat-item">
-          <div class="stat-value" id="coins-display">0</div>
-          <div class="stat-label">COINS</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon-wrap" id="sidebar-stars-icon-wrap">
-            <i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i>
-          </div>
-          <div class="stat-value" id="stars-display">0</div>
-          <div class="stat-label">STARS</div>
-        </div>
-      </div>
+    <div class="visually-hidden-balance-hooks" style="display:none;" aria-hidden="true">
+      <span id="coins-display">0</span>
+      <span id="stars-display">0</span>
+      <div id="sidebar-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i></div>
     </div>
   </div>
 
@@ -6997,7 +6973,7 @@
         e.stopPropagation();
         if (!giftAnimation.classList.contains('torn')) {
           firstRip();
-          const preConfettiMs = 2000;
+          const preConfettiMs = 1000;
           if (packAutoUnboxTimer) clearTimeout(packAutoUnboxTimer);
           packAutoUnboxTimer = setTimeout(() => {
             packAutoUnboxTimer = null;
