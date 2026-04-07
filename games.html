@@ -37,10 +37,96 @@
 
     body {
       background-color: var(--bg-dark);
+      background-image: linear-gradient(165deg, #06080d 0%, #0b0f18 35%, #080a0f 70%, #0a1018 100%);
       font-family: 'Nunito', sans-serif;
       color: var(--text-primary);
       overflow-x: hidden;
       display: flex;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 55% at 15% 15%, rgba(42, 255, 158, 0.11), transparent 52%),
+        radial-gradient(ellipse 75% 50% at 92% 88%, rgba(255, 61, 108, 0.08), transparent 48%),
+        radial-gradient(ellipse 65% 45% at 48% 48%, rgba(66, 165, 245, 0.05), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 75% 25%, rgba(171, 71, 188, 0.06), transparent 50%);
+      animation: siteAmbienceShift 22s ease-in-out infinite;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.45;
+      background-image:
+        linear-gradient(rgba(42, 255, 158, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 255, 158, 0.028) 1px, transparent 1px);
+      background-size: 52px 52px;
+      animation: siteGridDrift 48s linear infinite;
+      mask-image: radial-gradient(ellipse 110% 85% at 50% 30%, black 0%, transparent 72%);
+    }
+    @keyframes siteAmbienceShift {
+      0%, 100% { transform: scale(1) translate(0, 0); filter: hue-rotate(0deg); }
+      33% { transform: scale(1.06) translate(2%, -3%); filter: hue-rotate(6deg); }
+      66% { transform: scale(1.03) translate(-3%, 2%); filter: hue-rotate(-4deg); }
+    }
+    @keyframes siteGridDrift {
+      to { transform: translate(52px, 52px); }
+    }
+    @keyframes siteOrbitGlow {
+      to { transform: rotate(360deg); }
+    }
+    .site-bg-atlas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .site-bg-atlas::before {
+      content: '';
+      position: absolute;
+      inset: -55%;
+      background: conic-gradient(
+        from 0deg at 50% 50%,
+        transparent 0deg,
+        rgba(42, 255, 158, 0.04) 40deg,
+        transparent 85deg,
+        rgba(255, 255, 255, 0.02) 130deg,
+        transparent 175deg,
+        rgba(66, 165, 245, 0.035) 220deg,
+        transparent 265deg,
+        rgba(255, 61, 108, 0.03) 310deg,
+        transparent 360deg
+      );
+      animation: siteOrbitGlow 90s linear infinite;
+      opacity: 0.85;
+    }
+    .site-bg-atlas::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 85% 70% at 50% 100%, rgba(0, 0, 0, 0.55) 0%, transparent 58%);
+      animation: siteVignettePulse 8s ease-in-out infinite;
+    }
+    @keyframes siteVignettePulse {
+      0%, 100% { opacity: 0.95; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body::before, body::after { animation: none !important; }
+      .site-bg-atlas::before, .site-bg-atlas::after { animation: none !important; }
+      .page.active, #chat-page.active { animation: none !important; }
+      .page-content::before, .main-page::before { animation: none !important; }
+      .logo h1 { animation: none !important; }
+      .page-title::after { animation: none !important; }
+      .staff-card:hover { transform: none !important; }
     }
     .page-content, .main-page {
       position: relative;
@@ -52,9 +138,13 @@
       background-image: url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png');
       background-size: 120px 120px;
       background-repeat: repeat;
-      opacity: 0.04;
+      opacity: 0.045;
       pointer-events: none;
       z-index: 0;
+      animation: sitePatternFloat 90s linear infinite;
+    }
+    @keyframes sitePatternFloat {
+      to { background-position: 120px 120px; }
     }
     .page-content > *, .main-page > * {
       position: relative;
@@ -64,7 +154,8 @@
     /* Sidebar */
     .sidebar {
       width: var(--sidebar-width);
-      background: var(--sidebar-bg);
+      background: linear-gradient(180deg, #0c1018 0%, #0e121b 45%, #0a0d14 100%);
+      box-shadow: inset -1px 0 0 rgba(42, 255, 158, 0.12), 4px 0 32px rgba(0, 0, 0, 0.35);
       border-right: 1px solid var(--neon-green);
       height: 100vh;
       position: fixed;
@@ -127,19 +218,21 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      transition: all 0.2s;
+      transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease, font-weight 0.15s;
     }
-
     .tab-button:hover {
-      background: rgba(42, 255, 158, 0.1);
+      background: rgba(42, 255, 158, 0.12);
       color: var(--neon-green);
       font-weight: 700;
+      transform: translateX(4px);
+      box-shadow: inset 3px 0 0 rgba(42, 255, 158, 0.65);
     }
 
     .tab-button.active {
-      background: rgba(42, 255, 158, 0.1);
+      background: linear-gradient(90deg, rgba(42, 255, 158, 0.18) 0%, rgba(42, 255, 158, 0.06) 100%);
       color: var(--neon-green);
       font-weight: 800;
+      box-shadow: inset 3px 0 0 var(--neon-green);
     }
 
     .tab-button i {
@@ -179,6 +272,13 @@
       flex-direction: column;
       flex: 1 1 auto;
       min-height: 0;
+    }
+    .page.active {
+      animation: sitePageFade 0.45s ease-out both;
+    }
+    @keyframes sitePageFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Main Page */
@@ -221,10 +321,14 @@
       position: relative;
       z-index: 2;
       max-width: 600px;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(6, 8, 12, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 24px;
       border-radius: 20px;
+      border: 1px solid rgba(42, 255, 158, 0.2);
       border-left: 4px solid var(--neon-green);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 40px rgba(42, 255, 158, 0.06);
     }
     .slide-info h2 { font-size: 2rem; font-weight: 900; margin-bottom: 8px; }
     .slide-info p { font-size: 0.9rem; margin-bottom: 16px; opacity: 0.9; }
@@ -299,13 +403,15 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(42, 255, 158, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
       scroll-snap-align: start;
     }
     .game-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 12px var(--neon-green);
+      transform: translateY(-6px) scale(1.035);
+      border-color: rgba(42, 255, 158, 0.45);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 28px rgba(42, 255, 158, 0.2), 0 0 0 1px rgba(42, 255, 158, 0.15) inset;
     }
     .card-overlay {
       position: absolute;
@@ -445,7 +551,9 @@
 
     /* Header */
     header {
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(8, 10, 14, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       padding: 12px 5%;
       display: flex;
       justify-content: space-between;
@@ -453,7 +561,8 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid rgba(42, 255, 158, 0.3);
+      border-bottom: 1px solid rgba(42, 255, 158, 0.28);
+      box-shadow: 0 4px 28px rgba(0, 0, 0, 0.45), 0 0 40px rgba(42, 255, 158, 0.04);
     }
 
     .logo {
@@ -468,9 +577,16 @@
     .logo h1 {
       font-size: 1.4rem;
       font-weight: 900;
-      background: linear-gradient(135deg, #fff, var(--neon-green));
+      background: linear-gradient(120deg, #fff 0%, var(--neon-green) 45%, #7af5c8 75%, #fff 100%);
+      background-size: 200% auto;
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: siteLogoShimmer 8s ease-in-out infinite;
+    }
+    @keyframes siteLogoShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     nav ul {
@@ -535,8 +651,25 @@
       font-size: 1.8rem;
       font-weight: 800;
       margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(42, 255, 158, 0.2);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(42, 255, 158, 0.22);
+      text-shadow: 0 0 40px rgba(42, 255, 158, 0.12);
+      position: relative;
+    }
+    .page-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: min(120px, 35%);
+      height: 2px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--neon-green), transparent);
+      animation: siteTitleUnderline 4s ease-in-out infinite;
+    }
+    @keyframes siteTitleUnderline {
+      0%, 100% { opacity: 0.7; transform: scaleX(1); }
+      50% { opacity: 1; transform: scaleX(1.08); }
     }
     .font-titan-header {
       font-family: 'Titan One', 'Nunito', sans-serif;
@@ -3581,11 +3714,18 @@
     .staff-section { display: none; }
     .staff-section.active { display: block; }
     .staff-card {
-      background: rgba(17,22,31,0.9);
-      border: 1px solid rgba(42,255,158,0.15);
+      background: linear-gradient(165deg, rgba(22,28,38,0.95) 0%, rgba(14,18,26,0.92) 100%);
+      border: 1px solid rgba(42,255,158,0.18);
       border-radius: 20px;
       padding: 24px;
       margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.03) inset;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    }
+    .staff-card:hover {
+      border-color: rgba(42,255,158,0.32);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.42), 0 0 24px rgba(42,255,158,0.06);
+      transform: translateY(-2px);
     }
     .staff-card-header {
       display: flex;
@@ -4248,6 +4388,7 @@
   </style>
 </head>
 <body>
+  <div class="site-bg-atlas" aria-hidden="true"></div>
   <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
     <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
     <div class="loading-universe-label">GAME UNIVERSE</div>
