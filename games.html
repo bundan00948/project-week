@@ -6292,7 +6292,6 @@
         document.getElementById('staff-blook-editor-stars').value = item.starsGained ?? 0;
         document.getElementById('staff-blook-editor-chance').value = item.chance ?? 0;
         document.getElementById('staff-blook-editor-image').value = item.imageUrl || '';
-        document.getElementById('staff-blook-editor-raritycolor').value = item.rarityColor || '#888888';
         if (currentPackId) packSel.value = currentPackId;
         else if (packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
       } else {
@@ -6301,7 +6300,6 @@
         document.getElementById('staff-blook-editor-stars').value = 0;
         document.getElementById('staff-blook-editor-chance').value = 0;
         document.getElementById('staff-blook-editor-image').value = '';
-        document.getElementById('staff-blook-editor-raritycolor').value = '#888888';
         if (!currentPackId && packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
         else if (currentPackId) packSel.value = currentPackId;
       }
@@ -6316,13 +6314,14 @@
       if (!name) { showNotification('Enter a blook name', 'error'); return; }
       const targetPack = document.getElementById('staff-blook-editor-pack').value;
       const currentPackId = document.getElementById('staff-pack-id').value;
+      const rarityVal = document.getElementById('staff-blook-editor-rarity').value;
       const entry = {
         name,
-        rarity: document.getElementById('staff-blook-editor-rarity').value,
+        rarity: rarityVal,
         starsGained: parseFloat(document.getElementById('staff-blook-editor-stars').value) || 0,
         chance: parseFloat(document.getElementById('staff-blook-editor-chance').value) || 0,
         imageUrl: document.getElementById('staff-blook-editor-image').value.trim(),
-        rarityColor: document.getElementById('staff-blook-editor-raritycolor').value
+        rarityColor: getRarityColor(rarityVal)
       };
       const inThisPack = currentPackId ? (targetPack === currentPackId) : (targetPack === '__DRAFT__');
 
