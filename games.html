@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
   <style>
     /* Existing CSS styles remain unchanged */
     :root {
@@ -72,7 +72,16 @@
       top: 0;
       z-index: 1000;
       transition: left 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .sidebar-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .sidebar.active {
@@ -88,8 +97,15 @@
     }
 
     .sidebar-header i {
-      font-size: 1.5rem;
+      font-size: 1.65rem;
       color: var(--neon-green);
+    }
+
+    .sidebar-header h2 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
     }
 
     .sidebar-tabs {
@@ -103,23 +119,53 @@
       border: none;
       color: var(--text-secondary);
       text-align: left;
-      padding: 15px 20px;
-      font-size: 0.9rem;
+      padding: 16px 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.2s;
     }
 
-    .tab-button:hover, .tab-button.active {
+    .tab-button:hover {
       background: rgba(42, 255, 158, 0.1);
       color: var(--neon-green);
+      font-weight: 700;
+    }
+
+    .tab-button.active {
+      background: rgba(42, 255, 158, 0.1);
+      color: var(--neon-green);
+      font-weight: 800;
     }
 
     .tab-button i {
-      width: 20px;
+      width: 22px;
       text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .sidebar-balance-bar {
+      margin-top: auto;
+      padding: 16px 18px 20px;
+      border-top: 1px solid rgba(42, 255, 158, 0.2);
+      background: rgba(0, 0, 0, 0.22);
+    }
+    .sidebar-balance-bar .profile-stats {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .sidebar-balance-bar .stat-value {
+      font-size: 1.45rem;
+    }
+    .sidebar-balance-bar .stat-label {
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
     }
 
     /* Main Content */
@@ -129,6 +175,9 @@
       transition: margin-left 0.3s ease;
       height: 100vh;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
     }
 
     .main-content.sidebar-active {
@@ -137,12 +186,19 @@
 
     /* Pages */
     .page {
-      display: none;
+      display: none !important;
       padding: 20px 5%;
     }
 
     .page.active {
-      display: block;
+      display: block !important;
+    }
+
+    #chat-page.active {
+      display: flex !important;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
     /* Main Page */
@@ -1453,10 +1509,8 @@
     /* Global Chat Panel (full main area) */
     #chat-page {
       padding: 0;
-      height: 100%;
-      min-height: calc(100vh - 0px);
-      display: flex;
-      flex-direction: column;
+      flex: 1;
+      min-height: 0;
     }
     #chat-page .page-content.chat-page-inner {
       flex: 1;
@@ -3871,6 +3925,7 @@
       <h2>USER PANEL</h2>
     </div>
     
+    <div class="sidebar-scroll">
     <div class="sidebar-tabs">
       <button class="tab-button active" data-page="main-page">
         <i class="fas fa-home"></i> Main Page
@@ -3903,18 +3958,10 @@
         <i class="fas fa-shield-alt"></i> Staff Panel
       </button>
     </div>
-    
-    <!-- User info in sidebar -->
-    <div class="profile-section" style="padding: 20px; border-top: 1px solid rgba(42, 255, 158, 0.2); margin-top: 20px;">
-      <div class="avatar-container">
-        <img id="sidebar-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar">
-      </div>
-      <div class="profile-username" id="sidebar-username">Username</div>
-      <div class="user-title" id="sidebar-title">User</div>
-      <div class="profile-email" id="sidebar-email">user@example.com</div>
-      <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;font-weight:700;letter-spacing:0.04em;" id="sidebar-public-id"></div>
-      
-      <div class="profile-stats" style="margin-top: 20px;">
+    </div>
+
+    <div class="sidebar-balance-bar" aria-label="Coins and stars">
+      <div class="profile-stats">
         <div class="stat-item">
           <div class="stat-value" id="coins-display">0</div>
           <div class="stat-label">COINS</div>
@@ -4937,10 +4984,6 @@
     const avatarPreview = document.getElementById('avatarPreview');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
-    const sidebarAvatar = document.getElementById('sidebar-avatar');
-    const sidebarUsername = document.getElementById('sidebar-username');
-    const sidebarTitle = document.getElementById('sidebar-title');
-    const sidebarEmail = document.getElementById('sidebar-email');
     const playCount = document.getElementById('play-count');
     const friendCount = document.getElementById('friend-count');
     const playHistoryList = document.getElementById('play-history-list');
@@ -5226,18 +5269,6 @@
         const data = userDoc.data();
         userNameSpan.textContent = data.username || user.email;
         userAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        sidebarAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        sidebarUsername.textContent = data.username || user.email;
-        applyTitleStyle(sidebarTitle, data.title || "User");
-        sidebarEmail.textContent = user.email;
-        const sid = document.getElementById('sidebar-public-id');
-        if (sid) {
-          const did = data.displayId ? String(data.displayId) : '';
-          sid.textContent = did && did.length === 6 ? `ID ${did}` : '';
-        }
-        ensureDisplayIdForUser(user.uid).then(did => {
-          if (did && sid) sid.textContent = `ID ${did}`;
-        });
         profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         profileUsername.textContent = data.username || user.email;
         applyTitleStyle(profileTitle, data.title || "User");
