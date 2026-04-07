@@ -1896,6 +1896,16 @@
       max-height: none;
       margin-bottom: 12px;
     }
+    .chat-composer-wrap,
+    .friend-chat-composer-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    .friend-chat-composer-wrap { display: none; }
+    .friend-chat-composer-wrap.is-visible { display: flex; }
     .chat-loading-overlay {
       position: absolute;
       inset: 0;
@@ -1907,6 +1917,16 @@
       border-radius: 10px;
       pointer-events: none;
     }
+    .chat-loading-overlay.chat-loading-full {
+      z-index: 25;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.72);
+      pointer-events: auto;
+      backdrop-filter: blur(2px);
+    }
+    .global-chat-panel .chat-loading-overlay.chat-loading-full {
+      border-radius: 12px;
+    }
     .chat-loading-overlay.hidden { display: none !important; }
     .chat-loading-spinner {
       width: 40px;
@@ -1916,23 +1936,51 @@
       border-top-color: var(--neon-green);
       animation: chatSpin 0.75s linear infinite;
     }
+    .chat-loading-gamepad {
+      font-size: 2.75rem;
+      color: var(--neon-green);
+      animation: spinUniverse 1.05s linear infinite;
+      filter: drop-shadow(0 0 18px rgba(42, 255, 158, 0.55));
+    }
     @keyframes chatSpin { to { transform: rotate(360deg); } }
+    .chat-composer-loading .chat-input input,
+    .chat-composer-loading .chat-input button,
+    .chat-composer-loading .chat-attach-btn,
+    .chat-composer-loading .chat-link-btn {
+      pointer-events: none !important;
+      opacity: 0.4;
+    }
 
     .chat-message {
       margin-bottom: 6px;
       padding: 6px 10px;
       border-radius: 10px;
       font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
     }
     .chat-message.chat-msg-grouped {
-      margin-top: -2px;
-      padding-top: 2px;
+      margin-top: 0;
+      padding-top: 6px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      max-width: min(100%, 520px);
+      align-self: center;
     }
     .chat-message.chat-msg-grouped .chat-msg-header {
       display: none;
     }
     .chat-message.chat-msg-grouped .message-content {
-      margin-left: 28px;
+      margin-left: 0;
+      align-self: center;
+      width: 100%;
+      max-width: 100%;
+      text-align: center;
+    }
+    .chat-message.chat-msg-grouped .chat-msg-img {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .chat-message.user {
@@ -2009,8 +2057,10 @@
       margin-top: 2px;
     }
     .chat-message.chat-msg-grouped .message-time-inline {
-      text-align: right;
-      margin-top: 2px;
+      text-align: center;
+      margin-top: 4px;
+      width: 100%;
+      align-self: center;
     }
 
     .chat-input {
@@ -4696,17 +4746,20 @@
     <div class="page" id="chat-page">
       <div class="page-content chat-page-inner">
         <div class="global-chat-panel">
-          <div class="chat-container" id="global-chat-container">
-            <div class="chat-loading-overlay" id="global-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
-          </div>
-          <div class="chat-input">
-            <div class="chat-input-actions">
-              <input type="file" id="global-chat-file" accept="image/*" style="display:none;">
-              <button type="button" class="chat-attach-btn" id="global-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
-              <button type="button" class="chat-link-btn" id="global-chat-link-btn" title="Paste image URL">Link</button>
+          <div class="chat-composer-wrap chat-composer-loading" id="global-chat-composer-wrap">
+            <div class="chat-container" id="global-chat-container"></div>
+            <div class="chat-loading-overlay chat-loading-full" id="global-chat-input-loading" aria-busy="true" aria-label="Loading chat">
+              <i class="fas fa-gamepad chat-loading-gamepad" aria-hidden="true"></i>
             </div>
-            <input type="text" id="global-chat-input" placeholder="Type a message...">
-            <button id="global-send-chat-btn">Send</button>
+            <div class="chat-input">
+              <div class="chat-input-actions">
+                <input type="file" id="global-chat-file" accept="image/*" style="display:none;">
+                <button type="button" class="chat-attach-btn" id="global-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
+                <button type="button" class="chat-link-btn" id="global-chat-link-btn" title="Paste image URL">Link</button>
+              </div>
+              <input type="text" id="global-chat-input" placeholder="Type a message..." disabled>
+              <button type="button" id="global-send-chat-btn" disabled>Send</button>
+            </div>
           </div>
         </div>
       </div>
@@ -4731,17 +4784,20 @@
             <div class="friend-chat-header" id="friend-chat-header">
               <span class="friend-chat-placeholder">Select a friend to start chatting</span>
             </div>
-            <div class="chat-container" id="friend-chat-container">
-              <div class="chat-loading-overlay hidden" id="friend-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
-            </div>
-            <div class="chat-input" id="friend-chat-input-area" style="display:none;">
-              <div class="chat-input-actions">
-                <input type="file" id="friend-chat-file" accept="image/*" style="display:none;">
-                <button type="button" class="chat-attach-btn" id="friend-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
-                <button type="button" class="chat-link-btn" id="friend-chat-link-btn" title="Paste image URL">Link</button>
+            <div class="friend-chat-composer-wrap" id="friend-chat-composer-wrap">
+              <div class="chat-container" id="friend-chat-container"></div>
+              <div class="chat-loading-overlay chat-loading-full hidden" id="friend-chat-input-loading" aria-busy="true" aria-label="Loading chat">
+                <i class="fas fa-gamepad chat-loading-gamepad" aria-hidden="true"></i>
               </div>
-              <input type="text" id="friend-chat-input" placeholder="Type a message...">
-              <button id="friend-send-chat-btn">Send</button>
+              <div class="chat-input" id="friend-chat-input-area" style="display:none;">
+                <div class="chat-input-actions">
+                  <input type="file" id="friend-chat-file" accept="image/*" style="display:none;">
+                  <button type="button" class="chat-attach-btn" id="friend-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
+                  <button type="button" class="chat-link-btn" id="friend-chat-link-btn" title="Paste image URL">Link</button>
+                </div>
+                <input type="text" id="friend-chat-input" placeholder="Type a message..." disabled>
+                <button type="button" id="friend-send-chat-btn" disabled>Send</button>
+              </div>
             </div>
           </div>
         </div>
@@ -8050,6 +8106,53 @@
       return null;
     }
 
+    function startChatComposerLoading(wrapEl) {
+      if (!wrapEl) return;
+      wrapEl.classList.add('chat-composer-loading');
+      const overlay = wrapEl.querySelector('.chat-loading-full');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-busy', 'true');
+      }
+      wrapEl.querySelectorAll('.chat-input input[type="text"], .chat-input button').forEach(el => {
+        if (el && el.type !== 'file') el.disabled = true;
+      });
+    }
+
+    function getChatComposerWrap(chatContainerEl) {
+      return chatContainerEl && chatContainerEl.closest('.chat-composer-wrap, .friend-chat-composer-wrap');
+    }
+
+    function scrollChatToBottom(chatContainerEl) {
+      if (!chatContainerEl) return;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          chatContainerEl.scrollTop = chatContainerEl.scrollHeight;
+        });
+      });
+    }
+
+    function finishChatComposerLoading(chatContainerEl) {
+      const wrapEl = getChatComposerWrap(chatContainerEl);
+      if (!wrapEl) return;
+      const overlay = wrapEl.querySelector('.chat-loading-full');
+      const scrollAndReveal = () => {
+        chatContainerEl.scrollTop = chatContainerEl.scrollHeight;
+        if (overlay) {
+          overlay.classList.add('hidden');
+          overlay.setAttribute('aria-busy', 'false');
+        }
+        wrapEl.classList.remove('chat-composer-loading');
+        wrapEl.querySelectorAll('.chat-input input[type="text"], .chat-input button').forEach(el => {
+          if (el && el.type !== 'file') el.disabled = false;
+        });
+        wrapEl.dataset.chatReady = 'true';
+      };
+      requestAnimationFrame(() => {
+        requestAnimationFrame(scrollAndReveal);
+      });
+    }
+
     async function buildChatMessageElement(docSnap, options) {
       const opts = options || {};
       const msg = docSnap.data();
@@ -8133,9 +8236,8 @@
       return div;
     }
 
-    async function syncChatFromSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
+    async function syncChatFromSnapshot(container, snapshot, renderedIdSet) {
       renderedIdSet.clear();
-      const fragLoading = loadingOverlay;
       container.querySelectorAll('.chat-message').forEach(n => n.remove());
       const docs = snapshot.docs.slice().sort((a, b) => {
         const ta = a.data().timestamp?.toMillis ? a.data().timestamp.toMillis() : 0;
@@ -8151,15 +8253,19 @@
         if (msg.type !== 'system') prevSender = msg.senderId || null;
         else prevSender = null;
       }
-      requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
-      if (fragLoading) fragLoading.classList.add('hidden');
+      const wrapEl = getChatComposerWrap(container);
+      if (wrapEl && wrapEl.classList.contains('chat-composer-loading')) {
+        finishChatComposerLoading(container);
+      } else {
+        scrollChatToBottom(container);
+      }
     }
 
-    async function applyChatSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
+    async function applyChatSnapshot(container, snapshot, renderedIdSet) {
       const fromCache = snapshot.metadata && snapshot.metadata.fromCache === true;
       const hasLocalAdds = snapshot.docChanges().some(c => c.type === 'added');
       if (fromCache && hasLocalAdds) {
-        await syncChatFromSnapshot(container, snapshot, renderedIdSet, loadingOverlay);
+        await syncChatFromSnapshot(container, snapshot, renderedIdSet);
         return;
       }
       const changes = snapshot.docChanges();
@@ -8176,6 +8282,7 @@
         const tb = b.data().timestamp?.toMillis ? b.data().timestamp.toMillis() : 0;
         return ta - tb;
       });
+      let appendedAny = false;
       for (const d of added) {
         if (renderedIdSet.has(d.id)) continue;
         renderedIdSet.add(d.id);
@@ -8183,25 +8290,27 @@
         const last = container.querySelector('.chat-message:last-of-type');
         const group = last && last.dataset.senderId && msg.senderId === last.dataset.senderId && msg.type !== 'system';
         container.appendChild(await buildChatMessageElement(d, { groupWithPrevious: group }));
+        appendedAny = true;
       }
-      requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
-      if (loadingOverlay) loadingOverlay.classList.add('hidden');
+      const wrapEl = getChatComposerWrap(container);
+      if (wrapEl && wrapEl.classList.contains('chat-composer-loading')) {
+        finishChatComposerLoading(container);
+      } else if (appendedAny) {
+        scrollChatToBottom(container);
+      }
     }
 
     // ========== Global Chat ==========
     async function loadGlobalChat() {
       if (globalChatUnsubscribe) globalChatUnsubscribe();
       globalChatRenderedIds = new Set();
-      const loadingEl = document.getElementById('global-chat-loading');
+      const wrap = document.getElementById('global-chat-composer-wrap');
+      startChatComposerLoading(wrap);
       globalChatContainer.innerHTML = '';
-      if (loadingEl) {
-        globalChatContainer.appendChild(loadingEl);
-        loadingEl.classList.remove('hidden');
-      }
       await refreshChatMentionDirectory();
       const chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
       globalChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds, loadingEl).catch(e => console.warn(e));
+        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds).catch(e => console.warn(e));
       });
     }
 
@@ -8284,28 +8393,28 @@
     // ========== Friend Chat ==========
     async function loadFriendChat() {
       if (friendChatUnsubscribe) friendChatUnsubscribe();
+      const fWrap = document.getElementById('friend-chat-composer-wrap');
       if (!selectedFriend) {
         friendChatHeader.innerHTML = '<span class="friend-chat-placeholder">Select a friend to start chatting</span>';
         friendChatContainer.innerHTML = '';
         friendChatInputArea.style.display = 'none';
-        document.getElementById('friend-chat-loading')?.classList.add('hidden');
+        fWrap?.classList.remove('is-visible');
+        document.getElementById('friend-chat-input-loading')?.classList.add('hidden');
+        if (fWrap) fWrap.classList.remove('chat-composer-loading');
         return;
       }
+      fWrap?.classList.add('is-visible');
       friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${selectedFriend.avatar}" alt="${selectedFriend.username}">` : '<i class="fas fa-user"></i>'} <span>${selectedFriend.username}</span>`;
       friendChatInputArea.style.display = 'flex';
       friendChatRenderedIds = new Set();
-      const fLoad = document.getElementById('friend-chat-loading');
+      startChatComposerLoading(fWrap);
       friendChatContainer.innerHTML = '';
-      if (fLoad) {
-        friendChatContainer.appendChild(fLoad);
-        fLoad.classList.remove('hidden');
-      }
       await refreshChatMentionDirectory();
       const uids = [currentUser.uid, selectedFriend.id].sort();
       const chatId = `${uids[0]}_${uids[1]}`;
       const chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
       friendChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds, fLoad).catch(e => console.warn(e));
+        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds).catch(e => console.warn(e));
       });
     }
 
