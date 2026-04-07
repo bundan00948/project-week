@@ -67,9 +67,9 @@
       background-image:
         linear-gradient(rgba(42, 255, 158, 0.042) 1px, transparent 1px),
         linear-gradient(90deg, rgba(42, 255, 158, 0.034) 1px, transparent 1px);
-      background-size: 140px 140px;
+      background-size: 175px 175px;
       transform-origin: 50% 50%;
-      animation: siteGridSwim 36s linear infinite;
+      animation: siteGridSwim 14s ease-in-out infinite alternate;
       mask-image: radial-gradient(ellipse 110% 85% at 50% 30%, black 0%, transparent 72%);
     }
     @keyframes siteAmbienceShift {
@@ -78,8 +78,8 @@
       66% { transform: scale(1.04) translate(-3%, -1%); filter: hue-rotate(-5deg); }
     }
     @keyframes siteGridSwim {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      100% { transform: translate(28px, -140px) rotate(2.5deg); }
+      0% { transform: translate(0, 0) rotate(-4deg); }
+      100% { transform: translate(36px, -175px) rotate(4deg); }
     }
     @keyframes siteOrbitGlow {
       to { transform: rotate(360deg); }
@@ -90,11 +90,11 @@
       z-index: -1;
       pointer-events: none;
       overflow: hidden;
-      animation: siteAtlasSwimUp 24s ease-in-out infinite;
+      animation: siteAtlasSwimUp 15s ease-in-out infinite;
     }
     @keyframes siteAtlasSwimUp {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-28px); }
+      50% { transform: translateY(-40px); }
     }
     .site-bg-atlas::before {
       content: '';
@@ -112,7 +112,7 @@
         rgba(255, 61, 108, 0.04) 310deg,
         transparent 360deg
       );
-      animation: siteOrbitGlow 68s linear infinite;
+      animation: siteOrbitGlow 48s linear infinite;
       opacity: 0.92;
     }
     .site-bg-atlas::after {
@@ -146,31 +146,27 @@
     .page-content::before, .main-page::before {
       content: '';
       position: absolute;
-      top: -12%;
-      left: -12%;
-      width: 124%;
-      height: 124%;
+      top: -14%;
+      left: -14%;
+      width: 128%;
+      height: 128%;
       background-image: url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png');
-      background-size: 380px 380px;
+      background-size: 460px 460px;
       background-repeat: repeat;
       opacity: 0.055;
       pointer-events: none;
       z-index: 0;
-      transform-origin: 50% 45%;
-      animation: sitePatternSwim 50s linear infinite;
+      transform-origin: 50% 42%;
+      animation: sitePatternSwim 22s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
     }
     @keyframes sitePatternSwim {
       0% {
         background-position: 0 0;
-        transform: rotate(0.9deg) scale(1.06);
-      }
-      50% {
-        background-position: 190px -380px;
-        transform: rotate(-0.9deg) scale(1.08);
+        transform: rotate(-2.4deg) scale(1.09);
       }
       100% {
-        background-position: 380px -760px;
-        transform: rotate(0.9deg) scale(1.06);
+        background-position: 230px -920px;
+        transform: rotate(2.4deg) scale(1.12);
       }
     }
     .page-content > *, .main-page > * {
