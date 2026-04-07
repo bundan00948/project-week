@@ -1884,6 +1884,8 @@
       max-width: 420px;
       flex-shrink: 0;
       display: none;
+      justify-content: center;
+      align-items: center;
     }
     .pack-unbox-body.pack-unbox-revealed .pack-unbox-details-wrap {
       display: flex;
@@ -1892,7 +1894,7 @@
       width: min(92vw, 400px);
       min-height: min(72vh, 520px);
       margin: 0 auto;
-      border-radius: 16px;
+      border-radius: 6px;
       border: 2px solid rgba(42,255,158,0.35);
       padding: 18px 16px 14px;
       display: flex;
@@ -3368,13 +3370,16 @@
     .up-banner.has-custom-banner .up-banner-pattern { display: none; }
     .up-banner-content {
       position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      width: 100%; min-height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: space-between; text-align: center;
-      padding: 6px 4px 5px; box-sizing: border-box;
+      width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px;
+      text-align: center;
+      padding: 4px 6px; box-sizing: border-box;
+      min-height: 0;
     }
-    .up-banner-content .up-banner-name-block { width: 100%; flex-shrink: 0; }
-    .up-banner-content .up-banner-mid { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
-    .up-banner-content .up-title-badge { margin-top: auto; flex-shrink: 0; max-width: 100%; }
+    .up-banner-content .up-banner-name-block { width: 100%; flex-shrink: 0; line-height: 1.1; }
+    .up-banner-content .up-title-badge { flex-shrink: 0; max-width: 100%; margin-top: 0; }
     .up-name-row {
       font-size: 1rem; font-weight: 800; color: #fff;
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;
@@ -3881,11 +3886,10 @@
               <div class="up-banner" id="profile-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;">
+                <div class="up-banner-content">
                   <div class="up-banner-name-block">
                     <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
                   </div>
-                  <div class="up-banner-mid" style="min-height:4px;"></div>
                   <span class="up-title-badge" id="profile-title">User</span>
                 </div>
               </div>
@@ -3928,11 +3932,10 @@
               <div class="up-banner" id="vp-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;">
+                <div class="up-banner-content">
                   <div class="up-banner-name-block">
                     <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
                   </div>
-                  <div class="up-banner-mid" style="min-height:4px;"></div>
                   <span class="up-title-badge" id="vp-title">User</span>
                 </div>
               </div>
@@ -4591,7 +4594,7 @@
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div class="staff-form-group"><label>Reveal card background (URL)</label><input id="staff-pack-reveal-bg-url" placeholder="Optional — image behind the square result card after opening"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div class="staff-form-group"><label>Reveal card background (URL)</label><input id="staff-pack-reveal-bg-url" placeholder="Optional image; if empty, pack inner/outer gradient is used"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
   <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
 
@@ -6352,9 +6355,11 @@
         if (revealUrl) {
           packRevealCard.style.backgroundColor = 'rgba(10,14,20,0.88)';
           packRevealCard.style.backgroundImage = `linear-gradient(rgba(10,14,20,0.82), rgba(10,14,20,0.88)), url(${JSON.stringify(revealUrl)})`;
+          packRevealCard.style.backgroundSize = 'cover';
         } else {
-          packRevealCard.style.backgroundImage = '';
-          packRevealCard.style.backgroundColor = 'rgba(12, 16, 22, 0.94)';
+          packRevealCard.style.backgroundColor = '';
+          packRevealCard.style.backgroundSize = 'auto';
+          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner}cc 0%, ${outer}ee 45%, #070a10 100%), radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,255,255,0.12), transparent 55%)`;
         }
       }
       if (packRevealBlookSlot) {
