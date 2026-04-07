@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
   <style>
     /* Existing CSS styles remain unchanged */
     :root {
@@ -502,6 +502,11 @@
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(42, 255, 158, 0.2);
     }
+    .font-titan-header {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
 
     /* Profile Page */
     .profile-section {
@@ -566,21 +571,16 @@
     .star-slot-badge-img {
       border-radius: 6px; object-fit: contain; display: block; border: none;
     }
-    .star-slot-badge-fa {
-      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
-      flex-shrink: 0; border: none;
-    }
-    .star-slot-badge-wrap {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .star-slot-badge-wrap--badged {
+    .star-slot-badge-img.star-slot-badge-img--badged {
       border: 1px solid rgba(42,255,158,0.28);
       border-radius: 7px;
       padding: 1px;
       background: rgba(0,0,0,0.2);
+      box-sizing: border-box;
+    }
+    .star-slot-badge-fa {
+      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0; border: none;
     }
     #sidebar-stars-icon-wrap .star-slot-badge-img,
     #sidebar-stars-icon-wrap .star-slot-badge-fa { width: 22px; height: 22px; font-size: 0.72rem; }
@@ -1450,16 +1450,32 @@
       font-size: 1.1rem;
     }
 
-    /* Global Chat Panel */
-    .global-chat-panel {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 20px;
+    /* Global Chat Panel (full main area) */
+    #chat-page {
+      padding: 0;
+      height: 100%;
+      min-height: calc(100vh - 0px);
       display: flex;
       flex-direction: column;
-      height: 70vh;
+    }
+    #chat-page .page-content.chat-page-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 0;
+      margin: 0;
+    }
+    .global-chat-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      max-width: none;
+      margin: 0;
+      background: transparent;
+      border-radius: 0;
+      padding: 12px 16px 16px;
     }
 
     /* Friends Panel */
@@ -1594,6 +1610,12 @@
       position: relative;
       min-height: 120px;
     }
+    #global-chat-container.chat-container {
+      flex: 1;
+      min-height: 200px;
+      max-height: none;
+      margin-bottom: 12px;
+    }
     .chat-loading-overlay {
       position: absolute;
       inset: 0;
@@ -1630,7 +1652,7 @@
       display: none;
     }
     .chat-message.chat-msg-grouped .message-content {
-      margin-left: 0;
+      margin-left: 28px;
     }
 
     .chat-message.user {
@@ -1676,6 +1698,15 @@
       margin-left: 28px;
       font-size: 0.82rem;
     }
+    .chat-msg-img {
+      display: block;
+      max-width: min(100%, 320px);
+      max-height: 220px;
+      border-radius: 10px;
+      margin-top: 4px;
+      object-fit: cover;
+      cursor: pointer;
+    }
     .chat-at-mention {
       font-weight: 800;
       cursor: pointer;
@@ -1693,11 +1724,50 @@
       text-align: right;
       margin-top: 2px;
     }
+    .chat-message.chat-msg-grouped .message-time-inline {
+      text-align: right;
+      margin-top: 2px;
+    }
 
     .chat-input {
       display: flex;
       gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
     }
+    .chat-input-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .chat-attach-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(42,255,158,0.25);
+      color: var(--neon-green);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .chat-attach-btn:hover { background: rgba(42,255,158,0.12); }
+    .chat-link-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(42,255,158,0.25);
+      color: var(--neon-green);
+      border-radius: 20px;
+      padding: 0 12px;
+      height: 42px;
+      font-weight: 800;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: none;
+    }
+    .chat-link-btn.visible { display: inline-flex; align-items: center; justify-content: center; }
 
     .chat-input input {
       flex: 1;
@@ -1894,7 +1964,7 @@
       width: min(92vw, 400px);
       min-height: min(72vh, 520px);
       margin: 0 auto;
-      border-radius: 6px;
+      border-radius: 14px;
       border: 2px solid rgba(42,255,158,0.35);
       padding: 18px 16px 14px;
       display: flex;
@@ -1902,7 +1972,7 @@
       align-items: stretch;
       text-align: center;
       box-shadow: 0 16px 48px rgba(0,0,0,0.55);
-      background: rgba(12, 16, 22, 0.94);
+      background-color: #0c1016;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -1915,8 +1985,9 @@
       min-height: 0;
     }
     .pack-reveal-name {
-      font-size: 1.35rem;
-      font-weight: 900;
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 400;
       color: #fff;
       text-shadow: 0 2px 8px rgba(0,0,0,0.7);
       line-height: 1.15;
@@ -1928,9 +1999,12 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       margin-bottom: 14px;
-      background: none !important;
-      border: none !important;
-      padding: 0 !important;
+      display: inline-block;
+      padding: 4px 10px !important;
+      border-radius: 8px;
+      border: 2px solid #000 !important;
+      background: rgba(0,0,0,0.35) !important;
+      -webkit-text-fill-color: initial !important;
     }
     .pack-reveal-blook-wrap {
       flex: 1;
@@ -1941,20 +2015,23 @@
       min-height: 200px;
     }
     .pack-reveal-blook-wrap img {
-      max-width: 88%;
-      max-height: min(38vh, 280px);
+      max-width: 72%;
+      max-height: min(28vh, 200px);
       object-fit: contain;
       filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5));
     }
     .pack-reveal-chance {
-      font-size: 1.05rem;
-      font-weight: 800;
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 400;
       color: rgba(255,255,255,0.92);
       margin-top: auto;
       padding-top: 10px;
     }
     .pack-reveal-stars-note {
-      font-size: 0.78rem;
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
       color: var(--text-secondary);
       margin-top: 6px;
     }
@@ -3555,7 +3632,8 @@
         min-width: unset;
       }
       .global-chat-panel {
-        height: 60vh;
+        flex: 1;
+        min-height: 0;
       }
       .packs-grid {
         grid-template-columns: 1fr;
@@ -3967,7 +4045,7 @@
     <!-- Play History Page -->
     <div class="page" id="history-page">
       <div class="page-content">
-        <h2 class="page-title">Play History</h2>
+        <h2 class="page-title font-titan-header">Play History</h2>
         <div class="history-list" id="play-history-list">
           <!-- Play history items will be added here -->
         </div>
@@ -3978,7 +4056,7 @@
     <div class="page" id="shop-page">
       <div class="page-content">
         <div class="shop-header">
-          <h2 class="page-title">Game Shop</h2>
+          <h2 class="page-title font-titan-header">Game Shop</h2>
           <div class="balance-display">
             <div class="balance-item">
               <i class="fas fa-coins"></i>
@@ -4003,7 +4081,7 @@
     <div class="page" id="inventory-page">
       <div class="page-content inv-blooks-page">
         <div class="inv-blooks-top">
-          <h2 class="page-title">My Blooks</h2>
+          <h2 class="page-title font-titan-header">My Blooks</h2>
           <div class="inv-blooks-tokens" id="inv-blooks-tokens" aria-live="polite">
             <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
           </div>
@@ -4040,7 +4118,7 @@
     <!-- Missions Page -->
     <div class="page" id="missions-page">
       <div class="page-content">
-        <h2 class="page-title">Daily Missions</h2>
+        <h2 class="page-title font-titan-header">Daily Missions</h2>
         <div class="daily-reward-card" id="daily-reward-card">
           <h3><i class="fas fa-gift"></i> Daily reward</h3>
           <p id="daily-reward-desc">Claim your free bonus once per day.</p>
@@ -4055,13 +4133,17 @@
 
     <!-- Chat Page (Global Chat Only) -->
     <div class="page" id="chat-page">
-      <div class="page-content">
-        <h2 class="page-title">Global Chat</h2>
+      <div class="page-content chat-page-inner">
         <div class="global-chat-panel">
           <div class="chat-container" id="global-chat-container">
             <div class="chat-loading-overlay" id="global-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
           </div>
           <div class="chat-input">
+            <div class="chat-input-actions">
+              <input type="file" id="global-chat-file" accept="image/*" style="display:none;">
+              <button type="button" class="chat-attach-btn" id="global-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
+              <button type="button" class="chat-link-btn" id="global-chat-link-btn" title="Paste image URL">Link</button>
+            </div>
             <input type="text" id="global-chat-input" placeholder="Type a message...">
             <button id="global-send-chat-btn">Send</button>
           </div>
@@ -4072,7 +4154,7 @@
     <!-- Friends Page (Friends list + Friend Chat) -->
     <div class="page" id="friends-page">
       <div class="page-content">
-        <h2 class="page-title">Friends</h2>
+        <h2 class="page-title font-titan-header">Friends</h2>
         <div class="friends-panel-container">
           <div class="friends-sidebar-section">
             <div class="add-friend-form">
@@ -4092,6 +4174,11 @@
               <div class="chat-loading-overlay hidden" id="friend-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
             </div>
             <div class="chat-input" id="friend-chat-input-area" style="display:none;">
+              <div class="chat-input-actions">
+                <input type="file" id="friend-chat-file" accept="image/*" style="display:none;">
+                <button type="button" class="chat-attach-btn" id="friend-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
+                <button type="button" class="chat-link-btn" id="friend-chat-link-btn" title="Paste image URL">Link</button>
+              </div>
               <input type="text" id="friend-chat-input" placeholder="Type a message...">
               <button id="friend-send-chat-btn">Send</button>
             </div>
@@ -4103,7 +4190,7 @@
     <!-- Staff Panel Page -->
     <div class="page" id="staff-page">
       <div class="page-content">
-        <h2 class="page-title"><i class="fas fa-shield-alt" style="color:var(--neon-green);margin-right:10px;"></i>Staff Panel</h2>
+        <h2 class="page-title font-titan-header"><i class="fas fa-shield-alt" style="color:var(--neon-green);margin-right:10px;"></i>Staff Panel</h2>
         <div class="staff-panel-container">
           <div class="staff-sub-tabs" id="staff-sub-tabs">
             <button class="staff-sub-tab active" data-staff-tab="staff-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
@@ -4294,7 +4381,7 @@
     <!-- Settings Page -->
     <div class="page" id="settings-page">
       <div class="page-content">
-        <h2 class="page-title">Settings</h2>
+        <h2 class="page-title font-titan-header">Settings</h2>
         <div class="settings-section">
           <div class="settings-form">
             <div class="form-group">
@@ -4311,7 +4398,7 @@
             
             <div class="form-group">
               <label for="avatar-upload">Change Avatar</label>
-              <input type="url" id="avatar-url-input" class="auth-input" placeholder="Or paste image URL" style="margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
+              <input type="url" id="avatar-url-input" class="auth-input staff-only-url-field" placeholder="Or paste image URL (staff)" style="display:none;margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
               <label class="file-label">
                 <i class="fas fa-upload"></i> Choose Image
                 <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
@@ -4349,8 +4436,8 @@
             <div class="form-group"><label>YOUR NAME</label><input type="text" id="suggestName" required></div>
             <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="suggestEmail" required></div>
             <div class="form-group"><label>GAME TITLE</label><input type="text" id="gameTitle" required></div>
-            <div class="form-group"><label>GAME BANNER</label><input type="text" id="gameBanner" placeholder="Image URL or leave blank and upload below"></div>
-            <div class="form-group"><label>OR UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
+            <div class="form-group staff-only-suggest-banner-url"><label>GAME BANNER URL</label><input type="text" id="gameBanner" placeholder="Image URL (staff only)"></div>
+            <div class="form-group"><label>UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
             <div class="form-group"><label>GAME LINK</label><input type="text" id="gameLink" placeholder="https://..." required></div>
             <div class="form-group"><label>GAME DESCRIPTION</label><textarea id="gameDescription" required></textarea></div>
             <button type="submit" class="submit-btn">SUBMIT SUGGESTION</button>
@@ -4406,8 +4493,8 @@
         <input type="text" id="signupUsername" class="auth-input" placeholder="Username">
         <input type="email" id="signupEmail" class="auth-input" placeholder="Email">
         <input type="password" id="signupPassword" class="auth-input" placeholder="Password">
-        <div class="form-group" style="margin:10px 0 6px;">
-          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — URL or upload</label>
+        <div class="form-group staff-only-signup-url" style="margin:10px 0 6px;display:none;">
+          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — image URL (staff)</label>
           <input type="url" id="signupAvatarUrl" class="auth-input" placeholder="Optional: image URL">
         </div>
         <label class="file-label"><i class="fas fa-upload"></i> Upload Profile Picture (optional)
@@ -4770,23 +4857,21 @@
       const badges = Array.isArray(currentBadges) ? [...currentBadges] : [];
       const ruleMap = new Map();
       rules.forEach(rule => {
-        const name = rule.badgeName;
+        const name = String(rule.badgeName || '').trim();
+        if (!name) return;
         const min = Math.max(0, Number(rule.minStars) || 0);
-        ruleMap.set(name, min);
+        const prev = ruleMap.get(name);
+        if (prev == null || min < prev) ruleMap.set(name, min);
       });
-      const toRemove = [];
-      for (const b of badges) {
-        if (!ruleMap.has(b)) continue;
-        if (stars < ruleMap.get(b)) toRemove.push(b);
-      }
-      const toAdd = [];
-      for (const [name, min] of ruleMap) {
-        if (stars >= min && !badges.includes(name)) toAdd.push(name);
-      }
-      let next = badges.filter(b => !toRemove.includes(b));
-      toAdd.forEach(a => { if (!next.includes(a)) next.push(a); });
-      const changed = toRemove.length > 0 || toAdd.length > 0;
-      return { nextBadges: next, changed, toAdd, toRemove };
+      const manual = badges.filter(b => !ruleMap.has(b));
+      const autoNames = [...ruleMap.keys()].sort((a, b) => {
+        const d = ruleMap.get(a) - ruleMap.get(b);
+        return d !== 0 ? d : a.localeCompare(b);
+      });
+      const auto = autoNames.filter(name => stars >= ruleMap.get(name));
+      const nextBadges = [...manual, ...auto];
+      const changed = nextBadges.length !== badges.length || nextBadges.some((b, i) => b !== badges[i]);
+      return { nextBadges, changed, toAdd: [], toRemove: [] };
     }
 
     async function syncStarBadgesForUser(uid, starCount) {
@@ -5072,7 +5157,7 @@
 
     async function renderStarSlotBadgesInto(wrapEl, fallbackEl, badgeNames, max) {
       if (!wrapEl) return;
-      wrapEl.querySelectorAll('.star-slot-badge-wrap').forEach(n => n.remove());
+      wrapEl.querySelectorAll('.star-slot-badge-img, .star-slot-badge-fa').forEach(n => n.remove());
       const ruleSet = await getStarBadgeRulesNameSet();
       const picks = pickStarSlotBadgeNames(badgeNames, max, ruleSet);
       if (!picks.length) {
@@ -5084,9 +5169,6 @@
       picks.forEach(bn => {
         const bd = meta[bn];
         if (!bd) return;
-        const wrap = document.createElement('span');
-        wrap.className = 'star-slot-badge-wrap';
-        wrap.title = bn;
         const icon = bd.icon || '';
         const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
         if (isFa) {
@@ -5094,20 +5176,20 @@
           const iel = document.createElement('i');
           iel.className = `star-slot-badge-fa ${safeFa}`;
           iel.setAttribute('aria-hidden', 'true');
+          iel.title = bn;
           iel.style.background = bd.bgColor || 'var(--neon-green)';
           iel.style.color = bd.textColor || '#000';
-          wrap.appendChild(iel);
+          wrapEl.appendChild(iel);
         } else if (/^https?:\/\//i.test(icon)) {
-          wrap.classList.add('star-slot-badge-wrap--badged');
           const img = document.createElement('img');
-          img.className = 'star-slot-badge-img';
+          img.className = 'star-slot-badge-img star-slot-badge-img--badged';
           img.src = icon;
           img.alt = '';
-          wrap.appendChild(img);
-        } else return;
-        wrapEl.appendChild(wrap);
+          img.title = bn;
+          wrapEl.appendChild(img);
+        }
       });
-      if (!wrapEl.querySelector('.star-slot-badge-wrap') && fallbackEl) fallbackEl.style.display = '';
+      if (!wrapEl.querySelector('.star-slot-badge-img, .star-slot-badge-fa') && fallbackEl) fallbackEl.style.display = '';
     }
 
     async function refreshStarDisplayBadges(badgeNames) {
@@ -5274,6 +5356,9 @@
           case 'staff-page': loadStaffPanel(); break;
         }
       } else {
+        currentUserPermissions = [];
+        currentUserTitle = 'User';
+        applyNonStaffMediaUi();
         userInfoDiv.style.display = 'none';
         sidebar.classList.remove('active');
         mainContent.classList.remove('sidebar-active');
@@ -5301,7 +5386,7 @@
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
       const urlField = document.getElementById('signupAvatarUrl');
-      const urlAvatar = urlField ? urlField.value.trim() : '';
+      const urlAvatar = (canUserPasteImageLinks() && urlField) ? urlField.value.trim() : '';
       const avatarFile = avatarUpload.files[0];
       let avatarUrl = urlAvatar || null;
       if (avatarFile) {
@@ -5527,7 +5612,7 @@
       e.preventDefault();
       const msgEl = document.getElementById('suggestMessage');
       const title = document.getElementById('gameTitle')?.value.trim();
-      let bannerUrl = document.getElementById('gameBanner')?.value.trim() || '';
+      let bannerUrl = canUserPasteImageLinks() ? (document.getElementById('gameBanner')?.value.trim() || '') : '';
       const link = document.getElementById('gameLink')?.value.trim();
       const file = document.getElementById('gameBannerFile')?.files?.[0];
       if (!title || !link) {
@@ -5545,7 +5630,7 @@
         }
       }
       if (!bannerUrl) {
-        if (msgEl) { msgEl.textContent = 'Provide a banner image URL or upload a file.'; msgEl.style.color = '#FF3D6C'; }
+        if (msgEl) { msgEl.textContent = 'Upload a banner image for your suggestion.'; msgEl.style.color = '#FF3D6C'; }
         return;
       }
       try {
@@ -6353,13 +6438,13 @@
       const revealUrl = (pack.revealCardBgUrl || '').trim();
       if (packRevealCard) {
         if (revealUrl) {
-          packRevealCard.style.backgroundColor = 'rgba(10,14,20,0.88)';
-          packRevealCard.style.backgroundImage = `linear-gradient(rgba(10,14,20,0.82), rgba(10,14,20,0.88)), url(${JSON.stringify(revealUrl)})`;
+          packRevealCard.style.backgroundColor = '#0b0e14';
+          packRevealCard.style.backgroundImage = `url(${JSON.stringify(revealUrl)})`;
           packRevealCard.style.backgroundSize = 'cover';
         } else {
-          packRevealCard.style.backgroundColor = '';
-          packRevealCard.style.backgroundSize = 'auto';
-          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner}cc 0%, ${outer}ee 45%, #070a10 100%), radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,255,255,0.12), transparent 55%)`;
+          packRevealCard.style.backgroundColor = '#0b0e14';
+          packRevealCard.style.backgroundSize = '100% 100%';
+          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner} 0%, ${outer} 48%, #05070c 100%), radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,255,255,0.14), rgba(5,7,12,0) 55%)`;
         }
       }
       if (packRevealBlookSlot) {
@@ -6370,7 +6455,7 @@
           im.alt = item.name || '';
           packRevealBlookSlot.appendChild(im);
         } else {
-          packRevealBlookSlot.innerHTML = `<i class="fas fa-gift" style="font-size:4.5rem;color:${getRarityColor(item.rarity)};"></i>`;
+          packRevealBlookSlot.innerHTML = `<i class="fas fa-gift" style="font-size:3rem;color:${getRarityColor(item.rarity)};"></i>`;
         }
       }
       openedGiftName.style.opacity = '0';
@@ -7057,17 +7142,24 @@
       const diffMs = now - date;
       const diffSec = Math.floor(diffMs / 1000);
       if (diffSec < 300 || diffMs < 0) return 'Just now';
-      const startOfWeek = new Date(now);
-      startOfWeek.setHours(0, 0, 0, 0);
-      startOfWeek.setDate(now.getDate() - now.getDay());
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      if (date >= startOfWeek && date <= now) {
-        return `${days[date.getDay()]}, ${date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+
+      const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startMsgDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const dayDiff = Math.round((startToday - startMsgDay) / 86400000);
+
+      const hm = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+      if (dayDiff === 0) return hm;
+      if (dayDiff === 1) return `Yesterday at ${hm}`;
+
+      const startOfWeek = new Date(startToday);
+      startOfWeek.setDate(startToday.getDate() - startToday.getDay());
+      const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      if (date >= startOfWeek && date < startToday) {
+        return weekdayNames[date.getDay()];
       }
-      const isToday = date.toDateString() === now.toDateString();
-      if (isToday) return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+
       const yy = date.getFullYear().toString().slice(-2);
-      const mm = (date.getMonth()+1).toString().padStart(2, '0');
+      const mm = (date.getMonth() + 1).toString().padStart(2, '0');
       const dd = date.getDate().toString().padStart(2, '0');
       const hh = date.getHours().toString().padStart(2, '0');
       const min = date.getMinutes().toString().padStart(2, '0');
@@ -7107,8 +7199,47 @@
       return chatMentionDirPromise;
     }
 
-    function renderChatMessageBodyHtml(rawText) {
+    async function refreshChatMentionDirectory() {
+      chatMentionDir = null;
+      chatMentionDirPromise = null;
+      return ensureChatMentionDirectory();
+    }
+
+    function mergeChatMentionEntry(username, userId, titleStyle) {
+      const un = (username || '').trim();
+      if (!un || !userId) return;
+      if (!chatMentionDir) chatMentionDir = {};
+      const key = un.toLowerCase();
+      chatMentionDir[key] = { id: userId, display: un, titleStyle: titleStyle || 'color:var(--neon-green);font-weight:800;' };
+    }
+
+    async function resolveUsernameTitleStyle(username) {
+      const q = (username || '').trim();
+      if (!q) return 'color:var(--neon-green);font-weight:800;';
+      try {
+        const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', q)));
+        let udoc = usersSnap.empty ? null : usersSnap.docs[0];
+        if (!udoc) {
+          const lower = q.toLowerCase();
+          const all = await getDocs(collection(db, 'users'));
+          udoc = all.docs.find(d => (d.data().username || '').toLowerCase() === lower) || null;
+        }
+        if (!udoc) return 'color:var(--neon-green);font-weight:800;';
+        const u = udoc.data();
+        const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', u.title || 'User')));
+        if (titlesSnap.empty) return 'color:var(--neon-green);font-weight:800;';
+        const td = titlesSnap.docs[0].data();
+        if (td.isGradient && td.gradientColors?.length >= 2) {
+          return `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
+        }
+        if (td.color) return `color:${td.color};font-weight:800;`;
+      } catch (e) { console.warn('resolveUsernameTitleStyle', e); }
+      return 'color:var(--neon-green);font-weight:800;';
+    }
+
+    async function renderChatMessageBodyHtml(rawText) {
       const text = rawText == null ? '' : String(rawText);
+      await ensureChatMentionDirectory();
       const dir = chatMentionDir || {};
       const re = /@([\w.\-]{2,40})/g;
       let out = '';
@@ -7116,8 +7247,18 @@
       let m;
       while ((m = re.exec(text)) !== null) {
         out += escapeHtml(text.slice(last, m.index));
-        const key = m[1].toLowerCase();
-        const info = dir[key];
+        const rawHandle = m[1];
+        const key = rawHandle.toLowerCase();
+        let info = dir[key];
+        if (!info) {
+          const uid = await findUserIdByUsername(rawHandle);
+          if (uid) {
+            const ts = await resolveUsernameTitleStyle(rawHandle);
+            const display = (await getChatUserData(uid))?.username || rawHandle;
+            info = { id: uid, display: String(display).trim() || rawHandle, titleStyle: ts };
+            mergeChatMentionEntry(info.display, uid, ts);
+          }
+        }
         if (info) {
           out += `<span class="chat-at-mention" role="link" tabindex="0" data-user-id="${escapeHtml(info.id)}" style="${info.titleStyle}">@${escapeHtml(info.display)}</span>`;
         } else {
@@ -7177,17 +7318,39 @@
       const av = escapeHtml(msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg');
       const hideHeader = !!opts.groupWithPrevious;
       if (hideHeader) div.classList.add('chat-msg-grouped');
+      const timeStr = formatMessageTime(msg.timestamp);
+      const imgUrl = (msg.imageUrl || '').trim();
+      const safeImg = imgUrl && /^https?:\/\//i.test(imgUrl) ? escapeHtml(imgUrl) : '';
       div.innerHTML = `
         <div class="chat-msg-header">
           <img class="chat-avatar" src="${av}" alt="${safeName}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">
           <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">${safeName}</span>
           ${topBadgeHtml}
-          <span class="message-time">${formatMessageTime(msg.timestamp)}</span>
+          <span class="message-time">${escapeHtml(timeStr)}</span>
         </div>
         <div class="message-content chat-msg-body"></div>
+        ${hideHeader ? `<div class="message-time message-time-inline">${escapeHtml(timeStr)}</div>` : ''}
       `;
       const body = div.querySelector('.chat-msg-body');
-      if (body) body.innerHTML = renderChatMessageBodyHtml(msg.message || '');
+      if (body) {
+        body.innerHTML = '';
+        if (safeImg) {
+          const im = document.createElement('img');
+          im.className = 'chat-msg-img';
+          im.src = imgUrl;
+          im.alt = 'Chat image';
+          im.loading = 'lazy';
+          im.addEventListener('click', () => window.open(imgUrl, '_blank', 'noopener'));
+          body.appendChild(im);
+        }
+        const text = (msg.message || '').trim();
+        if (text) {
+          const span = document.createElement('span');
+          span.className = 'chat-msg-text';
+          span.innerHTML = await renderChatMessageBodyHtml(text);
+          body.appendChild(span);
+        }
+      }
       div.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
         el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
       });
@@ -7237,7 +7400,7 @@
         globalChatContainer.appendChild(loadingEl);
         loadingEl.classList.remove('hidden');
       }
-      await ensureChatMentionDirectory();
+      await refreshChatMentionDirectory();
       const chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
       globalChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
         applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds, loadingEl).catch(e => console.warn(e));
@@ -7258,10 +7421,34 @@
       return false;
     }
 
+    async function uploadChatImageFile(file) {
+      if (!file || !currentUser) return null;
+      const storageRef = ref(storage, `chatImages/${currentUser.uid}_${Date.now()}_${file.name.replace(/[^\w.\-]+/g, '_')}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      return getDownloadURL(snapshot.ref);
+    }
+
+    function promptChatImageUrl() {
+      if (!canUserPasteImageLinks()) {
+        showNotification('Only staff can attach images by URL.', 'error');
+        return null;
+      }
+      const raw = window.prompt('Image URL (https://...)');
+      if (raw == null) return null;
+      const u = raw.trim();
+      if (!u) return null;
+      if (!/^https?:\/\//i.test(u)) {
+        showNotification('Please use an http(s) image URL.', 'error');
+        return null;
+      }
+      return u;
+    }
+
     async function sendGlobalChatMessage() {
       const message = globalChatInput.value.trim();
-      if (!message || !currentUser) return;
+      if (!currentUser) return;
       if (await isUserMuted()) return;
+      if (!message) return;
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       const userData = userDoc.data();
       await addDoc(collection(db, "chats"), {
@@ -7273,8 +7460,26 @@
         type: 'global'
       });
       globalChatInput.value = '';
-      chatMentionDir = null;
-      chatMentionDirPromise = null;
+      refreshChatMentionDirectory().catch(() => {});
+      updateMissionProgress('chatting', 1);
+    }
+
+    async function sendGlobalChatWithImage(imageUrl, caption) {
+      if (!currentUser || !imageUrl) return;
+      if (await isUserMuted()) return;
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const userData = userDoc.data();
+      await addDoc(collection(db, "chats"), {
+        message: caption || '',
+        imageUrl,
+        senderId: currentUser.uid,
+        senderName: userData.username || currentUser.email,
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        timestamp: serverTimestamp(),
+        type: 'global'
+      });
+      globalChatInput.value = '';
+      refreshChatMentionDirectory().catch(() => {});
       updateMissionProgress('chatting', 1);
     }
 
@@ -7297,7 +7502,7 @@
         friendChatContainer.appendChild(fLoad);
         fLoad.classList.remove('hidden');
       }
-      await ensureChatMentionDirectory();
+      await refreshChatMentionDirectory();
       const uids = [currentUser.uid, selectedFriend.id].sort();
       const chatId = `${uids[0]}_${uids[1]}`;
       const chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
@@ -7308,8 +7513,9 @@
 
     async function sendFriendChatMessage() {
       const message = friendChatInput.value.trim();
-      if (!message || !currentUser || !selectedFriend) return;
+      if (!currentUser || !selectedFriend) return;
       if (await isUserMuted()) return;
+      if (!message) return;
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       const userData = userDoc.data();
       const uids = [currentUser.uid, selectedFriend.id].sort();
@@ -7324,8 +7530,29 @@
         participants: [currentUser.uid, selectedFriend.id]
       });
       friendChatInput.value = '';
-      chatMentionDir = null;
-      chatMentionDirPromise = null;
+      refreshChatMentionDirectory().catch(() => {});
+      updateMissionProgress('chatting', 1);
+    }
+
+    async function sendFriendChatWithImage(imageUrl, caption) {
+      if (!currentUser || !selectedFriend || !imageUrl) return;
+      if (await isUserMuted()) return;
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const userData = userDoc.data();
+      const uids = [currentUser.uid, selectedFriend.id].sort();
+      await addDoc(collection(db, "chats"), {
+        message: caption || '',
+        imageUrl,
+        senderId: currentUser.uid,
+        senderName: userData.username || currentUser.email,
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        timestamp: serverTimestamp(),
+        type: 'private',
+        chatId: `${uids[0]}_${uids[1]}`,
+        participants: [currentUser.uid, selectedFriend.id]
+      });
+      friendChatInput.value = '';
+      refreshChatMentionDirectory().catch(() => {});
       updateMissionProgress('chatting', 1);
     }
 
@@ -7556,6 +7783,7 @@
       }
       const urlIn = document.getElementById('avatar-url-input');
       if (urlIn) urlIn.value = '';
+      applyNonStaffMediaUi();
     }
 
     saveSettingsBtn.addEventListener('click', async () => {
@@ -7594,7 +7822,7 @@
           }
         }
         
-        const avatarUrlField = document.getElementById('avatar-url-input')?.value.trim();
+        const avatarUrlField = canUserPasteImageLinks() ? document.getElementById('avatar-url-input')?.value.trim() : '';
         if (avatarUrlField) updates.avatar = avatarUrlField;
 
         const avatarFile = avatarUploadInput.files[0];
@@ -7688,6 +7916,28 @@
       } else {
         staffTab.style.display = 'none';
       }
+      applyNonStaffMediaUi();
+    }
+
+    function canUserPasteImageLinks() {
+      return hasPermission('staff_access');
+    }
+
+    function applyNonStaffMediaUi() {
+      const staff = canUserPasteImageLinks();
+      document.querySelectorAll('.staff-only-url-field').forEach(el => {
+        el.style.display = staff ? '' : 'none';
+      });
+      document.querySelectorAll('.staff-only-signup-url').forEach(el => {
+        el.style.display = staff ? 'block' : 'none';
+      });
+      document.querySelectorAll('.staff-only-suggest-banner-url').forEach(el => {
+        el.style.display = staff ? '' : 'none';
+      });
+      document.querySelectorAll('.chat-link-btn').forEach(btn => {
+        if (staff) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+      });
     }
 
     function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -8722,6 +8972,42 @@
     globalChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendGlobalChatMessage(); });
     friendSendChatBtn.addEventListener('click', sendFriendChatMessage);
     friendChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendFriendChatMessage(); });
+
+    document.getElementById('global-chat-attach-btn')?.addEventListener('click', () => document.getElementById('global-chat-file')?.click());
+    document.getElementById('global-chat-file')?.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0];
+      e.target.value = '';
+      if (!f || !currentUser) return;
+      if (await isUserMuted()) return;
+      try {
+        const url = await uploadChatImageFile(f);
+        if (url) await sendGlobalChatWithImage(url, globalChatInput.value.trim());
+      } catch (err) { showNotification('Image upload failed: ' + (err.message || 'error'), 'error'); }
+    });
+    document.getElementById('global-chat-link-btn')?.addEventListener('click', async () => {
+      const url = promptChatImageUrl();
+      if (!url || !currentUser) return;
+      if (await isUserMuted()) return;
+      try { await sendGlobalChatWithImage(url, globalChatInput.value.trim()); } catch (err) { showNotification(err.message || 'Send failed', 'error'); }
+    });
+
+    document.getElementById('friend-chat-attach-btn')?.addEventListener('click', () => document.getElementById('friend-chat-file')?.click());
+    document.getElementById('friend-chat-file')?.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0];
+      e.target.value = '';
+      if (!f || !currentUser || !selectedFriend) return;
+      if (await isUserMuted()) return;
+      try {
+        const url = await uploadChatImageFile(f);
+        if (url) await sendFriendChatWithImage(url, friendChatInput.value.trim());
+      } catch (err) { showNotification('Image upload failed: ' + (err.message || 'error'), 'error'); }
+    });
+    document.getElementById('friend-chat-link-btn')?.addEventListener('click', async () => {
+      const url = promptChatImageUrl();
+      if (!url || !currentUser || !selectedFriend) return;
+      if (await isUserMuted()) return;
+      try { await sendFriendChatWithImage(url, friendChatInput.value.trim()); } catch (err) { showNotification(err.message || 'Send failed', 'error'); }
+    });
     addFriendBtn.addEventListener('click', addFriend);
 
     document.getElementById('inv-blook-modal-close')?.addEventListener('click', closeInvBlookModal);
