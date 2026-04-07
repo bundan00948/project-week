@@ -559,6 +559,25 @@
       color: var(--neon-green);
     }
 
+    .stat-icon-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      flex-wrap: wrap; margin-bottom: 4px; min-height: 1.35rem;
+    }
+    .star-slot-badge-img {
+      border-radius: 6px; object-fit: contain;
+      border: 1px solid rgba(42,255,158,0.25); display: block;
+    }
+    .star-slot-badge-fa {
+      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(42,255,158,0.25); flex-shrink: 0;
+    }
+    #sidebar-stars-icon-wrap .star-slot-badge-img,
+    #sidebar-stars-icon-wrap .star-slot-badge-fa { width: 22px; height: 22px; font-size: 0.72rem; }
+    .balance-icon-wrap .star-slot-badge-img,
+    .balance-icon-wrap .star-slot-badge-fa { width: 20px; height: 20px; font-size: 0.65rem; }
+    .up-stat-icon .star-slot-badge-img,
+    .up-stat-icon .star-slot-badge-fa { width: 26px; height: 26px; font-size: 0.78rem; }
+
     .stat-label {
       font-size: 0.8rem;
       color: var(--text-secondary);
@@ -631,6 +650,9 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+    .balance-icon-wrap {
+      display: flex; align-items: center; gap: 3px;
     }
 
     .balance-value {
@@ -3162,7 +3184,15 @@
     }
     .up-banner.has-custom-banner .up-banner-bg { display: block; }
     .up-banner.has-custom-banner .up-banner-pattern { display: none; }
-    .up-banner-content { position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6); width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .up-banner-content {
+      position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      width: 100%; min-height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between; text-align: center;
+      padding: 6px 4px 5px; box-sizing: border-box;
+    }
+    .up-banner-content .up-banner-name-block { width: 100%; flex-shrink: 0; }
+    .up-banner-content .up-banner-mid { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+    .up-banner-content .up-title-badge { margin-top: auto; flex-shrink: 0; max-width: 100%; }
     .up-name-row {
       font-size: 1rem; font-weight: 800; color: #fff;
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;
@@ -3174,8 +3204,10 @@
     }
     .up-title-badge.gradient-title {
       background: none; border: none;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; font-weight: 900; font-size: 0.65rem;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      font-weight: 900; font-size: 0.65rem;
     }
     .up-member { font-size: 0.65rem; color: rgba(255,255,255,0.85); }
     .up-stats-row {
@@ -3187,7 +3219,7 @@
       display: flex; align-items: center; gap: 10px;
       border: 1px solid rgba(42,255,158,0.1);
     }
-    .up-stat-icon { font-size: 1.2rem; }
+    .up-stat-icon { font-size: 1.2rem; display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
     .up-stat-val { font-size: 1rem; font-weight: 800; line-height: 1.1; }
     .up-stat-lbl { font-size: 0.68rem; color: #8A9BB5; }
     .up-section {
@@ -3236,9 +3268,14 @@
     }
     .up-friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .up-friend-banner {
-      flex: 1; height: 32px; border-radius: 6px; position: relative;
-      overflow: hidden; display: flex; align-items: center; padding: 0 8px;
-      background: #1a2a3a;
+      flex: 1; min-height: 44px; height: auto; border-radius: 6px; position: relative;
+      overflow: hidden; display: flex; flex-direction: column; align-items: stretch;
+      justify-content: center; padding: 0; background: #1a2a3a;
+    }
+    .up-friend-banner-text {
+      position: relative; z-index: 3; display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between; text-align: center;
+      width: 100%; min-height: 44px; padding: 4px 6px 5px; box-sizing: border-box;
     }
     .up-friend-pattern {
       position: absolute; top: 0; left: 0; width: 200%; height: 200%;
@@ -3253,14 +3290,27 @@
     .up-friend-banner.has-custom-banner .up-friend-banner-bg { display: block; }
     .up-friend-banner.has-custom-banner .up-friend-pattern { display: none; }
     .up-friend-name {
-      position: relative; z-index: 3; font-size: 0.7rem; font-weight: 700;
-      color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      position: relative; z-index: 3; font-size: 0.68rem; font-weight: 800;
+      color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+      width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.15; flex-shrink: 0;
     }
     .up-friend-title-tag {
-      position: relative; z-index: 3; font-size: 0.5rem; font-weight: 700;
-      margin-left: 4px; padding: 1px 5px; border-radius: 10px;
+      position: relative; z-index: 3; font-size: 0.52rem; font-weight: 800;
+      margin-top: auto; padding: 2px 6px; border-radius: 10px; max-width: 100%;
       background: rgba(42,255,158,0.15); color: #2AFF9E; flex-shrink: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      border: 1px solid rgba(42,255,158,0.35);
+    }
+    .up-friend-title-tag.gradient-title {
+      background: none; border: none;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      padding: 1px 0;
+    }
+    .up-friend-title-tag.gradient-title.running-gradient {
+      background-size: 200% 200%;
+      animation: runGradient 3s linear infinite;
     }
 
     /* Legacy selectors kept for compatibility */
@@ -3596,6 +3646,9 @@
           <div class="stat-label">COINS</div>
         </div>
         <div class="stat-item">
+          <div class="stat-icon-wrap" id="sidebar-stars-icon-wrap">
+            <i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i>
+          </div>
           <div class="stat-value" id="stars-display">0</div>
           <div class="stat-label">STARS</div>
         </div>
@@ -3637,18 +3690,22 @@
               <div class="up-banner" id="profile-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                  <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                <div class="up-banner-content" style="text-align:center;">
+                  <div class="up-banner-name-block">
+                    <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                    <span id="member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
+                  </div>
+                  <div class="up-banner-mid">
+                    <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  </div>
                   <span class="up-title-badge" id="profile-title">User</span>
-                  <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                  <span id="member-since" style="display:none;">2024</span>
                 </div>
               </div>
               <div id="profile-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
           <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
+            <div class="up-stat"><div class="up-stat-icon" id="profile-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="profile-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="profile-playtime-val">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="play-count">0</div><div class="up-stat-lbl">Plays</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="friend-count">0</div><div class="up-stat-lbl">Friends</div></div></div>
@@ -3680,18 +3737,22 @@
               <div class="up-banner" id="vp-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                  <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                <div class="up-banner-content" style="text-align:center;">
+                  <div class="up-banner-name-block">
+                    <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                    <span id="vp-member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
+                  </div>
+                  <div class="up-banner-mid">
+                    <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  </div>
                   <span class="up-title-badge" id="vp-title">User</span>
-                  <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                  <span id="vp-member-since" style="display:none;">2024</span>
                 </div>
               </div>
               <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
           <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
+            <div class="up-stat"><div class="up-stat-icon" id="vp-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="vp-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="vp-plays">0</div><div class="up-stat-lbl">Plays</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
@@ -3733,7 +3794,9 @@
               <span class="balance-value" id="shop-coins">0</span>
             </div>
             <div class="balance-item">
-              <i class="fas fa-star"></i>
+              <div class="balance-icon-wrap" id="shop-stars-icon-wrap">
+                <i class="fas fa-star" id="shop-stars-fallback-icon"></i>
+              </div>
               <span class="balance-value" id="shop-stars">0</span>
             </div>
           </div>
@@ -4730,24 +4793,31 @@
     }
 
     // ========== Load user profile with gradient title support ==========
-    async function applyTitleStyle(element, titleName) {
-      element.textContent = titleName || "User";
+    async function applyTitleStyleToElement(element, titleName) {
+      if (!element) return;
+      const name = titleName || 'User';
+      element.textContent = name;
       element.classList.remove('gradient-title', 'running-gradient');
       element.style.background = '';
       element.style.backgroundSize = '';
+      element.style.backgroundImage = '';
       element.style.webkitBackgroundClip = '';
+      element.style.backgroundClip = '';
       element.style.webkitTextFillColor = '';
       element.style.color = '';
       element.style.animation = '';
       try {
-        const titlesSnap = await getDocs(query(collection(db, "titles"), where("name", "==", titleName)));
+        const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', name)));
         if (!titlesSnap.empty) {
           const td = titlesSnap.docs[0].data();
           if (td.isGradient && td.gradientColors && td.gradientColors.length >= 2) {
             element.classList.add('gradient-title');
-            element.style.background = `linear-gradient(135deg, ${td.gradientColors.join(', ')})`;
+            const g = td.gradientColors.join(', ');
+            element.style.background = `linear-gradient(135deg, ${g})`;
             element.style.webkitBackgroundClip = 'text';
+            element.style.backgroundClip = 'text';
             element.style.webkitTextFillColor = 'transparent';
+            element.style.color = 'transparent';
             if (td.isRunning) {
               element.classList.add('running-gradient');
               element.style.backgroundSize = '200% 200%';
@@ -4757,7 +4827,99 @@
             element.style.background = `${td.color}20`;
           }
         }
-      } catch(e) {}
+      } catch (e) {}
+    }
+
+    async function applyTitleStyle(element, titleName) {
+      await applyTitleStyleToElement(element, titleName);
+    }
+
+    let starBadgeMetaCache = null;
+    let starBadgeMetaCacheTime = 0;
+    async function getStarBadgeMetaMap() {
+      const now = Date.now();
+      if (starBadgeMetaCache && now - starBadgeMetaCacheTime < 60000) return starBadgeMetaCache;
+      const map = {};
+      try {
+        const snap = await getDocs(collection(db, 'badges'));
+        snap.docs.forEach(d => {
+          const x = d.data();
+          if (x.name) map[x.name] = x;
+        });
+      } catch (e) {}
+      starBadgeMetaCache = map;
+      starBadgeMetaCacheTime = now;
+      return map;
+    }
+
+    function pickStarSlotBadgeNames(badgeNames, max) {
+      const arr = Array.isArray(badgeNames) ? badgeNames.filter(Boolean) : [];
+      return [...new Set(arr.map(String))].sort().slice(0, Math.max(1, max || 3));
+    }
+
+    async function renderStarSlotBadgesInto(wrapEl, fallbackEl, badgeNames, max) {
+      if (!wrapEl) return;
+      wrapEl.querySelectorAll('.star-slot-badge-wrap').forEach(n => n.remove());
+      const picks = pickStarSlotBadgeNames(badgeNames, max);
+      if (!picks.length) {
+        if (fallbackEl) fallbackEl.style.display = '';
+        return;
+      }
+      if (fallbackEl) fallbackEl.style.display = 'none';
+      const meta = await getStarBadgeMetaMap();
+      picks.forEach(bn => {
+        const bd = meta[bn];
+        if (!bd) return;
+        const wrap = document.createElement('span');
+        wrap.className = 'star-slot-badge-wrap';
+        wrap.title = bn;
+        const icon = bd.icon || '';
+        const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
+        if (isFa) {
+          const safeFa = icon.split(/\s+/).filter(t => /^[a-zA-Z0-9_-]+$/.test(t)).join(' ');
+          const iel = document.createElement('i');
+          iel.className = `star-slot-badge-fa ${safeFa}`;
+          iel.setAttribute('aria-hidden', 'true');
+          iel.style.background = bd.bgColor || 'var(--neon-green)';
+          iel.style.color = bd.textColor || '#000';
+          wrap.appendChild(iel);
+        } else if (/^https?:\/\//i.test(icon)) {
+          const img = document.createElement('img');
+          img.className = 'star-slot-badge-img';
+          img.src = icon;
+          img.alt = '';
+          wrap.appendChild(img);
+        } else return;
+        wrapEl.appendChild(wrap);
+      });
+      if (!wrapEl.querySelector('.star-slot-badge-wrap') && fallbackEl) fallbackEl.style.display = '';
+    }
+
+    async function refreshStarDisplayBadges(badgeNames) {
+      await renderStarSlotBadgesInto(
+        document.getElementById('sidebar-stars-icon-wrap'),
+        document.getElementById('sidebar-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
+      await renderStarSlotBadgesInto(
+        document.getElementById('shop-stars-icon-wrap'),
+        document.getElementById('shop-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
+      await renderStarSlotBadgesInto(
+        document.getElementById('profile-stars-icon-wrap'),
+        document.getElementById('profile-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
+      await renderStarSlotBadgesInto(
+        document.getElementById('vp-stars-icon-wrap'),
+        document.getElementById('vp-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
     }
 
     async function loadUserProfile(user) {
@@ -4792,9 +4954,11 @@
           pid.textContent = did && did.length === 6 ? `ID ${did}` : 'ID —';
         }
         renderProfileBadges(data.badges || []);
-        if (data.createdAt) {
+        refreshStarDisplayBadges(data.badges || []);
+        if (data.createdAt && memberSince) {
           const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
           memberSince.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+          memberSince.style.display = 'block';
         }
       } else {
         await saveUserProfile(user.uid, user.email, user.email.split('@')[0], null);
@@ -5272,12 +5436,15 @@
         }
       }
       if (ids.memberSince) {
-        if (data.createdAt) {
+        const ms = document.getElementById(ids.memberSince);
+        if (ms && data.createdAt) {
           const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          document.getElementById(ids.memberSince).textContent = d.getFullYear();
-        }
+          ms.textContent = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+          ms.style.display = 'block';
+        } else if (ms) ms.style.display = 'none';
       }
       renderProfileBadges(data.badges || [], ids.badges);
+      refreshStarDisplayBadges(data.badges || []);
       document.getElementById(ids.starsVal).textContent = data.stars || 0;
 
       const playsSnap = await getDocs(query(collection(db, "plays"), where("userId", "==", userId)));
@@ -5318,19 +5485,44 @@
           const snap = await getDocs(query(collection(db, "users"), where("__name__", "in", batch)));
           snap.docs.forEach(d => allFriends.push({ id: d.id, ...d.data() }));
         }
-        friendsContainer.innerHTML = allFriends.map(f => `
-          <div class="up-friend-row" data-uid="${f.id}">
-            <div class="up-friend-avatar"><img src="${f.avatar || defaultAvatar}" alt="${f.username}"></div>
-            <div class="up-friend-banner${f.banner ? ' has-custom-banner' : ''}">
-              <div class="up-friend-pattern"></div>
-              ${f.banner ? `<img class="up-friend-banner-bg" src="${f.banner}" alt="">` : ''}
-              <span class="up-friend-name">${escapeHtml(f.username || f.email)}</span>
-              <span class="up-friend-title-tag">${escapeHtml(f.title || 'User')}</span>
-            </div>
-          </div>
-        `).join('');
-        friendsContainer.querySelectorAll('.up-friend-row').forEach(row => {
-          row.addEventListener('click', () => navigateToUserProfile(row.dataset.uid));
+        friendsContainer.innerHTML = '';
+        allFriends.forEach(f => {
+          const row = document.createElement('div');
+          row.className = 'up-friend-row';
+          row.dataset.uid = f.id;
+          const av = document.createElement('div');
+          av.className = 'up-friend-avatar';
+          const avImg = document.createElement('img');
+          avImg.src = f.avatar || defaultAvatar;
+          avImg.alt = f.username || '';
+          av.appendChild(avImg);
+          const ban = document.createElement('div');
+          ban.className = `up-friend-banner${f.banner ? ' has-custom-banner' : ''}`;
+          const pat = document.createElement('div');
+          pat.className = 'up-friend-pattern';
+          ban.appendChild(pat);
+          if (f.banner) {
+            const bg = document.createElement('img');
+            bg.className = 'up-friend-banner-bg';
+            bg.src = f.banner;
+            bg.alt = '';
+            ban.appendChild(bg);
+          }
+          const textWrap = document.createElement('div');
+          textWrap.className = 'up-friend-banner-text';
+          const nameSp = document.createElement('span');
+          nameSp.className = 'up-friend-name';
+          nameSp.textContent = f.username || f.email || '';
+          const titleSp = document.createElement('span');
+          titleSp.className = 'up-friend-title-tag';
+          textWrap.appendChild(nameSp);
+          textWrap.appendChild(titleSp);
+          ban.appendChild(textWrap);
+          row.appendChild(av);
+          row.appendChild(ban);
+          friendsContainer.appendChild(row);
+          applyTitleStyleToElement(titleSp, f.title || 'User');
+          row.addEventListener('click', () => navigateToUserProfile(f.id));
         });
       }
     }
@@ -6928,15 +7120,16 @@
     // ========== Load user balance (coins & stars) ==========
     async function loadUserBalance(userId) {
       if (userUnsubscribe) userUnsubscribe();
-      userUnsubscribe = onSnapshot(doc(db, "users", userId), (doc) => {
-        if (doc.exists()) {
-          const data = doc.data();
+      userUnsubscribe = onSnapshot(doc(db, "users", userId), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
           coinsDisplay.textContent = data.coins || 0;
           starsDisplay.textContent = data.stars || 0;
           shopCoins.textContent = data.coins || 0;
           shopStars.textContent = data.stars || 0;
           const itd = document.getElementById('inv-tokens-display');
           if (itd) itd.textContent = data.coins || 0;
+          refreshStarDisplayBadges(data.badges || []);
         }
       });
     }
@@ -7939,6 +8132,7 @@
         if (!iconFile && !isFa && !/^https?:\/\//i.test(icon)) { showNotification('Icon must be a URL, upload, or Font Awesome classes','error'); return; }
         const badgeData={name:document.getElementById('staff-badge-name').value,icon,bgColor:document.getElementById('staff-badge-bg').value,textColor:document.getElementById('staff-badge-text-color').value,description:document.getElementById('staff-badge-desc').value,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'badges',id),badgeData); else await addDoc(collection(db,'badges'),{...badgeData,createdAt:serverTimestamp()});
+        starBadgeMetaCache = null;
         document.getElementById('staff-badge-modal').style.display='none';
         loadStaffBadges();
         showNotification('Badge saved!','success');
