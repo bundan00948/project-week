@@ -2274,13 +2274,42 @@
     .pack-unbox-stage.torn .pack-unbox-blook-under {
       opacity: 1;
     }
-    .pack-unbox-blook-under img {
+    .pack-unbox-blook-under img,
+    .pack-unbox-blook-under .pack-unbox-blook-icon {
       max-width: 88%;
       max-height: 88%;
       width: auto;
       height: auto;
       object-fit: contain;
       filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+    }
+    .pack-unbox-blook-under .pack-unbox-blook-clip {
+      max-width: 88%;
+      max-height: 88%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: inset(0 0 50% 0);
+      transition: clip-path 0.45s ease 0.35s;
+    }
+    .pack-unbox-stage.pack-unbox-cover-drop .pack-unbox-blook-under .pack-unbox-blook-clip {
+      clip-path: inset(0 0 0 0);
+    }
+    .pack-confetti-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 14;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .pack-confetti-piece {
+      position: absolute;
+      top: -12px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      opacity: 0.95;
+      will-change: transform, opacity;
     }
     .pack-unbox-half {
       position: absolute;
@@ -2328,8 +2357,19 @@
     .pack-unbox-stage.torn .pack-unbox-half-top {
       animation: packRipTopFlap 0.65s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
-    .pack-unbox-stage.torn .pack-unbox-half-bot {
-      animation: packRipBottomFade 0.45s ease 0.2s forwards;
+    /* First rip: bottom cover stays (half blook peek); second phase: bottom falls */
+    .pack-unbox-stage.torn.pack-unbox-peek .pack-unbox-half-bot {
+      animation: none;
+      opacity: 1;
+    }
+    .pack-unbox-stage.torn.pack-unbox-cover-drop .pack-unbox-half-bot {
+      animation: packCoverFallAway 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes packCoverFallAway {
+      to {
+        transform: translateY(125%) rotate(3deg);
+        opacity: 0;
+      }
     }
     @keyframes packRipTopFlap {
       0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
@@ -2338,9 +2378,6 @@
         transform: translate(-12%, -115%) rotate(-22deg) scale(0.92);
         opacity: 0;
       }
-    }
-    @keyframes packRipBottomFade {
-      to { opacity: 0; }
     }
     .pack-unbox-reveal {
       animation: packUnboxRevealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -2359,6 +2396,20 @@
       background-size: cover;
       background-position: center;
       filter: blur(2px) brightness(0.5);
+    }
+    #opening-modal-bg.pack-rarity-celebrate {
+      filter: brightness(0.92);
+      transition: background-image 0.45s ease, background-size 0.45s ease;
+    }
+    @keyframes packRarityBgRun {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    @keyframes packConfettiFall {
+      to {
+        transform: translate3d(var(--cf-dx, 0px), 110vh, 0) rotate(720deg);
+        opacity: 0.85;
+      }
     }
 
     .modal-body {
@@ -4730,6 +4781,7 @@
       <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
         <div class="modal-background" id="opening-modal-bg"></div>
         <div class="modal-body" id="pack-opening-modal-body">
+          <div class="pack-confetti-layer" id="pack-confetti-layer" aria-hidden="true" style="display:none;"></div>
           <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
           <button type="button" class="pack-unbox-dismiss-layer" id="pack-unbox-dismiss-layer" style="display:none;" aria-label="Collect and close"></button>
           <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
@@ -5149,6 +5201,7 @@
     const packOpeningModalBody = document.getElementById('pack-opening-modal-body');
     const packUnboxClickLayer = document.getElementById('pack-unbox-click-layer');
     const packUnboxDismissLayer = document.getElementById('pack-unbox-dismiss-layer');
+    const packConfettiLayer = document.getElementById('pack-confetti-layer');
     const packUnboxBoost = document.getElementById('pack-unbox-boost');
     const openingModalBg = document.getElementById('opening-modal-bg');
     const giftAnimation = document.getElementById('gift-animation');
@@ -6233,6 +6286,75 @@
       return d.solid || '#ffffff';
     }
 
+    /** Full-area modal background from rarity (not text-clipped). */
+    function getRarityBackgroundGradientCss(rarity) {
+      const d = getRarityDef(rarity);
+      if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
+        const g = d.gradientColors.join(', ');
+        return {
+          image: `linear-gradient(145deg, ${g}, #080c14 78%, #030509 100%)`,
+          size: d.isRunning ? '220% 220%' : '100% 100%',
+          repeat: 'no-repeat',
+          position: d.isRunning ? '0% 50%' : 'center',
+          animated: !!d.isRunning
+        };
+      }
+      const c = d.solid || '#1a2233';
+      return {
+        image: `linear-gradient(165deg, ${c} 0%, #0d1218 45%, #030509 100%)`,
+        size: '100% 100%',
+        repeat: 'no-repeat',
+        position: 'center',
+        animated: false
+      };
+    }
+
+    let packConfettiInterval = null;
+    let packConfettiStopTimer = null;
+
+    function stopPackConfetti() {
+      if (packConfettiInterval) {
+        clearInterval(packConfettiInterval);
+        packConfettiInterval = null;
+      }
+      if (packConfettiStopTimer) {
+        clearTimeout(packConfettiStopTimer);
+        packConfettiStopTimer = null;
+      }
+      if (packConfettiLayer) {
+        packConfettiLayer.innerHTML = '';
+        packConfettiLayer.style.display = 'none';
+      }
+    }
+
+    function spawnPackConfettiBurst(n) {
+      if (!packConfettiLayer) return;
+      const colors = ['#2AFF9E', '#FF3D6C', '#FFC107', '#42A5F5', '#AB47BC', '#ffffff', '#FFB347', '#00e5ff'];
+      const count = Math.max(1, Math.floor(n));
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'pack-confetti-piece';
+        el.style.left = `${Math.random() * 100}%`;
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = `${6 + Math.random() * 8}px`;
+        el.style.height = `${6 + Math.random() * 8}px`;
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        const dur = 2.2 + Math.random() * 2.2;
+        el.style.setProperty('--cf-dx', `${(Math.random() - 0.5) * 140}px`);
+        el.style.animation = `packConfettiFall ${dur}s linear forwards`;
+        packConfettiLayer.appendChild(el);
+        setTimeout(() => { try { el.remove(); } catch (e) {} }, dur * 1000 + 120);
+      }
+    }
+
+    function startPackConfetti(durationMs) {
+      stopPackConfetti();
+      if (packConfettiLayer) packConfettiLayer.style.display = 'block';
+      spawnPackConfettiBurst(28);
+      packConfettiInterval = setInterval(() => spawnPackConfettiBurst(16), 380);
+      packConfettiStopTimer = setTimeout(() => stopPackConfetti(), durationMs || 15000);
+    }
+
     function ymdUTC(d) {
       return d.toISOString().slice(0, 10);
     }
@@ -6552,6 +6674,11 @@
     let packUnboxDismissHandler = null;
 
     function resetPackOpeningModalLayout() {
+      stopPackConfetti();
+      if (openingModalBg) {
+        openingModalBg.classList.remove('pack-rarity-celebrate');
+        openingModalBg.style.animation = '';
+      }
       if (packUnboxClickLayer && packUnboxClickHandler) {
         packUnboxClickLayer.removeEventListener('click', packUnboxClickHandler);
         packUnboxClickHandler = null;
@@ -6567,7 +6694,7 @@
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.remove('pack-unbox-body', 'pack-unbox-revealed');
       if (packUnboxPackCenter) packUnboxPackCenter.style.display = '';
-      giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
+      giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-peek', 'pack-unbox-cover-drop', 'pack-unbox-reveal', 'pack-unbox-anim');
       giftAnimation.innerHTML = '';
       if (packRevealBlookSlot) packRevealBlookSlot.innerHTML = '';
       if (packRevealCard) {
@@ -6653,14 +6780,21 @@
 
       const blookUnder = document.createElement('div');
       blookUnder.className = 'pack-unbox-blook-under';
+      const blookClip = document.createElement('div');
+      blookClip.className = 'pack-unbox-blook-clip';
       if (item.imageUrl) {
         const bi = document.createElement('img');
         bi.src = item.imageUrl;
         bi.alt = item.name || '';
-        blookUnder.appendChild(bi);
+        blookClip.appendChild(bi);
       } else {
-        blookUnder.innerHTML = `<i class="fas fa-gift" style="font-size:min(26vw,6.5rem);color:${getRarityColor(item.rarity)};"></i>`;
+        const ic = document.createElement('i');
+        ic.className = 'fas fa-gift pack-unbox-blook-icon';
+        ic.style.fontSize = 'min(26vw,6.5rem)';
+        ic.style.color = getRarityColor(item.rarity);
+        blookClip.appendChild(ic);
       }
+      blookUnder.appendChild(blookClip);
 
       const makeHalfImg = () => {
         const im = document.createElement('img');
@@ -6682,7 +6816,7 @@
       stack.appendChild(halfBot);
       stack.appendChild(halfTop);
 
-      const revealDetails = () => {
+      const finishRevealCard = () => {
         packOpeningModalBody?.classList.add('pack-unbox-revealed');
         if (packUnboxPackCenter) packUnboxPackCenter.style.display = 'none';
         openedGiftName.style.opacity = '1';
@@ -6722,17 +6856,46 @@
         }
       };
 
-      const tearOpen = () => {
+      const applyRarityCelebrateBg = () => {
+        const bg = getRarityBackgroundGradientCss(item.rarity);
+        if (openingModalBg) {
+          openingModalBg.classList.add('pack-rarity-celebrate');
+          openingModalBg.style.backgroundImage = bg.image;
+          openingModalBg.style.backgroundSize = bg.size;
+          openingModalBg.style.backgroundRepeat = bg.repeat;
+          openingModalBg.style.backgroundPosition = bg.position;
+          if (bg.animated) {
+            openingModalBg.style.animation = 'packRarityBgRun 6s linear infinite';
+          } else {
+            openingModalBg.style.animation = '';
+          }
+        }
+      };
+
+      const firstRip = () => {
         if (giftAnimation.classList.contains('torn')) return;
-        giftAnimation.classList.add('torn');
-        if (packUnboxClickLayer) packUnboxClickLayer.style.display = 'none';
+        giftAnimation.classList.add('torn', 'pack-unbox-peek');
         if (packUnboxBoost) packUnboxBoost.style.display = 'none';
-        setTimeout(revealDetails, 420);
+      };
+
+      const secondReveal = () => {
+        if (!giftAnimation.classList.contains('torn') || giftAnimation.classList.contains('pack-unbox-cover-drop')) return;
+        giftAnimation.classList.add('pack-unbox-cover-drop');
+        giftAnimation.classList.remove('pack-unbox-peek');
+        applyRarityCelebrateBg();
+        startPackConfetti(15000);
+        setTimeout(finishRevealCard, 520);
       };
 
       packUnboxClickHandler = (e) => {
         e.preventDefault();
-        tearOpen();
+        e.stopPropagation();
+        if (!giftAnimation.classList.contains('torn')) {
+          firstRip();
+          return;
+        }
+        if (giftAnimation.classList.contains('pack-unbox-cover-drop')) return;
+        secondReveal();
       };
 
       const probe = new Image();
