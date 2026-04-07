@@ -559,6 +559,25 @@
       color: var(--neon-green);
     }
 
+    .stat-icon-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      flex-wrap: wrap; margin-bottom: 4px; min-height: 1.35rem;
+    }
+    .star-slot-badge-img {
+      border-radius: 6px; object-fit: contain;
+      border: 1px solid rgba(42,255,158,0.25); display: block;
+    }
+    .star-slot-badge-fa {
+      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(42,255,158,0.25); flex-shrink: 0;
+    }
+    #sidebar-stars-icon-wrap .star-slot-badge-img,
+    #sidebar-stars-icon-wrap .star-slot-badge-fa { width: 22px; height: 22px; font-size: 0.72rem; }
+    .balance-icon-wrap .star-slot-badge-img,
+    .balance-icon-wrap .star-slot-badge-fa { width: 20px; height: 20px; font-size: 0.65rem; }
+    .up-stat-icon .star-slot-badge-img,
+    .up-stat-icon .star-slot-badge-fa { width: 26px; height: 26px; font-size: 0.78rem; }
+
     .stat-label {
       font-size: 0.8rem;
       color: var(--text-secondary);
@@ -631,6 +650,9 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+    .balance-icon-wrap {
+      display: flex; align-items: center; gap: 3px;
     }
 
     .balance-value {
@@ -1766,6 +1788,7 @@
       border-radius: 0;
       border: none;
       background: transparent;
+      overflow: visible;
     }
     .pack-opening-modal-unbox .modal-background {
       filter: none;
@@ -1775,7 +1798,7 @@
     .pack-unbox-body {
       justify-content: center;
       gap: 12px;
-      padding: 24px 16px 32px;
+      padding: 20px 12px 28px;
     }
     .pack-unbox-hint {
       margin: 0;
@@ -1795,49 +1818,74 @@
       50% { opacity: 1; transform: scale(1.02); }
     }
     .gift-animation.pack-unbox-stage {
-      width: min(78vw, 340px);
-      height: min(78vw, 340px);
-      max-height: 48vh;
+      width: auto;
+      height: auto;
+      max-width: min(92vw, 440px);
+      max-height: min(72vh, 620px);
+      min-width: 0;
+      min-height: 0;
       margin-bottom: 8px;
       position: relative;
       overflow: visible;
       background: transparent;
-      border-radius: 20px;
-    }
-    .pack-unbox-art {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
-      pointer-events: none;
-    }
-    .pack-unbox-zipper-layer {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 6%;
-      width: 108%;
-      height: 32%;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
       cursor: pointer;
-      z-index: 3;
       -webkit-tap-highlight-color: transparent;
     }
-    .pack-unbox-zipper-layer:focus-visible {
+    .gift-animation.pack-unbox-stage:focus-visible {
       outline: 2px solid var(--neon-green);
-      outline-offset: 4px;
-      border-radius: 8px;
+      outline-offset: 6px;
+      border-radius: 12px;
     }
-    .pack-unbox-zipper-half {
+    .pack-unbox-stack {
+      position: relative;
+      display: block;
+      line-height: 0;
+      margin: 0 auto;
+      border: none;
+      box-shadow: none;
+    }
+    .pack-unbox-stack img {
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .pack-unbox-blook-under {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease 0.25s;
+    }
+    .pack-unbox-stage.torn .pack-unbox-blook-under {
+      opacity: 1;
+    }
+    .pack-unbox-blook-under img {
+      max-width: 88%;
+      max-height: 88%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+    }
+    .pack-unbox-half {
       position: absolute;
       left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
     }
-    .pack-unbox-zipper-top { transform-origin: 50% 100%; }
-    .pack-unbox-zipper-bot { transform-origin: 50% 0%; }
-    .pack-unbox-zipper-half img {
+    .pack-unbox-half img {
       position: absolute;
       left: 0;
       top: 0;
@@ -1845,45 +1893,49 @@
       height: 100%;
       object-fit: contain;
       object-position: center center;
-      user-select: none;
-      pointer-events: none;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
     }
-    .pack-unbox-zipper-top img {
-      clip-path: inset(0 0 50% 0);
+    .pack-unbox-half-top img {
+      /* slight overlap at seam = no bright hairline between halves */
+      clip-path: inset(0 0 49.2% 0);
     }
-    .pack-unbox-zipper-bot img {
-      clip-path: inset(50% 0 0 0);
+    .pack-unbox-half-bot img {
+      clip-path: inset(50.8% 0 0 0);
     }
-    .pack-unbox-stage:not(.torn) .pack-unbox-zipper-layer {
-      animation: packZipperIdle 1.25s ease-in-out infinite;
+    .pack-unbox-half-top {
+      z-index: 3;
+      transform-origin: 50% 100%;
     }
-    @keyframes packZipperIdle {
-      0%, 100% { transform: translateX(-50%) translateY(0); filter: brightness(1); }
-      50% { transform: translateX(-50%) translateY(-3px); filter: brightness(1.15); }
+    .pack-unbox-half-bot {
+      z-index: 2;
     }
-    .pack-unbox-stage.torn .pack-unbox-zipper-layer {
+    .pack-unbox-stage:not(.torn) {
+      animation: packWholeNudge 2s ease-in-out infinite;
+    }
+    @keyframes packWholeNudge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .pack-unbox-stage.torn {
       animation: none;
-      transform: translateX(-50%);
-      pointer-events: none;
       cursor: default;
     }
-    .pack-unbox-stage.torn .pack-unbox-zipper-top {
-      animation: packZipperTearTop 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    .pack-unbox-stage.torn .pack-unbox-half-top {
+      animation: packRipTopFlap 0.65s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
-    .pack-unbox-stage.torn .pack-unbox-zipper-bot {
-      animation: packZipperTearBot 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    .pack-unbox-stage.torn .pack-unbox-half-bot {
+      animation: packRipBottomFade 0.45s ease 0.2s forwards;
     }
-    @keyframes packZipperTearTop {
-      to {
-        transform: translate(-42%, -95%) rotate(-14deg);
+    @keyframes packRipTopFlap {
+      0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+      100% {
+        transform: translate(-8%, -108%) rotate(-18deg);
         opacity: 0;
       }
     }
-    @keyframes packZipperTearBot {
-      to {
-        transform: translate(42%, 110%) rotate(12deg);
-        opacity: 0;
-      }
+    @keyframes packRipBottomFade {
+      to { opacity: 0; }
     }
     .pack-unbox-reveal {
       animation: packUnboxRevealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -3132,7 +3184,15 @@
     }
     .up-banner.has-custom-banner .up-banner-bg { display: block; }
     .up-banner.has-custom-banner .up-banner-pattern { display: none; }
-    .up-banner-content { position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6); width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .up-banner-content {
+      position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      width: 100%; min-height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between; text-align: center;
+      padding: 6px 4px 5px; box-sizing: border-box;
+    }
+    .up-banner-content .up-banner-name-block { width: 100%; flex-shrink: 0; }
+    .up-banner-content .up-banner-mid { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+    .up-banner-content .up-title-badge { margin-top: auto; flex-shrink: 0; max-width: 100%; }
     .up-name-row {
       font-size: 1rem; font-weight: 800; color: #fff;
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;
@@ -3144,8 +3204,10 @@
     }
     .up-title-badge.gradient-title {
       background: none; border: none;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; font-weight: 900; font-size: 0.65rem;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      font-weight: 900; font-size: 0.65rem;
     }
     .up-member { font-size: 0.65rem; color: rgba(255,255,255,0.85); }
     .up-stats-row {
@@ -3157,7 +3219,7 @@
       display: flex; align-items: center; gap: 10px;
       border: 1px solid rgba(42,255,158,0.1);
     }
-    .up-stat-icon { font-size: 1.2rem; }
+    .up-stat-icon { font-size: 1.2rem; display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
     .up-stat-val { font-size: 1rem; font-weight: 800; line-height: 1.1; }
     .up-stat-lbl { font-size: 0.68rem; color: #8A9BB5; }
     .up-section {
@@ -3206,9 +3268,14 @@
     }
     .up-friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .up-friend-banner {
-      flex: 1; height: 32px; border-radius: 6px; position: relative;
-      overflow: hidden; display: flex; align-items: center; padding: 0 8px;
-      background: #1a2a3a;
+      flex: 1; min-height: 44px; height: auto; border-radius: 6px; position: relative;
+      overflow: hidden; display: flex; flex-direction: column; align-items: stretch;
+      justify-content: center; padding: 0; background: #1a2a3a;
+    }
+    .up-friend-banner-text {
+      position: relative; z-index: 3; display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between; text-align: center;
+      width: 100%; min-height: 44px; padding: 4px 6px 5px; box-sizing: border-box;
     }
     .up-friend-pattern {
       position: absolute; top: 0; left: 0; width: 200%; height: 200%;
@@ -3223,14 +3290,27 @@
     .up-friend-banner.has-custom-banner .up-friend-banner-bg { display: block; }
     .up-friend-banner.has-custom-banner .up-friend-pattern { display: none; }
     .up-friend-name {
-      position: relative; z-index: 3; font-size: 0.7rem; font-weight: 700;
-      color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      position: relative; z-index: 3; font-size: 0.68rem; font-weight: 800;
+      color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+      width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.15; flex-shrink: 0;
     }
     .up-friend-title-tag {
-      position: relative; z-index: 3; font-size: 0.5rem; font-weight: 700;
-      margin-left: 4px; padding: 1px 5px; border-radius: 10px;
+      position: relative; z-index: 3; font-size: 0.52rem; font-weight: 800;
+      margin-top: auto; padding: 2px 6px; border-radius: 10px; max-width: 100%;
       background: rgba(42,255,158,0.15); color: #2AFF9E; flex-shrink: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      border: 1px solid rgba(42,255,158,0.35);
+    }
+    .up-friend-title-tag.gradient-title {
+      background: none; border: none;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      padding: 1px 0;
+    }
+    .up-friend-title-tag.gradient-title.running-gradient {
+      background-size: 200% 200%;
+      animation: runGradient 3s linear infinite;
     }
 
     /* Legacy selectors kept for compatibility */
@@ -3566,6 +3646,9 @@
           <div class="stat-label">COINS</div>
         </div>
         <div class="stat-item">
+          <div class="stat-icon-wrap" id="sidebar-stars-icon-wrap">
+            <i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i>
+          </div>
           <div class="stat-value" id="stars-display">0</div>
           <div class="stat-label">STARS</div>
         </div>
@@ -3607,18 +3690,22 @@
               <div class="up-banner" id="profile-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                  <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                <div class="up-banner-content" style="text-align:center;">
+                  <div class="up-banner-name-block">
+                    <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                    <span id="member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
+                  </div>
+                  <div class="up-banner-mid">
+                    <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  </div>
                   <span class="up-title-badge" id="profile-title">User</span>
-                  <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                  <span id="member-since" style="display:none;">2024</span>
                 </div>
               </div>
               <div id="profile-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
           <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
+            <div class="up-stat"><div class="up-stat-icon" id="profile-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="profile-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="profile-playtime-val">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="play-count">0</div><div class="up-stat-lbl">Plays</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="friend-count">0</div><div class="up-stat-lbl">Friends</div></div></div>
@@ -3650,18 +3737,22 @@
               <div class="up-banner" id="vp-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-                  <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                <div class="up-banner-content" style="text-align:center;">
+                  <div class="up-banner-name-block">
+                    <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                    <span id="vp-member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
+                  </div>
+                  <div class="up-banner-mid">
+                    <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
+                  </div>
                   <span class="up-title-badge" id="vp-title">User</span>
-                  <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
-                  <span id="vp-member-since" style="display:none;">2024</span>
                 </div>
               </div>
               <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
             </div>
           </div>
           <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-star" style="color:#FFC107;"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
+            <div class="up-stat"><div class="up-stat-icon" id="vp-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="vp-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="vp-plays">0</div><div class="up-stat-lbl">Plays</div></div></div>
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
@@ -3703,7 +3794,9 @@
               <span class="balance-value" id="shop-coins">0</span>
             </div>
             <div class="balance-item">
-              <i class="fas fa-star"></i>
+              <div class="balance-icon-wrap" id="shop-stars-icon-wrap">
+                <i class="fas fa-star" id="shop-stars-fallback-icon"></i>
+              </div>
               <span class="balance-value" id="shop-stars">0</span>
             </div>
           </div>
@@ -3832,6 +3925,7 @@
             <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
             <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
             <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-star-badges"><i class="fas fa-medal"></i> Star badges</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
           </div>
 
@@ -3926,17 +4020,8 @@
             </div>
           </div>
 
-          <!-- Staff: Rarity styles + site theme (accents) -->
+          <!-- Staff: Rarity styles + daily reward -->
           <div class="staff-section" id="staff-rarity">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Site accent colors</h3></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Default green and grey/pink accents for every visitor. Users can still override in Settings (local only).</p>
-              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
-                <div class="staff-form-group" style="margin:0;"><label>Primary (green)</label><input type="color" id="staff-site-theme-primary" value="#2AFF9E"></div>
-                <div class="staff-form-group" style="margin:0;"><label>Secondary (grey accent)</label><input type="color" id="staff-site-theme-secondary" value="#FF3D6C"></div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-site-theme-save">Save site theme</button>
-              </div>
-            </div>
             <div class="staff-card">
               <div class="staff-card-header"><h3>Daily login reward</h3></div>
               <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Coins and stars granted once per calendar day when users claim on the Missions page.</p>
@@ -3976,6 +4061,25 @@
                 <button class="staff-btn staff-btn-primary" id="staff-stars-apply-btn" style="margin-bottom:14px;">Apply</button>
               </div>
               <div id="staff-stars-result" style="margin-top:12px;"></div>
+            </div>
+          </div>
+
+          <!-- Star threshold badges (auto-award by total stars) -->
+          <div class="staff-section" id="staff-star-badges">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Star threshold badges</h3></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Create badges under <strong>Badges</strong> first. Add rules here: when a user’s <strong>total stars</strong> reach the minimum, that badge is added. If stars drop below a threshold, that badge is removed. Manual badges (not listed here) are never touched.</p>
+              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;">
+                <div class="staff-form-group" style="margin:0;min-width:200px;"><label>Badge</label><select id="staff-star-badge-pick"><option value="">Select badge…</option></select></div>
+                <div class="staff-form-group" style="margin:0;"><label>Min stars</label><input type="number" id="staff-star-badge-min" value="100" min="0" step="1"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-add-row">Add rule</button>
+              </div>
+              <div id="staff-star-badge-rules-list" style="margin-bottom:14px;"></div>
+              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;">
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-save-rules">Save rules</button>
+                <button type="button" class="staff-btn" id="staff-star-badge-resync-all">Re-apply to all users</button>
+              </div>
+              <p id="staff-star-badge-status" style="font-size:0.78rem;color:var(--text-secondary);margin-top:12px;"></p>
             </div>
           </div>
 
@@ -4022,20 +4126,6 @@
               </label>
             </div>
 
-            <div class="settings-section" style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(42,255,158,0.15);">
-              <h3 style="font-size:1rem;margin-bottom:12px;color:var(--neon-green);">Theme colors</h3>
-              <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;">Adjust the two accent colors used across the site. This device only (saved in your browser).</p>
-              <div class="form-group">
-                <label for="theme-primary">Primary accent</label>
-                <input type="color" id="theme-primary" value="#2AFF9E">
-              </div>
-              <div class="form-group">
-                <label for="theme-secondary">Secondary accent</label>
-                <input type="color" id="theme-secondary" value="#FF3D6C">
-              </div>
-              <button type="button" class="settings-btn" id="theme-reset-btn" style="margin-top:8px;background:rgba(255,255,255,0.08);">Reset to default theme</button>
-            </div>
-            
             <div class="form-group">
               <label for="current-password">Current Password</label>
               <input type="password" id="current-password" placeholder="Enter current password">
@@ -4407,7 +4497,6 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    const THEME_STORAGE_KEY = 'gu_theme_colors';
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
     const DEFAULT_THEME_GREY = '#8A9BB5';
@@ -4450,35 +4539,75 @@
       }
     }
 
-    function applyAccentColors(primary, secondary) {
-      const p = primary || DEFAULT_NEON_GREEN;
-      const s = secondary || DEFAULT_NEON_PINK;
-      document.documentElement.style.setProperty('--neon-green', p);
-      document.documentElement.style.setProperty('--neon-pink', s);
-      document.documentElement.style.setProperty('--theme-grey', s);
+    function applyFixedSiteTheme() {
+      document.documentElement.style.setProperty('--neon-green', DEFAULT_NEON_GREEN);
+      document.documentElement.style.setProperty('--neon-pink', DEFAULT_NEON_PINK);
+      document.documentElement.style.setProperty('--theme-grey', DEFAULT_THEME_GREY);
     }
 
-    async function refreshSiteThemeFromServer() {
+    async function getStarBadgeRulesFromServer() {
       try {
-        const docSnap = await getDoc(doc(db, 'siteConfig', 'settings'));
-        if (docSnap.exists()) {
-          const st = docSnap.data().siteTheme;
-          if (st && (st.primary || st.secondary)) {
-            applyAccentColors(st.primary, st.secondary);
-            return;
-          }
-        }
-      } catch (e) {}
-      applyAccentColors(DEFAULT_NEON_GREEN, DEFAULT_NEON_PINK);
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (!s.exists()) return [];
+        const r = s.data().starBadgeRules;
+        if (!Array.isArray(r)) return [];
+        const byName = new Map();
+        r.forEach(x => {
+          if (!x || !x.badgeName) return;
+          const name = String(x.badgeName).trim();
+          if (!name) return;
+          const min = Math.max(0, Math.floor(parseInt(x.minStars, 10) || 0));
+          const prev = byName.get(name);
+          if (prev == null || min < prev) byName.set(name, min);
+        });
+        return Array.from(byName.entries()).map(([badgeName, minStars]) => ({ badgeName, minStars }));
+      } catch (e) {
+        return [];
+      }
     }
 
-    function applyThemeFromStorage() {
+    function computeStarBadgeUpdates(stars, currentBadges, rules) {
+      const badges = Array.isArray(currentBadges) ? [...currentBadges] : [];
+      const ruleMap = new Map();
+      rules.forEach(rule => {
+        const name = rule.badgeName;
+        const min = Math.max(0, Number(rule.minStars) || 0);
+        ruleMap.set(name, min);
+      });
+      const toRemove = [];
+      for (const b of badges) {
+        if (!ruleMap.has(b)) continue;
+        if (stars < ruleMap.get(b)) toRemove.push(b);
+      }
+      const toAdd = [];
+      for (const [name, min] of ruleMap) {
+        if (stars >= min && !badges.includes(name)) toAdd.push(name);
+      }
+      let next = badges.filter(b => !toRemove.includes(b));
+      toAdd.forEach(a => { if (!next.includes(a)) next.push(a); });
+      const changed = toRemove.length > 0 || toAdd.length > 0;
+      return { nextBadges: next, changed, toAdd, toRemove };
+    }
+
+    async function syncStarBadgesForUser(uid, starCount) {
+      if (!uid) return;
+      const rules = await getStarBadgeRulesFromServer();
+      if (!rules.length) return;
       try {
-        const raw = localStorage.getItem(THEME_STORAGE_KEY);
-        if (!raw) return;
-        const j = JSON.parse(raw);
-        applyAccentColors(j.primary, j.secondary);
-      } catch (e) {}
+        await runTransaction(db, async tx => {
+          const uref = doc(db, 'users', uid);
+          const snap = await tx.get(uref);
+          if (!snap.exists()) return;
+          const d = snap.data();
+          const stars = typeof starCount === 'number' && Number.isFinite(starCount)
+            ? starCount
+            : (typeof d.stars === 'number' ? d.stars : parseInt(d.stars, 10) || 0);
+          const { nextBadges, changed } = computeStarBadgeUpdates(stars, d.badges, rules);
+          if (changed) tx.update(uref, { badges: nextBadges });
+        });
+      } catch (e) {
+        console.warn('syncStarBadgesForUser', e);
+      }
     }
 
     function hidePageLoading() {
@@ -4664,24 +4793,31 @@
     }
 
     // ========== Load user profile with gradient title support ==========
-    async function applyTitleStyle(element, titleName) {
-      element.textContent = titleName || "User";
+    async function applyTitleStyleToElement(element, titleName) {
+      if (!element) return;
+      const name = titleName || 'User';
+      element.textContent = name;
       element.classList.remove('gradient-title', 'running-gradient');
       element.style.background = '';
       element.style.backgroundSize = '';
+      element.style.backgroundImage = '';
       element.style.webkitBackgroundClip = '';
+      element.style.backgroundClip = '';
       element.style.webkitTextFillColor = '';
       element.style.color = '';
       element.style.animation = '';
       try {
-        const titlesSnap = await getDocs(query(collection(db, "titles"), where("name", "==", titleName)));
+        const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', name)));
         if (!titlesSnap.empty) {
           const td = titlesSnap.docs[0].data();
           if (td.isGradient && td.gradientColors && td.gradientColors.length >= 2) {
             element.classList.add('gradient-title');
-            element.style.background = `linear-gradient(135deg, ${td.gradientColors.join(', ')})`;
+            const g = td.gradientColors.join(', ');
+            element.style.background = `linear-gradient(135deg, ${g})`;
             element.style.webkitBackgroundClip = 'text';
+            element.style.backgroundClip = 'text';
             element.style.webkitTextFillColor = 'transparent';
+            element.style.color = 'transparent';
             if (td.isRunning) {
               element.classList.add('running-gradient');
               element.style.backgroundSize = '200% 200%';
@@ -4691,7 +4827,99 @@
             element.style.background = `${td.color}20`;
           }
         }
-      } catch(e) {}
+      } catch (e) {}
+    }
+
+    async function applyTitleStyle(element, titleName) {
+      await applyTitleStyleToElement(element, titleName);
+    }
+
+    let starBadgeMetaCache = null;
+    let starBadgeMetaCacheTime = 0;
+    async function getStarBadgeMetaMap() {
+      const now = Date.now();
+      if (starBadgeMetaCache && now - starBadgeMetaCacheTime < 60000) return starBadgeMetaCache;
+      const map = {};
+      try {
+        const snap = await getDocs(collection(db, 'badges'));
+        snap.docs.forEach(d => {
+          const x = d.data();
+          if (x.name) map[x.name] = x;
+        });
+      } catch (e) {}
+      starBadgeMetaCache = map;
+      starBadgeMetaCacheTime = now;
+      return map;
+    }
+
+    function pickStarSlotBadgeNames(badgeNames, max) {
+      const arr = Array.isArray(badgeNames) ? badgeNames.filter(Boolean) : [];
+      return [...new Set(arr.map(String))].sort().slice(0, Math.max(1, max || 3));
+    }
+
+    async function renderStarSlotBadgesInto(wrapEl, fallbackEl, badgeNames, max) {
+      if (!wrapEl) return;
+      wrapEl.querySelectorAll('.star-slot-badge-wrap').forEach(n => n.remove());
+      const picks = pickStarSlotBadgeNames(badgeNames, max);
+      if (!picks.length) {
+        if (fallbackEl) fallbackEl.style.display = '';
+        return;
+      }
+      if (fallbackEl) fallbackEl.style.display = 'none';
+      const meta = await getStarBadgeMetaMap();
+      picks.forEach(bn => {
+        const bd = meta[bn];
+        if (!bd) return;
+        const wrap = document.createElement('span');
+        wrap.className = 'star-slot-badge-wrap';
+        wrap.title = bn;
+        const icon = bd.icon || '';
+        const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
+        if (isFa) {
+          const safeFa = icon.split(/\s+/).filter(t => /^[a-zA-Z0-9_-]+$/.test(t)).join(' ');
+          const iel = document.createElement('i');
+          iel.className = `star-slot-badge-fa ${safeFa}`;
+          iel.setAttribute('aria-hidden', 'true');
+          iel.style.background = bd.bgColor || 'var(--neon-green)';
+          iel.style.color = bd.textColor || '#000';
+          wrap.appendChild(iel);
+        } else if (/^https?:\/\//i.test(icon)) {
+          const img = document.createElement('img');
+          img.className = 'star-slot-badge-img';
+          img.src = icon;
+          img.alt = '';
+          wrap.appendChild(img);
+        } else return;
+        wrapEl.appendChild(wrap);
+      });
+      if (!wrapEl.querySelector('.star-slot-badge-wrap') && fallbackEl) fallbackEl.style.display = '';
+    }
+
+    async function refreshStarDisplayBadges(badgeNames) {
+      await renderStarSlotBadgesInto(
+        document.getElementById('sidebar-stars-icon-wrap'),
+        document.getElementById('sidebar-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
+      await renderStarSlotBadgesInto(
+        document.getElementById('shop-stars-icon-wrap'),
+        document.getElementById('shop-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
+      await renderStarSlotBadgesInto(
+        document.getElementById('profile-stars-icon-wrap'),
+        document.getElementById('profile-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
+      await renderStarSlotBadgesInto(
+        document.getElementById('vp-stars-icon-wrap'),
+        document.getElementById('vp-stars-fallback-icon'),
+        badgeNames,
+        3
+      );
     }
 
     async function loadUserProfile(user) {
@@ -4726,9 +4954,11 @@
           pid.textContent = did && did.length === 6 ? `ID ${did}` : 'ID —';
         }
         renderProfileBadges(data.badges || []);
-        if (data.createdAt) {
+        refreshStarDisplayBadges(data.badges || []);
+        if (data.createdAt && memberSince) {
           const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
           memberSince.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+          memberSince.style.display = 'block';
         }
       } else {
         await saveUserProfile(user.uid, user.email, user.email.split('@')[0], null);
@@ -5206,12 +5436,15 @@
         }
       }
       if (ids.memberSince) {
-        if (data.createdAt) {
+        const ms = document.getElementById(ids.memberSince);
+        if (ms && data.createdAt) {
           const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          document.getElementById(ids.memberSince).textContent = d.getFullYear();
-        }
+          ms.textContent = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+          ms.style.display = 'block';
+        } else if (ms) ms.style.display = 'none';
       }
       renderProfileBadges(data.badges || [], ids.badges);
+      refreshStarDisplayBadges(data.badges || []);
       document.getElementById(ids.starsVal).textContent = data.stars || 0;
 
       const playsSnap = await getDocs(query(collection(db, "plays"), where("userId", "==", userId)));
@@ -5252,19 +5485,44 @@
           const snap = await getDocs(query(collection(db, "users"), where("__name__", "in", batch)));
           snap.docs.forEach(d => allFriends.push({ id: d.id, ...d.data() }));
         }
-        friendsContainer.innerHTML = allFriends.map(f => `
-          <div class="up-friend-row" data-uid="${f.id}">
-            <div class="up-friend-avatar"><img src="${f.avatar || defaultAvatar}" alt="${f.username}"></div>
-            <div class="up-friend-banner${f.banner ? ' has-custom-banner' : ''}">
-              <div class="up-friend-pattern"></div>
-              ${f.banner ? `<img class="up-friend-banner-bg" src="${f.banner}" alt="">` : ''}
-              <span class="up-friend-name">${escapeHtml(f.username || f.email)}</span>
-              <span class="up-friend-title-tag">${escapeHtml(f.title || 'User')}</span>
-            </div>
-          </div>
-        `).join('');
-        friendsContainer.querySelectorAll('.up-friend-row').forEach(row => {
-          row.addEventListener('click', () => navigateToUserProfile(row.dataset.uid));
+        friendsContainer.innerHTML = '';
+        allFriends.forEach(f => {
+          const row = document.createElement('div');
+          row.className = 'up-friend-row';
+          row.dataset.uid = f.id;
+          const av = document.createElement('div');
+          av.className = 'up-friend-avatar';
+          const avImg = document.createElement('img');
+          avImg.src = f.avatar || defaultAvatar;
+          avImg.alt = f.username || '';
+          av.appendChild(avImg);
+          const ban = document.createElement('div');
+          ban.className = `up-friend-banner${f.banner ? ' has-custom-banner' : ''}`;
+          const pat = document.createElement('div');
+          pat.className = 'up-friend-pattern';
+          ban.appendChild(pat);
+          if (f.banner) {
+            const bg = document.createElement('img');
+            bg.className = 'up-friend-banner-bg';
+            bg.src = f.banner;
+            bg.alt = '';
+            ban.appendChild(bg);
+          }
+          const textWrap = document.createElement('div');
+          textWrap.className = 'up-friend-banner-text';
+          const nameSp = document.createElement('span');
+          nameSp.className = 'up-friend-name';
+          nameSp.textContent = f.username || f.email || '';
+          const titleSp = document.createElement('span');
+          titleSp.className = 'up-friend-title-tag';
+          textWrap.appendChild(nameSp);
+          textWrap.appendChild(titleSp);
+          ban.appendChild(textWrap);
+          row.appendChild(av);
+          row.appendChild(ban);
+          friendsContainer.appendChild(row);
+          applyTitleStyleToElement(titleSp, f.title || 'User');
+          row.addEventListener('click', () => navigateToUserProfile(f.id));
         });
       }
     }
@@ -5500,7 +5758,10 @@
       
       // Award stars immediately to the user
       await updateDoc(doc(db, "users", userId), { stars: increment(starsGained) });
-      
+      const uAfter = await getDoc(doc(db, 'users', userId));
+      const newStars = uAfter.exists() ? (uAfter.data().stars || 0) : 0;
+      syncStarBadgesForUser(userId, newStars);
+
       currentGiftCard = { 
         ...item,    
         packId: pack.id,    
@@ -5680,17 +5941,60 @@
       try {
         const s = await getDoc(doc(db, 'siteConfig', 'settings'));
         const d = s.exists() ? s.data() : {};
-        const st = d.siteTheme || {};
-        const pr = document.getElementById('staff-site-theme-primary');
-        const sc = document.getElementById('staff-site-theme-secondary');
-        if (pr) pr.value = st.primary || DEFAULT_NEON_GREEN;
-        if (sc) sc.value = st.secondary || DEFAULT_NEON_PINK;
         const dr = d.dailyReward || {};
         const cEl = document.getElementById('staff-daily-reward-coins');
         const sEl = document.getElementById('staff-daily-reward-stars');
         if (cEl) cEl.value = dr.coins != null ? dr.coins : 50;
         if (sEl) sEl.value = dr.stars != null ? dr.stars : 10;
       } catch (e) {}
+    }
+
+    let staffStarBadgeRulesDraft = [];
+
+    function renderStaffStarBadgeRulesList() {
+      const list = document.getElementById('staff-star-badge-rules-list');
+      if (!list) return;
+      if (!staffStarBadgeRulesDraft.length) {
+        list.innerHTML = '<p style="font-size:0.82rem;color:var(--text-secondary);">No rules yet. Add at least one badge and minimum stars.</p>';
+        return;
+      }
+      const sorted = [...staffStarBadgeRulesDraft].sort((a, b) => a.minStars - b.minStars || a.badgeName.localeCompare(b.badgeName));
+      list.innerHTML = sorted.map(r => `<div class="staff-user-row" style="margin-bottom:8px;align-items:center;">
+          <div style="flex:1;"><strong>${escapeHtml(r.badgeName)}</strong> <span style="font-size:0.8rem;color:var(--text-secondary);">≥ ${r.minStars} stars</span></div>
+          <button type="button" class="staff-btn staff-btn-danger staff-btn-sm staff-star-badge-del" data-badge="${escapeHtml(r.badgeName)}" data-min="${r.minStars}">Remove</button>
+        </div>`).join('');
+      list.querySelectorAll('.staff-star-badge-del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const bn = btn.dataset.badge;
+          const mn = parseInt(btn.dataset.min, 10);
+          staffStarBadgeRulesDraft = staffStarBadgeRulesDraft.filter(x => !(x.badgeName === bn && x.minStars === mn));
+          renderStaffStarBadgeRulesList();
+        });
+      });
+    }
+
+    async function loadStaffStarBadgesPanel() {
+      const pick = document.getElementById('staff-star-badge-pick');
+      const status = document.getElementById('staff-star-badge-status');
+      if (status) status.textContent = '';
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        const rules = s.exists() && Array.isArray(s.data().starBadgeRules) ? s.data().starBadgeRules : [];
+        staffStarBadgeRulesDraft = rules
+          .filter(x => x && x.badgeName && (typeof x.minStars === 'number' || x.minStars != null))
+          .map(x => ({ badgeName: String(x.badgeName).trim(), minStars: Math.max(0, parseInt(x.minStars, 10) || 0) }))
+          .filter(x => x.badgeName);
+        const snap = await getDocs(collection(db, 'badges'));
+        const names = snap.docs.map(d => d.data().name).filter(Boolean).sort();
+        if (pick) {
+          const cur = pick.value;
+          pick.innerHTML = '<option value="">Select badge…</option>' + names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+          if (cur && names.includes(cur)) pick.value = cur;
+        }
+        renderStaffStarBadgeRulesList();
+      } catch (e) {
+        if (status) status.textContent = 'Could not load: ' + e.message;
+      }
     }
 
     async function refreshDailyRewardUI(userId) {
@@ -5761,6 +6065,7 @@
         showNotification(`Daily reward: +${coins} coins, +${stars} stars`, 'success');
         loadUserBalance(uid);
         refreshDailyRewardUI(uid);
+        syncStarBadgesForUser(uid);
       } catch (e) {
         if (e.message === 'already') showNotification('Already claimed today', 'error');
         else if (e.message === 'nouser') showNotification('User not found', 'error');
@@ -5803,12 +6108,23 @@
       modal.style.display = 'flex';
     }
 
-    const PACK_UNBOX_ZIPPER_URL = 'https://ac.blooket.com/dashboard/ded3e1029e7cae327bf35eda2a5b46e616bab256/_next/static/media/packGlow.7ae463c1.png';
+    let packUnboxClickHandler = null;
+    let packUnboxKeyHandler = null;
 
     function resetPackOpeningModalLayout() {
+      if (giftAnimation && packUnboxClickHandler) {
+        giftAnimation.removeEventListener('click', packUnboxClickHandler);
+        giftAnimation.removeEventListener('keydown', packUnboxKeyHandler);
+        packUnboxClickHandler = null;
+        packUnboxKeyHandler = null;
+      }
+      giftAnimation?.removeAttribute('role');
+      giftAnimation?.removeAttribute('tabindex');
+      giftAnimation?.removeAttribute('aria-label');
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.remove('pack-unbox-body');
       giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
+      giftAnimation.innerHTML = '';
       if (packUnboxHint) {
         packUnboxHint.classList.add('is-hidden');
         packUnboxHint.style.display = 'none';
@@ -5826,10 +6142,11 @@
       const inner = fc.inner || '#5a6a8a';
       const outer = fc.outer || '#1a2233';
       const patternUrl = marketPackPatternUrl(pack);
+      const softLight = 'radial-gradient(ellipse 95% 75% at 50% 38%, rgba(255,255,255,0.055), transparent 58%), radial-gradient(ellipse 80% 45% at 50% 92%, rgba(0,0,0,0.28), transparent 55%)';
       const layers = [
-        'linear-gradient(ellipse 82% 58% at 50% 40%, rgba(255,255,255,0.14), transparent 62%)',
+        softLight,
         patternUrl ? `url(${JSON.stringify(String(patternUrl))})` : '',
-        `linear-gradient(155deg, ${inner} 0%, ${outer} 48%, #06080d 100%)`
+        `linear-gradient(155deg, ${inner} 0%, ${outer} 52%, #05070c 100%)`
       ].filter(Boolean);
       openingModalBg.style.backgroundImage = layers.join(', ');
       openingModalBg.style.backgroundSize = patternUrl ? '100% 100%, 320px 320px, 100% 100%' : '100% 100%, 100% 100%';
@@ -5854,54 +6171,62 @@
       if (packUnboxHint) {
         packUnboxHint.classList.remove('is-hidden');
         packUnboxHint.style.display = 'block';
+        packUnboxHint.textContent = 'Click the pack to open';
       }
 
       giftAnimation.innerHTML = '';
       giftAnimation.classList.add('pack-unbox-stage');
+      giftAnimation.setAttribute('role', 'button');
+      giftAnimation.setAttribute('tabindex', '0');
+      giftAnimation.setAttribute('aria-label', 'Open pack');
 
-      const artUrl = marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || '';
-      const art = document.createElement('img');
-      art.className = 'pack-unbox-art';
-      art.alt = '';
-      art.src = artUrl || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack';
-      giftAnimation.appendChild(art);
+      const artUrl = (marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack').replace(/\\/g, '/');
 
-      const zipperLayer = document.createElement('button');
-      zipperLayer.type = 'button';
-      zipperLayer.className = 'pack-unbox-zipper-layer';
-      zipperLayer.setAttribute('aria-label', 'Tear open pack seal');
+      const stack = document.createElement('div');
+      stack.className = 'pack-unbox-stack';
 
-      const zipTop = document.createElement('div');
-      zipTop.className = 'pack-unbox-zipper-half pack-unbox-zipper-top';
-      const zipTopImg = document.createElement('img');
-      zipTopImg.src = PACK_UNBOX_ZIPPER_URL;
-      zipTopImg.alt = '';
-      zipTop.appendChild(zipTopImg);
+      const setStackSize = (nw, nh) => {
+        const maxW = Math.min(window.innerWidth * 0.92, 440);
+        const maxH = Math.min(window.innerHeight * 0.72, 620);
+        const w = nw > 0 ? nw : 280;
+        const h = nh > 0 ? nh : 280;
+        const scale = Math.min(1, maxW / w, maxH / h);
+        stack.style.width = `${Math.round(w * scale)}px`;
+        stack.style.height = `${Math.round(h * scale)}px`;
+      };
 
-      const zipBot = document.createElement('div');
-      zipBot.className = 'pack-unbox-zipper-half pack-unbox-zipper-bot';
-      const zipBotImg = document.createElement('img');
-      zipBotImg.src = PACK_UNBOX_ZIPPER_URL;
-      zipBotImg.alt = '';
-      zipBot.appendChild(zipBotImg);
+      const blookUnder = document.createElement('div');
+      blookUnder.className = 'pack-unbox-blook-under';
+      if (item.imageUrl) {
+        const bi = document.createElement('img');
+        bi.src = item.imageUrl;
+        bi.alt = item.name || '';
+        blookUnder.appendChild(bi);
+      } else {
+        blookUnder.innerHTML = `<i class="fas fa-gift" style="font-size:min(26vw,6.5rem);color:${getRarityColor(item.rarity)};"></i>`;
+      }
 
-      zipperLayer.appendChild(zipTop);
-      zipperLayer.appendChild(zipBot);
-      giftAnimation.appendChild(zipperLayer);
+      const makeHalfImg = () => {
+        const im = document.createElement('img');
+        im.src = artUrl;
+        im.alt = '';
+        im.draggable = false;
+        return im;
+      };
 
-      const revealPrize = () => {
-        giftAnimation.innerHTML = '';
-        giftAnimation.classList.remove('torn');
-        giftAnimation.classList.add('pack-unbox-reveal');
-        if (item.imageUrl) {
-          const prize = document.createElement('img');
-          prize.src = item.imageUrl;
-          prize.alt = item.name || '';
-          prize.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:12px;display:block;';
-          giftAnimation.appendChild(prize);
-        } else {
-          giftAnimation.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;"><i class="fas fa-gift" style="color:${getRarityColor(item.rarity)};"></i></div>`;
-        }
+      const halfBot = document.createElement('div');
+      halfBot.className = 'pack-unbox-half pack-unbox-half-bot';
+      halfBot.appendChild(makeHalfImg());
+
+      const halfTop = document.createElement('div');
+      halfTop.className = 'pack-unbox-half pack-unbox-half-top';
+      halfTop.appendChild(makeHalfImg());
+
+      stack.appendChild(blookUnder);
+      stack.appendChild(halfBot);
+      stack.appendChild(halfTop);
+
+      const revealDetails = () => {
         openedGiftName.style.opacity = '1';
         openedGiftRarity.style.opacity = '1';
         openedGiftValue.style.opacity = '1';
@@ -5910,17 +6235,41 @@
         collectBtn.style.pointerEvents = '';
       };
 
-      const onZipperClick = () => {
+      const tearOpen = () => {
         if (giftAnimation.classList.contains('torn')) return;
         giftAnimation.classList.add('torn');
+        giftAnimation.removeAttribute('tabindex');
+        giftAnimation.removeAttribute('role');
         if (packUnboxHint) {
           packUnboxHint.classList.add('is-hidden');
           packUnboxHint.style.display = 'none';
         }
-        zipperLayer.removeEventListener('click', onZipperClick);
-        setTimeout(revealPrize, 560);
+        setTimeout(revealDetails, 420);
       };
-      zipperLayer.addEventListener('click', onZipperClick);
+
+      const onPackActivate = (e) => {
+        e.preventDefault();
+        tearOpen();
+      };
+      packUnboxKeyHandler = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') onPackActivate(e);
+      };
+      packUnboxClickHandler = onPackActivate;
+
+      const probe = new Image();
+      probe.onload = () => {
+        setStackSize(probe.naturalWidth, probe.naturalHeight);
+        giftAnimation.appendChild(stack);
+        giftAnimation.addEventListener('click', packUnboxClickHandler);
+        giftAnimation.addEventListener('keydown', packUnboxKeyHandler);
+      };
+      probe.onerror = () => {
+        setStackSize(280, 280);
+        giftAnimation.appendChild(stack);
+        giftAnimation.addEventListener('click', packUnboxClickHandler);
+        giftAnimation.addEventListener('keydown', packUnboxKeyHandler);
+      };
+      probe.src = artUrl;
 
       packOpeningModal.style.display = 'flex';
     }
@@ -6135,7 +6484,6 @@
         document.getElementById('staff-blook-editor-stars').value = item.starsGained ?? 0;
         document.getElementById('staff-blook-editor-chance').value = item.chance ?? 0;
         document.getElementById('staff-blook-editor-image').value = item.imageUrl || '';
-        document.getElementById('staff-blook-editor-raritycolor').value = item.rarityColor || '#888888';
         if (currentPackId) packSel.value = currentPackId;
         else if (packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
       } else {
@@ -6144,7 +6492,6 @@
         document.getElementById('staff-blook-editor-stars').value = 0;
         document.getElementById('staff-blook-editor-chance').value = 0;
         document.getElementById('staff-blook-editor-image').value = '';
-        document.getElementById('staff-blook-editor-raritycolor').value = '#888888';
         if (!currentPackId && packSel.querySelector('option[value="__DRAFT__"]')) packSel.value = '__DRAFT__';
         else if (currentPackId) packSel.value = currentPackId;
       }
@@ -6159,13 +6506,14 @@
       if (!name) { showNotification('Enter a blook name', 'error'); return; }
       const targetPack = document.getElementById('staff-blook-editor-pack').value;
       const currentPackId = document.getElementById('staff-pack-id').value;
+      const rarityVal = document.getElementById('staff-blook-editor-rarity').value;
       const entry = {
         name,
-        rarity: document.getElementById('staff-blook-editor-rarity').value,
+        rarity: rarityVal,
         starsGained: parseFloat(document.getElementById('staff-blook-editor-stars').value) || 0,
         chance: parseFloat(document.getElementById('staff-blook-editor-chance').value) || 0,
         imageUrl: document.getElementById('staff-blook-editor-image').value.trim(),
-        rarityColor: document.getElementById('staff-blook-editor-raritycolor').value
+        rarityColor: getRarityColor(rarityVal)
       };
       const inThisPack = currentPackId ? (targetPack === currentPackId) : (targetPack === '__DRAFT__');
 
@@ -6427,6 +6775,7 @@
         });
         showNotification(`Mission completed! You received ${mission.rewardCoins || 0} coins and ${mission.rewardStars || 0} stars!`, "success");
         loadUserBalance(userId);
+        syncStarBadgesForUser(userId);
       } catch(e) {
         if (e.message === 'already') showNotification('Reward already claimed', 'error');
         else if (e.message === 'notdone') showNotification('Mission not complete yet', 'error');
@@ -6720,6 +7069,7 @@
         const newStars = (recipientSnap.data().stars || 0) + (cardData.starsGained || 0);
         batch.update(recipientRef, { stars: newStars });
         await batch.commit();
+        syncStarBadgesForUser(recipientId, newStars);
         await addDoc(collection(db, "giftwall"), {
           recipientId, senderId: currentUser.uid, senderName: currentUser.displayName || currentUser.email,    
           itemName: cardData.itemName, rarity: cardData.rarity, imageUrl: cardData.imageUrl || null,    
@@ -6770,15 +7120,16 @@
     // ========== Load user balance (coins & stars) ==========
     async function loadUserBalance(userId) {
       if (userUnsubscribe) userUnsubscribe();
-      userUnsubscribe = onSnapshot(doc(db, "users", userId), (doc) => {
-        if (doc.exists()) {
-          const data = doc.data();
+      userUnsubscribe = onSnapshot(doc(db, "users", userId), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
           coinsDisplay.textContent = data.coins || 0;
           starsDisplay.textContent = data.stars || 0;
           shopCoins.textContent = data.coins || 0;
           shopStars.textContent = data.stars || 0;
           const itd = document.getElementById('inv-tokens-display');
           if (itd) itd.textContent = data.coins || 0;
+          refreshStarDisplayBadges(data.badges || []);
         }
       });
     }
@@ -6814,49 +7165,7 @@
       }
       const urlIn = document.getElementById('avatar-url-input');
       if (urlIn) urlIn.value = '';
-      const tp = document.getElementById('theme-primary');
-      const ts = document.getElementById('theme-secondary');
-      try {
-        const raw = localStorage.getItem(THEME_STORAGE_KEY);
-        if (raw) {
-          const j = JSON.parse(raw);
-          if (tp && j.primary) tp.value = j.primary;
-          if (ts && j.secondary) ts.value = j.secondary;
-        } else {
-          if (tp) tp.value = DEFAULT_NEON_GREEN;
-          if (ts) ts.value = DEFAULT_NEON_PINK;
-        }
-      } catch (e) {
-        if (tp) tp.value = DEFAULT_NEON_GREEN;
-        if (ts) ts.value = DEFAULT_NEON_PINK;
-      }
     }
-
-    function persistThemeColors() {
-      const tp = document.getElementById('theme-primary');
-      const ts = document.getElementById('theme-secondary');
-      if (!tp || !ts) return;
-      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ primary: tp.value, secondary: ts.value }));
-      applyAccentColors(tp.value, ts.value);
-    }
-    document.getElementById('theme-primary')?.addEventListener('input', persistThemeColors);
-    document.getElementById('theme-secondary')?.addEventListener('input', persistThemeColors);
-    document.getElementById('theme-reset-btn')?.addEventListener('click', async () => {
-      localStorage.removeItem(THEME_STORAGE_KEY);
-      const tp = document.getElementById('theme-primary');
-      const ts = document.getElementById('theme-secondary');
-      await refreshSiteThemeFromServer();
-      try {
-        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
-        const st = s.exists() ? s.data().siteTheme : null;
-        if (tp) tp.value = st?.primary || DEFAULT_NEON_GREEN;
-        if (ts) ts.value = st?.secondary || DEFAULT_NEON_PINK;
-      } catch (e) {
-        if (tp) tp.value = DEFAULT_NEON_GREEN;
-        if (ts) ts.value = DEFAULT_NEON_PINK;
-      }
-      showNotification('Personal theme reset (site defaults applied)', 'success');
-    });
 
     saveSettingsBtn.addEventListener('click', async () => {
       if (!currentUser) return;
@@ -7143,6 +7452,7 @@
             case 'staff-badges': loadStaffBadges(); break;
             case 'staff-missions': loadStaffMissions(); break;
             case 'staff-stars': break;
+            case 'staff-star-badges': loadStaffStarBadgesPanel(); break;
             case 'staff-chatview': loadStaffChatViewer(); break;
             case 'staff-rarity': loadStaffRaritySitePanel(); break;
           }
@@ -7717,18 +8027,6 @@
         showNotification('Rarity order saved','success');
       });
 
-      document.getElementById('staff-site-theme-save')?.addEventListener('click', async () => {
-        const primary = document.getElementById('staff-site-theme-primary')?.value || DEFAULT_NEON_GREEN;
-        const secondary = document.getElementById('staff-site-theme-secondary')?.value || DEFAULT_NEON_PINK;
-        try {
-          await setDoc(doc(db, 'siteConfig', 'settings'), {
-            siteTheme: { primary, secondary },
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-          applyAccentColors(primary, secondary);
-          showNotification('Site theme saved (users can still override locally)', 'success');
-        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
-      });
       document.getElementById('staff-daily-reward-save')?.addEventListener('click', async () => {
         const coins = Math.max(0, parseInt(document.getElementById('staff-daily-reward-coins')?.value, 10) || 0);
         const stars = Math.max(0, parseInt(document.getElementById('staff-daily-reward-stars')?.value, 10) || 0);
@@ -7784,6 +8082,7 @@
         if(updates.muteStatus==='temp'){const v=document.getElementById('staff-edit-mute-until').value;if(v) updates.muteUntil=new Date(v);else updates.muteUntil=null;} else {updates.muteUntil=null;}
         if(updates.banStatus==='temp'){const v=document.getElementById('staff-edit-ban-until').value;if(v) updates.banUntil=new Date(v);else updates.banUntil=null;} else {updates.banUntil=null;}
         await updateDoc(doc(db,'users',uid),updates);
+        if (typeof updates.stars === 'number') syncStarBadgesForUser(uid, updates.stars);
         document.getElementById('staff-user-modal').style.display='none';
         loadStaffUsers();
         showNotification('User updated!','success');
@@ -7833,6 +8132,7 @@
         if (!iconFile && !isFa && !/^https?:\/\//i.test(icon)) { showNotification('Icon must be a URL, upload, or Font Awesome classes','error'); return; }
         const badgeData={name:document.getElementById('staff-badge-name').value,icon,bgColor:document.getElementById('staff-badge-bg').value,textColor:document.getElementById('staff-badge-text-color').value,description:document.getElementById('staff-badge-desc').value,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'badges',id),badgeData); else await addDoc(collection(db,'badges'),{...badgeData,createdAt:serverTimestamp()});
+        starBadgeMetaCache = null;
         document.getElementById('staff-badge-modal').style.display='none';
         loadStaffBadges();
         showNotification('Badge saved!','success');
@@ -7934,8 +8234,66 @@
         else if (action === 'add') newVal = current + amount;
         else if (action === 'remove') newVal = Math.max(0, current - amount);
         await updateDoc(doc(db,'users',uid),{stars:newVal});
+        syncStarBadgesForUser(uid, newVal);
         document.getElementById('staff-stars-result').innerHTML = `<span style="color:var(--neon-green);">✓ ${snap.docs[0].data().username}: ${current} → ${newVal} stars</span>`;
         showNotification('Stars updated!','success');
+      });
+
+      document.getElementById('staff-star-badge-add-row')?.addEventListener('click', () => {
+        const pick = document.getElementById('staff-star-badge-pick');
+        const minEl = document.getElementById('staff-star-badge-min');
+        const name = (pick?.value || '').trim();
+        const minStars = Math.max(0, parseInt(minEl?.value, 10) || 0);
+        if (!name) { showNotification('Choose a badge', 'error'); return; }
+        if (staffStarBadgeRulesDraft.some(r => r.badgeName === name)) { showNotification('That badge already has a rule', 'error'); return; }
+        staffStarBadgeRulesDraft.push({ badgeName: name, minStars });
+        renderStaffStarBadgeRulesList();
+      });
+      document.getElementById('staff-star-badge-save-rules')?.addEventListener('click', async () => {
+        const status = document.getElementById('staff-star-badge-status');
+        const byName = new Map();
+        staffStarBadgeRulesDraft.forEach(r => {
+          const prev = byName.get(r.badgeName);
+          if (!prev || r.minStars < prev.minStars) byName.set(r.badgeName, r);
+        });
+        const deduped = Array.from(byName.values());
+        try {
+          await setDoc(doc(db, 'siteConfig', 'settings'), {
+            starBadgeRules: deduped,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          staffStarBadgeRulesDraft = deduped;
+          renderStaffStarBadgeRulesList();
+          if (status) status.textContent = 'Saved. Use “Re-apply to all users” if you changed thresholds.';
+          showNotification('Star badge rules saved', 'success');
+        } catch (e) {
+          showNotification('Save failed: ' + e.message, 'error');
+        }
+      });
+      document.getElementById('staff-star-badge-resync-all')?.addEventListener('click', async () => {
+        const status = document.getElementById('staff-star-badge-status');
+        if (!confirm('Re-apply star badge rules to every user? This may take a moment.')) return;
+        if (status) status.textContent = 'Working…';
+        try {
+          const rules = await getStarBadgeRulesFromServer();
+          if (!rules.length) {
+            if (status) status.textContent = 'No rules saved yet.';
+            return;
+          }
+          const us = await getDocs(collection(db, 'users'));
+          let n = 0;
+          for (const d of us.docs) {
+            const stars = typeof d.data().stars === 'number' ? d.data().stars : parseInt(d.data().stars, 10) || 0;
+            await syncStarBadgesForUser(d.id, stars);
+            n++;
+            if (n % 40 === 0 && status) status.textContent = `Processed ${n} users…`;
+          }
+          if (status) status.textContent = `Done. Updated ${n} users.`;
+          showNotification('Star badges re-applied for all users', 'success');
+        } catch (e) {
+          if (status) status.textContent = 'Error: ' + e.message;
+          showNotification('Re-apply failed: ' + e.message, 'error');
+        }
       });
 
       // Close staff modals on backdrop click
@@ -7946,8 +8304,7 @@
     // ========== Initialize the app ==========
     async function init() {
       await refreshRarityOrderFromServer();
-      await refreshSiteThemeFromServer();
-      applyThemeFromStorage();
+      applyFixedSiteTheme();
       const gamesData = await getGames();
       renderTopGamesCarousel(gamesData.topGames);
       renderCategoryBrowsing(gamesData);
