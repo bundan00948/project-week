@@ -3862,6 +3862,7 @@
             <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
             <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
             <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-star-badges"><i class="fas fa-medal"></i> Star badges</button>
             <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
           </div>
 
@@ -3956,17 +3957,8 @@
             </div>
           </div>
 
-          <!-- Staff: Rarity styles + site theme (accents) -->
+          <!-- Staff: Rarity styles + daily reward -->
           <div class="staff-section" id="staff-rarity">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Site accent colors</h3></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Default green and grey/pink accents for every visitor. Users can still override in Settings (local only).</p>
-              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
-                <div class="staff-form-group" style="margin:0;"><label>Primary (green)</label><input type="color" id="staff-site-theme-primary" value="#2AFF9E"></div>
-                <div class="staff-form-group" style="margin:0;"><label>Secondary (grey accent)</label><input type="color" id="staff-site-theme-secondary" value="#FF3D6C"></div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-site-theme-save">Save site theme</button>
-              </div>
-            </div>
             <div class="staff-card">
               <div class="staff-card-header"><h3>Daily login reward</h3></div>
               <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Coins and stars granted once per calendar day when users claim on the Missions page.</p>
@@ -4006,6 +3998,25 @@
                 <button class="staff-btn staff-btn-primary" id="staff-stars-apply-btn" style="margin-bottom:14px;">Apply</button>
               </div>
               <div id="staff-stars-result" style="margin-top:12px;"></div>
+            </div>
+          </div>
+
+          <!-- Star threshold badges (auto-award by total stars) -->
+          <div class="staff-section" id="staff-star-badges">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Star threshold badges</h3></div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Create badges under <strong>Badges</strong> first. Add rules here: when a user’s <strong>total stars</strong> reach the minimum, that badge is added. If stars drop below a threshold, that badge is removed. Manual badges (not listed here) are never touched.</p>
+              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;">
+                <div class="staff-form-group" style="margin:0;min-width:200px;"><label>Badge</label><select id="staff-star-badge-pick"><option value="">Select badge…</option></select></div>
+                <div class="staff-form-group" style="margin:0;"><label>Min stars</label><input type="number" id="staff-star-badge-min" value="100" min="0" step="1"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-add-row">Add rule</button>
+              </div>
+              <div id="staff-star-badge-rules-list" style="margin-bottom:14px;"></div>
+              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;">
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-save-rules">Save rules</button>
+                <button type="button" class="staff-btn" id="staff-star-badge-resync-all">Re-apply to all users</button>
+              </div>
+              <p id="staff-star-badge-status" style="font-size:0.78rem;color:var(--text-secondary);margin-top:12px;"></p>
             </div>
           </div>
 
@@ -4052,20 +4063,6 @@
               </label>
             </div>
 
-            <div class="settings-section" style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(42,255,158,0.15);">
-              <h3 style="font-size:1rem;margin-bottom:12px;color:var(--neon-green);">Theme colors</h3>
-              <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;">Adjust the two accent colors used across the site. This device only (saved in your browser).</p>
-              <div class="form-group">
-                <label for="theme-primary">Primary accent</label>
-                <input type="color" id="theme-primary" value="#2AFF9E">
-              </div>
-              <div class="form-group">
-                <label for="theme-secondary">Secondary accent</label>
-                <input type="color" id="theme-secondary" value="#FF3D6C">
-              </div>
-              <button type="button" class="settings-btn" id="theme-reset-btn" style="margin-top:8px;background:rgba(255,255,255,0.08);">Reset to default theme</button>
-            </div>
-            
             <div class="form-group">
               <label for="current-password">Current Password</label>
               <input type="password" id="current-password" placeholder="Enter current password">
@@ -4437,7 +4434,6 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    const THEME_STORAGE_KEY = 'gu_theme_colors';
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
     const DEFAULT_THEME_GREY = '#8A9BB5';
@@ -4480,35 +4476,75 @@
       }
     }
 
-    function applyAccentColors(primary, secondary) {
-      const p = primary || DEFAULT_NEON_GREEN;
-      const s = secondary || DEFAULT_NEON_PINK;
-      document.documentElement.style.setProperty('--neon-green', p);
-      document.documentElement.style.setProperty('--neon-pink', s);
-      document.documentElement.style.setProperty('--theme-grey', s);
+    function applyFixedSiteTheme() {
+      document.documentElement.style.setProperty('--neon-green', DEFAULT_NEON_GREEN);
+      document.documentElement.style.setProperty('--neon-pink', DEFAULT_NEON_PINK);
+      document.documentElement.style.setProperty('--theme-grey', DEFAULT_THEME_GREY);
     }
 
-    async function refreshSiteThemeFromServer() {
+    async function getStarBadgeRulesFromServer() {
       try {
-        const docSnap = await getDoc(doc(db, 'siteConfig', 'settings'));
-        if (docSnap.exists()) {
-          const st = docSnap.data().siteTheme;
-          if (st && (st.primary || st.secondary)) {
-            applyAccentColors(st.primary, st.secondary);
-            return;
-          }
-        }
-      } catch (e) {}
-      applyAccentColors(DEFAULT_NEON_GREEN, DEFAULT_NEON_PINK);
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        if (!s.exists()) return [];
+        const r = s.data().starBadgeRules;
+        if (!Array.isArray(r)) return [];
+        const byName = new Map();
+        r.forEach(x => {
+          if (!x || !x.badgeName) return;
+          const name = String(x.badgeName).trim();
+          if (!name) return;
+          const min = Math.max(0, Math.floor(parseInt(x.minStars, 10) || 0));
+          const prev = byName.get(name);
+          if (prev == null || min < prev) byName.set(name, min);
+        });
+        return Array.from(byName.entries()).map(([badgeName, minStars]) => ({ badgeName, minStars }));
+      } catch (e) {
+        return [];
+      }
     }
 
-    function applyThemeFromStorage() {
+    function computeStarBadgeUpdates(stars, currentBadges, rules) {
+      const badges = Array.isArray(currentBadges) ? [...currentBadges] : [];
+      const ruleMap = new Map();
+      rules.forEach(rule => {
+        const name = rule.badgeName;
+        const min = Math.max(0, Number(rule.minStars) || 0);
+        ruleMap.set(name, min);
+      });
+      const toRemove = [];
+      for (const b of badges) {
+        if (!ruleMap.has(b)) continue;
+        if (stars < ruleMap.get(b)) toRemove.push(b);
+      }
+      const toAdd = [];
+      for (const [name, min] of ruleMap) {
+        if (stars >= min && !badges.includes(name)) toAdd.push(name);
+      }
+      let next = badges.filter(b => !toRemove.includes(b));
+      toAdd.forEach(a => { if (!next.includes(a)) next.push(a); });
+      const changed = toRemove.length > 0 || toAdd.length > 0;
+      return { nextBadges: next, changed, toAdd, toRemove };
+    }
+
+    async function syncStarBadgesForUser(uid, starCount) {
+      if (!uid) return;
+      const rules = await getStarBadgeRulesFromServer();
+      if (!rules.length) return;
       try {
-        const raw = localStorage.getItem(THEME_STORAGE_KEY);
-        if (!raw) return;
-        const j = JSON.parse(raw);
-        applyAccentColors(j.primary, j.secondary);
-      } catch (e) {}
+        await runTransaction(db, async tx => {
+          const uref = doc(db, 'users', uid);
+          const snap = await tx.get(uref);
+          if (!snap.exists()) return;
+          const d = snap.data();
+          const stars = typeof starCount === 'number' && Number.isFinite(starCount)
+            ? starCount
+            : (typeof d.stars === 'number' ? d.stars : parseInt(d.stars, 10) || 0);
+          const { nextBadges, changed } = computeStarBadgeUpdates(stars, d.badges, rules);
+          if (changed) tx.update(uref, { badges: nextBadges });
+        });
+      } catch (e) {
+        console.warn('syncStarBadgesForUser', e);
+      }
     }
 
     function hidePageLoading() {
@@ -5530,7 +5566,10 @@
       
       // Award stars immediately to the user
       await updateDoc(doc(db, "users", userId), { stars: increment(starsGained) });
-      
+      const uAfter = await getDoc(doc(db, 'users', userId));
+      const newStars = uAfter.exists() ? (uAfter.data().stars || 0) : 0;
+      syncStarBadgesForUser(userId, newStars);
+
       currentGiftCard = { 
         ...item,    
         packId: pack.id,    
@@ -5710,17 +5749,60 @@
       try {
         const s = await getDoc(doc(db, 'siteConfig', 'settings'));
         const d = s.exists() ? s.data() : {};
-        const st = d.siteTheme || {};
-        const pr = document.getElementById('staff-site-theme-primary');
-        const sc = document.getElementById('staff-site-theme-secondary');
-        if (pr) pr.value = st.primary || DEFAULT_NEON_GREEN;
-        if (sc) sc.value = st.secondary || DEFAULT_NEON_PINK;
         const dr = d.dailyReward || {};
         const cEl = document.getElementById('staff-daily-reward-coins');
         const sEl = document.getElementById('staff-daily-reward-stars');
         if (cEl) cEl.value = dr.coins != null ? dr.coins : 50;
         if (sEl) sEl.value = dr.stars != null ? dr.stars : 10;
       } catch (e) {}
+    }
+
+    let staffStarBadgeRulesDraft = [];
+
+    function renderStaffStarBadgeRulesList() {
+      const list = document.getElementById('staff-star-badge-rules-list');
+      if (!list) return;
+      if (!staffStarBadgeRulesDraft.length) {
+        list.innerHTML = '<p style="font-size:0.82rem;color:var(--text-secondary);">No rules yet. Add at least one badge and minimum stars.</p>';
+        return;
+      }
+      const sorted = [...staffStarBadgeRulesDraft].sort((a, b) => a.minStars - b.minStars || a.badgeName.localeCompare(b.badgeName));
+      list.innerHTML = sorted.map(r => `<div class="staff-user-row" style="margin-bottom:8px;align-items:center;">
+          <div style="flex:1;"><strong>${escapeHtml(r.badgeName)}</strong> <span style="font-size:0.8rem;color:var(--text-secondary);">≥ ${r.minStars} stars</span></div>
+          <button type="button" class="staff-btn staff-btn-danger staff-btn-sm staff-star-badge-del" data-badge="${escapeHtml(r.badgeName)}" data-min="${r.minStars}">Remove</button>
+        </div>`).join('');
+      list.querySelectorAll('.staff-star-badge-del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const bn = btn.dataset.badge;
+          const mn = parseInt(btn.dataset.min, 10);
+          staffStarBadgeRulesDraft = staffStarBadgeRulesDraft.filter(x => !(x.badgeName === bn && x.minStars === mn));
+          renderStaffStarBadgeRulesList();
+        });
+      });
+    }
+
+    async function loadStaffStarBadgesPanel() {
+      const pick = document.getElementById('staff-star-badge-pick');
+      const status = document.getElementById('staff-star-badge-status');
+      if (status) status.textContent = '';
+      try {
+        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
+        const rules = s.exists() && Array.isArray(s.data().starBadgeRules) ? s.data().starBadgeRules : [];
+        staffStarBadgeRulesDraft = rules
+          .filter(x => x && x.badgeName && (typeof x.minStars === 'number' || x.minStars != null))
+          .map(x => ({ badgeName: String(x.badgeName).trim(), minStars: Math.max(0, parseInt(x.minStars, 10) || 0) }))
+          .filter(x => x.badgeName);
+        const snap = await getDocs(collection(db, 'badges'));
+        const names = snap.docs.map(d => d.data().name).filter(Boolean).sort();
+        if (pick) {
+          const cur = pick.value;
+          pick.innerHTML = '<option value="">Select badge…</option>' + names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+          if (cur && names.includes(cur)) pick.value = cur;
+        }
+        renderStaffStarBadgeRulesList();
+      } catch (e) {
+        if (status) status.textContent = 'Could not load: ' + e.message;
+      }
     }
 
     async function refreshDailyRewardUI(userId) {
@@ -5791,6 +5873,7 @@
         showNotification(`Daily reward: +${coins} coins, +${stars} stars`, 'success');
         loadUserBalance(uid);
         refreshDailyRewardUI(uid);
+        syncStarBadgesForUser(uid);
       } catch (e) {
         if (e.message === 'already') showNotification('Already claimed today', 'error');
         else if (e.message === 'nouser') showNotification('User not found', 'error');
@@ -6501,6 +6584,7 @@
         });
         showNotification(`Mission completed! You received ${mission.rewardCoins || 0} coins and ${mission.rewardStars || 0} stars!`, "success");
         loadUserBalance(userId);
+        syncStarBadgesForUser(userId);
       } catch(e) {
         if (e.message === 'already') showNotification('Reward already claimed', 'error');
         else if (e.message === 'notdone') showNotification('Mission not complete yet', 'error');
@@ -6794,6 +6878,7 @@
         const newStars = (recipientSnap.data().stars || 0) + (cardData.starsGained || 0);
         batch.update(recipientRef, { stars: newStars });
         await batch.commit();
+        syncStarBadgesForUser(recipientId, newStars);
         await addDoc(collection(db, "giftwall"), {
           recipientId, senderId: currentUser.uid, senderName: currentUser.displayName || currentUser.email,    
           itemName: cardData.itemName, rarity: cardData.rarity, imageUrl: cardData.imageUrl || null,    
@@ -6888,49 +6973,7 @@
       }
       const urlIn = document.getElementById('avatar-url-input');
       if (urlIn) urlIn.value = '';
-      const tp = document.getElementById('theme-primary');
-      const ts = document.getElementById('theme-secondary');
-      try {
-        const raw = localStorage.getItem(THEME_STORAGE_KEY);
-        if (raw) {
-          const j = JSON.parse(raw);
-          if (tp && j.primary) tp.value = j.primary;
-          if (ts && j.secondary) ts.value = j.secondary;
-        } else {
-          if (tp) tp.value = DEFAULT_NEON_GREEN;
-          if (ts) ts.value = DEFAULT_NEON_PINK;
-        }
-      } catch (e) {
-        if (tp) tp.value = DEFAULT_NEON_GREEN;
-        if (ts) ts.value = DEFAULT_NEON_PINK;
-      }
     }
-
-    function persistThemeColors() {
-      const tp = document.getElementById('theme-primary');
-      const ts = document.getElementById('theme-secondary');
-      if (!tp || !ts) return;
-      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ primary: tp.value, secondary: ts.value }));
-      applyAccentColors(tp.value, ts.value);
-    }
-    document.getElementById('theme-primary')?.addEventListener('input', persistThemeColors);
-    document.getElementById('theme-secondary')?.addEventListener('input', persistThemeColors);
-    document.getElementById('theme-reset-btn')?.addEventListener('click', async () => {
-      localStorage.removeItem(THEME_STORAGE_KEY);
-      const tp = document.getElementById('theme-primary');
-      const ts = document.getElementById('theme-secondary');
-      await refreshSiteThemeFromServer();
-      try {
-        const s = await getDoc(doc(db, 'siteConfig', 'settings'));
-        const st = s.exists() ? s.data().siteTheme : null;
-        if (tp) tp.value = st?.primary || DEFAULT_NEON_GREEN;
-        if (ts) ts.value = st?.secondary || DEFAULT_NEON_PINK;
-      } catch (e) {
-        if (tp) tp.value = DEFAULT_NEON_GREEN;
-        if (ts) ts.value = DEFAULT_NEON_PINK;
-      }
-      showNotification('Personal theme reset (site defaults applied)', 'success');
-    });
 
     saveSettingsBtn.addEventListener('click', async () => {
       if (!currentUser) return;
@@ -7217,6 +7260,7 @@
             case 'staff-badges': loadStaffBadges(); break;
             case 'staff-missions': loadStaffMissions(); break;
             case 'staff-stars': break;
+            case 'staff-star-badges': loadStaffStarBadgesPanel(); break;
             case 'staff-chatview': loadStaffChatViewer(); break;
             case 'staff-rarity': loadStaffRaritySitePanel(); break;
           }
@@ -7791,18 +7835,6 @@
         showNotification('Rarity order saved','success');
       });
 
-      document.getElementById('staff-site-theme-save')?.addEventListener('click', async () => {
-        const primary = document.getElementById('staff-site-theme-primary')?.value || DEFAULT_NEON_GREEN;
-        const secondary = document.getElementById('staff-site-theme-secondary')?.value || DEFAULT_NEON_PINK;
-        try {
-          await setDoc(doc(db, 'siteConfig', 'settings'), {
-            siteTheme: { primary, secondary },
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-          applyAccentColors(primary, secondary);
-          showNotification('Site theme saved (users can still override locally)', 'success');
-        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
-      });
       document.getElementById('staff-daily-reward-save')?.addEventListener('click', async () => {
         const coins = Math.max(0, parseInt(document.getElementById('staff-daily-reward-coins')?.value, 10) || 0);
         const stars = Math.max(0, parseInt(document.getElementById('staff-daily-reward-stars')?.value, 10) || 0);
@@ -7858,6 +7890,7 @@
         if(updates.muteStatus==='temp'){const v=document.getElementById('staff-edit-mute-until').value;if(v) updates.muteUntil=new Date(v);else updates.muteUntil=null;} else {updates.muteUntil=null;}
         if(updates.banStatus==='temp'){const v=document.getElementById('staff-edit-ban-until').value;if(v) updates.banUntil=new Date(v);else updates.banUntil=null;} else {updates.banUntil=null;}
         await updateDoc(doc(db,'users',uid),updates);
+        if (typeof updates.stars === 'number') syncStarBadgesForUser(uid, updates.stars);
         document.getElementById('staff-user-modal').style.display='none';
         loadStaffUsers();
         showNotification('User updated!','success');
@@ -8008,8 +8041,66 @@
         else if (action === 'add') newVal = current + amount;
         else if (action === 'remove') newVal = Math.max(0, current - amount);
         await updateDoc(doc(db,'users',uid),{stars:newVal});
+        syncStarBadgesForUser(uid, newVal);
         document.getElementById('staff-stars-result').innerHTML = `<span style="color:var(--neon-green);">✓ ${snap.docs[0].data().username}: ${current} → ${newVal} stars</span>`;
         showNotification('Stars updated!','success');
+      });
+
+      document.getElementById('staff-star-badge-add-row')?.addEventListener('click', () => {
+        const pick = document.getElementById('staff-star-badge-pick');
+        const minEl = document.getElementById('staff-star-badge-min');
+        const name = (pick?.value || '').trim();
+        const minStars = Math.max(0, parseInt(minEl?.value, 10) || 0);
+        if (!name) { showNotification('Choose a badge', 'error'); return; }
+        if (staffStarBadgeRulesDraft.some(r => r.badgeName === name)) { showNotification('That badge already has a rule', 'error'); return; }
+        staffStarBadgeRulesDraft.push({ badgeName: name, minStars });
+        renderStaffStarBadgeRulesList();
+      });
+      document.getElementById('staff-star-badge-save-rules')?.addEventListener('click', async () => {
+        const status = document.getElementById('staff-star-badge-status');
+        const byName = new Map();
+        staffStarBadgeRulesDraft.forEach(r => {
+          const prev = byName.get(r.badgeName);
+          if (!prev || r.minStars < prev.minStars) byName.set(r.badgeName, r);
+        });
+        const deduped = Array.from(byName.values());
+        try {
+          await setDoc(doc(db, 'siteConfig', 'settings'), {
+            starBadgeRules: deduped,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          staffStarBadgeRulesDraft = deduped;
+          renderStaffStarBadgeRulesList();
+          if (status) status.textContent = 'Saved. Use “Re-apply to all users” if you changed thresholds.';
+          showNotification('Star badge rules saved', 'success');
+        } catch (e) {
+          showNotification('Save failed: ' + e.message, 'error');
+        }
+      });
+      document.getElementById('staff-star-badge-resync-all')?.addEventListener('click', async () => {
+        const status = document.getElementById('staff-star-badge-status');
+        if (!confirm('Re-apply star badge rules to every user? This may take a moment.')) return;
+        if (status) status.textContent = 'Working…';
+        try {
+          const rules = await getStarBadgeRulesFromServer();
+          if (!rules.length) {
+            if (status) status.textContent = 'No rules saved yet.';
+            return;
+          }
+          const us = await getDocs(collection(db, 'users'));
+          let n = 0;
+          for (const d of us.docs) {
+            const stars = typeof d.data().stars === 'number' ? d.data().stars : parseInt(d.data().stars, 10) || 0;
+            await syncStarBadgesForUser(d.id, stars);
+            n++;
+            if (n % 40 === 0 && status) status.textContent = `Processed ${n} users…`;
+          }
+          if (status) status.textContent = `Done. Updated ${n} users.`;
+          showNotification('Star badges re-applied for all users', 'success');
+        } catch (e) {
+          if (status) status.textContent = 'Error: ' + e.message;
+          showNotification('Re-apply failed: ' + e.message, 'error');
+        }
       });
 
       // Close staff modals on backdrop click
@@ -8020,8 +8111,7 @@
     // ========== Initialize the app ==========
     async function init() {
       await refreshRarityOrderFromServer();
-      await refreshSiteThemeFromServer();
-      applyThemeFromStorage();
+      applyFixedSiteTheme();
       const gamesData = await getGames();
       renderTopGamesCarousel(gamesData.topGames);
       renderCategoryBrowsing(gamesData);
