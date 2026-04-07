@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
   <style>
     /* Existing CSS styles remain unchanged */
     :root {
@@ -72,7 +72,16 @@
       top: 0;
       z-index: 1000;
       transition: left 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .sidebar-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .sidebar.active {
@@ -88,8 +97,15 @@
     }
 
     .sidebar-header i {
-      font-size: 1.5rem;
+      font-size: 1.65rem;
       color: var(--neon-green);
+    }
+
+    .sidebar-header h2 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
     }
 
     .sidebar-tabs {
@@ -103,23 +119,33 @@
       border: none;
       color: var(--text-secondary);
       text-align: left;
-      padding: 15px 20px;
-      font-size: 0.9rem;
+      padding: 16px 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.2s;
     }
 
-    .tab-button:hover, .tab-button.active {
+    .tab-button:hover {
       background: rgba(42, 255, 158, 0.1);
       color: var(--neon-green);
+      font-weight: 700;
+    }
+
+    .tab-button.active {
+      background: rgba(42, 255, 158, 0.1);
+      color: var(--neon-green);
+      font-weight: 800;
     }
 
     .tab-button i {
-      width: 20px;
+      width: 22px;
       text-align: center;
+      font-size: 1.1rem;
     }
 
     /* Main Content */
@@ -129,6 +155,9 @@
       transition: margin-left 0.3s ease;
       height: 100vh;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
     }
 
     .main-content.sidebar-active {
@@ -137,12 +166,19 @@
 
     /* Pages */
     .page {
-      display: none;
+      display: none !important;
       padding: 20px 5%;
     }
 
     .page.active {
-      display: block;
+      display: block !important;
+    }
+
+    #chat-page.active {
+      display: flex !important;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
     /* Main Page */
@@ -502,6 +538,11 @@
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(42, 255, 158, 0.2);
     }
+    .font-titan-header {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
 
     /* Profile Page */
     .profile-section {
@@ -564,12 +605,12 @@
       flex-wrap: wrap; margin-bottom: 4px; min-height: 1.35rem;
     }
     .star-slot-badge-img {
-      border-radius: 6px; object-fit: contain;
-      border: 1px solid rgba(42,255,158,0.25); display: block;
+      border-radius: 0; object-fit: contain; display: block; border: none !important;
+      padding: 0 !important; background: transparent !important; box-shadow: none !important;
     }
     .star-slot-badge-fa {
-      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(42,255,158,0.25); flex-shrink: 0;
+      border-radius: 0; display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0; border: none !important; padding: 0 !important; box-shadow: none !important;
     }
     #sidebar-stars-icon-wrap .star-slot-badge-img,
     #sidebar-stars-icon-wrap .star-slot-badge-fa { width: 22px; height: 22px; font-size: 0.72rem; }
@@ -771,6 +812,75 @@
       border: 1px solid rgba(42,255,158,0.2);
     }
     .market-pack-price .fa-coins { color: #ffe066; }
+
+    /* Shop: banner offers — flat wide cards, 2 per row, full art upright */
+    #shop-banners.shop-banners-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 16px;
+      align-items: stretch;
+    }
+    @media (max-width: 640px) {
+      #shop-banners.shop-banners-row { grid-template-columns: 1fr; }
+    }
+    .shop-banner-card {
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(42,255,158,0.18);
+      background: rgba(0,0,0,0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .shop-banner-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+      border-color: rgba(42,255,158,0.45);
+    }
+    .shop-banner-card-visual {
+      width: 100%;
+      height: 72px;
+      background: #121820;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .shop-banner-card-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transform: none !important;
+      filter: none;
+    }
+    .shop-banner-card-foot {
+      padding: 8px 10px 10px;
+      text-align: center;
+    }
+    .shop-banner-card-name {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .shop-banner-card-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      background: rgba(0,0,0,0.28);
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(42,255,158,0.15);
+    }
 
     .staff-pack-preview-box {
       max-width: 200px;
@@ -1439,16 +1549,30 @@
       font-size: 1.1rem;
     }
 
-    /* Global Chat Panel */
-    .global-chat-panel {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 20px;
+    /* Global Chat Panel (full main area) */
+    #chat-page {
+      padding: 0;
+      flex: 1;
+      min-height: 0;
+    }
+    #chat-page .page-content.chat-page-inner {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      height: 70vh;
+      min-height: 0;
+      padding: 0;
+      margin: 0;
+    }
+    .global-chat-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      max-width: none;
+      margin: 0;
+      background: transparent;
+      border-radius: 0;
+      padding: 12px 16px 16px;
     }
 
     /* Friends Panel */
@@ -1580,13 +1704,52 @@
       padding: 15px;
       margin-bottom: 15px;
       max-height: 400px;
+      position: relative;
+      min-height: 120px;
     }
+    #global-chat-container.chat-container {
+      flex: 1;
+      min-height: 200px;
+      max-height: none;
+      margin-bottom: 12px;
+    }
+    .chat-loading-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.35);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+    .chat-loading-overlay.hidden { display: none !important; }
+    .chat-loading-spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid rgba(42,255,158,0.2);
+      border-top-color: var(--neon-green);
+      animation: chatSpin 0.75s linear infinite;
+    }
+    @keyframes chatSpin { to { transform: rotate(360deg); } }
 
     .chat-message {
       margin-bottom: 6px;
       padding: 6px 10px;
       border-radius: 10px;
       font-size: 0.82rem;
+    }
+    .chat-message.chat-msg-grouped {
+      margin-top: -2px;
+      padding-top: 2px;
+    }
+    .chat-message.chat-msg-grouped .chat-msg-header {
+      display: none;
+    }
+    .chat-message.chat-msg-grouped .message-content {
+      margin-left: 28px;
     }
 
     .chat-message.user {
@@ -1632,6 +1795,29 @@
       margin-left: 28px;
       font-size: 0.82rem;
     }
+    .chat-msg-text {
+      white-space: pre-wrap;
+      display: block;
+    }
+    .chat-msg-img {
+      display: block;
+      max-width: min(100%, 320px);
+      max-height: 220px;
+      border-radius: 10px;
+      margin-top: 4px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    .chat-at-mention {
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 4px;
+      padding: 0 2px;
+    }
+    .chat-at-mention:hover {
+      text-decoration: underline;
+    }
 
     .message-time {
       font-size: 0.62rem;
@@ -1639,11 +1825,50 @@
       text-align: right;
       margin-top: 2px;
     }
+    .chat-message.chat-msg-grouped .message-time-inline {
+      text-align: right;
+      margin-top: 2px;
+    }
 
     .chat-input {
       display: flex;
       gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
     }
+    .chat-input-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .chat-attach-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(42,255,158,0.25);
+      color: var(--neon-green);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .chat-attach-btn:hover { background: rgba(42,255,158,0.12); }
+    .chat-link-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(42,255,158,0.25);
+      color: var(--neon-green);
+      border-radius: 20px;
+      padding: 0 12px;
+      height: 42px;
+      font-weight: 800;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: none;
+    }
+    .chat-link-btn.visible { display: inline-flex; align-items: center; justify-content: center; }
 
     .chat-input input {
       flex: 1;
@@ -1796,9 +2021,191 @@
       background-position: center;
     }
     .pack-unbox-body {
+      position: relative;
       justify-content: center;
-      gap: 12px;
-      padding: 20px 12px 28px;
+      align-items: center;
+      gap: 0;
+      padding: 0;
+      min-height: 100vh;
+      flex: 1;
+    }
+    .pack-unbox-pack-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .pack-unbox-body .gift-animation.pack-unbox-stage {
+      flex: none;
+      display: block;
+      width: auto;
+      min-height: 0;
+      margin: 0;
+    }
+    .pack-unbox-body.pack-unbox-revealed .gift-animation.pack-unbox-stage {
+      display: none;
+    }
+    .pack-unbox-details-wrap {
+      position: relative;
+      z-index: 9;
+      width: 100%;
+      max-width: 420px;
+      flex-shrink: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .pack-unbox-body.pack-unbox-revealed .pack-unbox-details-wrap {
+      display: flex;
+    }
+    .pack-reveal-card.pack-unbox-reveal-anim {
+      animation: packRevealCardIn 0.82s cubic-bezier(0.18, 1.2, 0.28, 1) both;
+    }
+    @keyframes packRevealCardIn {
+      0% { opacity: 0; transform: scale(0.72) translateY(36px) rotate(-3deg); filter: blur(14px); box-shadow: 0 0 0 rgba(42,255,158,0); }
+      38% { opacity: 1; transform: scale(1.09) translateY(-10px) rotate(1deg); filter: blur(0); box-shadow: 0 0 48px rgba(42,255,158,0.35); }
+      65% { transform: scale(0.96) translateY(4px) rotate(-0.5deg); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+      100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); filter: blur(0); box-shadow: 0 16px 48px rgba(0,0,0,0.55); }
+    }
+    .pack-reveal-card {
+      width: min(92vw, 400px);
+      min-height: min(72vh, 520px);
+      margin: 0 auto;
+      border-radius: 14px;
+      border: 2px solid rgba(42,255,158,0.35);
+      padding: 18px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.55);
+      background-color: #0c1016;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .pack-reveal-card-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 0;
+    }
+    .pack-reveal-name {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 1.56rem;
+      font-weight: 400;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.75), 0 0 24px rgba(42,255,158,0.15);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .pack-reveal-card.pack-unbox-reveal-anim .pack-reveal-name {
+      animation: packRevealNamePop 0.85s cubic-bezier(0.34, 1.25, 0.64, 1) 0.12s both;
+    }
+    @keyframes packRevealNamePop {
+      0% { opacity: 0; transform: translateY(22px) scale(0.8) skewX(-4deg); letter-spacing: 0.08em; }
+      55% { opacity: 1; transform: translateY(-4px) scale(1.05) skewX(0deg); letter-spacing: 0.02em; }
+      100% { opacity: 1; transform: translateY(0) scale(1) skewX(0deg); letter-spacing: 0.02em; }
+    }
+    .pack-reveal-rarity {
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: inline-block;
+      padding: 4px 10px !important;
+      border-radius: 8px;
+      border: 2px solid #000 !important;
+      background: rgba(0,0,0,0.35) !important;
+      -webkit-text-fill-color: initial !important;
+    }
+    .pack-reveal-blook-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 200px;
+    }
+    .pack-reveal-blook-wrap img {
+      max-width: 72%;
+      max-height: min(28vh, 200px);
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5));
+    }
+    .pack-reveal-chance {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 1.274rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.95);
+      margin-top: auto;
+      padding-top: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.65);
+    }
+    .pack-reveal-card.pack-unbox-reveal-anim .pack-reveal-chance {
+      animation: packRevealChanceIn 0.7s cubic-bezier(0.34, 1.2, 0.64, 1) 0.35s both;
+    }
+    @keyframes packRevealChanceIn {
+      0% { opacity: 0; transform: translateY(26px) scale(0.82); filter: blur(4px); }
+      60% { opacity: 1; transform: translateY(-5px) scale(1.06); filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+    .pack-reveal-stars-note {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    .pack-unbox-click-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      cursor: pointer;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pack-unbox-click-layer:focus-visible {
+      outline: 2px solid var(--neon-green);
+      outline-offset: -4px;
+    }
+    .pack-unbox-dismiss-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 18;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pack-unbox-dismiss-layer:focus-visible {
+      outline: 2px solid var(--neon-green);
+      outline-offset: -4px;
+    }
+    .pack-unbox-boost {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      z-index: 8;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(42,255,158,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      color: var(--neon-green);
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
     .pack-unbox-hint {
       margin: 0;
@@ -1821,11 +2228,12 @@
       width: auto;
       height: auto;
       max-width: min(92vw, 440px);
-      max-height: min(72vh, 620px);
+      max-height: min(62vh, 560px);
       min-width: 0;
       min-height: 0;
-      margin-bottom: 8px;
+      margin: auto;
       position: relative;
+      z-index: 5;
       overflow: visible;
       background: transparent;
       border: none;
@@ -1833,13 +2241,8 @@
       box-shadow: none;
       border-radius: 0;
       padding: 0;
-      cursor: pointer;
+      pointer-events: none;
       -webkit-tap-highlight-color: transparent;
-    }
-    .gift-animation.pack-unbox-stage:focus-visible {
-      outline: 2px solid var(--neon-green);
-      outline-offset: 6px;
-      border-radius: 12px;
     }
     .pack-unbox-stack {
       position: relative;
@@ -1870,13 +2273,58 @@
     .pack-unbox-stage.torn .pack-unbox-blook-under {
       opacity: 1;
     }
-    .pack-unbox-blook-under img {
+    .pack-unbox-blook-under img,
+    .pack-unbox-blook-under .pack-unbox-blook-icon {
       max-width: 88%;
       max-height: 88%;
       width: auto;
       height: auto;
       object-fit: contain;
       filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+    }
+    .pack-unbox-blook-under .pack-unbox-blook-clip {
+      max-width: 88%;
+      max-height: 88%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: inset(0 0 50% 0);
+      transition: clip-path 0.65s cubic-bezier(0.34, 1.1, 0.64, 1);
+    }
+    .pack-unbox-stage.pack-unbox-cover-drop .pack-unbox-blook-under .pack-unbox-blook-clip {
+      clip-path: inset(0 0 0 0);
+    }
+    .pack-unbox-stage.torn.pack-unbox-peek .pack-unbox-blook-under {
+      animation: packBlookPeekPulse 1.25s ease-in-out infinite;
+    }
+    .pack-unbox-stage.pack-unbox-cover-drop .pack-unbox-blook-under {
+      animation: packBlookRevealPop 0.75s cubic-bezier(0.34, 1.25, 0.64, 1) both;
+    }
+    @keyframes packBlookPeekPulse {
+      0%, 100% { transform: scale(1) translateY(0); filter: brightness(1) drop-shadow(0 8px 20px rgba(0,0,0,0.4)); }
+      33% { transform: scale(1.045) translateY(-2px); filter: brightness(1.1) drop-shadow(0 14px 28px rgba(42,255,158,0.2)); }
+      66% { transform: scale(1.02) translateY(1px); filter: brightness(1.05); }
+    }
+    @keyframes packBlookRevealPop {
+      0% { transform: scale(0.88) rotate(-2deg); filter: brightness(0.8); }
+      45% { transform: scale(1.1) rotate(1.5deg); filter: brightness(1.18); }
+      100% { transform: scale(1) rotate(0); filter: brightness(1); }
+    }
+    .pack-confetti-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 14;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .pack-confetti-piece {
+      position: absolute;
+      top: -12px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      opacity: 0.95;
+      will-change: transform, opacity;
     }
     .pack-unbox-half {
       position: absolute;
@@ -1910,39 +2358,61 @@
     .pack-unbox-half-bot {
       z-index: 2;
     }
-    .pack-unbox-stage:not(.torn) {
-      animation: packWholeNudge 2s ease-in-out infinite;
+    .pack-unbox-stage:not(.torn) .pack-unbox-stack {
+      animation: packWholeNudge 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 12px 28px rgba(0,0,0,0.5));
     }
     @keyframes packWholeNudge {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
+      0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+      15% { transform: translateY(-10px) scale(1.035) rotate(-1.4deg); }
+      40% { transform: translateY(-5px) scale(1.02) rotate(0.6deg); }
+      65% { transform: translateY(-9px) scale(1.028) rotate(1.1deg); }
+      85% { transform: translateY(-3px) scale(1.01) rotate(-0.4deg); }
     }
     .pack-unbox-stage.torn {
       animation: none;
       cursor: default;
     }
     .pack-unbox-stage.torn .pack-unbox-half-top {
-      animation: packRipTopFlap 0.65s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+      animation: packRipTopFlap 1.02s cubic-bezier(0.15, 0.92, 0.1, 1) forwards;
+      filter: drop-shadow(0 12px 32px rgba(0,0,0,0.6));
     }
-    .pack-unbox-stage.torn .pack-unbox-half-bot {
-      animation: packRipBottomFade 0.45s ease 0.2s forwards;
+    /* First rip: bottom cover stays (half blook peek); second phase: bottom falls */
+    .pack-unbox-stage.torn.pack-unbox-peek .pack-unbox-half-bot {
+      animation: none;
+      opacity: 1;
     }
-    @keyframes packRipTopFlap {
-      0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+    .pack-unbox-stage.torn.pack-unbox-cover-drop .pack-unbox-half-bot {
+      animation: packCoverFallAway 1.12s cubic-bezier(0.52, -0.02, 0.12, 1) forwards;
+    }
+    @keyframes packCoverFallAway {
+      0% { transform: translateY(0) rotate(0) scale(1); opacity: 1; filter: brightness(1); }
+      18% { transform: translateY(-4%) rotate(1.5deg) scale(1.03); opacity: 1; }
+      38% { transform: translateY(12%) rotate(-3deg) scale(1.01); opacity: 1; }
       100% {
-        transform: translate(-8%, -108%) rotate(-18deg);
+        transform: translateY(145%) rotate(18deg) scale(0.82);
         opacity: 0;
+        filter: brightness(0.35);
       }
     }
-    @keyframes packRipBottomFade {
-      to { opacity: 0; }
+    @keyframes packRipTopFlap {
+      0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+      8% { transform: translate(0.3%, -1%) rotate(1deg) scale(1.04); opacity: 1; }
+      22% { transform: translate(-1.5%, -12%) rotate(-6deg) scale(1.02); opacity: 1; }
+      42% { transform: translate(-6%, -42%) rotate(-14deg) scale(0.98); opacity: 1; }
+      68% { transform: translate(-14%, -88%) rotate(-24deg) scale(0.88); opacity: 0.95; }
+      100% {
+        transform: translate(-26%, -138%) rotate(-36deg) scale(0.72);
+        opacity: 0;
+      }
     }
     .pack-unbox-reveal {
       animation: packUnboxRevealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
     @keyframes packUnboxRevealPop {
-      from { opacity: 0; transform: scale(0.88); }
-      to { opacity: 1; transform: scale(1); }
+      0% { opacity: 0; transform: scale(0.82) translateY(16px); filter: blur(6px); }
+      55% { opacity: 1; transform: scale(1.04) translateY(-4px); filter: blur(0); }
+      100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
     }
 
     .modal-background {
@@ -1954,6 +2424,26 @@
       background-size: cover;
       background-position: center;
       filter: blur(2px) brightness(0.5);
+    }
+    #opening-modal-bg.pack-rarity-celebrate {
+      filter: brightness(0.92);
+      transition: background-image 0.55s ease, background-size 0.55s ease, filter 0.4s ease;
+      animation: packBgCelebrateFlash 0.55s ease-out 1;
+    }
+    @keyframes packBgCelebrateFlash {
+      0% { filter: brightness(1.35) saturate(1.45) contrast(1.05); }
+      45% { filter: brightness(1.08) saturate(1.25); }
+      100% { filter: brightness(0.92) saturate(1); }
+    }
+    @keyframes packRarityBgRun {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    @keyframes packConfettiFall {
+      to {
+        transform: translate3d(var(--cf-dx, 0px), 110vh, 0) rotate(var(--cf-rot, 720deg));
+        opacity: 0.35;
+      }
     }
 
     .modal-body {
@@ -2938,23 +3428,32 @@
       border-radius: 16px;
     }
     .staff-sub-tab {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(42,255,158,0.2);
-      background: rgba(255,255,255,0.03);
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(42,255,158,0.22);
+      background: linear-gradient(180deg, rgba(36,44,58,0.95), rgba(18,22,30,0.98));
       color: var(--text-secondary);
-      font-weight: 700;
-      font-size: 0.82rem;
+      font-weight: 800;
+      font-size: 0.84rem;
       cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s, color 0.18s;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+      font-family: 'Nunito', sans-serif;
     }
-    .staff-sub-tab:hover, .staff-sub-tab.active {
-      background: var(--neon-green);
-      color: #000;
-      border-color: var(--neon-green);
+    .staff-sub-tab:hover {
+      transform: translateY(-2px);
+      border-color: rgba(42,255,158,0.45);
+      color: var(--neon-green);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    }
+    .staff-sub-tab.active {
+      background: linear-gradient(145deg, #3dffb0 0%, #2AFF9E 50%, #12c77a 100%);
+      color: #04120c;
+      border-color: rgba(42,255,158,0.65);
+      box-shadow: 0 6px 22px rgba(42,255,158,0.28);
     }
     .staff-section { display: none; }
     .staff-section.active { display: block; }
@@ -2993,26 +3492,53 @@
     .staff-table th { color: var(--neon-green); font-weight: 700; }
     .staff-table tr:hover { background: rgba(42,255,158,0.03); }
     .staff-btn {
-      padding: 8px 18px;
-      border-radius: 20px;
+      padding: 11px 22px;
+      border-radius: 12px;
       font-weight: 800;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, border-color 0.18s;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      line-height: 1.2;
+      font-family: 'Nunito', sans-serif;
     }
-    .staff-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-    .staff-btn:active { transform: translateY(0); }
-    .staff-btn-primary { background: linear-gradient(135deg, #2AFF9E, #1ad47e); color: #000; }
-    .staff-btn-primary:hover { background: linear-gradient(135deg, #3affab, #2AFF9E); box-shadow: 0 4px 16px rgba(42,255,158,0.3); }
-    .staff-btn-danger { background: linear-gradient(135deg, #FF3D6C, #d4294f); color: #fff; }
-    .staff-btn-danger:hover { background: linear-gradient(135deg, #ff5580, #FF3D6C); box-shadow: 0 4px 16px rgba(255,61,108,0.3); }
-    .staff-btn-warning { background: linear-gradient(135deg, #FFB347, #e69a2e); color: #000; }
-    .staff-btn-warning:hover { box-shadow: 0 4px 16px rgba(255,179,71,0.3); }
-    .staff-btn-sm { padding: 5px 12px; font-size: 0.72rem; }
+    .staff-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
+    .staff-btn:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .staff-btn-primary {
+      background: linear-gradient(145deg, #3dffb0 0%, #2AFF9E 40%, #12c77a 100%);
+      color: #04120c;
+      border-color: rgba(42,255,158,0.55);
+    }
+    .staff-btn-primary:hover { filter: brightness(1.06); box-shadow: 0 8px 26px rgba(42,255,158,0.35); }
+    .staff-btn:not(.staff-btn-primary):not(.staff-btn-danger):not(.staff-btn-warning) {
+      background: linear-gradient(180deg, rgba(40,48,62,0.95), rgba(22,28,38,0.98));
+      color: var(--text-primary);
+      border-color: rgba(42,255,158,0.22);
+    }
+    .staff-btn:not(.staff-btn-primary):not(.staff-btn-danger):not(.staff-btn-warning):hover {
+      border-color: rgba(42,255,158,0.45);
+      color: var(--neon-green);
+    }
+    .staff-btn-danger {
+      background: linear-gradient(145deg, #ff5c82 0%, #FF3D6C 45%, #c92a4d 100%);
+      color: #fff;
+      border-color: rgba(255,100,130,0.5);
+    }
+    .staff-btn-danger:hover { filter: brightness(1.05); box-shadow: 0 8px 26px rgba(255,61,108,0.35); }
+    .staff-btn-warning {
+      background: linear-gradient(145deg, #ffd180 0%, #FFB347 50%, #e09520 100%);
+      color: #1a1204;
+      border-color: rgba(255,200,100,0.45);
+    }
+    .staff-btn-warning:hover { filter: brightness(1.05); box-shadow: 0 8px 26px rgba(255,179,71,0.3); }
+    .staff-btn-sm { padding: 7px 14px; font-size: 0.76rem; border-radius: 10px; }
     .staff-badge { background: rgba(42,255,158,0.15); padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; color: var(--neon-green); display: inline-block; margin: 2px; }
     .staff-search { background: rgba(30,38,50,0.8); border: 1px solid rgba(42,255,158,0.2); border-radius: 20px; padding: 8px 16px; color: white; width: 260px; font-size: 0.85rem; }
     .staff-search:focus { outline: none; border-color: var(--neon-green); }
@@ -3040,7 +3566,7 @@
       overflow-y: auto;
     }
     .staff-modal-content h3 { margin-bottom: 16px; font-weight: 800; }
-    .staff-flex-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .staff-flex-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .title-preview {
       padding: 6px 14px;
       border-radius: 12px;
@@ -3186,13 +3712,16 @@
     .up-banner.has-custom-banner .up-banner-pattern { display: none; }
     .up-banner-content {
       position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      width: 100%; min-height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: space-between; text-align: center;
-      padding: 6px 4px 5px; box-sizing: border-box;
+      width: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px;
+      text-align: center;
+      padding: 4px 6px; box-sizing: border-box;
+      min-height: 0;
     }
-    .up-banner-content .up-banner-name-block { width: 100%; flex-shrink: 0; }
-    .up-banner-content .up-banner-mid { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
-    .up-banner-content .up-title-badge { margin-top: auto; flex-shrink: 0; max-width: 100%; }
+    .up-banner-content .up-banner-name-block { width: 100%; flex-shrink: 0; line-height: 1.1; }
+    .up-banner-content .up-title-badge { flex-shrink: 0; max-width: 100%; margin-top: 0; }
     .up-name-row {
       font-size: 1rem; font-weight: 800; color: #fff;
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;
@@ -3257,7 +3786,7 @@
     /* Friends list in profile - 4 per row */
     .up-friends-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .up-friend-row {
-      display: flex; align-items: center; gap: 6px; padding: 5px 8px;
+      display: flex; align-items: center; gap: 6px; padding: 4px 8px;
       background: rgba(0,0,0,0.2); border-radius: 10px; cursor: pointer;
       transition: background 0.15s; border: 1px solid rgba(42,255,158,0.06);
     }
@@ -3268,14 +3797,14 @@
     }
     .up-friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .up-friend-banner {
-      flex: 1; min-height: 44px; height: auto; border-radius: 6px; position: relative;
+      flex: 1; min-height: 36px; height: auto; border-radius: 6px; position: relative;
       overflow: hidden; display: flex; flex-direction: column; align-items: stretch;
       justify-content: center; padding: 0; background: #1a2a3a;
     }
     .up-friend-banner-text {
       position: relative; z-index: 3; display: flex; flex-direction: column;
-      align-items: center; justify-content: space-between; text-align: center;
-      width: 100%; min-height: 44px; padding: 4px 6px 5px; box-sizing: border-box;
+      align-items: center; justify-content: center; text-align: center; gap: 1px;
+      width: 100%; min-height: 0; padding: 3px 6px 4px; box-sizing: border-box;
     }
     .up-friend-pattern {
       position: absolute; top: 0; left: 0; width: 200%; height: 200%;
@@ -3286,6 +3815,9 @@
     .up-friend-banner-bg {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       object-fit: cover; z-index: 1; filter: brightness(0.5); display: none;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
     .up-friend-banner.has-custom-banner .up-friend-banner-bg { display: block; }
     .up-friend-banner.has-custom-banner .up-friend-pattern { display: none; }
@@ -3293,14 +3825,14 @@
       position: relative; z-index: 3; font-size: 0.68rem; font-weight: 800;
       color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.55);
       width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      line-height: 1.15; flex-shrink: 0;
+      line-height: 1.12; flex-shrink: 0; margin: 0;
     }
     .up-friend-title-tag {
       position: relative; z-index: 3; font-size: 0.52rem; font-weight: 800;
-      margin-top: auto; padding: 2px 6px; border-radius: 10px; max-width: 100%;
-      background: rgba(42,255,158,0.15); color: #2AFF9E; flex-shrink: 0;
+      margin: 0; padding: 0; border-radius: 0; max-width: 100%;
+      background: transparent; color: #2AFF9E; flex-shrink: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      border: 1px solid rgba(42,255,158,0.35);
+      border: none; line-height: 1.1;
     }
     .up-friend-title-tag.gradient-title {
       background: none; border: none;
@@ -3365,7 +3897,8 @@
         min-width: unset;
       }
       .global-chat-panel {
-        height: 60vh;
+        flex: 1;
+        min-height: 0;
       }
       .packs-grid {
         grid-template-columns: 1fr;
@@ -3415,16 +3948,22 @@
       pointer-events: none;
     }
     .loading-universe-icon {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: 3px solid var(--neon-green);
-      border-top-color: transparent;
-      border-right-color: var(--neon-pink);
-      background: radial-gradient(circle at 30% 30%, rgba(42,255,158,0.15), transparent 60%),
-        url('https://ac.blooket.com/@codeblooket/blooket-frontend-components/v0.2.45/assets/BlookCheckers-e975c505.png') center/48px repeat;
-      animation: spinUniverse 0.9s linear infinite;
-      box-shadow: 0 0 24px rgba(42, 255, 158, 0.35);
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spinUniverse 1.1s linear infinite;
+      filter: drop-shadow(0 0 14px rgba(42, 255, 158, 0.45));
+    }
+    .loading-universe-icon .fas.fa-gamepad {
+      font-size: 3rem;
+      color: var(--neon-green);
+      filter: drop-shadow(0 0 14px rgba(42, 255, 158, 0.55));
     }
     @keyframes spinUniverse {
       to { transform: rotate(360deg); }
@@ -3587,7 +4126,7 @@
 </head>
 <body>
   <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
-    <div class="loading-universe-icon" role="presentation"></div>
+    <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
     <div class="loading-universe-label">GAME UNIVERSE</div>
   </div>
   <!-- Sidebar -->
@@ -3597,6 +4136,7 @@
       <h2>USER PANEL</h2>
     </div>
     
+    <div class="sidebar-scroll">
     <div class="sidebar-tabs">
       <button class="tab-button active" data-page="main-page">
         <i class="fas fa-home"></i> Main Page
@@ -3629,30 +4169,11 @@
         <i class="fas fa-shield-alt"></i> Staff Panel
       </button>
     </div>
-    
-    <!-- User info in sidebar -->
-    <div class="profile-section" style="padding: 20px; border-top: 1px solid rgba(42, 255, 158, 0.2); margin-top: 20px;">
-      <div class="avatar-container">
-        <img id="sidebar-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar">
-      </div>
-      <div class="profile-username" id="sidebar-username">Username</div>
-      <div class="user-title" id="sidebar-title">User</div>
-      <div class="profile-email" id="sidebar-email">user@example.com</div>
-      <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;font-weight:700;letter-spacing:0.04em;" id="sidebar-public-id"></div>
-      
-      <div class="profile-stats" style="margin-top: 20px;">
-        <div class="stat-item">
-          <div class="stat-value" id="coins-display">0</div>
-          <div class="stat-label">COINS</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon-wrap" id="sidebar-stars-icon-wrap">
-            <i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i>
-          </div>
-          <div class="stat-value" id="stars-display">0</div>
-          <div class="stat-label">STARS</div>
-        </div>
-      </div>
+    </div>
+    <div class="visually-hidden-balance-hooks" style="display:none;" aria-hidden="true">
+      <span id="coins-display">0</span>
+      <span id="stars-display">0</span>
+      <div id="sidebar-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i></div>
     </div>
   </div>
 
@@ -3690,13 +4211,9 @@
               <div class="up-banner" id="profile-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;">
+                <div class="up-banner-content">
                   <div class="up-banner-name-block">
                     <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                    <span id="member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
-                  </div>
-                  <div class="up-banner-mid">
-                    <span id="profile-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
                   </div>
                   <span class="up-title-badge" id="profile-title">User</span>
                 </div>
@@ -3711,7 +4228,7 @@
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="friend-count">0</div><div class="up-stat-lbl">Friends</div></div></div>
           </div>
           <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="profile-blook-count">0</span> / <span id="profile-blook-total">150</span></span></div>
+            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="profile-blook-count">0</span> / <span id="profile-blook-total">0</span></span></div>
             <div class="progress-bar"><div class="progress-fill" id="profile-blook-progress"></div></div>
           </div>
           <div class="up-section">
@@ -3729,7 +4246,10 @@
     <!-- View Other User Profile Page (navigated, not popup) -->
     <div class="page" id="view-profile-page">
       <div class="page-content">
-        <button class="staff-btn staff-btn-primary" id="vp-back-btn" style="margin-bottom:16px;"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="staff-flex-row" style="margin-bottom:16px;gap:10px;flex-wrap:wrap;align-items:center;">
+          <button class="staff-btn staff-btn-primary" id="vp-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+          <button type="button" class="staff-btn staff-btn-primary" id="vp-add-friend-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add friend</button>
+        </div>
         <div class="up-container" id="vp-container">
           <div class="up-header">
             <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
@@ -3737,13 +4257,9 @@
               <div class="up-banner" id="vp-banner-wrap">
                 <div class="up-banner-pattern"></div>
                 <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content" style="text-align:center;">
+                <div class="up-banner-content">
                   <div class="up-banner-name-block">
                     <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                    <span id="vp-member-since" style="display:none;font-size:0.58rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;">—</span>
-                  </div>
-                  <div class="up-banner-mid">
-                    <span id="vp-public-id" style="font-size:0.62rem;color:rgba(255,255,255,0.8);font-weight:700;">ID —</span>
                   </div>
                   <span class="up-title-badge" id="vp-title">User</span>
                 </div>
@@ -3758,7 +4274,7 @@
             <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
           </div>
           <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">150</span></span></div>
+            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">0</span></span></div>
             <div class="progress-bar"><div class="progress-fill" id="vp-blook-progress"></div></div>
           </div>
           <div class="up-section">
@@ -3776,7 +4292,7 @@
     <!-- Play History Page -->
     <div class="page" id="history-page">
       <div class="page-content">
-        <h2 class="page-title">Play History</h2>
+        <h2 class="page-title font-titan-header">Play History</h2>
         <div class="history-list" id="play-history-list">
           <!-- Play history items will be added here -->
         </div>
@@ -3787,7 +4303,7 @@
     <div class="page" id="shop-page">
       <div class="page-content">
         <div class="shop-header">
-          <h2 class="page-title">Game Shop</h2>
+          <h2 class="page-title font-titan-header">Game Shop</h2>
           <div class="balance-display">
             <div class="balance-item">
               <i class="fas fa-coins"></i>
@@ -3804,7 +4320,7 @@
         <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
         <div class="packs-grid" id="shop-packs"></div>
         <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
-        <div class="packs-grid" id="shop-banners"></div>
+        <div class="shop-banners-row" id="shop-banners"></div>
       </div>
     </div>
 
@@ -3812,7 +4328,7 @@
     <div class="page" id="inventory-page">
       <div class="page-content inv-blooks-page">
         <div class="inv-blooks-top">
-          <h2 class="page-title">My Blooks</h2>
+          <h2 class="page-title font-titan-header">My Blooks</h2>
           <div class="inv-blooks-tokens" id="inv-blooks-tokens" aria-live="polite">
             <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
           </div>
@@ -3849,7 +4365,7 @@
     <!-- Missions Page -->
     <div class="page" id="missions-page">
       <div class="page-content">
-        <h2 class="page-title">Daily Missions</h2>
+        <h2 class="page-title font-titan-header">Daily Missions</h2>
         <div class="daily-reward-card" id="daily-reward-card">
           <h3><i class="fas fa-gift"></i> Daily reward</h3>
           <p id="daily-reward-desc">Claim your free bonus once per day.</p>
@@ -3864,13 +4380,17 @@
 
     <!-- Chat Page (Global Chat Only) -->
     <div class="page" id="chat-page">
-      <div class="page-content">
-        <h2 class="page-title">Global Chat</h2>
+      <div class="page-content chat-page-inner">
         <div class="global-chat-panel">
           <div class="chat-container" id="global-chat-container">
-            <!-- Global chat messages will be added here -->
+            <div class="chat-loading-overlay" id="global-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
           </div>
           <div class="chat-input">
+            <div class="chat-input-actions">
+              <input type="file" id="global-chat-file" accept="image/*" style="display:none;">
+              <button type="button" class="chat-attach-btn" id="global-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
+              <button type="button" class="chat-link-btn" id="global-chat-link-btn" title="Paste image URL">Link</button>
+            </div>
             <input type="text" id="global-chat-input" placeholder="Type a message...">
             <button id="global-send-chat-btn">Send</button>
           </div>
@@ -3881,13 +4401,14 @@
     <!-- Friends Page (Friends list + Friend Chat) -->
     <div class="page" id="friends-page">
       <div class="page-content">
-        <h2 class="page-title">Friends</h2>
+        <h2 class="page-title font-titan-header">Friends</h2>
         <div class="friends-panel-container">
           <div class="friends-sidebar-section">
             <div class="add-friend-form">
-              <input type="email" id="friend-email" placeholder="Friend's email">
+              <input type="text" id="friend-email" placeholder="Friend's username" autocomplete="username">
               <button id="add-friend-btn">Add</button>
             </div>
+            <div id="friend-requests-incoming" style="margin-bottom:16px;"></div>
             <div class="friends-list" id="friends-list">
               <!-- Friends will be added here -->
             </div>
@@ -3897,9 +4418,14 @@
               <span class="friend-chat-placeholder">Select a friend to start chatting</span>
             </div>
             <div class="chat-container" id="friend-chat-container">
-              <!-- Friend chat messages will be added here -->
+              <div class="chat-loading-overlay hidden" id="friend-chat-loading"><div class="chat-loading-spinner" aria-hidden="true"></div></div>
             </div>
             <div class="chat-input" id="friend-chat-input-area" style="display:none;">
+              <div class="chat-input-actions">
+                <input type="file" id="friend-chat-file" accept="image/*" style="display:none;">
+                <button type="button" class="chat-attach-btn" id="friend-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
+                <button type="button" class="chat-link-btn" id="friend-chat-link-btn" title="Paste image URL">Link</button>
+              </div>
               <input type="text" id="friend-chat-input" placeholder="Type a message...">
               <button id="friend-send-chat-btn">Send</button>
             </div>
@@ -3911,7 +4437,7 @@
     <!-- Staff Panel Page -->
     <div class="page" id="staff-page">
       <div class="page-content">
-        <h2 class="page-title"><i class="fas fa-shield-alt" style="color:var(--neon-green);margin-right:10px;"></i>Staff Panel</h2>
+        <h2 class="page-title font-titan-header"><i class="fas fa-shield-alt" style="color:var(--neon-green);margin-right:10px;"></i>Staff Panel</h2>
         <div class="staff-panel-container">
           <div class="staff-sub-tabs" id="staff-sub-tabs">
             <button class="staff-sub-tab active" data-staff-tab="staff-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
@@ -4102,7 +4628,7 @@
     <!-- Settings Page -->
     <div class="page" id="settings-page">
       <div class="page-content">
-        <h2 class="page-title">Settings</h2>
+        <h2 class="page-title font-titan-header">Settings</h2>
         <div class="settings-section">
           <div class="settings-form">
             <div class="form-group">
@@ -4119,7 +4645,7 @@
             
             <div class="form-group">
               <label for="avatar-upload">Change Avatar</label>
-              <input type="url" id="avatar-url-input" class="auth-input" placeholder="Or paste image URL" style="margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
+              <input type="url" id="avatar-url-input" class="auth-input staff-only-url-field" placeholder="Or paste image URL (staff)" style="display:none;margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
               <label class="file-label">
                 <i class="fas fa-upload"></i> Choose Image
                 <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
@@ -4157,8 +4683,8 @@
             <div class="form-group"><label>YOUR NAME</label><input type="text" id="suggestName" required></div>
             <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="suggestEmail" required></div>
             <div class="form-group"><label>GAME TITLE</label><input type="text" id="gameTitle" required></div>
-            <div class="form-group"><label>GAME BANNER</label><input type="text" id="gameBanner" placeholder="Image URL or leave blank and upload below"></div>
-            <div class="form-group"><label>OR UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
+            <div class="form-group staff-only-suggest-banner-url"><label>GAME BANNER URL</label><input type="text" id="gameBanner" placeholder="Image URL (staff only)"></div>
+            <div class="form-group"><label>UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
             <div class="form-group"><label>GAME LINK</label><input type="text" id="gameLink" placeholder="https://..." required></div>
             <div class="form-group"><label>GAME DESCRIPTION</label><textarea id="gameDescription" required></textarea></div>
             <button type="submit" class="submit-btn">SUBMIT SUGGESTION</button>
@@ -4214,8 +4740,8 @@
         <input type="text" id="signupUsername" class="auth-input" placeholder="Username">
         <input type="email" id="signupEmail" class="auth-input" placeholder="Email">
         <input type="password" id="signupPassword" class="auth-input" placeholder="Password">
-        <div class="form-group" style="margin:10px 0 6px;">
-          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — URL or upload</label>
+        <div class="form-group staff-only-signup-url" style="margin:10px 0 6px;display:none;">
+          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — image URL (staff)</label>
           <input type="url" id="signupAvatarUrl" class="auth-input" placeholder="Optional: image URL">
         </div>
         <label class="file-label"><i class="fas fa-upload"></i> Upload Profile Picture (optional)
@@ -4278,16 +4804,25 @@
       <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
         <div class="modal-background" id="opening-modal-bg"></div>
         <div class="modal-body" id="pack-opening-modal-body">
-          <div class="gift-animation" id="gift-animation">
-            <!-- Animation will be shown here -->
+          <div class="pack-confetti-layer" id="pack-confetti-layer" aria-hidden="true" style="display:none;"></div>
+          <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
+          <button type="button" class="pack-unbox-dismiss-layer" id="pack-unbox-dismiss-layer" style="display:none;" aria-label="Collect and close"></button>
+          <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
+          <div class="pack-unbox-pack-center" id="pack-unbox-pack-center">
+            <div class="gift-animation" id="gift-animation">
+              <!-- Pack stage -->
+            </div>
           </div>
           <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
-            <p class="pack-unbox-hint" id="pack-unbox-hint" style="display:none;">Tap the zipper to open</p>
-            <div class="gift-name" id="opened-gift-name">Gift Name</div>
-            <div class="gift-rarity" id="opened-gift-rarity">Rarity</div>
-            <div class="gift-value" id="opened-gift-value">Value: 0</div>
-            <div class="gift-stars" id="opened-gift-stars">Stars: 0</div>
-            <button class="collect-btn" id="collect-btn">COLLECT</button>
+            <div class="pack-reveal-card" id="pack-reveal-card">
+              <div class="pack-reveal-card-inner">
+                <div class="pack-reveal-name" id="opened-gift-name">Gift Name</div>
+                <div class="pack-reveal-rarity gift-rarity" id="opened-gift-rarity">Rarity</div>
+                <div class="pack-reveal-blook-wrap" id="pack-reveal-blook-slot"></div>
+                <div class="pack-reveal-chance" id="opened-gift-chance">0%</div>
+                <div class="pack-reveal-stars-note" id="opened-gift-stars">Stars: 0</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -4394,7 +4929,7 @@
 
   <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div class="staff-form-group"><label>Reveal card background (URL)</label><input id="staff-pack-reveal-bg-url" placeholder="Optional image; if empty, pack inner/outer gradient is used"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
 
   <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
 
@@ -4570,23 +5105,21 @@
       const badges = Array.isArray(currentBadges) ? [...currentBadges] : [];
       const ruleMap = new Map();
       rules.forEach(rule => {
-        const name = rule.badgeName;
+        const name = String(rule.badgeName || '').trim();
+        if (!name) return;
         const min = Math.max(0, Number(rule.minStars) || 0);
-        ruleMap.set(name, min);
+        const prev = ruleMap.get(name);
+        if (prev == null || min < prev) ruleMap.set(name, min);
       });
-      const toRemove = [];
-      for (const b of badges) {
-        if (!ruleMap.has(b)) continue;
-        if (stars < ruleMap.get(b)) toRemove.push(b);
-      }
-      const toAdd = [];
-      for (const [name, min] of ruleMap) {
-        if (stars >= min && !badges.includes(name)) toAdd.push(name);
-      }
-      let next = badges.filter(b => !toRemove.includes(b));
-      toAdd.forEach(a => { if (!next.includes(a)) next.push(a); });
-      const changed = toRemove.length > 0 || toAdd.length > 0;
-      return { nextBadges: next, changed, toAdd, toRemove };
+      const manual = badges.filter(b => !ruleMap.has(b));
+      const autoNames = [...ruleMap.keys()].sort((a, b) => {
+        const d = ruleMap.get(a) - ruleMap.get(b);
+        return d !== 0 ? d : a.localeCompare(b);
+      });
+      const auto = autoNames.filter(name => stars >= ruleMap.get(name));
+      const nextBadges = [...manual, ...auto];
+      const changed = nextBadges.length !== badges.length || nextBadges.some((b, i) => b !== badges[i]);
+      return { nextBadges, changed, toAdd: [], toRemove: [] };
     }
 
     async function syncStarBadgesForUser(uid, starCount) {
@@ -4652,13 +5185,8 @@
     const avatarPreview = document.getElementById('avatarPreview');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
-    const sidebarAvatar = document.getElementById('sidebar-avatar');
-    const sidebarUsername = document.getElementById('sidebar-username');
-    const sidebarTitle = document.getElementById('sidebar-title');
-    const sidebarEmail = document.getElementById('sidebar-email');
     const playCount = document.getElementById('play-count');
     const friendCount = document.getElementById('friend-count');
-    const memberSince = document.getElementById('member-since');
     const playHistoryList = document.getElementById('play-history-list');
     const shopPacks = document.getElementById('shop-packs');
     const shopBanners = document.getElementById('shop-banners');
@@ -4694,14 +5222,19 @@
     const packOpeningModal = document.getElementById('pack-opening-modal');
     const packOpeningModalInner = document.getElementById('pack-opening-modal-inner');
     const packOpeningModalBody = document.getElementById('pack-opening-modal-body');
-    const packUnboxHint = document.getElementById('pack-unbox-hint');
+    const packUnboxClickLayer = document.getElementById('pack-unbox-click-layer');
+    const packUnboxDismissLayer = document.getElementById('pack-unbox-dismiss-layer');
+    const packConfettiLayer = document.getElementById('pack-confetti-layer');
+    const packUnboxBoost = document.getElementById('pack-unbox-boost');
     const openingModalBg = document.getElementById('opening-modal-bg');
     const giftAnimation = document.getElementById('gift-animation');
     const openedGiftName = document.getElementById('opened-gift-name');
     const openedGiftRarity = document.getElementById('opened-gift-rarity');
-    const openedGiftValue = document.getElementById('opened-gift-value');
+    const openedGiftChance = document.getElementById('opened-gift-chance');
+    const packRevealCard = document.getElementById('pack-reveal-card');
+    const packRevealBlookSlot = document.getElementById('pack-reveal-blook-slot');
+    const packUnboxPackCenter = document.getElementById('pack-unbox-pack-center');
     const openedGiftStars = document.getElementById('opened-gift-stars');
-    const collectBtn = document.getElementById('collect-btn');
     const sendGiftModal = document.getElementById('send-gift-modal');
     const sendGiftPreview = document.getElementById('send-gift-preview');
     const friendEmailSend = document.getElementById('friend-email-send');
@@ -4824,7 +5357,9 @@
             }
           } else if (td.color) {
             element.style.color = td.color;
-            element.style.background = `${td.color}20`;
+            if (!element.classList.contains('up-friend-title-tag')) {
+              element.style.background = `${td.color}20`;
+            }
           }
         }
       } catch (e) {}
@@ -4852,15 +5387,26 @@
       return map;
     }
 
-    function pickStarSlotBadgeNames(badgeNames, max) {
+    async function getStarBadgeRulesNameSet() {
+      const rules = await getStarBadgeRulesFromServer();
+      return new Set(rules.map(r => r.badgeName).filter(Boolean));
+    }
+
+    function pickStarSlotBadgeNames(badgeNames, max, ruleNameSet) {
       const arr = Array.isArray(badgeNames) ? badgeNames.filter(Boolean) : [];
-      return [...new Set(arr.map(String))].sort().slice(0, Math.max(1, max || 3));
+      const ruleSet = ruleNameSet instanceof Set ? ruleNameSet : null;
+      if (!ruleSet || !ruleSet.size) return [];
+      const filtered = arr.filter(n => ruleSet.has(String(n).trim()));
+      const uniq = [...new Set(filtered.map(n => String(n).trim()))];
+      const cap = Math.max(0, Math.min(10, max || 1));
+      return uniq.slice(0, cap);
     }
 
     async function renderStarSlotBadgesInto(wrapEl, fallbackEl, badgeNames, max) {
       if (!wrapEl) return;
-      wrapEl.querySelectorAll('.star-slot-badge-wrap').forEach(n => n.remove());
-      const picks = pickStarSlotBadgeNames(badgeNames, max);
+      wrapEl.querySelectorAll('.star-slot-badge-img, .star-slot-badge-fa').forEach(n => n.remove());
+      const ruleSet = await getStarBadgeRulesNameSet();
+      const picks = pickStarSlotBadgeNames(badgeNames, max, ruleSet);
       if (!picks.length) {
         if (fallbackEl) fallbackEl.style.display = '';
         return;
@@ -4870,9 +5416,6 @@
       picks.forEach(bn => {
         const bd = meta[bn];
         if (!bd) return;
-        const wrap = document.createElement('span');
-        wrap.className = 'star-slot-badge-wrap';
-        wrap.title = bn;
         const icon = bd.icon || '';
         const isFa = /\bfa[srb]?\s+fa-/.test(icon) || /^fa[srb]?\s/.test(icon) || (icon.includes('fa-') && !/^https?:\/\//i.test(icon));
         if (isFa) {
@@ -4880,19 +5423,20 @@
           const iel = document.createElement('i');
           iel.className = `star-slot-badge-fa ${safeFa}`;
           iel.setAttribute('aria-hidden', 'true');
-          iel.style.background = bd.bgColor || 'var(--neon-green)';
-          iel.style.color = bd.textColor || '#000';
-          wrap.appendChild(iel);
+          iel.title = bn;
+          iel.style.background = 'transparent';
+          iel.style.color = bd.textColor || bd.bgColor || 'var(--neon-green)';
+          wrapEl.appendChild(iel);
         } else if (/^https?:\/\//i.test(icon)) {
           const img = document.createElement('img');
           img.className = 'star-slot-badge-img';
           img.src = icon;
           img.alt = '';
-          wrap.appendChild(img);
-        } else return;
-        wrapEl.appendChild(wrap);
+          img.title = bn;
+          wrapEl.appendChild(img);
+        }
       });
-      if (!wrapEl.querySelector('.star-slot-badge-wrap') && fallbackEl) fallbackEl.style.display = '';
+      if (!wrapEl.querySelector('.star-slot-badge-img, .star-slot-badge-fa') && fallbackEl) fallbackEl.style.display = '';
     }
 
     async function refreshStarDisplayBadges(badgeNames) {
@@ -4900,25 +5444,25 @@
         document.getElementById('sidebar-stars-icon-wrap'),
         document.getElementById('sidebar-stars-fallback-icon'),
         badgeNames,
-        3
+        1
       );
       await renderStarSlotBadgesInto(
         document.getElementById('shop-stars-icon-wrap'),
         document.getElementById('shop-stars-fallback-icon'),
         badgeNames,
-        3
+        1
       );
       await renderStarSlotBadgesInto(
         document.getElementById('profile-stars-icon-wrap'),
         document.getElementById('profile-stars-fallback-icon'),
         badgeNames,
-        3
+        1
       );
       await renderStarSlotBadgesInto(
         document.getElementById('vp-stars-icon-wrap'),
         document.getElementById('vp-stars-fallback-icon'),
         badgeNames,
-        3
+        1
       );
     }
 
@@ -4929,37 +5473,11 @@
         const data = userDoc.data();
         userNameSpan.textContent = data.username || user.email;
         userAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        sidebarAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        sidebarUsername.textContent = data.username || user.email;
-        applyTitleStyle(sidebarTitle, data.title || "User");
-        sidebarEmail.textContent = user.email;
-        const sid = document.getElementById('sidebar-public-id');
-        if (sid) {
-          const did = data.displayId ? String(data.displayId) : '';
-          sid.textContent = did && did.length === 6 ? `ID ${did}` : '';
-        }
-        ensureDisplayIdForUser(user.uid).then(did => {
-          if (did) {
-            if (sid) sid.textContent = `ID ${did}`;
-            const pp = document.getElementById('profile-public-id');
-            if (pp) pp.textContent = `ID ${did}`;
-          }
-        });
         profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         profileUsername.textContent = data.username || user.email;
         applyTitleStyle(profileTitle, data.title || "User");
-        const pid = document.getElementById('profile-public-id');
-        if (pid) {
-          const did = data.displayId ? String(data.displayId) : '';
-          pid.textContent = did && did.length === 6 ? `ID ${did}` : 'ID —';
-        }
         renderProfileBadges(data.badges || []);
         refreshStarDisplayBadges(data.badges || []);
-        if (data.createdAt && memberSince) {
-          const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          memberSince.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-          memberSince.style.display = 'block';
-        }
       } else {
         await saveUserProfile(user.uid, user.email, user.email.split('@')[0], null);
         await loadUserProfile(user);
@@ -5073,6 +5591,9 @@
           case 'staff-page': loadStaffPanel(); break;
         }
       } else {
+        currentUserPermissions = [];
+        currentUserTitle = 'User';
+        applyNonStaffMediaUi();
         userInfoDiv.style.display = 'none';
         sidebar.classList.remove('active');
         mainContent.classList.remove('sidebar-active');
@@ -5100,7 +5621,7 @@
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
       const urlField = document.getElementById('signupAvatarUrl');
-      const urlAvatar = urlField ? urlField.value.trim() : '';
+      const urlAvatar = (canUserPasteImageLinks() && urlField) ? urlField.value.trim() : '';
       const avatarFile = avatarUpload.files[0];
       let avatarUrl = urlAvatar || null;
       if (avatarFile) {
@@ -5326,7 +5847,7 @@
       e.preventDefault();
       const msgEl = document.getElementById('suggestMessage');
       const title = document.getElementById('gameTitle')?.value.trim();
-      let bannerUrl = document.getElementById('gameBanner')?.value.trim() || '';
+      let bannerUrl = canUserPasteImageLinks() ? (document.getElementById('gameBanner')?.value.trim() || '') : '';
       const link = document.getElementById('gameLink')?.value.trim();
       const file = document.getElementById('gameBannerFile')?.files?.[0];
       if (!title || !link) {
@@ -5344,7 +5865,7 @@
         }
       }
       if (!bannerUrl) {
-        if (msgEl) { msgEl.textContent = 'Provide a banner image URL or upload a file.'; msgEl.style.color = '#FF3D6C'; }
+        if (msgEl) { msgEl.textContent = 'Upload a banner image for your suggestion.'; msgEl.style.color = '#FF3D6C'; }
         return;
       }
       try {
@@ -5393,8 +5914,7 @@
         await populateProfileLayout(userId, {
           avatar: 'profile-avatar', banner: 'profile-banner', bannerWrap: 'profile-banner-wrap',
           username: 'profile-username', title: 'profile-title',
-          publicId: 'profile-public-id',
-          memberSince: 'member-since', badges: 'profile-badges',
+          badges: 'profile-badges',
           starsVal: 'profile-stars-val', playtimeVal: 'profile-playtime-val',
           playCount: 'play-count', friendCount: 'friend-count',
           blookCount: 'profile-blook-count', blookTotal: 'profile-blook-total',
@@ -5425,24 +5945,6 @@
       }
       document.getElementById(ids.username).textContent = data.username || data.email;
       applyTitleStyle(document.getElementById(ids.title), data.title || "User");
-      if (ids.publicId) {
-        const pel = document.getElementById(ids.publicId);
-        if (pel) {
-          let did = data.displayId ? String(data.displayId) : '';
-          if (!did || did.length !== 6) {
-            ensureDisplayIdForUser(userId).then(nid => { if (nid && pel) pel.textContent = `ID ${nid}`; });
-            pel.textContent = 'ID —';
-          } else pel.textContent = `ID ${did}`;
-        }
-      }
-      if (ids.memberSince) {
-        const ms = document.getElementById(ids.memberSince);
-        if (ms && data.createdAt) {
-          const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          ms.textContent = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-          ms.style.display = 'block';
-        } else if (ms) ms.style.display = 'none';
-      }
       renderProfileBadges(data.badges || [], ids.badges);
       refreshStarDisplayBadges(data.badges || []);
       document.getElementById(ids.starsVal).textContent = data.stars || 0;
@@ -5460,10 +5962,12 @@
 
       const blooksSnap = await getDocs(query(collection(db, "inventory"), where("userId", "==", userId)));
       const ownedNames = new Set(blooksSnap.docs.map(d => d.data().itemName));
-      const blookCurrent = ownedNames.size;
-      document.getElementById(ids.blookCount).textContent = blookCurrent;
-      const blookPercent = (blookCurrent / 150) * 100;
-      document.getElementById(ids.blookProgress).style.width = blookPercent + '%';
+      const blookUnique = ownedNames.size;
+      const blookCopies = blooksSnap.size;
+      document.getElementById(ids.blookCount).textContent = blookCopies;
+      document.getElementById(ids.blookTotal).textContent = blookUnique;
+      const blookBarPct = Math.min(100, blookUnique * (100 / 45));
+      document.getElementById(ids.blookProgress).style.width = `${blookBarPct}%`;
 
       const top5 = blooksSnap.docs.sort((a, b) => (b.data().starsGained || 0) - (a.data().starsGained || 0)).slice(0, 5);
       document.getElementById(ids.topBlooks).innerHTML = top5.length ? top5.map(d => {
@@ -5643,6 +6147,30 @@
       } catch(e) { console.error(e); }
     }
 
+    function buildShopBannerRowCard(bannerPack) {
+      const wrap = document.createElement('div');
+      wrap.className = 'shop-banner-card';
+      const imgUrl = (bannerPack.bannerImageUrl || bannerPack.backgroundImage || '').trim();
+      const vis = document.createElement('div');
+      vis.className = 'shop-banner-card-visual';
+      if (imgUrl) {
+        const im = document.createElement('img');
+        im.src = imgUrl;
+        im.alt = bannerPack.name || 'Banner';
+        im.loading = 'lazy';
+        vis.appendChild(im);
+      } else {
+        vis.innerHTML = '<i class="fas fa-image" style="font-size:1.6rem;color:rgba(255,255,255,0.35);"></i>';
+      }
+      const foot = document.createElement('div');
+      foot.className = 'shop-banner-card-foot';
+      foot.innerHTML = `<div class="shop-banner-card-name">${escapeHtml(bannerPack.name || 'Banner')}</div><div class="shop-banner-card-price"><i class="fas fa-coins"></i> ${escapeHtml(String(bannerPack.price ?? 0))}</div>`;
+      wrap.appendChild(vis);
+      wrap.appendChild(foot);
+      wrap.addEventListener('click', () => purchaseBannerOffer(bannerPack));
+      return wrap;
+    }
+
     async function loadShopBannerOffers() {
       if (shopBannersUnsub) { shopBannersUnsub(); shopBannersUnsub = null; }
       if (!shopBanners) return;
@@ -5655,19 +6183,7 @@
           shopBanners.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;">No banners in the shop yet</p>';
           return;
         }
-        banners.forEach(b => {
-          const img = b.bannerImageUrl || b.backgroundImage || '';
-          const card = buildMarketPackCardEl({
-            name: b.name,
-            price: b.price,
-            pack: b,
-            artUrl: img,
-            patternUrl: '',
-            onCardClick: () => purchaseBannerOffer(b),
-            onInfoClick: null
-          });
-          shopBanners.appendChild(card);
-        });
+        banners.forEach(b => shopBanners.appendChild(buildShopBannerRowCard(b)));
       });
     }
 
@@ -5791,6 +6307,128 @@
         return `${base}; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent`;
       }
       return d.solid || '#ffffff';
+    }
+
+    /** Full-area modal background from rarity (not text-clipped). */
+    function getRarityBackgroundGradientCss(rarity) {
+      const d = getRarityDef(rarity);
+      if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
+        const g = d.gradientColors.join(', ');
+        return {
+          image: `linear-gradient(145deg, ${g}, #080c14 78%, #030509 100%)`,
+          size: d.isRunning ? '220% 220%' : '100% 100%',
+          repeat: 'no-repeat',
+          position: d.isRunning ? '0% 50%' : 'center',
+          animated: !!d.isRunning
+        };
+      }
+      const c = d.solid || '#1a2233';
+      return {
+        image: `linear-gradient(165deg, ${c} 0%, #0d1218 45%, #030509 100%)`,
+        size: '100% 100%',
+        repeat: 'no-repeat',
+        position: 'center',
+        animated: false
+      };
+    }
+
+    let packConfettiInterval = null;
+    let packConfettiStopTimer = null;
+    let packAutoUnboxTimer = null;
+
+    function hexToRgbTriplet(hex) {
+      const s = String(hex || '').trim();
+      if (!s.startsWith('#')) return null;
+      if (s.length === 4) {
+        const r = parseInt(s[1] + s[1], 16), g = parseInt(s[2] + s[2], 16), b = parseInt(s[3] + s[3], 16);
+        return Number.isFinite(r) ? [r, g, b] : null;
+      }
+      if (s.length === 7) {
+        const r = parseInt(s.slice(1, 3), 16), g = parseInt(s.slice(3, 5), 16), b = parseInt(s.slice(5, 7), 16);
+        return Number.isFinite(r) ? [r, g, b] : null;
+      }
+      return null;
+    }
+    function mixRgb(a, b, t) {
+      return [
+        Math.round(a[0] + (b[0] - a[0]) * t),
+        Math.round(a[1] + (b[1] - a[1]) * t),
+        Math.round(a[2] + (b[2] - a[2]) * t)
+      ];
+    }
+    function rgbToHex(rgb) {
+      return '#' + rgb.map(x => Math.max(0, Math.min(255, x)).toString(16).padStart(2, '0')).join('');
+    }
+
+    /** Deep → light palette for confetti from rarity definition. */
+    function getRarityConfettiColors(rarity) {
+      const d = getRarityDef(rarity);
+      let deep;
+      let light;
+      if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
+        const parsed = d.gradientColors.map(c => hexToRgbTriplet(c)).filter(Boolean);
+        if (parsed.length >= 2) {
+          deep = parsed[0];
+          light = parsed[parsed.length - 1];
+        }
+      }
+      if (!deep || !light) {
+        const base = hexToRgbTriplet(d.solid) || [140, 150, 165];
+        deep = base.map(c => Math.max(0, Math.floor(c * 0.28)));
+        light = base.map(c => Math.min(255, Math.floor(c + (255 - c) * 0.5)));
+      }
+      const palette = [];
+      for (let i = 0; i <= 7; i++) {
+        palette.push(rgbToHex(mixRgb(deep, light, i / 7)));
+      }
+      palette.push('rgba(255,255,255,0.92)');
+      return palette;
+    }
+
+    function stopPackConfetti() {
+      if (packConfettiInterval) {
+        clearInterval(packConfettiInterval);
+        packConfettiInterval = null;
+      }
+      if (packConfettiStopTimer) {
+        clearTimeout(packConfettiStopTimer);
+        packConfettiStopTimer = null;
+      }
+      if (packConfettiLayer) {
+        packConfettiLayer.innerHTML = '';
+        packConfettiLayer.style.display = 'none';
+      }
+    }
+
+    function spawnPackConfettiBurst(n, colorPalette) {
+      if (!packConfettiLayer) return;
+      const colors = Array.isArray(colorPalette) && colorPalette.length
+        ? colorPalette
+        : ['#2AFF9E', '#FF3D6C', '#FFC107', '#42A5F5', '#AB47BC', '#ffffff'];
+      const count = Math.max(1, Math.floor(n));
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'pack-confetti-piece';
+        el.style.left = `${Math.random() * 100}%`;
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = `${6 + Math.random() * 10}px`;
+        el.style.height = `${6 + Math.random() * 10}px`;
+        el.style.borderRadius = Math.random() > 0.45 ? '50%' : '2px';
+        const dur = 2.2 + Math.random() * 2.2;
+        el.style.setProperty('--cf-dx', `${(Math.random() - 0.5) * 160}px`);
+        el.style.setProperty('--cf-rot', `${420 + Math.random() * 540}deg`);
+        el.style.animation = `packConfettiFall ${dur}s linear forwards`;
+        packConfettiLayer.appendChild(el);
+        setTimeout(() => { try { el.remove(); } catch (e) {} }, dur * 1000 + 120);
+      }
+    }
+
+    function startPackConfetti(durationMs, colorPalette) {
+      stopPackConfetti();
+      if (packConfettiLayer) packConfettiLayer.style.display = 'block';
+      spawnPackConfettiBurst(32, colorPalette);
+      packConfettiInterval = setInterval(() => spawnPackConfettiBurst(18, colorPalette), 360);
+      packConfettiStopTimer = setTimeout(() => stopPackConfetti(), durationMs || 15000);
     }
 
     function ymdUTC(d) {
@@ -6109,25 +6747,39 @@
     }
 
     let packUnboxClickHandler = null;
-    let packUnboxKeyHandler = null;
+    let packUnboxDismissHandler = null;
 
     function resetPackOpeningModalLayout() {
-      if (giftAnimation && packUnboxClickHandler) {
-        giftAnimation.removeEventListener('click', packUnboxClickHandler);
-        giftAnimation.removeEventListener('keydown', packUnboxKeyHandler);
-        packUnboxClickHandler = null;
-        packUnboxKeyHandler = null;
+      if (packAutoUnboxTimer) {
+        clearTimeout(packAutoUnboxTimer);
+        packAutoUnboxTimer = null;
       }
-      giftAnimation?.removeAttribute('role');
-      giftAnimation?.removeAttribute('tabindex');
-      giftAnimation?.removeAttribute('aria-label');
+      stopPackConfetti();
+      if (openingModalBg) {
+        openingModalBg.classList.remove('pack-rarity-celebrate');
+        openingModalBg.style.animation = '';
+      }
+      if (packUnboxClickLayer && packUnboxClickHandler) {
+        packUnboxClickLayer.removeEventListener('click', packUnboxClickHandler);
+        packUnboxClickHandler = null;
+      }
+      if (packUnboxDismissLayer && packUnboxDismissHandler) {
+        packUnboxDismissLayer.removeEventListener('click', packUnboxDismissHandler);
+        packUnboxDismissHandler = null;
+      }
+      if (packUnboxClickLayer) packUnboxClickLayer.style.display = 'none';
+      if (packUnboxDismissLayer) packUnboxDismissLayer.style.display = 'none';
+      if (packRevealCard) packRevealCard.classList.remove('pack-unbox-reveal-anim');
+      if (packUnboxBoost) packUnboxBoost.style.display = 'none';
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
-      packOpeningModalBody?.classList.remove('pack-unbox-body');
-      giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-reveal', 'pack-unbox-anim');
+      packOpeningModalBody?.classList.remove('pack-unbox-body', 'pack-unbox-revealed');
+      if (packUnboxPackCenter) packUnboxPackCenter.style.display = '';
+      giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-peek', 'pack-unbox-cover-drop', 'pack-unbox-reveal', 'pack-unbox-anim');
       giftAnimation.innerHTML = '';
-      if (packUnboxHint) {
-        packUnboxHint.classList.add('is-hidden');
-        packUnboxHint.style.display = 'none';
+      if (packRevealBlookSlot) packRevealBlookSlot.innerHTML = '';
+      if (packRevealCard) {
+        packRevealCard.style.backgroundImage = '';
+        packRevealCard.style.backgroundColor = '';
       }
       openingModalBg.style.backgroundImage = '';
       openingModalBg.style.backgroundSize = '';
@@ -6141,44 +6793,55 @@
       const fc = marketPackFrameColors(pack);
       const inner = fc.inner || '#5a6a8a';
       const outer = fc.outer || '#1a2233';
-      const patternUrl = marketPackPatternUrl(pack);
-      const softLight = 'radial-gradient(ellipse 95% 75% at 50% 38%, rgba(255,255,255,0.055), transparent 58%), radial-gradient(ellipse 80% 45% at 50% 92%, rgba(0,0,0,0.28), transparent 55%)';
-      const layers = [
-        softLight,
-        patternUrl ? `url(${JSON.stringify(String(patternUrl))})` : '',
-        `linear-gradient(155deg, ${inner} 0%, ${outer} 52%, #05070c 100%)`
-      ].filter(Boolean);
-      openingModalBg.style.backgroundImage = layers.join(', ');
-      openingModalBg.style.backgroundSize = patternUrl ? '100% 100%, 320px 320px, 100% 100%' : '100% 100%, 100% 100%';
-      openingModalBg.style.backgroundRepeat = patternUrl ? 'no-repeat, repeat, no-repeat' : 'no-repeat, no-repeat';
-      openingModalBg.style.backgroundPosition = 'center, center, center';
+      openingModalBg.style.backgroundImage = `linear-gradient(168deg, ${inner} 0%, ${outer} 42%, #030509 88%)`;
+      openingModalBg.style.backgroundSize = '100% 100%';
+      openingModalBg.style.backgroundRepeat = 'no-repeat';
+      openingModalBg.style.backgroundPosition = 'center';
 
       packOpeningModalInner?.classList.add('pack-opening-modal-unbox');
       packOpeningModalBody?.classList.add('pack-unbox-body');
 
-      openedGiftName.textContent = item.name;
+      openedGiftName.textContent = item.name || '';
+      const rKey = (item.rarity || 'common').toLowerCase();
       openedGiftRarity.textContent = (item.rarity || 'common').toUpperCase();
-      openedGiftRarity.className = `gift-rarity ${item.rarity || 'common'}`;
-      openedGiftValue.textContent = `Chance: ${item.chance != null ? item.chance : '?'}%`;
-      openedGiftStars.textContent = `Stars: ${item.starsGained}`;
+      openedGiftRarity.className = 'pack-reveal-rarity';
+      openedGiftRarity.style.cssText = `color:${getRarityColor(rKey)};background:none;-webkit-text-fill-color:initial;`;
+      const pct = item.chance != null && item.chance !== '' ? Number(item.chance) : null;
+      openedGiftChance.textContent = pct != null && Number.isFinite(pct) ? `${pct}%` : '—';
+      openedGiftStars.textContent = `Stars: ${item.starsGained != null ? item.starsGained : 0}`;
+      const revealUrl = (pack.revealCardBgUrl || '').trim();
+      if (packRevealCard) {
+        if (revealUrl) {
+          packRevealCard.style.backgroundColor = '#0b0e14';
+          packRevealCard.style.backgroundImage = `url(${JSON.stringify(revealUrl)})`;
+          packRevealCard.style.backgroundSize = 'cover';
+        } else {
+          packRevealCard.style.backgroundColor = '#0b0e14';
+          packRevealCard.style.backgroundSize = '100% 100%';
+          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner} 0%, ${outer} 55%, #05070c 100%)`;
+        }
+      }
+      if (packRevealBlookSlot) {
+        packRevealBlookSlot.innerHTML = '';
+        if (item.imageUrl) {
+          const im = document.createElement('img');
+          im.src = item.imageUrl;
+          im.alt = item.name || '';
+          packRevealBlookSlot.appendChild(im);
+        } else {
+          packRevealBlookSlot.innerHTML = `<i class="fas fa-gift" style="font-size:3rem;color:${getRarityColor(item.rarity)};"></i>`;
+        }
+      }
       openedGiftName.style.opacity = '0';
       openedGiftRarity.style.opacity = '0';
-      openedGiftValue.style.opacity = '0';
+      openedGiftChance.style.opacity = '0';
       openedGiftStars.style.opacity = '0';
-      collectBtn.style.opacity = '0';
-      collectBtn.style.pointerEvents = 'none';
 
-      if (packUnboxHint) {
-        packUnboxHint.classList.remove('is-hidden');
-        packUnboxHint.style.display = 'block';
-        packUnboxHint.textContent = 'Click the pack to open';
-      }
+      if (packUnboxClickLayer) packUnboxClickLayer.style.display = 'block';
+      if (packUnboxBoost) packUnboxBoost.style.display = 'flex';
 
       giftAnimation.innerHTML = '';
       giftAnimation.classList.add('pack-unbox-stage');
-      giftAnimation.setAttribute('role', 'button');
-      giftAnimation.setAttribute('tabindex', '0');
-      giftAnimation.setAttribute('aria-label', 'Open pack');
 
       const artUrl = (marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack').replace(/\\/g, '/');
 
@@ -6187,24 +6850,31 @@
 
       const setStackSize = (nw, nh) => {
         const maxW = Math.min(window.innerWidth * 0.92, 440);
-        const maxH = Math.min(window.innerHeight * 0.72, 620);
+        const maxH = Math.min(window.innerHeight * 0.62, 560);
         const w = nw > 0 ? nw : 280;
         const h = nh > 0 ? nh : 280;
-        const scale = Math.min(1, maxW / w, maxH / h);
+        const scale = Math.min(1, maxW / w, maxH / h) * 1.3;
         stack.style.width = `${Math.round(w * scale)}px`;
         stack.style.height = `${Math.round(h * scale)}px`;
       };
 
       const blookUnder = document.createElement('div');
       blookUnder.className = 'pack-unbox-blook-under';
+      const blookClip = document.createElement('div');
+      blookClip.className = 'pack-unbox-blook-clip';
       if (item.imageUrl) {
         const bi = document.createElement('img');
         bi.src = item.imageUrl;
         bi.alt = item.name || '';
-        blookUnder.appendChild(bi);
+        blookClip.appendChild(bi);
       } else {
-        blookUnder.innerHTML = `<i class="fas fa-gift" style="font-size:min(26vw,6.5rem);color:${getRarityColor(item.rarity)};"></i>`;
+        const ic = document.createElement('i');
+        ic.className = 'fas fa-gift pack-unbox-blook-icon';
+        ic.style.fontSize = 'min(26vw,6.5rem)';
+        ic.style.color = getRarityColor(item.rarity);
+        blookClip.appendChild(ic);
       }
+      blookUnder.appendChild(blookClip);
 
       const makeHalfImg = () => {
         const im = document.createElement('img');
@@ -6226,72 +6896,107 @@
       stack.appendChild(halfBot);
       stack.appendChild(halfTop);
 
-      const revealDetails = () => {
+      const finishRevealCard = () => {
+        packOpeningModalBody?.classList.add('pack-unbox-revealed');
+        if (packUnboxPackCenter) packUnboxPackCenter.style.display = 'none';
         openedGiftName.style.opacity = '1';
         openedGiftRarity.style.opacity = '1';
-        openedGiftValue.style.opacity = '1';
+        openedGiftChance.style.opacity = '1';
         openedGiftStars.style.opacity = '1';
-        collectBtn.style.opacity = '1';
-        collectBtn.style.pointerEvents = '';
-      };
-
-      const tearOpen = () => {
-        if (giftAnimation.classList.contains('torn')) return;
-        giftAnimation.classList.add('torn');
-        giftAnimation.removeAttribute('tabindex');
-        giftAnimation.removeAttribute('role');
-        if (packUnboxHint) {
-          packUnboxHint.classList.add('is-hidden');
-          packUnboxHint.style.display = 'none';
+        if (packRevealCard) packRevealCard.classList.add('pack-unbox-reveal-anim');
+        if (packUnboxDismissLayer) {
+          packUnboxDismissLayer.style.display = 'block';
+          packUnboxDismissHandler = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!currentUser || !currentGiftCard) {
+              packOpeningModal.style.display = 'none';
+              resetPackOpeningModalLayout();
+              return;
+            }
+            try {
+              await addDoc(collection(db, 'inventory'), {
+                userId: currentUser.uid,
+                packId: currentGiftCard.packId,
+                packName: currentGiftCard.packName,
+                itemName: currentGiftCard.name,
+                rarity: currentGiftCard.rarity,
+                imageUrl: currentGiftCard.imageUrl || null,
+                starsGained: currentGiftCard.starsGained,
+                timestamp: serverTimestamp()
+              });
+              packOpeningModal.style.display = 'none';
+              resetPackOpeningModalLayout();
+              showNotification(`You received: ${currentGiftCard.name}!`, 'success');
+            } catch (err) {
+              showNotification('Error collecting item: ' + (err.message || 'error'), 'error');
+            }
+          };
+          packUnboxDismissLayer.addEventListener('click', packUnboxDismissHandler);
         }
-        setTimeout(revealDetails, 420);
       };
 
-      const onPackActivate = (e) => {
+      const applyRarityCelebrateBg = () => {
+        const bg = getRarityBackgroundGradientCss(item.rarity);
+        if (openingModalBg) {
+          openingModalBg.classList.add('pack-rarity-celebrate');
+          openingModalBg.style.backgroundImage = bg.image;
+          openingModalBg.style.backgroundSize = bg.size;
+          openingModalBg.style.backgroundRepeat = bg.repeat;
+          openingModalBg.style.backgroundPosition = bg.position;
+          if (bg.animated) {
+            openingModalBg.style.animation = 'packRarityBgRun 6s linear infinite';
+          } else {
+            openingModalBg.style.animation = '';
+          }
+        }
+      };
+
+      const firstRip = () => {
+        if (giftAnimation.classList.contains('torn')) return;
+        giftAnimation.classList.add('torn', 'pack-unbox-peek');
+        if (packUnboxBoost) packUnboxBoost.style.display = 'none';
+      };
+
+      const secondReveal = () => {
+        if (!giftAnimation.classList.contains('torn') || giftAnimation.classList.contains('pack-unbox-cover-drop')) return;
+        giftAnimation.classList.add('pack-unbox-cover-drop');
+        giftAnimation.classList.remove('pack-unbox-peek');
+        applyRarityCelebrateBg();
+        const confettiColors = getRarityConfettiColors(item.rarity);
+        startPackConfetti(15000, confettiColors);
+        setTimeout(finishRevealCard, 620);
+      };
+
+      packUnboxClickHandler = (e) => {
         e.preventDefault();
-        tearOpen();
+        e.stopPropagation();
+        if (!giftAnimation.classList.contains('torn')) {
+          firstRip();
+          const preConfettiMs = 1000;
+          if (packAutoUnboxTimer) clearTimeout(packAutoUnboxTimer);
+          packAutoUnboxTimer = setTimeout(() => {
+            packAutoUnboxTimer = null;
+            secondReveal();
+          }, preConfettiMs);
+        }
       };
-      packUnboxKeyHandler = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') onPackActivate(e);
-      };
-      packUnboxClickHandler = onPackActivate;
 
       const probe = new Image();
       probe.onload = () => {
         setStackSize(probe.naturalWidth, probe.naturalHeight);
         giftAnimation.appendChild(stack);
-        giftAnimation.addEventListener('click', packUnboxClickHandler);
-        giftAnimation.addEventListener('keydown', packUnboxKeyHandler);
+        if (packUnboxClickLayer) packUnboxClickLayer.addEventListener('click', packUnboxClickHandler);
       };
       probe.onerror = () => {
         setStackSize(280, 280);
         giftAnimation.appendChild(stack);
-        giftAnimation.addEventListener('click', packUnboxClickHandler);
-        giftAnimation.addEventListener('keydown', packUnboxKeyHandler);
+        if (packUnboxClickLayer) packUnboxClickLayer.addEventListener('click', packUnboxClickHandler);
       };
       probe.src = artUrl;
 
       packOpeningModal.style.display = 'flex';
     }
-
-    collectBtn.addEventListener('click', async () => {
-      if (!currentUser || !currentGiftCard) return;
-      try {
-        await addDoc(collection(db, "inventory"), {
-          userId: currentUser.uid,    
-          packId: currentGiftCard.packId,    
-          packName: currentGiftCard.packName,    
-          itemName: currentGiftCard.name,    
-          rarity: currentGiftCard.rarity,    
-          imageUrl: currentGiftCard.imageUrl || null,    
-          starsGained: currentGiftCard.starsGained,    
-          timestamp: serverTimestamp()
-        });
-        packOpeningModal.style.display = 'none';
-        resetPackOpeningModalLayout();
-        showNotification(`You received: ${currentGiftCard.name}!`, "success");
-      } catch(e) { showNotification("Error collecting item: " + e.message, "error"); }
-    });
 
     // ========== Blooket-style Inventory ==========
     let currentInventoryFilter = 'all';
@@ -6783,49 +7488,208 @@
       }
     }
 
+    let friendsListUnsub = null;
+    let friendRequestsUnsub = null;
+
     // ========== Friends List ==========
     async function loadFriends(userId) {
       try {
+        if (friendsListUnsub) { friendsListUnsub(); friendsListUnsub = null; }
+        if (friendRequestsUnsub) { friendRequestsUnsub(); friendRequestsUnsub = null; }
+        const reqBox = document.getElementById('friend-requests-incoming');
         const friendsQuery = query(collection(db, "friends"), where("userId", "==", userId));
-        const unsubscribe = onSnapshot(friendsQuery, async (snapshot) => {
+        friendsListUnsub = onSnapshot(friendsQuery, async (snapshot) => {
           friendsList.innerHTML = '';
           friendsData = [];
-          if (snapshot.empty) { friendsList.innerHTML = '<p>No friends yet</p>'; return; }
-          const friendIds = snapshot.docs.map(doc => doc.data().friendId);
-          const usersQuery = query(collection(db, "users"), where("__name__", "in", friendIds));
-          const usersSnapshot = await getDocs(usersQuery);
-          usersSnapshot.forEach(doc => {
-            const friend = { id: doc.id, ...doc.data() };
-            friendsData.push(friend);
-            const friendItem = document.createElement('div');
-            friendItem.className = `friend-item${selectedFriend && selectedFriend.id === friend.id ? ' active' : ''}`;
-            friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.username}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${friend.username}</div>`;
-            friendItem.addEventListener('click', () => {
-              document.querySelectorAll('.friend-item').forEach(i => i.classList.remove('active'));
-              friendItem.classList.add('active');
-              selectedFriend = friend;
-              loadFriendChat();
-            });
-            friendsList.appendChild(friendItem);
-          });
+          if (snapshot.empty) {
+            friendsList.innerHTML = '<p>No friends yet</p>';
+          } else {
+            const friendIds = snapshot.docs.map(doc => doc.data().friendId);
+            for (let i = 0; i < friendIds.length; i += 10) {
+              const batch = friendIds.slice(i, i + 10);
+              const usersSnapshot = await getDocs(query(collection(db, "users"), where("__name__", "in", batch)));
+              usersSnapshot.forEach(docu => {
+                const friend = { id: docu.id, ...docu.data() };
+                friendsData.push(friend);
+                const friendItem = document.createElement('div');
+                friendItem.className = `friend-item${selectedFriend && selectedFriend.id === friend.id ? ' active' : ''}`;
+                friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.username}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${escapeHtml(friend.username || '')}</div>`;
+                friendItem.addEventListener('click', () => {
+                  document.querySelectorAll('.friend-item').forEach(el => el.classList.remove('active'));
+                  friendItem.classList.add('active');
+                  selectedFriend = friend;
+                  loadFriendChat();
+                });
+                friendsList.appendChild(friendItem);
+              });
+            }
+          }
         });
+        friendRequestsUnsub = onSnapshot(
+          query(collection(db, 'friendRequests'), where('toUserId', '==', userId), where('status', '==', 'pending')),
+          async (snap) => {
+            if (!reqBox) return;
+            reqBox.innerHTML = '';
+            if (snap.empty) return;
+            const title = document.createElement('div');
+            title.style.cssText = 'font-weight:800;font-size:0.82rem;color:var(--neon-green);margin-bottom:8px;';
+            title.textContent = 'Friend requests';
+            reqBox.appendChild(title);
+            for (const d of snap.docs) {
+              const r = d.data();
+              const fromId = r.fromUserId;
+              if (!fromId) continue;
+              const udoc = await getDoc(doc(db, 'users', fromId));
+              const un = udoc.exists() ? (udoc.data().username || fromId) : fromId;
+              const row = document.createElement('div');
+              row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:rgba(0,0,0,0.25);border-radius:10px;margin-bottom:8px;border:1px solid rgba(42,255,158,0.15);';
+              row.innerHTML = `<span style="font-size:0.88rem;">${escapeHtml(un)}</span><span style="display:flex;gap:6px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm fr-acc" data-req="${d.id}" data-from="${fromId}">Accept</button><button type="button" class="staff-btn staff-btn-sm fr-dec" data-req="${d.id}">Decline</button></span>`;
+              reqBox.appendChild(row);
+            }
+            reqBox.querySelectorAll('.fr-acc').forEach(b => b.addEventListener('click', () => acceptFriendRequest(b.dataset.req, b.dataset.from)));
+            reqBox.querySelectorAll('.fr-dec').forEach(b => b.addEventListener('click', () => declineFriendRequest(b.dataset.req)));
+          }
+        );
       } catch(e) { console.error(e); }
     }
 
     function formatMessageTime(timestamp) {
-      if (!timestamp) return '';
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      if (!timestamp) return 'Just now';
+      let date;
+      if (typeof timestamp.toDate === 'function') date = timestamp.toDate();
+      else if (typeof timestamp.seconds === 'number') date = new Date(timestamp.seconds * 1000 + Math.floor((timestamp.nanoseconds || 0) / 1e6));
+      else date = new Date(timestamp);
+      if (Number.isNaN(date.getTime())) return 'Just now';
       const now = new Date();
-      const diffSec = Math.floor((now - date) / 1000);
-      if (diffSec < 20) return "Just now";
-      const isToday = date.toDateString() === now.toDateString();
-      if (isToday) return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+      const diffMs = now - date;
+      const diffSec = Math.floor(diffMs / 1000);
+      if (diffSec < 300 || diffMs < 0) return 'Just now';
+
+      const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startMsgDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const dayDiff = Math.round((startToday - startMsgDay) / 86400000);
+
+      const hm = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+      if (dayDiff === 0) return hm;
+      if (dayDiff === 1) return `Yesterday at ${hm}`;
+
+      const startOfWeek = new Date(startToday);
+      startOfWeek.setDate(startToday.getDate() - startToday.getDay());
+      const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      if (date >= startOfWeek && date < startToday) {
+        return weekdayNames[date.getDay()];
+      }
+
       const yy = date.getFullYear().toString().slice(-2);
-      const mm = (date.getMonth()+1).toString().padStart(2, '0');
+      const mm = (date.getMonth() + 1).toString().padStart(2, '0');
       const dd = date.getDate().toString().padStart(2, '0');
       const hh = date.getHours().toString().padStart(2, '0');
       const min = date.getMinutes().toString().padStart(2, '0');
       return `${yy}/${mm}/${dd} ${hh}:${min}`;
+    }
+
+    let chatMentionDir = null;
+    let chatMentionDirPromise = null;
+    async function ensureChatMentionDirectory() {
+      if (chatMentionDir) return chatMentionDir;
+      if (chatMentionDirPromise) return chatMentionDirPromise;
+      chatMentionDirPromise = (async () => {
+        const dir = {};
+        try {
+          const [usersSnap, titlesSnap] = await Promise.all([
+            getDocs(collection(db, 'users')),
+            getDocs(collection(db, 'titles'))
+          ]);
+          const titlesByName = {};
+          titlesSnap.docs.forEach(d => { const t = d.data(); if (t.name) titlesByName[t.name] = t; });
+          usersSnap.docs.forEach(d => {
+            const u = d.data();
+            const un = (u.username || '').trim();
+            if (!un) return;
+            const key = un.toLowerCase();
+            let titleStyle = 'color:var(--neon-green);font-weight:800;';
+            const td = titlesByName[u.title || 'User'];
+            if (td?.isGradient && td.gradientColors?.length >= 2) {
+              titleStyle = `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
+            } else if (td?.color) titleStyle = `color:${td.color};font-weight:800;`;
+            dir[key] = { id: d.id, display: un, titleStyle };
+          });
+        } catch (e) { console.warn('chat mention dir', e); }
+        chatMentionDir = dir;
+        return dir;
+      })();
+      return chatMentionDirPromise;
+    }
+
+    async function refreshChatMentionDirectory() {
+      chatMentionDir = null;
+      chatMentionDirPromise = null;
+      return ensureChatMentionDirectory();
+    }
+
+    function mergeChatMentionEntry(username, userId, titleStyle) {
+      const un = (username || '').trim();
+      if (!un || !userId) return;
+      if (!chatMentionDir) chatMentionDir = {};
+      const key = un.toLowerCase();
+      chatMentionDir[key] = { id: userId, display: un, titleStyle: titleStyle || 'color:var(--neon-green);font-weight:800;' };
+    }
+
+    async function resolveUsernameTitleStyle(username) {
+      const q = (username || '').trim();
+      if (!q) return 'color:var(--neon-green);font-weight:800;';
+      try {
+        const usersSnap = await getDocs(query(collection(db, 'users'), where('username', '==', q)));
+        let udoc = usersSnap.empty ? null : usersSnap.docs[0];
+        if (!udoc) {
+          const lower = q.toLowerCase();
+          const all = await getDocs(collection(db, 'users'));
+          udoc = all.docs.find(d => (d.data().username || '').toLowerCase() === lower) || null;
+        }
+        if (!udoc) return 'color:var(--neon-green);font-weight:800;';
+        const u = udoc.data();
+        const titlesSnap = await getDocs(query(collection(db, 'titles'), where('name', '==', u.title || 'User')));
+        if (titlesSnap.empty) return 'color:var(--neon-green);font-weight:800;';
+        const td = titlesSnap.docs[0].data();
+        if (td.isGradient && td.gradientColors?.length >= 2) {
+          return `background:linear-gradient(90deg,${td.gradientColors.join(',')});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;${td.isRunning ? 'background-size:300% 100%;animation:runGradient 3s linear infinite;' : ''}`;
+        }
+        if (td.color) return `color:${td.color};font-weight:800;`;
+      } catch (e) { console.warn('resolveUsernameTitleStyle', e); }
+      return 'color:var(--neon-green);font-weight:800;';
+    }
+
+    async function renderChatMessageBodyHtml(rawText) {
+      const text = rawText == null ? '' : String(rawText);
+      await ensureChatMentionDirectory();
+      const dir = chatMentionDir || {};
+      const re = /@([\w.\-]{2,40})/g;
+      let out = '';
+      let last = 0;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        out += escapeHtml(text.slice(last, m.index));
+        const rawHandle = m[1];
+        const key = rawHandle.toLowerCase();
+        let info = dir[key];
+        if (!info) {
+          const uid = await findUserIdByUsername(rawHandle);
+          if (uid) {
+            const ts = await resolveUsernameTitleStyle(rawHandle);
+            const display = (await getChatUserData(uid))?.username || rawHandle;
+            info = { id: uid, display: String(display).trim() || rawHandle, titleStyle: ts };
+            mergeChatMentionEntry(info.display, uid, ts);
+          }
+        }
+        if (info) {
+          out += `<span class="chat-at-mention" role="link" tabindex="0" data-user-id="${escapeHtml(info.id)}" style="${info.titleStyle}">@${escapeHtml(info.display)}</span>`;
+        } else {
+          out += escapeHtml(m[0]);
+        }
+        last = m.index + m[0].length;
+      }
+      out += escapeHtml(text.slice(last));
+      return out;
     }
 
     let chatUserCache = {};
@@ -6838,11 +7702,13 @@
       return null;
     }
 
-    async function buildChatMessageElement(docSnap) {
+    async function buildChatMessageElement(docSnap, options) {
+      const opts = options || {};
       const msg = docSnap.data();
       const div = document.createElement('div');
       div.className = `chat-message ${msg.senderId === currentUser?.uid ? 'user' : 'friend'}`;
       div.dataset.msgId = docSnap.id;
+      div.dataset.senderId = msg.senderId || '';
       if (msg.type === 'system') {
         div.innerHTML = `<div class="message-content">${escapeHtml(msg.message || '')}</div><div class="message-time">${formatMessageTime(msg.timestamp)}</div>`;
         return div;
@@ -6866,30 +7732,88 @@
           try {
             const badgesSnap = await getDocs(collection(db, 'badges'));
             const bd = badgesSnap.docs.map(d=>d.data()).find(b=>b.name===userData.badges[0]);
-            if (bd?.icon) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}">`;
+            if (bd?.icon && /^https?:\/\//i.test(bd.icon)) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}">`;
           } catch(e) {}
         }
       }
       const safeName = escapeHtml(msg.senderName || '');
       const av = escapeHtml(msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg');
+      const hideHeader = !!opts.groupWithPrevious;
+      if (hideHeader) div.classList.add('chat-msg-grouped');
+      const timeStr = formatMessageTime(msg.timestamp);
+      const imgUrl = (msg.imageUrl || '').trim();
+      const safeImg = imgUrl && /^https?:\/\//i.test(imgUrl) ? escapeHtml(imgUrl) : '';
       div.innerHTML = `
         <div class="chat-msg-header">
           <img class="chat-avatar" src="${av}" alt="${safeName}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">
           <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">${safeName}</span>
           ${topBadgeHtml}
-          <span class="message-time">${formatMessageTime(msg.timestamp)}</span>
+          <span class="message-time">${escapeHtml(timeStr)}</span>
         </div>
         <div class="message-content chat-msg-body"></div>
+        ${hideHeader ? `<div class="message-time message-time-inline">${escapeHtml(timeStr)}</div>` : ''}
       `;
       const body = div.querySelector('.chat-msg-body');
-      if (body) body.textContent = msg.message || '';
+      if (body) {
+        body.innerHTML = '';
+        if (safeImg) {
+          const im = document.createElement('img');
+          im.className = 'chat-msg-img';
+          im.src = imgUrl;
+          im.alt = 'Chat image';
+          im.loading = 'lazy';
+          im.addEventListener('click', () => window.open(imgUrl, '_blank', 'noopener'));
+          body.appendChild(im);
+        }
+        const text = (msg.message || '').trim();
+        if (text) {
+          const span = document.createElement('span');
+          span.className = 'chat-msg-text';
+          span.innerHTML = await renderChatMessageBodyHtml(text);
+          body.appendChild(span);
+        }
+      }
       div.querySelectorAll('.clickable-username, .chat-avatar').forEach(el => {
         el.addEventListener('click', () => showUserProfileModal(el.dataset.userId, el.dataset.username));
+      });
+      div.querySelectorAll('.chat-at-mention').forEach(el => {
+        const uid = el.dataset.userId;
+        const open = () => { if (uid) navigateToUserProfile(uid); };
+        el.addEventListener('click', open);
+        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
       });
       return div;
     }
 
-    async function applyChatSnapshot(container, snapshot, renderedIdSet) {
+    async function syncChatFromSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
+      renderedIdSet.clear();
+      const fragLoading = loadingOverlay;
+      container.querySelectorAll('.chat-message').forEach(n => n.remove());
+      const docs = snapshot.docs.slice().sort((a, b) => {
+        const ta = a.data().timestamp?.toMillis ? a.data().timestamp.toMillis() : 0;
+        const tb = b.data().timestamp?.toMillis ? b.data().timestamp.toMillis() : 0;
+        return ta - tb;
+      });
+      let prevSender = null;
+      for (const d of docs) {
+        renderedIdSet.add(d.id);
+        const msg = d.data();
+        const group = prevSender && msg.senderId === prevSender && msg.type !== 'system';
+        container.appendChild(await buildChatMessageElement(d, { groupWithPrevious: group }));
+        if (msg.type !== 'system') prevSender = msg.senderId || null;
+        else prevSender = null;
+      }
+      requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+      if (fragLoading) fragLoading.classList.add('hidden');
+    }
+
+    async function applyChatSnapshot(container, snapshot, renderedIdSet, loadingOverlay) {
+      const fromCache = snapshot.metadata && snapshot.metadata.fromCache === true;
+      const hasLocalAdds = snapshot.docChanges().some(c => c.type === 'added');
+      if (fromCache && hasLocalAdds) {
+        await syncChatFromSnapshot(container, snapshot, renderedIdSet, loadingOverlay);
+        return;
+      }
       const changes = snapshot.docChanges();
       for (const ch of changes) {
         if (ch.type === 'removed') {
@@ -6907,19 +7831,29 @@
       for (const d of added) {
         if (renderedIdSet.has(d.id)) continue;
         renderedIdSet.add(d.id);
-        container.appendChild(await buildChatMessageElement(d));
+        const msg = d.data();
+        const last = container.querySelector('.chat-message:last-of-type');
+        const group = last && last.dataset.senderId && msg.senderId === last.dataset.senderId && msg.type !== 'system';
+        container.appendChild(await buildChatMessageElement(d, { groupWithPrevious: group }));
       }
-      container.scrollTop = container.scrollHeight;
+      requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+      if (loadingOverlay) loadingOverlay.classList.add('hidden');
     }
 
     // ========== Global Chat ==========
     async function loadGlobalChat() {
       if (globalChatUnsubscribe) globalChatUnsubscribe();
       globalChatRenderedIds = new Set();
+      const loadingEl = document.getElementById('global-chat-loading');
       globalChatContainer.innerHTML = '';
+      if (loadingEl) {
+        globalChatContainer.appendChild(loadingEl);
+        loadingEl.classList.remove('hidden');
+      }
+      await refreshChatMentionDirectory();
       const chatQuery = query(collection(db, "chats"), where("type", "==", "global"), orderBy("timestamp", "desc"), limit(50));
       globalChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds).catch(e => console.warn(e));
+        applyChatSnapshot(globalChatContainer, snapshot, globalChatRenderedIds, loadingEl).catch(e => console.warn(e));
       });
     }
 
@@ -6937,10 +7871,34 @@
       return false;
     }
 
+    async function uploadChatImageFile(file) {
+      if (!file || !currentUser) return null;
+      const storageRef = ref(storage, `chatImages/${currentUser.uid}_${Date.now()}_${file.name.replace(/[^\w.\-]+/g, '_')}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      return getDownloadURL(snapshot.ref);
+    }
+
+    function promptChatImageUrl() {
+      if (!canUserPasteImageLinks()) {
+        showNotification('Only staff can attach images by URL.', 'error');
+        return null;
+      }
+      const raw = window.prompt('Image URL (https://...)');
+      if (raw == null) return null;
+      const u = raw.trim();
+      if (!u) return null;
+      if (!/^https?:\/\//i.test(u)) {
+        showNotification('Please use an http(s) image URL.', 'error');
+        return null;
+      }
+      return u;
+    }
+
     async function sendGlobalChatMessage() {
       const message = globalChatInput.value.trim();
-      if (!message || !currentUser) return;
+      if (!currentUser) return;
       if (await isUserMuted()) return;
+      if (!message) return;
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       const userData = userDoc.data();
       await addDoc(collection(db, "chats"), {
@@ -6952,6 +7910,26 @@
         type: 'global'
       });
       globalChatInput.value = '';
+      refreshChatMentionDirectory().catch(() => {});
+      updateMissionProgress('chatting', 1);
+    }
+
+    async function sendGlobalChatWithImage(imageUrl, caption) {
+      if (!currentUser || !imageUrl) return;
+      if (await isUserMuted()) return;
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const userData = userDoc.data();
+      await addDoc(collection(db, "chats"), {
+        message: caption || '',
+        imageUrl,
+        senderId: currentUser.uid,
+        senderName: userData.username || currentUser.email,
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        timestamp: serverTimestamp(),
+        type: 'global'
+      });
+      globalChatInput.value = '';
+      refreshChatMentionDirectory().catch(() => {});
       updateMissionProgress('chatting', 1);
     }
 
@@ -6962,24 +7940,32 @@
         friendChatHeader.innerHTML = '<span class="friend-chat-placeholder">Select a friend to start chatting</span>';
         friendChatContainer.innerHTML = '';
         friendChatInputArea.style.display = 'none';
+        document.getElementById('friend-chat-loading')?.classList.add('hidden');
         return;
       }
       friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${selectedFriend.avatar}" alt="${selectedFriend.username}">` : '<i class="fas fa-user"></i>'} <span>${selectedFriend.username}</span>`;
       friendChatInputArea.style.display = 'flex';
       friendChatRenderedIds = new Set();
+      const fLoad = document.getElementById('friend-chat-loading');
       friendChatContainer.innerHTML = '';
+      if (fLoad) {
+        friendChatContainer.appendChild(fLoad);
+        fLoad.classList.remove('hidden');
+      }
+      await refreshChatMentionDirectory();
       const uids = [currentUser.uid, selectedFriend.id].sort();
       const chatId = `${uids[0]}_${uids[1]}`;
       const chatQuery = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "desc"), limit(50));
       friendChatUnsubscribe = onSnapshot(chatQuery, (snapshot) => {
-        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds).catch(e => console.warn(e));
+        applyChatSnapshot(friendChatContainer, snapshot, friendChatRenderedIds, fLoad).catch(e => console.warn(e));
       });
     }
 
     async function sendFriendChatMessage() {
       const message = friendChatInput.value.trim();
-      if (!message || !currentUser || !selectedFriend) return;
+      if (!currentUser || !selectedFriend) return;
       if (await isUserMuted()) return;
+      if (!message) return;
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       const userData = userDoc.data();
       const uids = [currentUser.uid, selectedFriend.id].sort();
@@ -6994,27 +7980,94 @@
         participants: [currentUser.uid, selectedFriend.id]
       });
       friendChatInput.value = '';
+      refreshChatMentionDirectory().catch(() => {});
       updateMissionProgress('chatting', 1);
     }
 
+    async function sendFriendChatWithImage(imageUrl, caption) {
+      if (!currentUser || !selectedFriend || !imageUrl) return;
+      if (await isUserMuted()) return;
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      const userData = userDoc.data();
+      const uids = [currentUser.uid, selectedFriend.id].sort();
+      await addDoc(collection(db, "chats"), {
+        message: caption || '',
+        imageUrl,
+        senderId: currentUser.uid,
+        senderName: userData.username || currentUser.email,
+        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        timestamp: serverTimestamp(),
+        type: 'private',
+        chatId: `${uids[0]}_${uids[1]}`,
+        participants: [currentUser.uid, selectedFriend.id]
+      });
+      friendChatInput.value = '';
+      refreshChatMentionDirectory().catch(() => {});
+      updateMissionProgress('chatting', 1);
+    }
+
+    async function findUserIdByUsername(username) {
+      const q = (username || '').trim();
+      if (!q) return null;
+      const exact = await getDocs(query(collection(db, 'users'), where('username', '==', q)));
+      if (!exact.empty) return exact.docs[0].id;
+      const lower = q.toLowerCase();
+      const all = await getDocs(collection(db, 'users'));
+      const hit = all.docs.find(d => (d.data().username || '').toLowerCase() === lower);
+      return hit ? hit.id : null;
+    }
+
+    async function sendFriendRequestToUserId(targetUid) {
+      if (!currentUser || !targetUid || targetUid === currentUser.uid) return;
+      const dup = await getDocs(query(collection(db, 'friendRequests'),
+        where('fromUserId', '==', currentUser.uid),
+        where('toUserId', '==', targetUid),
+        where('status', '==', 'pending')));
+      if (!dup.empty) { showNotification('Request already sent', 'error'); return; }
+      const already = await getDocs(query(collection(db, 'friends'), where('userId', '==', currentUser.uid), where('friendId', '==', targetUid)));
+      if (!already.empty) { showNotification('Already friends', 'error'); return; }
+      await addDoc(collection(db, 'friendRequests'), {
+        fromUserId: currentUser.uid,
+        toUserId: targetUid,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+      showNotification('Friend request sent', 'success');
+    }
+
     async function addFriend() {
-      const email = friendEmailInput.value.trim();
-      if (!email || !currentUser) return;
-      const userQuery = query(collection(db, "users"), where("email", "==", email));
-      const userSnap = await getDocs(userQuery);
-      if (userSnap.empty) { showNotification("User not found", "error"); return; }
-      const friendId = userSnap.docs[0].id;
-      const existing = await getDocs(query(collection(db, "friends"), where("userId", "==", currentUser.uid), where("friendId", "==", friendId)));
-      if (!existing.empty) { showNotification("Already friends", "error"); return; }
-      await addDoc(collection(db, "friends"), { userId: currentUser.uid, friendId, createdAt: serverTimestamp() });
-      await addDoc(collection(db, "friends"), { userId: friendId, friendId: currentUser.uid, createdAt: serverTimestamp() });
-      showNotification(`Friend added: ${email}`, "success");
+      const raw = friendEmailInput.value.trim();
+      if (!raw || !currentUser) return;
+      const friendId = await findUserIdByUsername(raw);
+      if (!friendId) { showNotification('User not found', 'error'); return; }
+      await sendFriendRequestToUserId(friendId);
       friendEmailInput.value = '';
-      updateStats(currentUser.uid);
+    }
+
+    async function acceptFriendRequest(reqId, fromUid) {
+      if (!currentUser || !fromUid) return;
+      try {
+        const batch = writeBatch(db);
+        batch.update(doc(db, 'friendRequests', reqId), { status: 'accepted', respondedAt: serverTimestamp() });
+        batch.set(doc(collection(db, 'friends')), { userId: currentUser.uid, friendId: fromUid, createdAt: serverTimestamp() });
+        batch.set(doc(collection(db, 'friends')), { userId: fromUid, friendId: currentUser.uid, createdAt: serverTimestamp() });
+        await batch.commit();
+        showNotification('You are now friends', 'success');
+        loadFriends(currentUser.uid);
+        updateStats(currentUser.uid);
+      } catch (e) { showNotification('Could not accept: ' + e.message, 'error'); }
+    }
+
+    async function declineFriendRequest(reqId) {
+      try {
+        await updateDoc(doc(db, 'friendRequests', reqId), { status: 'declined', respondedAt: serverTimestamp() });
+        loadFriends(currentUser.uid);
+      } catch (e) { showNotification(e.message, 'error'); }
     }
 
     // ===== Navigate to user profile page (full page, not popup) =====
     let previousPageId = null;
+    let viewProfileTargetUid = null;
     async function navigateToUserProfile(userId) {
       if (!userId) return;
       if (currentUser && userId === currentUser.uid) {
@@ -7029,18 +8082,28 @@
       document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('view-profile-page').classList.add('active');
+      viewProfileTargetUid = userId;
+      const addBtn = document.getElementById('vp-add-friend-btn');
       try {
         await populateProfileLayout(userId, {
           avatar: 'vp-avatar', banner: 'vp-banner', bannerWrap: 'vp-banner-wrap',
           username: 'vp-username', title: 'vp-title',
-          publicId: 'vp-public-id',
-          memberSince: 'vp-member-since', badges: 'vp-badges',
+          badges: 'vp-badges',
           starsVal: 'vp-stars', playtimeVal: 'vp-playtime',
           playCount: 'vp-plays', friendCount: 'vp-friends',
           blookCount: 'vp-blook-count', blookTotal: 'vp-blook-total',
           blookProgress: 'vp-blook-progress',
           topBlooks: 'vp-top-blooks', friendsList: 'vp-friends-list',
         });
+        if (addBtn && currentUser) {
+          if (userId === currentUser.uid) addBtn.style.display = 'none';
+          else {
+            addBtn.style.display = 'inline-flex';
+            const fr = await getDocs(query(collection(db, 'friends'), where('userId', '==', currentUser.uid), where('friendId', '==', userId)));
+            addBtn.textContent = fr.empty ? 'Add friend' : 'Friends';
+            addBtn.disabled = !fr.empty;
+          }
+        }
       } catch(e) { console.error(e); showNotification("Could not load profile", "error"); }
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
@@ -7053,6 +8116,11 @@
       const tabBtn = document.querySelector(`[data-page="${target}"]`);
       if (tabBtn) { document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active')); tabBtn.classList.add('active'); }
       previousPageId = null;
+      viewProfileTargetUid = null;
+    });
+    document.getElementById('vp-add-friend-btn')?.addEventListener('click', async () => {
+      if (!currentUser || !viewProfileTargetUid || viewProfileTargetUid === currentUser.uid) return;
+      await sendFriendRequestToUserId(viewProfileTargetUid);
     });
 
     // ========== Send gift from chat (fully implemented) ==========
@@ -7165,6 +8233,7 @@
       }
       const urlIn = document.getElementById('avatar-url-input');
       if (urlIn) urlIn.value = '';
+      applyNonStaffMediaUi();
     }
 
     saveSettingsBtn.addEventListener('click', async () => {
@@ -7203,7 +8272,7 @@
           }
         }
         
-        const avatarUrlField = document.getElementById('avatar-url-input')?.value.trim();
+        const avatarUrlField = canUserPasteImageLinks() ? document.getElementById('avatar-url-input')?.value.trim() : '';
         if (avatarUrlField) updates.avatar = avatarUrlField;
 
         const avatarFile = avatarUploadInput.files[0];
@@ -7297,6 +8366,28 @@
       } else {
         staffTab.style.display = 'none';
       }
+      applyNonStaffMediaUi();
+    }
+
+    function canUserPasteImageLinks() {
+      return hasPermission('staff_access');
+    }
+
+    function applyNonStaffMediaUi() {
+      const staff = canUserPasteImageLinks();
+      document.querySelectorAll('.staff-only-url-field').forEach(el => {
+        el.style.display = staff ? '' : 'none';
+      });
+      document.querySelectorAll('.staff-only-signup-url').forEach(el => {
+        el.style.display = staff ? 'block' : 'none';
+      });
+      document.querySelectorAll('.staff-only-suggest-banner-url').forEach(el => {
+        el.style.display = staff ? '' : 'none';
+      });
+      document.querySelectorAll('.chat-link-btn').forEach(btn => {
+        if (staff) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+      });
     }
 
     function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -7596,6 +8687,8 @@
         artEl.value = ex || (data.backgroundImage || '').trim();
       }
       if (patEl) patEl.value = (data.patternUrl || data.packBackground || '').trim();
+      const revEl = document.getElementById('staff-pack-reveal-bg-url');
+      if (revEl) revEl.value = (data.revealCardBgUrl || '').trim();
       document.getElementById('staff-pack-bg').value = data.backgroundImage||'';
       document.getElementById('staff-pack-items-json').value = JSON.stringify(data.items||[],null,2);
       packBuilderItems = JSON.parse(JSON.stringify(data.items || []));
@@ -7921,6 +9014,7 @@
         const po = document.getElementById('staff-pack-color-outer'); if (po) po.value = '#6e6e6e';
         document.getElementById('staff-pack-art-url') && (document.getElementById('staff-pack-art-url').value = '');
         document.getElementById('staff-pack-pattern-url') && (document.getElementById('staff-pack-pattern-url').value = '');
+        document.getElementById('staff-pack-reveal-bg-url') && (document.getElementById('staff-pack-reveal-bg-url').value = '');
         packBuilderItems=[];renderPackBuilderItems();
         document.getElementById('staff-pack-edit-mode').value='builder';
         document.getElementById('staff-pack-builder-area').style.display='block';
@@ -7928,7 +9022,7 @@
         document.getElementById('staff-pack-modal').style.display='flex';
         updateStaffPackMarketPreview();
       });
-      ['staff-pack-name','staff-pack-price','staff-pack-color-inner','staff-pack-color-outer','staff-pack-art-url','staff-pack-pattern-url'].forEach(id => {
+      ['staff-pack-name','staff-pack-price','staff-pack-color-inner','staff-pack-color-outer','staff-pack-art-url','staff-pack-pattern-url','staff-pack-reveal-bg-url'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', updateStaffPackMarketPreview);
         document.getElementById(id)?.addEventListener('change', updateStaffPackMarketPreview);
       });
@@ -7957,6 +9051,7 @@
         const outerHex = document.getElementById('staff-pack-color-outer')?.value || '#6e6e6e';
         const packArt = document.getElementById('staff-pack-art-url')?.value.trim() || '';
         const pattern = document.getElementById('staff-pack-pattern-url')?.value.trim() || '';
+        const revealBg = document.getElementById('staff-pack-reveal-bg-url')?.value.trim() || '';
         const packData={
           name:document.getElementById('staff-pack-name').value,
           price:parseInt(document.getElementById('staff-pack-price').value),
@@ -7968,6 +9063,7 @@
           outerColor: hexToBlooketColorStop(outerHex, 100),
           packArtUrl: packArt,
           patternUrl: pattern,
+          revealCardBgUrl: revealBg,
           updatedAt:serverTimestamp()
         };
         if(id) await updateDoc(doc(db,'packs',id),packData); else await addDoc(collection(db,'packs'),{...packData,createdAt:serverTimestamp()});
@@ -8326,6 +9422,42 @@
     globalChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendGlobalChatMessage(); });
     friendSendChatBtn.addEventListener('click', sendFriendChatMessage);
     friendChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendFriendChatMessage(); });
+
+    document.getElementById('global-chat-attach-btn')?.addEventListener('click', () => document.getElementById('global-chat-file')?.click());
+    document.getElementById('global-chat-file')?.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0];
+      e.target.value = '';
+      if (!f || !currentUser) return;
+      if (await isUserMuted()) return;
+      try {
+        const url = await uploadChatImageFile(f);
+        if (url) await sendGlobalChatWithImage(url, globalChatInput.value.trim());
+      } catch (err) { showNotification('Image upload failed: ' + (err.message || 'error'), 'error'); }
+    });
+    document.getElementById('global-chat-link-btn')?.addEventListener('click', async () => {
+      const url = promptChatImageUrl();
+      if (!url || !currentUser) return;
+      if (await isUserMuted()) return;
+      try { await sendGlobalChatWithImage(url, globalChatInput.value.trim()); } catch (err) { showNotification(err.message || 'Send failed', 'error'); }
+    });
+
+    document.getElementById('friend-chat-attach-btn')?.addEventListener('click', () => document.getElementById('friend-chat-file')?.click());
+    document.getElementById('friend-chat-file')?.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0];
+      e.target.value = '';
+      if (!f || !currentUser || !selectedFriend) return;
+      if (await isUserMuted()) return;
+      try {
+        const url = await uploadChatImageFile(f);
+        if (url) await sendFriendChatWithImage(url, friendChatInput.value.trim());
+      } catch (err) { showNotification('Image upload failed: ' + (err.message || 'error'), 'error'); }
+    });
+    document.getElementById('friend-chat-link-btn')?.addEventListener('click', async () => {
+      const url = promptChatImageUrl();
+      if (!url || !currentUser || !selectedFriend) return;
+      if (await isUserMuted()) return;
+      try { await sendFriendChatWithImage(url, friendChatInput.value.trim()); } catch (err) { showNotification(err.message || 'Send failed', 'error'); }
+    });
     addFriendBtn.addEventListener('click', addFriend);
 
     document.getElementById('inv-blook-modal-close')?.addEventListener('click', closeInvBlookModal);
