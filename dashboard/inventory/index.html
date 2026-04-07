@@ -3,18 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - All Games</title>
+  <title>Game Universe — My Blooks</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/game-universe.css">
-
+  <link rel="stylesheet" href="../../assets/game-universe.css">
 </head>
 <body>
-  <script>
-    if (new URLSearchParams(location.search).get('legacy') !== '1') {
-      location.replace('dashboard/home/');
-    }
-  </script>
   <div class="site-bg-atlas" aria-hidden="true"></div>
   <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
     <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
@@ -29,36 +23,36 @@
     
     <div class="sidebar-scroll">
     <div class="sidebar-tabs">
-      <button class="tab-button active" data-page="main-page">
+      <a class="tab-button" href="../home/" data-page="main-page">
         <i class="fas fa-home"></i> Main Page
-      </button>
-      <button class="tab-button" data-page="profile-page">
+      </a>
+      <a class="tab-button" href="../profile/" data-page="profile-page">
         <i class="fas fa-user"></i> Profile
-      </button>
-      <button class="tab-button" data-page="history-page">
+      </a>
+      <a class="tab-button" href="../history/" data-page="history-page">
         <i class="fas fa-history"></i> Play History
-      </button>
-      <button class="tab-button" data-page="shop-page">
+      </a>
+      <a class="tab-button" href="../shop/" data-page="shop-page">
         <i class="fas fa-shopping-bag"></i> Shop
-      </button>
-      <button class="tab-button" data-page="inventory-page">
+      </a>
+      <a class="tab-button active" href="../inventory/" data-page="inventory-page">
         <i class="fas fa-box-open"></i> Inventory
-      </button>
-      <button class="tab-button" data-page="missions-page">
+      </a>
+      <a class="tab-button" href="../missions/" data-page="missions-page">
         <i class="fas fa-tasks"></i> Missions
-      </button>
-      <button class="tab-button" data-page="chat-page">
+      </a>
+      <a class="tab-button" href="../chat/" data-page="chat-page">
         <i class="fas fa-comments"></i> Chat
-      </button>
-      <button class="tab-button" data-page="friends-page">
+      </a>
+      <a class="tab-button" href="../friends/" data-page="friends-page">
         <i class="fas fa-user-friends"></i> Friends
-      </button>
-      <button class="tab-button" data-page="settings-page">
+      </a>
+      <a class="tab-button" href="../settings/" data-page="settings-page">
         <i class="fas fa-cog"></i> Settings
-      </button>
-      <button class="tab-button" data-page="staff-page" id="staff-panel-tab" style="display:none;">
+      </a>
+      <a class="tab-button" href="../staff/" data-page="staff-page" id="staff-panel-tab" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
-      </button>
+      </a>
     </div>
     </div>
     <div class="visually-hidden-balance-hooks" style="display:none;" aria-hidden="true">
@@ -67,7 +61,6 @@
       <div id="sidebar-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i></div>
     </div>
   </div>
-
   <!-- Main Content -->
   <div class="main-content" id="main-content">
     <header>
@@ -80,141 +73,6 @@
         </ul>
       </nav>
     </header>
-
-    <!-- Main Page (Games) -->
-    <div class="page main-page active" id="main-page">
-      <section class="hero"><div class="carousel-container" id="topGamesCarousel"></div></section>
-      <section class="category-browsing-section" id="categoryBrowsingSection"></section>
-      <section class="full-games-list" id="fullGamesList">
-        <h2>ALL GAMES</h2>
-        <div class="search-bar-container"><input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..."></div>
-        <div class="full-games-grid" id="fullGamesGrid"></div>
-      </section>
-    </div>
-
-    <!-- Profile Page (own profile - Blooket style) -->
-    <div class="page" id="profile-page">
-      <div class="page-content">
-        <div class="up-container" id="profile-container">
-          <div class="up-header">
-            <div class="up-avatar"><img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-header-banner-wrap">
-              <div class="up-banner" id="profile-banner-wrap">
-                <div class="up-banner-pattern"></div>
-                <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content">
-                  <div class="up-banner-name-block">
-                    <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                  </div>
-                  <span class="up-title-badge" id="profile-title">User</span>
-                </div>
-              </div>
-              <div id="profile-badges" class="up-badges-row" aria-label="Badges"></div>
-            </div>
-          </div>
-          <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon" id="profile-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="profile-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="profile-playtime-val">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="play-count">0</div><div class="up-stat-lbl">Plays</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="friend-count">0</div><div class="up-stat-lbl">Friends</div></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="profile-blook-count">0</span> / <span id="profile-blook-total">0</span></span></div>
-            <div class="progress-bar"><div class="progress-fill" id="profile-blook-progress"></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-trophy"></i> Top 5 Blooks</div>
-            <div class="up-blooks-grid" id="profile-top-blooks"></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-user-friends"></i> Friends</div>
-            <div class="up-friends-list" id="profile-friends-list"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- View Other User Profile Page (navigated, not popup) -->
-    <div class="page" id="view-profile-page">
-      <div class="page-content">
-        <div class="staff-flex-row" style="margin-bottom:16px;gap:10px;flex-wrap:wrap;align-items:center;">
-          <button class="staff-btn staff-btn-primary" id="vp-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
-          <button type="button" class="staff-btn staff-btn-primary" id="vp-add-friend-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add friend</button>
-        </div>
-        <div class="up-container" id="vp-container">
-          <div class="up-header">
-            <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-header-banner-wrap">
-              <div class="up-banner" id="vp-banner-wrap">
-                <div class="up-banner-pattern"></div>
-                <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content">
-                  <div class="up-banner-name-block">
-                    <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                  </div>
-                  <span class="up-title-badge" id="vp-title">User</span>
-                </div>
-              </div>
-              <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
-            </div>
-          </div>
-          <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon" id="vp-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="vp-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="vp-plays">0</div><div class="up-stat-lbl">Plays</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">0</span></span></div>
-            <div class="progress-bar"><div class="progress-fill" id="vp-blook-progress"></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-trophy"></i> Top 5 Blooks</div>
-            <div class="up-blooks-grid" id="vp-top-blooks"></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-user-friends"></i> Friends</div>
-            <div class="up-friends-list" id="vp-friends-list"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Play History Page -->
-    <div class="page" id="history-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Play History</h2>
-        <div class="history-list" id="play-history-list">
-          <!-- Play history items will be added here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Shop Page -->
-    <div class="page" id="shop-page">
-      <div class="page-content">
-        <div class="shop-header">
-          <h2 class="page-title font-titan-header">Game Shop</h2>
-          <div class="balance-display">
-            <div class="balance-item">
-              <i class="fas fa-coins"></i>
-              <span class="balance-value" id="shop-coins">0</span>
-            </div>
-            <div class="balance-item">
-              <div class="balance-icon-wrap" id="shop-stars-icon-wrap">
-                <i class="fas fa-star" id="shop-stars-fallback-icon"></i>
-              </div>
-              <span class="balance-value" id="shop-stars">0</span>
-            </div>
-          </div>
-        </div>
-        <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
-        <div class="packs-grid" id="shop-packs"></div>
-        <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
-        <div class="shop-banners-row" id="shop-banners"></div>
-      </div>
-    </div>
-
     <!-- Inventory Page (Blooket My Blooks–style layout) -->
     <div class="page" id="inventory-page">
       <div class="page-content inv-blooks-page">
@@ -253,355 +111,8 @@
       </div>
     </div>
 
-    <!-- Missions Page -->
-    <div class="page" id="missions-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Daily Missions</h2>
-        <div class="daily-reward-card" id="daily-reward-card">
-          <h3><i class="fas fa-gift"></i> Daily reward</h3>
-          <p id="daily-reward-desc">Claim your free bonus once per day.</p>
-          <button type="button" class="daily-reward-btn" id="daily-reward-claim-btn">Claim</button>
-          <div class="daily-reward-pill" id="daily-reward-status"></div>
-        </div>
-        <div class="missions-container" id="missions-container">
-          <!-- Missions will be added here -->
-        </div>
-      </div>
-    </div>
 
-    <!-- Chat Page (Global Chat Only) -->
-    <div class="page" id="chat-page">
-      <div class="page-content chat-page-inner">
-        <div class="global-chat-panel">
-          <div class="chat-composer-wrap chat-composer-loading" id="global-chat-composer-wrap">
-            <div class="chat-container" id="global-chat-container"></div>
-            <div class="chat-loading-overlay chat-loading-full" id="global-chat-input-loading" aria-busy="true" aria-label="Loading chat">
-              <i class="fas fa-gamepad chat-loading-gamepad" aria-hidden="true"></i>
-            </div>
-            <div class="chat-input">
-              <div class="chat-input-actions">
-                <input type="file" id="global-chat-file" accept="image/*" style="display:none;">
-                <button type="button" class="chat-attach-btn" id="global-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
-                <button type="button" class="chat-link-btn" id="global-chat-link-btn" title="Paste image URL">Link</button>
-              </div>
-              <input type="text" id="global-chat-input" placeholder="Type a message..." disabled>
-              <button type="button" id="global-send-chat-btn" disabled>Send</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Friends Page (Friends list + Friend Chat) -->
-    <div class="page" id="friends-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Friends</h2>
-        <div class="friends-panel-container">
-          <div class="friends-sidebar-section">
-            <div class="add-friend-form">
-              <input type="text" id="friend-email" placeholder="Friend's username" autocomplete="username">
-              <button id="add-friend-btn">Add</button>
-            </div>
-            <div id="friend-requests-incoming" style="margin-bottom:16px;"></div>
-            <div class="friends-list" id="friends-list">
-              <!-- Friends will be added here -->
-            </div>
-          </div>
-          <div class="friend-chat-section">
-            <div class="friend-chat-header" id="friend-chat-header">
-              <span class="friend-chat-placeholder">Select a friend to start chatting</span>
-            </div>
-            <div class="friend-chat-composer-wrap" id="friend-chat-composer-wrap">
-              <div class="chat-container" id="friend-chat-container"></div>
-              <div class="chat-loading-overlay chat-loading-full hidden" id="friend-chat-input-loading" aria-busy="true" aria-label="Loading chat">
-                <i class="fas fa-gamepad chat-loading-gamepad" aria-hidden="true"></i>
-              </div>
-              <div class="chat-input" id="friend-chat-input-area" style="display:none;">
-                <div class="chat-input-actions">
-                  <input type="file" id="friend-chat-file" accept="image/*" style="display:none;">
-                  <button type="button" class="chat-attach-btn" id="friend-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
-                  <button type="button" class="chat-link-btn" id="friend-chat-link-btn" title="Paste image URL">Link</button>
-                </div>
-                <input type="text" id="friend-chat-input" placeholder="Type a message..." disabled>
-                <button type="button" id="friend-send-chat-btn" disabled>Send</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Staff Panel Page -->
-    <div class="page" id="staff-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header"><i class="fas fa-shield-alt" style="color:var(--neon-green);margin-right:10px;"></i>Staff Panel</h2>
-        <div class="staff-panel-container">
-          <div class="staff-sub-tabs" id="staff-sub-tabs">
-            <button class="staff-sub-tab active" data-staff-tab="staff-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-games"><i class="fas fa-gamepad"></i> Games</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-tags"><i class="fas fa-tags"></i> Tags</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-plays"><i class="fas fa-history"></i> Plays & IP</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-packs"><i class="fas fa-cubes"></i> Packs & Items</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-star-badges"><i class="fas fa-medal"></i> Star badges</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
-          </div>
-
-          <!-- Staff Dashboard -->
-          <div class="staff-section active" id="staff-dashboard">
-            <div class="staff-stats-grid" id="staff-stats-grid"></div>
-            <div class="staff-card"><h3>Quick Actions</h3><div class="staff-flex-row" style="margin-top:14px;"><button class="staff-btn staff-btn-primary" id="staff-quick-add-game"><i class="fas fa-plus"></i> Add Game</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-pack"><i class="fas fa-plus"></i> Add Pack</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-title"><i class="fas fa-plus"></i> Add Title</button></div></div>
-          </div>
-
-          <!-- Staff Games -->
-          <div class="staff-section" id="staff-games">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Games Management</h3><div class="staff-flex-row"><input type="text" class="staff-search" id="staff-search-game" placeholder="Search games..."><button class="staff-btn staff-btn-primary" id="staff-add-game-btn"><i class="fas fa-plus"></i> New Game</button></div></div>
-              <div style="overflow-x:auto;" id="staff-games-table"></div>
-            </div>
-          </div>
-
-          <!-- Staff Tags -->
-          <div class="staff-section" id="staff-tags">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Tags Library</h3><button class="staff-btn staff-btn-primary" id="staff-add-tag-btn"><i class="fas fa-plus"></i> New Tag</button></div>
-              <div id="staff-tags-list" class="staff-flex-row" style="gap:10px;flex-wrap:wrap;"></div>
-            </div>
-          </div>
-
-          <!-- Staff Plays & IP -->
-          <div class="staff-section" id="staff-plays">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Play History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user or game..."></div>
-              <div style="overflow-x:auto;"><table class="staff-table" id="staff-plays-table"><thead><tr><th>User</th><th>Game</th><th>Time</th><th>IP Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
-            </div>
-          </div>
-
-          <!-- Staff Packs & Items -->
-          <div class="staff-section" id="staff-packs">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
-              <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Profile banners (sold in Shop)</h4>
-              <div id="staff-banner-shop-list" style="margin-bottom:20px;"></div>
-              <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Packs</h4>
-              <div id="staff-packs-list"></div>
-            </div>
-          </div>
-
-          <!-- Staff Users -->
-          <div class="staff-section" id="staff-users">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>User Accounts</h3><input type="text" class="staff-search" id="staff-search-user" placeholder="Search by username/email/ID..."></div>
-              <div class="staff-mod-quick" id="staff-mod-quick-panel">
-                <div class="staff-form-group" style="margin:0;">
-                  <label>Quick lookup (6-digit ID, email, or username)</label>
-                  <input type="text" id="staff-mod-lookup" placeholder="e.g. 123456 or user@email.com">
-                </div>
-                <div class="staff-form-group" style="margin:0;">
-                  <label>Action</label>
-                  <select id="staff-mod-action">
-                    <option value="open">Open user editor</option>
-                    <option value="mute_1h">Mute 1 hour</option>
-                    <option value="mute_24h">Mute 24 hours</option>
-                    <option value="mute_perm">Mute permanently</option>
-                    <option value="unmute">Clear mute</option>
-                    <option value="ban_24h">Ban 24 hours</option>
-                    <option value="ban_7d">Ban 7 days</option>
-                    <option value="ban_perm">Ban permanently</option>
-                    <option value="unban">Clear ban</option>
-                  </select>
-                </div>
-                <div class="staff-form-group" style="margin:0;flex:2;">
-                  <label>Reason (optional)</label>
-                  <input type="text" id="staff-mod-reason-quick" placeholder="Shown to the user if banned">
-                </div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-mod-apply-btn" style="align-self:flex-end;margin-bottom:2px;">Apply</button>
-              </div>
-              <div style="overflow-x:auto;" id="staff-users-table"></div>
-            </div>
-          </div>
-
-          <!-- Staff Titles Manager -->
-          <div class="staff-section" id="staff-titles">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Title & Permission Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-title-btn"><i class="fas fa-plus"></i> Create Title</button></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px;">Titles determine user permissions. Owners can create gradient titles, assign colors, and set permissions.</p>
-              <div id="staff-titles-list"></div>
-            </div>
-          </div>
-
-          <!-- Staff Badges Manager -->
-          <div class="staff-section" id="staff-badges">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Badge Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-badge-btn"><i class="fas fa-plus"></i> Create Badge</button></div>
-              <div id="staff-badges-list"></div>
-            </div>
-          </div>
-
-          <!-- Staff: Rarity styles + daily reward -->
-          <div class="staff-section" id="staff-rarity">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Daily login reward</h3></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Coins and stars granted once per calendar day when users claim on the Missions page.</p>
-              <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
-                <div class="staff-form-group" style="margin:0;"><label>Coins</label><input type="number" id="staff-daily-reward-coins" value="50" min="0"></div>
-                <div class="staff-form-group" style="margin:0;"><label>Stars</label><input type="number" id="staff-daily-reward-stars" value="10" min="0"></div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-daily-reward-save">Save daily reward</button>
-              </div>
-            </div>
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Rarity order</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-order-open"><i class="fas fa-sort"></i> Edit order</button></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);">Sort order for inventory and pack editor lists.</p>
-            </div>
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Rarity appearance</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-def-add"><i class="fas fa-plus"></i> Add rarity</button></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Solid color, optional gradient, optional animation. Used for blook highlights and inventory.</p>
-              <div id="staff-rarity-defs-list"></div>
-            </div>
-          </div>
-
-          <!-- Staff Missions -->
-          <div class="staff-section" id="staff-missions">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Mission Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-mission-btn"><i class="fas fa-plus"></i> Create Mission</button></div>
-              <div id="staff-missions-list"></div>
-            </div>
-          </div>
-
-          <!-- Staff Stars -->
-          <div class="staff-section" id="staff-stars">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Modify User Stars</h3></div>
-              <div class="staff-flex-row" style="gap:10px;align-items:flex-end;">
-                <div class="staff-form-group" style="flex:2;"><label>User Email</label><input id="staff-stars-email" placeholder="user@example.com"></div>
-                <div class="staff-form-group" style="flex:1;"><label>Action</label><select id="staff-stars-action"><option value="set">Set to</option><option value="add">Add</option><option value="remove">Remove</option></select></div>
-                <div class="staff-form-group" style="flex:1;"><label>Amount</label><input type="number" id="staff-stars-amount" value="0"></div>
-                <button class="staff-btn staff-btn-primary" id="staff-stars-apply-btn" style="margin-bottom:14px;">Apply</button>
-              </div>
-              <div id="staff-stars-result" style="margin-top:12px;"></div>
-            </div>
-          </div>
-
-          <!-- Star threshold badges (auto-award by total stars) -->
-          <div class="staff-section" id="staff-star-badges">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Star threshold badges</h3></div>
-              <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Create badges under <strong>Badges</strong> first. Add rules here: when a user’s <strong>total stars</strong> reach the minimum, that badge is added. If stars drop below a threshold, that badge is removed. Manual badges (not listed here) are never touched.</p>
-              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;">
-                <div class="staff-form-group" style="margin:0;min-width:200px;"><label>Badge</label><select id="staff-star-badge-pick"><option value="">Select badge…</option></select></div>
-                <div class="staff-form-group" style="margin:0;"><label>Min stars</label><input type="number" id="staff-star-badge-min" value="100" min="0" step="1"></div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-add-row">Add rule</button>
-              </div>
-              <div id="staff-star-badge-rules-list" style="margin-bottom:14px;"></div>
-              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;">
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-save-rules">Save rules</button>
-                <button type="button" class="staff-btn" id="staff-star-badge-resync-all">Re-apply to all users</button>
-              </div>
-              <p id="staff-star-badge-status" style="font-size:0.78rem;color:var(--text-secondary);margin-top:12px;"></p>
-            </div>
-          </div>
-
-          <!-- Staff Chat Viewer -->
-          <div class="staff-section" id="staff-chatview">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Chat Viewer</h3><div class="staff-flex-row"><button class="staff-sub-tab active" id="cv-global-btn">Global Chat</button><button class="staff-sub-tab" id="cv-private-btn">Private Chats</button></div></div>
-              <div class="chat-viewer-container">
-                <div class="chat-viewer-sidebar" id="cv-sidebar">
-                  <div style="color:var(--text-secondary);font-size:0.8rem;padding:8px;">Select chat type above</div>
-                </div>
-                <div class="chat-viewer-messages" id="cv-messages"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Settings Page -->
-    <div class="page" id="settings-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Settings</h2>
-        <div class="settings-section">
-          <div class="settings-form">
-            <div class="form-group">
-              <label for="current-avatar">Current Avatar</label>
-              <div class="avatar-preview">
-                <img id="current-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Current Avatar">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter new username">
-            </div>
-            
-            <div class="form-group">
-              <label for="avatar-upload">Change Avatar</label>
-              <input type="url" id="avatar-url-input" class="auth-input staff-only-url-field" placeholder="Or paste image URL (staff)" style="display:none;margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
-              <label class="file-label">
-                <i class="fas fa-upload"></i> Choose Image
-                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-              </label>
-            </div>
-
-            <div class="form-group">
-              <label for="current-password">Current Password</label>
-              <input type="password" id="current-password" placeholder="Enter current password">
-            </div>
-            
-            <div class="form-group">
-              <label for="new-password">New Password</label>
-              <input type="password" id="new-password" placeholder="Enter new password">
-            </div>
-            
-            <div class="form-group">
-              <label for="confirm-password">Confirm New Password</label>
-              <input type="password" id="confirm-password" placeholder="Confirm new password">
-            </div>
-            
-            <button class="settings-btn" id="save-settings-btn">Save Changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <section class="contact-section" id="contact-section">
-      <div class="section-title"><h2>CONTACT US</h2><p>Have a suggestion or found an issue? Let us know!</p></div>
-      <div class="tab-navigation"><button class="tab-button active" id="suggest-tab">Suggest a Game</button><button class="tab-button" id="report-tab">Report an Issue</button></div>
-      <div class="contact-container">
-        <div class="form-container" id="suggest-form-container">
-          <h3>SUGGEST A GAME</h3>
-          <form id="suggestGameForm">
-            <div class="form-group"><label>YOUR NAME</label><input type="text" id="suggestName" required></div>
-            <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="suggestEmail" required></div>
-            <div class="form-group"><label>GAME TITLE</label><input type="text" id="gameTitle" required></div>
-            <div class="form-group staff-only-suggest-banner-url"><label>GAME BANNER URL</label><input type="text" id="gameBanner" placeholder="Image URL (staff only)"></div>
-            <div class="form-group"><label>UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
-            <div class="form-group"><label>GAME LINK</label><input type="text" id="gameLink" placeholder="https://..." required></div>
-            <div class="form-group"><label>GAME DESCRIPTION</label><textarea id="gameDescription" required></textarea></div>
-            <button type="submit" class="submit-btn">SUBMIT SUGGESTION</button>
-            <div id="suggestMessage" class="form-message"></div>
-          </form>
-        </div>
-        <div class="form-container" id="report-form-container" style="display: none;">
-          <h3>REPORT AN ISSUE</h3>
-          <form id="reportIssueForm">
-            <div class="form-group"><label>YOUR NAME</label><input type="text" id="reportName" required></div>
-            <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="reportEmail" required></div>
-            <div class="form-group"><label>SELECT GAME</label><select id="issueGame"><option value="">-- SELECT A GAME --</option></select></div>
-            <div class="form-group"><label>ISSUE DESCRIPTION</label><textarea id="issueDescription" required></textarea></div>
-            <button type="submit" class="submit-btn">REPORT ISSUE</button>
-            <div id="reportMessage" class="form-message"></div>
-          </form>
-        </div>
-      </div>
-    </section>
-
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" frameborder="0"></iframe></div></div>
     <!-- Notice Modal (unlogged users) -->
     <div id="noticeModal" class="notice-modal">
       <div class="notice-modal-content">
@@ -872,6 +383,8 @@
     </div>
   </div>
 
-  <script type="module" src="assets/game-universe-app.js"></script>
+
+  <script>window.__GU_DASHBOARD_PANEL__ = "inventory"; window.__GU_DASHBOARD_BASE__ = "..";</script>
+  <script type="module" src="../../assets/game-universe-app.js"></script>
 </body>
 </html>

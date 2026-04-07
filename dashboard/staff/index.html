@@ -3,18 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - All Games</title>
+  <title>Game Universe — Staff</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/game-universe.css">
-
+  <link rel="stylesheet" href="../../assets/game-universe.css">
 </head>
 <body>
-  <script>
-    if (new URLSearchParams(location.search).get('legacy') !== '1') {
-      location.replace('dashboard/home/');
-    }
-  </script>
   <div class="site-bg-atlas" aria-hidden="true"></div>
   <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
     <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
@@ -29,36 +23,36 @@
     
     <div class="sidebar-scroll">
     <div class="sidebar-tabs">
-      <button class="tab-button active" data-page="main-page">
+      <a class="tab-button" href="../home/" data-page="main-page">
         <i class="fas fa-home"></i> Main Page
-      </button>
-      <button class="tab-button" data-page="profile-page">
+      </a>
+      <a class="tab-button" href="../profile/" data-page="profile-page">
         <i class="fas fa-user"></i> Profile
-      </button>
-      <button class="tab-button" data-page="history-page">
+      </a>
+      <a class="tab-button" href="../history/" data-page="history-page">
         <i class="fas fa-history"></i> Play History
-      </button>
-      <button class="tab-button" data-page="shop-page">
+      </a>
+      <a class="tab-button" href="../shop/" data-page="shop-page">
         <i class="fas fa-shopping-bag"></i> Shop
-      </button>
-      <button class="tab-button" data-page="inventory-page">
+      </a>
+      <a class="tab-button" href="../inventory/" data-page="inventory-page">
         <i class="fas fa-box-open"></i> Inventory
-      </button>
-      <button class="tab-button" data-page="missions-page">
+      </a>
+      <a class="tab-button" href="../missions/" data-page="missions-page">
         <i class="fas fa-tasks"></i> Missions
-      </button>
-      <button class="tab-button" data-page="chat-page">
+      </a>
+      <a class="tab-button" href="../chat/" data-page="chat-page">
         <i class="fas fa-comments"></i> Chat
-      </button>
-      <button class="tab-button" data-page="friends-page">
+      </a>
+      <a class="tab-button" href="../friends/" data-page="friends-page">
         <i class="fas fa-user-friends"></i> Friends
-      </button>
-      <button class="tab-button" data-page="settings-page">
+      </a>
+      <a class="tab-button" href="../settings/" data-page="settings-page">
         <i class="fas fa-cog"></i> Settings
-      </button>
-      <button class="tab-button" data-page="staff-page" id="staff-panel-tab" style="display:none;">
+      </a>
+      <a class="tab-button active" href="../staff/" data-page="staff-page" id="staff-panel-tab" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
-      </button>
+      </a>
     </div>
     </div>
     <div class="visually-hidden-balance-hooks" style="display:none;" aria-hidden="true">
@@ -67,7 +61,6 @@
       <div id="sidebar-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i></div>
     </div>
   </div>
-
   <!-- Main Content -->
   <div class="main-content" id="main-content">
     <header>
@@ -80,257 +73,6 @@
         </ul>
       </nav>
     </header>
-
-    <!-- Main Page (Games) -->
-    <div class="page main-page active" id="main-page">
-      <section class="hero"><div class="carousel-container" id="topGamesCarousel"></div></section>
-      <section class="category-browsing-section" id="categoryBrowsingSection"></section>
-      <section class="full-games-list" id="fullGamesList">
-        <h2>ALL GAMES</h2>
-        <div class="search-bar-container"><input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..."></div>
-        <div class="full-games-grid" id="fullGamesGrid"></div>
-      </section>
-    </div>
-
-    <!-- Profile Page (own profile - Blooket style) -->
-    <div class="page" id="profile-page">
-      <div class="page-content">
-        <div class="up-container" id="profile-container">
-          <div class="up-header">
-            <div class="up-avatar"><img id="profile-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-header-banner-wrap">
-              <div class="up-banner" id="profile-banner-wrap">
-                <div class="up-banner-pattern"></div>
-                <img id="profile-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content">
-                  <div class="up-banner-name-block">
-                    <div id="profile-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                  </div>
-                  <span class="up-title-badge" id="profile-title">User</span>
-                </div>
-              </div>
-              <div id="profile-badges" class="up-badges-row" aria-label="Badges"></div>
-            </div>
-          </div>
-          <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon" id="profile-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="profile-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="profile-stars-val">0</div><div class="up-stat-lbl">Stars</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="profile-playtime-val">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="play-count">0</div><div class="up-stat-lbl">Plays</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="friend-count">0</div><div class="up-stat-lbl">Friends</div></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="profile-blook-count">0</span> / <span id="profile-blook-total">0</span></span></div>
-            <div class="progress-bar"><div class="progress-fill" id="profile-blook-progress"></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-trophy"></i> Top 5 Blooks</div>
-            <div class="up-blooks-grid" id="profile-top-blooks"></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-user-friends"></i> Friends</div>
-            <div class="up-friends-list" id="profile-friends-list"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- View Other User Profile Page (navigated, not popup) -->
-    <div class="page" id="view-profile-page">
-      <div class="page-content">
-        <div class="staff-flex-row" style="margin-bottom:16px;gap:10px;flex-wrap:wrap;align-items:center;">
-          <button class="staff-btn staff-btn-primary" id="vp-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
-          <button type="button" class="staff-btn staff-btn-primary" id="vp-add-friend-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add friend</button>
-        </div>
-        <div class="up-container" id="vp-container">
-          <div class="up-header">
-            <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
-            <div class="up-header-banner-wrap">
-              <div class="up-banner" id="vp-banner-wrap">
-                <div class="up-banner-pattern"></div>
-                <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
-                <div class="up-banner-content">
-                  <div class="up-banner-name-block">
-                    <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
-                  </div>
-                  <span class="up-title-badge" id="vp-title">User</span>
-                </div>
-              </div>
-              <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
-            </div>
-          </div>
-          <div class="up-stats-row">
-            <div class="up-stat"><div class="up-stat-icon" id="vp-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="vp-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="vp-plays">0</div><div class="up-stat-lbl">Plays</div></div></div>
-            <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">0</span></span></div>
-            <div class="progress-bar"><div class="progress-fill" id="vp-blook-progress"></div></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-trophy"></i> Top 5 Blooks</div>
-            <div class="up-blooks-grid" id="vp-top-blooks"></div>
-          </div>
-          <div class="up-section">
-            <div class="up-section-header"><i class="fas fa-user-friends"></i> Friends</div>
-            <div class="up-friends-list" id="vp-friends-list"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Play History Page -->
-    <div class="page" id="history-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Play History</h2>
-        <div class="history-list" id="play-history-list">
-          <!-- Play history items will be added here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Shop Page -->
-    <div class="page" id="shop-page">
-      <div class="page-content">
-        <div class="shop-header">
-          <h2 class="page-title font-titan-header">Game Shop</h2>
-          <div class="balance-display">
-            <div class="balance-item">
-              <i class="fas fa-coins"></i>
-              <span class="balance-value" id="shop-coins">0</span>
-            </div>
-            <div class="balance-item">
-              <div class="balance-icon-wrap" id="shop-stars-icon-wrap">
-                <i class="fas fa-star" id="shop-stars-fallback-icon"></i>
-              </div>
-              <span class="balance-value" id="shop-stars">0</span>
-            </div>
-          </div>
-        </div>
-        <div class="shop-section-title"><i class="fas fa-cubes"></i> Packs</div>
-        <div class="packs-grid" id="shop-packs"></div>
-        <div class="shop-section-title"><i class="fas fa-image"></i> Banners</div>
-        <div class="shop-banners-row" id="shop-banners"></div>
-      </div>
-    </div>
-
-    <!-- Inventory Page (Blooket My Blooks–style layout) -->
-    <div class="page" id="inventory-page">
-      <div class="page-content inv-blooks-page">
-        <div class="inv-blooks-top">
-          <h2 class="page-title font-titan-header">My Blooks</h2>
-          <div class="inv-blooks-tokens" id="inv-blooks-tokens" aria-live="polite">
-            <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
-          </div>
-        </div>
-        <p class="inv-blooks-sub">View and manage your blooks. Tap a blook for details.</p>
-        <div class="inv-pack-tabs" id="inv-pack-tabs"></div>
-        <div class="inv-blooks-grid-wrap">
-          <div class="inv-blooks-grid" id="inventory-container"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal inv-blook-modal" id="inv-blook-modal" style="display:none;z-index:9500;">
-      <div class="modal-content inv-blook-modal-content">
-        <div class="modal-body inv-blook-modal-body">
-          <button type="button" class="inv-blook-modal-close" id="inv-blook-modal-close" aria-label="Close">&times;</button>
-          <div class="inv-blook-modal-visual" id="inv-blook-modal-visual"></div>
-          <h2 class="inv-blook-modal-name" id="inv-blook-modal-name">Blook</h2>
-          <div class="inv-blook-modal-rarity" id="inv-blook-modal-rarity">Common</div>
-          <div class="inv-blook-modal-meta">
-            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Pack</span><span id="inv-blook-modal-pack">—</span></div>
-            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Quantity</span><span id="inv-blook-modal-qty">1</span></div>
-            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Star value</span><span id="inv-blook-modal-stars">0</span></div>
-            <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Sell for</span><span id="inv-blook-modal-sell">0 tokens</span></div>
-          </div>
-          <div class="inv-blook-modal-actions">
-            <button type="button" class="collect-btn inv-blook-sell-btn" id="inv-blook-sell-btn">Sell</button>
-            <button type="button" class="cancel-btn inv-blook-send-btn" id="inv-blook-send-btn">Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Missions Page -->
-    <div class="page" id="missions-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Daily Missions</h2>
-        <div class="daily-reward-card" id="daily-reward-card">
-          <h3><i class="fas fa-gift"></i> Daily reward</h3>
-          <p id="daily-reward-desc">Claim your free bonus once per day.</p>
-          <button type="button" class="daily-reward-btn" id="daily-reward-claim-btn">Claim</button>
-          <div class="daily-reward-pill" id="daily-reward-status"></div>
-        </div>
-        <div class="missions-container" id="missions-container">
-          <!-- Missions will be added here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Chat Page (Global Chat Only) -->
-    <div class="page" id="chat-page">
-      <div class="page-content chat-page-inner">
-        <div class="global-chat-panel">
-          <div class="chat-composer-wrap chat-composer-loading" id="global-chat-composer-wrap">
-            <div class="chat-container" id="global-chat-container"></div>
-            <div class="chat-loading-overlay chat-loading-full" id="global-chat-input-loading" aria-busy="true" aria-label="Loading chat">
-              <i class="fas fa-gamepad chat-loading-gamepad" aria-hidden="true"></i>
-            </div>
-            <div class="chat-input">
-              <div class="chat-input-actions">
-                <input type="file" id="global-chat-file" accept="image/*" style="display:none;">
-                <button type="button" class="chat-attach-btn" id="global-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
-                <button type="button" class="chat-link-btn" id="global-chat-link-btn" title="Paste image URL">Link</button>
-              </div>
-              <input type="text" id="global-chat-input" placeholder="Type a message..." disabled>
-              <button type="button" id="global-send-chat-btn" disabled>Send</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Friends Page (Friends list + Friend Chat) -->
-    <div class="page" id="friends-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Friends</h2>
-        <div class="friends-panel-container">
-          <div class="friends-sidebar-section">
-            <div class="add-friend-form">
-              <input type="text" id="friend-email" placeholder="Friend's username" autocomplete="username">
-              <button id="add-friend-btn">Add</button>
-            </div>
-            <div id="friend-requests-incoming" style="margin-bottom:16px;"></div>
-            <div class="friends-list" id="friends-list">
-              <!-- Friends will be added here -->
-            </div>
-          </div>
-          <div class="friend-chat-section">
-            <div class="friend-chat-header" id="friend-chat-header">
-              <span class="friend-chat-placeholder">Select a friend to start chatting</span>
-            </div>
-            <div class="friend-chat-composer-wrap" id="friend-chat-composer-wrap">
-              <div class="chat-container" id="friend-chat-container"></div>
-              <div class="chat-loading-overlay chat-loading-full hidden" id="friend-chat-input-loading" aria-busy="true" aria-label="Loading chat">
-                <i class="fas fa-gamepad chat-loading-gamepad" aria-hidden="true"></i>
-              </div>
-              <div class="chat-input" id="friend-chat-input-area" style="display:none;">
-                <div class="chat-input-actions">
-                  <input type="file" id="friend-chat-file" accept="image/*" style="display:none;">
-                  <button type="button" class="chat-attach-btn" id="friend-chat-attach-btn" title="Upload image" aria-label="Upload image"><i class="fas fa-image"></i></button>
-                  <button type="button" class="chat-link-btn" id="friend-chat-link-btn" title="Paste image URL">Link</button>
-                </div>
-                <input type="text" id="friend-chat-input" placeholder="Type a message..." disabled>
-                <button type="button" id="friend-send-chat-btn" disabled>Send</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Staff Panel Page -->
     <div class="page" id="staff-page">
       <div class="page-content">
@@ -520,88 +262,9 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Settings Page -->
-    <div class="page" id="settings-page">
-      <div class="page-content">
-        <h2 class="page-title font-titan-header">Settings</h2>
-        <div class="settings-section">
-          <div class="settings-form">
-            <div class="form-group">
-              <label for="current-avatar">Current Avatar</label>
-              <div class="avatar-preview">
-                <img id="current-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Current Avatar">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter new username">
-            </div>
-            
-            <div class="form-group">
-              <label for="avatar-upload">Change Avatar</label>
-              <input type="url" id="avatar-url-input" class="auth-input staff-only-url-field" placeholder="Or paste image URL (staff)" style="display:none;margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
-              <label class="file-label">
-                <i class="fas fa-upload"></i> Choose Image
-                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-              </label>
-            </div>
 
-            <div class="form-group">
-              <label for="current-password">Current Password</label>
-              <input type="password" id="current-password" placeholder="Enter current password">
-            </div>
-            
-            <div class="form-group">
-              <label for="new-password">New Password</label>
-              <input type="password" id="new-password" placeholder="Enter new password">
-            </div>
-            
-            <div class="form-group">
-              <label for="confirm-password">Confirm New Password</label>
-              <input type="password" id="confirm-password" placeholder="Confirm new password">
-            </div>
-            
-            <button class="settings-btn" id="save-settings-btn">Save Changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <section class="contact-section" id="contact-section">
-      <div class="section-title"><h2>CONTACT US</h2><p>Have a suggestion or found an issue? Let us know!</p></div>
-      <div class="tab-navigation"><button class="tab-button active" id="suggest-tab">Suggest a Game</button><button class="tab-button" id="report-tab">Report an Issue</button></div>
-      <div class="contact-container">
-        <div class="form-container" id="suggest-form-container">
-          <h3>SUGGEST A GAME</h3>
-          <form id="suggestGameForm">
-            <div class="form-group"><label>YOUR NAME</label><input type="text" id="suggestName" required></div>
-            <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="suggestEmail" required></div>
-            <div class="form-group"><label>GAME TITLE</label><input type="text" id="gameTitle" required></div>
-            <div class="form-group staff-only-suggest-banner-url"><label>GAME BANNER URL</label><input type="text" id="gameBanner" placeholder="Image URL (staff only)"></div>
-            <div class="form-group"><label>UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
-            <div class="form-group"><label>GAME LINK</label><input type="text" id="gameLink" placeholder="https://..." required></div>
-            <div class="form-group"><label>GAME DESCRIPTION</label><textarea id="gameDescription" required></textarea></div>
-            <button type="submit" class="submit-btn">SUBMIT SUGGESTION</button>
-            <div id="suggestMessage" class="form-message"></div>
-          </form>
-        </div>
-        <div class="form-container" id="report-form-container" style="display: none;">
-          <h3>REPORT AN ISSUE</h3>
-          <form id="reportIssueForm">
-            <div class="form-group"><label>YOUR NAME</label><input type="text" id="reportName" required></div>
-            <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="reportEmail" required></div>
-            <div class="form-group"><label>SELECT GAME</label><select id="issueGame"><option value="">-- SELECT A GAME --</option></select></div>
-            <div class="form-group"><label>ISSUE DESCRIPTION</label><textarea id="issueDescription" required></textarea></div>
-            <button type="submit" class="submit-btn">REPORT ISSUE</button>
-            <div id="reportMessage" class="form-message"></div>
-          </form>
-        </div>
-      </div>
-    </section>
-
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" frameborder="0"></iframe></div></div>
     <!-- Notice Modal (unlogged users) -->
     <div id="noticeModal" class="notice-modal">
       <div class="notice-modal-content">
@@ -872,6 +535,8 @@
     </div>
   </div>
 
-  <script type="module" src="assets/game-universe-app.js"></script>
+
+  <script>window.__GU_DASHBOARD_PANEL__ = "staff"; window.__GU_DASHBOARD_BASE__ = "..";</script>
+  <script type="module" src="../../assets/game-universe-app.js"></script>
 </body>
 </html>

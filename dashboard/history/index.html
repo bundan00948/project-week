@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Universe — Play History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/game-universe.css">
+</head>
+<body>
+  <div class="site-bg-atlas" aria-hidden="true"></div>
+  <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
+    <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
+    <div class="loading-universe-label">GAME UNIVERSE</div>
+  </div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-user"></i>
+      <h2>USER PANEL</h2>
+    </div>
+    
+    <div class="sidebar-scroll">
+    <div class="sidebar-tabs">
+      <a class="tab-button" href="../home/" data-page="main-page">
+        <i class="fas fa-home"></i> Main Page
+      </a>
+      <a class="tab-button" href="../profile/" data-page="profile-page">
+        <i class="fas fa-user"></i> Profile
+      </a>
+      <a class="tab-button active" href="../history/" data-page="history-page">
+        <i class="fas fa-history"></i> Play History
+      </a>
+      <a class="tab-button" href="../shop/" data-page="shop-page">
+        <i class="fas fa-shopping-bag"></i> Shop
+      </a>
+      <a class="tab-button" href="../inventory/" data-page="inventory-page">
+        <i class="fas fa-box-open"></i> Inventory
+      </a>
+      <a class="tab-button" href="../missions/" data-page="missions-page">
+        <i class="fas fa-tasks"></i> Missions
+      </a>
+      <a class="tab-button" href="../chat/" data-page="chat-page">
+        <i class="fas fa-comments"></i> Chat
+      </a>
+      <a class="tab-button" href="../friends/" data-page="friends-page">
+        <i class="fas fa-user-friends"></i> Friends
+      </a>
+      <a class="tab-button" href="../settings/" data-page="settings-page">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+      <a class="tab-button" href="../staff/" data-page="staff-page" id="staff-panel-tab" style="display:none;">
+        <i class="fas fa-shield-alt"></i> Staff Panel
+      </a>
+    </div>
+    </div>
+    <div class="visually-hidden-balance-hooks" style="display:none;" aria-hidden="true">
+      <span id="coins-display">0</span>
+      <span id="stars-display">0</span>
+      <div id="sidebar-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i></div>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <div class="main-content" id="main-content">
+    <header>
+      <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
+      <nav>
+        <ul>
+          <li><a href="#" class="active" id="home-tab">Home</a></li>
+          <li><a href="#" id="contact-tab">Contact Us</a></li>
+          <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
+        </ul>
+      </nav>
+    </header>
+    <!-- Play History Page -->
+    <div class="page" id="history-page">
+      <div class="page-content">
+        <h2 class="page-title font-titan-header">Play History</h2>
+        <div class="history-list" id="play-history-list">
+          <!-- Play history items will be added here -->
+        </div>
+      </div>
+
+
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" frameborder="0"></iframe></div></div>
+    <!-- Notice Modal (unlogged users) -->
+    <div id="noticeModal" class="notice-modal">
+      <div class="notice-modal-content">
+        <h3><i class="fas fa-exclamation-triangle"></i> Login Required</h3>
+        <p>You need to be logged in to access this page.<br>Please login or sign up to continue.</p>
+        <div class="confirm-buttons" style="margin-top: 20px;">
+          <button id="noticeLoginBtn" class="confirm-yes">Login</button>
+          <button id="noticeSignupBtn" class="confirm-no">Sign Up</button>
+          <button id="noticeCancelBtn" class="confirm-no" style="background: #3a3f4a;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="auth-modal">
+      <div class="auth-modal-content">
+        <h3><i class="fas fa-sign-in-alt"></i> Login</h3>
+        <input type="email" id="loginEmail" class="auth-input" placeholder="Email">
+        <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
+        <button id="loginBtn" class="auth-btn">Login</button>
+        <div class="switch-auth">Don't have an account? <a id="showSignup">Sign up</a></div>
+        <button class="close-modal" id="closeLoginModal">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Signup Modal with file upload -->
+    <div id="signupModal" class="auth-modal">
+      <div class="auth-modal-content">
+        <h3><i class="fas fa-user-plus"></i> Sign Up</h3>
+        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.45;margin-bottom:12px;text-align:left;">
+          Welcome to <strong style="color:var(--neon-green);">Game Universe</strong>. After you join: use the sidebar to browse games, open the <strong>Shop</strong> for packs and profile banners, collect blooks in <strong>Inventory</strong>, complete <strong>Daily Missions</strong>, and chat in <strong>Chat</strong> or <strong>Friends</strong>. Your profile shows stats, badges, and friends. Each account has a public <strong>6-digit ID</strong> for moderation. Have fun and play fair.
+        </p>
+        <input type="text" id="signupUsername" class="auth-input" placeholder="Username">
+        <input type="email" id="signupEmail" class="auth-input" placeholder="Email">
+        <input type="password" id="signupPassword" class="auth-input" placeholder="Password">
+        <div class="form-group staff-only-signup-url" style="margin:10px 0 6px;display:none;">
+          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — image URL (staff)</label>
+          <input type="url" id="signupAvatarUrl" class="auth-input" placeholder="Optional: image URL">
+        </div>
+        <label class="file-label"><i class="fas fa-upload"></i> Upload Profile Picture (optional)
+          <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+        </label>
+        <img id="avatarPreview" style="display: none; max-width: 100px; border-radius: 50%; margin-top: 10px;">
+        <button id="signupBtn" class="auth-btn">Create Account</button>
+        <div class="switch-auth">Already have an account? <a id="showLogin">Login</a></div>
+        <button class="close-modal" id="closeSignupModal">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Confirm Game Modal -->
+    <div id="confirmModal" class="confirm-modal">
+      <div class="confirm-modal-content">
+        <h3>Play this game?</h3>
+        <p id="confirmGameName"></p>
+        <div class="confirm-buttons">
+          <button id="confirmYes" class="confirm-yes">Yes</button>
+          <button id="confirmNo" class="confirm-no">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Gift Card Modal -->
+    <div id="sendCardModal" class="send-card-modal">
+      <div class="send-card-modal-content">
+        <h3>Send Gift Card</h3>
+        <div class="send-card-info">
+          <div class="send-card-icon" id="send-card-icon">🎁</div>
+          <div class="send-card-details">
+            <div class="send-card-name" id="send-card-name">Gift Card Name</div>
+            <div class="send-card-type" id="send-card-type">Type: Coins</div>
+          </div>
+        </div>
+        <div class="send-form-group">
+          <label for="recipient-email">Send to: </label>
+          <select id="recipient-email">
+            <option value="">Select a friend or send to yourself</option>
+            <!-- Friends will be added here -->
+          </select>
+        </div>
+        <div class="send-card-buttons">
+          <button class="send-card-btn send" id="send-card-btn">Send</button>
+          <button class="send-card-btn cancel" id="cancel-send-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Popup -->
+    <div class="notification-popup" id="notification-popup">
+      <div class="notification-content">
+        <div class="notification-icon" id="notification-icon">✓</div>
+        <div class="notification-text" id="notification-text">Operation successful!</div>
+      </div>
+    </div>
+
+    <!-- Pack Opening Modal -->
+    <div class="modal" id="pack-opening-modal">
+      <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
+        <div class="modal-background" id="opening-modal-bg"></div>
+        <div class="pack-bg-fx" id="pack-bg-fx" aria-hidden="true">
+          <div class="pack-bg-aurora"></div>
+          <div class="pack-bg-mesh"></div>
+          <div class="pack-bg-rays"></div>
+          <div class="pack-bg-vignette"></div>
+        </div>
+        <div class="modal-body" id="pack-opening-modal-body">
+          <div class="pack-confetti-layer" id="pack-confetti-layer" aria-hidden="true" style="display:none;"></div>
+          <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
+          <button type="button" class="pack-unbox-dismiss-layer" id="pack-unbox-dismiss-layer" style="display:none;" aria-label="Collect and close"></button>
+          <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
+          <div class="pack-unbox-pack-center" id="pack-unbox-pack-center">
+            <div class="gift-animation" id="gift-animation">
+              <!-- Pack stage -->
+            </div>
+          </div>
+          <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
+            <div class="pack-reveal-card" id="pack-reveal-card">
+              <div class="pack-reveal-card-inner">
+                <div class="pack-reveal-name" id="opened-gift-name">Gift Name</div>
+                <div class="pack-reveal-rarity gift-rarity" id="opened-gift-rarity">Rarity</div>
+                <div class="pack-reveal-blook-wrap" id="pack-reveal-blook-slot"></div>
+                <div class="pack-reveal-chance" id="opened-gift-chance">0%</div>
+                <div class="pack-reveal-stars-note" id="opened-gift-stars">Stars: 0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Gift Modal -->
+    <div class="modal" id="send-gift-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2>SEND GIFT</h2>
+          <div class="gift-animation" id="send-gift-preview">
+            <!-- Gift preview will be shown here -->
+          </div>
+          <div class="send-form">
+            <div class="form-group">
+              <label for="friend-email-send">Friend's Email</label>
+              <input type="email" id="friend-email-send" placeholder="Enter friend's email">
+            </div>
+            <div class="buttons-row">
+              <button class="confirm-btn" id="confirm-send-btn">CONFIRM</button>
+              <button class="cancel-btn" id="cancel-send-gift-btn">CANCEL</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sending Animation Modal -->
+    <div class="modal" id="sending-animation-modal">
+      <div class="modal-content pack-opening-modal">
+        <div class="modal-background" id="sending-modal-bg"></div>
+        <div class="modal-body">
+          <div class="gift-animation" id="sending-animation">
+            <!-- Animation will be shown here -->
+          </div>
+          <div class="gift-details">
+            <div class="gift-name" id="sending-message">Sending gift...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chance Modal -->
+    <div class="modal chance-modal" id="chance-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2>Pack Drop Chances</h2>
+          <div class="chance-list" id="chance-list">
+            <!-- Chances will be added here -->
+          </div>
+          <button class="cancel-btn" id="close-chance-modal">CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile modals removed - now uses full page navigation -->
+
+    <!-- Send Gift from Chat Modal -->
+    <div class="modal send-gift-modal" id="send-gift-chat-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="send-gift-header">
+            <div class="send-gift-avatar">
+              <img id="send-gift-user-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="User Avatar">
+            </div>
+            <div class="send-gift-info">
+              <h3 id="send-gift-username">Username</h3>
+              <div>Send a gift</div>
+            </div>
+          </div>
+          
+          <h4>Select a gift to send: </h4>
+          <div class="gift-cards-list" id="gift-cards-list">
+            <!-- Gift cards will be added here -->
+          </div>
+          
+          <button class="cancel-btn" id="close-send-gift-chat-modal">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Gift from Inventory Modal -->
+    <div class="modal send-gift-inventory-modal" id="send-gift-inventory-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2>Send Gift</h2>
+          <h3>Select a gift to send: </h3>
+          <div class="gift-cards-list" id="sender-gift-cards-list">
+            <!-- Sender's gift cards will be populated here -->
+          </div>
+          <div class="buttons-row">
+            <button class="cancel-btn" id="cancel-send-gift-inventory-btn">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" frameborder="0"></iframe></div></div>
+    <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
+  </div>
+
+  <!-- Staff Panel Modals -->
+  <div class="staff-modal" id="staff-game-modal"><div class="staff-modal-content"><h3 id="staff-game-modal-title">Add Game</h3><form id="staff-game-form"><input type="hidden" id="staff-game-id"><div class="staff-form-group"><label>Title</label><input id="staff-game-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-game-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Image URL</label><input id="staff-game-image" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload cover image</label><input type="file" id="staff-game-image-file" accept="image/*"></div><div class="staff-form-group"><label>Game URL (iframe)</label><input id="staff-game-url" required></div><div class="staff-form-group"><label>Rating (0-5)</label><input id="staff-game-rating" type="number" step="0.1" value="3"></div><div class="staff-form-group"><label>Multiplayer</label><select id="staff-game-multi"><option value="false">Single Player</option><option value="true">Multiplayer</option></select></div><div class="staff-form-group"><label>Tags (comma separated)</label><input id="staff-game-tags" placeholder="action, arcade, puzzle"></div><div class="staff-flex-row"><button type="submit" class="staff-btn staff-btn-primary">Save Game</button><button type="button" class="staff-btn" id="staff-close-game-modal">Cancel</button></div></form></div></div>
+
+  <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div class="staff-form-group"><label>Reveal card background (URL)</label><input id="staff-pack-reveal-bg-url" placeholder="Optional image; if empty, pack inner/outer gradient is used"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
+
+  <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-rarity-def-modal"><div class="staff-modal-content" style="max-width:440px;"><h3 id="staff-rarity-def-modal-title">Rarity style</h3><input type="hidden" id="staff-rarity-def-key"><div class="staff-form-group"><label>Rarity id (slug)</label><input id="staff-rarity-def-key-input" placeholder="e.g. legendary"></div><div class="staff-form-group"><label>Solid color</label><input id="staff-rarity-def-solid" type="color" value="#c0c0c0"></div><div class="staff-form-group"><label>Use gradient</label><select id="staff-rarity-def-gradient"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-form-group" id="staff-rarity-def-grad-wrap" style="display:none;"><label>Gradient colors (comma-separated hex)</label><input id="staff-rarity-def-grad-colors" placeholder="#aabbcc, #112233"></div><div class="staff-form-group" id="staff-rarity-def-run-wrap" style="display:none;"><label>Animated gradient</label><select id="staff-rarity-def-running"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-flex-row" style="margin-top:16px;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-def-save">Save</button><button type="button" class="staff-btn staff-btn-danger" id="staff-rarity-def-delete" style="display:none;">Delete</button><button type="button" class="staff-btn" id="staff-rarity-def-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
+
+  <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-4px 0 8px;">Market card uses the same frame as packs; set inner/outer colors to match rarity.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-banner-shop-inner" type="color" value="#5a7a9a"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-banner-shop-outer" type="color" value="#1a2a3a"></div></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div id="staff-banner-shop-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-rarity-order-modal"><div class="staff-modal-content" style="max-width:480px;"><h3>Blook rarity order</h3><p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px;">Comma-separated, lowest to highest (used for inventory sorting). Default: common,uncommon,rare,epic,legendary,mythical,chroma</p><textarea id="staff-rarity-order-input" rows="3" style="width:100%;padding:10px;border-radius:10px;background:rgba(0,0,0,0.4);color:#fff;border:1px solid rgba(42,255,158,0.2);"></textarea><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-order-save">Save</button><button type="button" class="staff-btn" id="staff-rarity-order-cancel">Cancel</button></div></div></div>
+
+  <div class="staff-modal" id="staff-mission-form-modal"><div class="staff-modal-content" style="max-width:520px;"><h3>Create / edit mission</h3><input type="hidden" id="staff-mission-form-id"><div class="staff-form-group"><label>Title</label><input id="staff-mission-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-mission-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Type</label><select id="staff-mission-type"><option value="gametime">Gametime (seconds played)</option><option value="chatting">Chat messages</option><option value="spending">Coins spent</option></select></div><div class="staff-form-group"><label>Target</label><input id="staff-mission-target" type="number" value="10" required></div><div class="staff-form-group"><label>Reward coins</label><input id="staff-mission-rcoins" type="number" value="100"></div><div class="staff-form-group"><label>Reward stars</label><input id="staff-mission-rstars" type="number" value="50"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-mission-form-save">Save mission</button><button type="button" class="staff-btn" id="staff-mission-form-cancel">Cancel</button></div></div></div>
+
+  <div class="modal" id="banner-picker-modal" style="z-index:11000;">
+    <div class="modal-content" style="max-width:520px;">
+      <div class="modal-body" style="align-items:stretch;">
+        <h2 style="margin-bottom:8px;">Choose banner</h2>
+        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">Pick a banner you already own, or the default look.</p>
+        <div class="banner-picker-grid" id="banner-picker-grid"></div>
+        <button type="button" class="collect-btn" id="banner-picker-close" style="margin-top:16px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="badge-detail-modal" style="z-index:11001;display:none;">
+    <div class="modal-content" style="max-width:360px;">
+      <div class="modal-body" style="align-items:center;text-align:center;">
+        <div id="badge-detail-icon-wrap" style="width:64px;height:64px;margin:0 auto 12px;border-radius:14px;display:flex;align-items:center;justify-content:center;"></div>
+        <h2 id="badge-detail-name" style="font-size:1.1rem;margin-bottom:8px;">Badge</h2>
+        <p id="badge-detail-desc" style="font-size:0.88rem;color:var(--text-secondary);line-height:1.4;">—</p>
+        <button type="button" class="collect-btn" id="badge-detail-close" style="margin-top:18px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>window.__GU_DASHBOARD_PANEL__ = "history"; window.__GU_DASHBOARD_BASE__ = "..";</script>
+  <script type="module" src="../../assets/game-universe-app.js"></script>
+</body>
+</html>
