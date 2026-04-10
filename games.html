@@ -4,8 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://wsrv.nl" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   <style>
     /* Existing CSS styles remain unchanged */
     :root {
@@ -139,6 +143,10 @@
       .carousel-dot.active { animation: none !important; }
       .carousel-slide { transition: opacity 0.3s ease !important; transform: none !important; }
       .carousel-slide.active { transform: none !important; }
+      .pack-opening-modal-unbox .modal-background#opening-modal-bg { animation: none !important; }
+      .pack-unbox-body-lively::before { animation: none !important; opacity: 0.5 !important; }
+      .pack-unbox-body-lively .pack-bg-fx .pack-bg-aurora { animation: none !important; }
+      .pack-confetti-piece { animation: none !important; opacity: 0.6 !important; }
     }
     .page-content, .main-page {
       position: relative;
@@ -297,16 +305,37 @@
       min-height: 0;
     }
     .page.active {
-      animation: sitePageFade 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: sitePageFade 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     @keyframes sitePageFade {
-      from { opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(4px); }
-      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Main Page */
     .main-page {
       padding: 0;
+    }
+    .main-page-games-deferred .hero,
+    .main-page-games-deferred #categoryBrowsingSection,
+    .main-page-games-deferred #fullGamesList {
+      display: none;
+    }
+    .main-games-load-placeholder {
+      display: none;
+      margin: 24px 5% 40px;
+      padding: 28px 22px;
+      border-radius: 16px;
+      border: 1px dashed rgba(42, 255, 158, 0.28);
+      background: rgba(0, 0, 0, 0.28);
+      text-align: center;
+      color: var(--text-secondary);
+      font-weight: 700;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+    .main-page-games-deferred .main-games-load-placeholder {
+      display: block;
     }
 
     /* Hero carousel */
@@ -337,9 +366,15 @@
       left: 0;
       width: 100%;
       height: 100%;
+      background-color: #0a0d14;
       background-size: cover;
       background-position: center;
       filter: brightness(0.3);
+      transition: opacity 0.4s ease;
+      opacity: 0.92;
+    }
+    .slide-background.lazy-bg-loaded {
+      opacity: 1;
     }
     .slide-content {
       position: relative;
@@ -409,6 +444,8 @@
     }
     .category-row {
       margin-bottom: 32px;
+      content-visibility: auto;
+      contain-intrinsic-size: 320px 280px;
     }
     .category-title {
       font-size: 1.4rem;
@@ -447,8 +484,7 @@
       width: 260px;
       aspect-ratio: 16 / 9;
       border-radius: 16px;
-      background-size: cover;
-      background-position: center;
+      background-color: #151A22;
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -456,6 +492,19 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
       transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
       scroll-snap-align: start;
+    }
+    .game-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .game-card-bg.lazy-bg-loaded {
+      opacity: 1;
     }
     .game-card:hover {
       transform: translateY(-6px) scale(1.035);
@@ -468,6 +517,7 @@
       left: 0;
       width: 100%;
       height: 100%;
+      z-index: 1;
       background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 100%);
       display: flex;
       flex-direction: column;
@@ -562,6 +612,8 @@
       gap: 20px;
     }
     .full-game-item {
+      content-visibility: auto;
+      contain-intrinsic-size: 200px 240px;
       background: #151A22;
       border-radius: 16px;
       overflow: hidden;
@@ -574,10 +626,22 @@
       border-color: var(--neon-green);
     }
     .full-game-banner {
+      position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
+      background: #0d1118;
+      overflow: hidden;
+    }
+    .full-game-banner-bg {
+      position: absolute;
+      inset: 0;
       background-size: cover;
       background-position: center;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .full-game-banner-bg.lazy-bg-loaded {
+      opacity: 1;
     }
     .full-game-info {
       padding: 10px;
@@ -725,6 +789,23 @@
       font-family: 'Titan One', 'Nunito', sans-serif;
       font-weight: 400;
       letter-spacing: 0.02em;
+    }
+    /* Primary / CTA buttons site-wide (Titan One display face) */
+    .font-titan-btn,
+    .collect-btn, .confirm-btn, .cancel-btn,
+    .buy-btn, .chance-btn,
+    .settings-btn,
+    .confirm-yes, .confirm-no,
+    .submit-btn,
+    .send-card-btn,
+    .daily-reward-btn, .claim-btn,
+    .slide-play-button,
+    .staff-btn,
+    .staff-sub-tab,
+    #logout-btn {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.03em;
     }
 
     /* Profile Page */
@@ -1495,76 +1576,300 @@
       color: #000;
       border-color: var(--neon-green);
     }
-    .inv-blooks-grid-wrap {
+    .inv-blooks-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: stretch;
+      min-height: 420px;
+    }
+    @media (min-width: 960px) {
+      .inv-blooks-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 28px;
+      }
+      .inv-blooks-catalog {
+        flex: 1 1 58%;
+        min-width: 0;
+        max-height: min(78vh, 820px);
+        overflow-y: auto;
+        padding-right: 6px;
+      }
+      .inv-blook-detail {
+        flex: 0 0 340px;
+        position: sticky;
+        top: 88px;
+        align-self: flex-start;
+        max-height: min(78vh, 820px);
+      }
+    }
+    .inv-blooks-catalog {
       min-height: 200px;
     }
-    .inv-blooks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 12px 10px;
+    .inv-blook-pack-section {
+      margin-bottom: 28px;
     }
-    @media (min-width: 600px) {
-      .inv-blooks-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 16px 14px; }
+    .inv-blook-pack-section:last-child {
+      margin-bottom: 0;
     }
-    .inv-blook-cell {
+    .inv-blook-pack-title {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+      line-height: 1.2;
+    }
+    .inv-blook-pack-rule {
+      height: 2px;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(42,255,158,0.55), rgba(255,61,108,0.35), transparent);
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+    .inv-blook-pack-empty {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .inv-blook-empty-msg {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      margin: 12px 0;
+    }
+    .inv-blook-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      align-items: flex-end;
+    }
+    .inv-blook-slot {
       position: relative;
+      flex: 0 0 auto;
+      width: 72px;
+      padding: 0;
+      margin: 0;
+      border: none;
+      background: transparent;
       cursor: pointer;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.06);
-      border: 2px solid rgba(255,255,255,0.1);
-      padding: 10px 8px 8px;
-      text-align: center;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+      border-radius: 0;
+      transition: transform 0.15s ease, filter 0.15s ease;
     }
-    .inv-blook-cell:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
-      border-color: rgba(42,255,158,0.35);
+    .inv-blook-slot:focus-visible {
+      outline: 2px solid var(--neon-green);
+      outline-offset: 3px;
     }
-    .inv-blook-cell-inner {
-      aspect-ratio: 1;
+    .inv-blook-slot:hover {
+      transform: scale(1.06);
+    }
+    .inv-blook-slot.selected {
+      filter: drop-shadow(0 0 10px rgba(42,255,158,0.55));
+    }
+    .inv-blook-slot-inner {
+      width: 72px;
+      height: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 6px;
     }
-    .inv-blook-cell-inner img {
+    .inv-blook-slot.unlocked .inv-blook-slot-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    }
+    .inv-blook-silhouette-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050608;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .inv-blook-silhouette-img {
       width: 88%;
       height: 88%;
       object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+      filter: brightness(0) saturate(100%);
+      opacity: 0.95;
+      pointer-events: none;
     }
-    .inv-blook-cell-inner .inv-blook-ph {
-      font-size: 2.4rem;
-      opacity: 0.75;
+    .inv-blook-slot.unlocked .inv-blook-silhouette-img {
+      filter: none;
+      opacity: 1;
     }
-    .inv-blook-cell-name {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1.2;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      min-height: 2.2em;
+    .inv-blook-lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.42);
+    }
+    .inv-blook-lock-overlay .material-symbols-outlined {
+      font-size: 28px;
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      color: rgba(255,255,255,0.92);
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
     }
     .inv-blook-qty-badge {
       position: absolute;
-      top: 6px;
-      right: 6px;
-      min-width: 22px;
-      height: 22px;
-      padding: 0 6px;
+      top: -4px;
+      right: -4px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.72);
+      background: rgba(0,0,0,0.85);
       color: #fff;
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1px solid rgba(255,255,255,0.25);
+      z-index: 2;
+    }
+    .inv-blook-detail {
+      border-radius: 20px;
+      border: 1px solid rgba(42,255,158,0.22);
+      background-color: #07090e;
+      background-image: none;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.04);
+      padding: 22px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 360px;
+      overflow: hidden;
+      position: relative;
+    }
+    .inv-blook-detail::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.52);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .inv-blook-detail.inv-blook-detail--opening-bg::before {
+      background: rgba(0, 0, 0, 0.42);
+    }
+    .inv-blook-detail.inv-blook-detail--reveal-bg::before {
+      background: linear-gradient(180deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.52) 100%);
+    }
+    .inv-blook-detail > * {
+      position: relative;
+      z-index: 1;
+    }
+    .inv-blook-detail-title {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+      font-weight: 400;
+      color: #fff;
+      margin: 0 0 8px;
+      line-height: 1.15;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.55);
+    }
+    .inv-blook-detail-rarity {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+      padding: 4px 12px;
+      border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.35);
+      color: var(--text-secondary);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.45);
+    }
+    .inv-blook-detail-stars {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #ffe066;
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+    }
+    .inv-blook-detail-stars .fa-star {
+      color: #FFC107;
+      font-size: 0.95rem;
+    }
+    .inv-blook-detail-visual {
+      width: min(200px, 70vw);
+      height: min(200px, 70vw);
+      margin: 0 auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .inv-blook-detail-visual img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 28px rgba(0,0,0,0.5));
+    }
+    .inv-blook-detail-visual .inv-blook-detail-silhouette {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #030508;
+      border-radius: 14px;
+    }
+    .inv-blook-detail-visual .inv-blook-detail-silhouette img {
+      width: 82%;
+      height: 82%;
+      object-fit: contain;
+      filter: brightness(0) saturate(100%);
+      opacity: 0.95;
+    }
+    .inv-blook-detail-visual .inv-blook-lock-overlay .material-symbols-outlined {
+      font-size: 48px;
+    }
+    .inv-blook-detail-owned {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 400;
+      color: #fff;
+      margin: auto 0 0;
+      padding-top: 12px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.55);
+    }
+    .inv-blook-detail-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .inv-blook-detail-actions .collect-btn,
+    .inv-blook-detail-actions .cancel-btn {
+      flex: 1;
+      min-width: 112px;
+    }
+    .inv-blook-detail-placeholder {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      margin: auto;
+      padding: 24px 12px;
+      line-height: 1.5;
     }
     .inv-blook-modal .inv-blook-modal-content {
       max-width: 400px;
@@ -2202,8 +2507,15 @@
       filter: none;
       background-size: 220% 220%;
       background-position: 40% 45%;
-      animation: packBgGradientDrift 14s ease-in-out infinite;
       z-index: 0;
+    }
+    /* Light GPU-cheap motion while unboxing (reveal uses rarity classes instead) */
+    .pack-opening-modal-unbox:not(.pack-unbox-celebrate) .modal-background#opening-modal-bg {
+      animation: packOpeningBgDriftSubtle 22s ease-in-out infinite;
+    }
+    @keyframes packOpeningBgDriftSubtle {
+      0%, 100% { background-position: 38% 44%; }
+      50% { background-position: 42% 47%; }
     }
     @keyframes packBgGradientDrift {
       0%, 100% { background-position: 35% 40%; filter: brightness(1) saturate(1); }
@@ -2218,13 +2530,29 @@
       0%, 100% { filter: brightness(1.05) saturate(1.15); }
       50% { filter: brightness(1.15) saturate(1.35); }
     }
-    #opening-modal-bg.pack-bg-rip-flash {
-      animation: packBgRipFlash 0.65s ease-out 1 !important;
+    .pack-rip-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: transparent;
+      mix-blend-mode: screen;
     }
-    @keyframes packBgRipFlash {
-      0% { filter: brightness(1) saturate(1); }
-      40% { filter: brightness(1.45) saturate(1.45) contrast(1.06); }
-      100% { filter: brightness(1) saturate(1); }
+    .pack-rip-overlay.pack-bg-rip-flash {
+      animation: packRipOverlayFlash 0.65s ease-out 1;
+    }
+    @keyframes packRipOverlayFlash {
+      0% { opacity: 0; }
+      35% { opacity: 1; background: radial-gradient(ellipse 85% 65% at 50% 45%, rgba(255,255,255,0.14), transparent 62%); }
+      100% { opacity: 0; background: transparent; }
+    }
+    .pack-rip-overlay.pack-bg-rip-flash-dark {
+      animation: packRipOverlayFlashDark 0.65s ease-out 1;
+    }
+    @keyframes packRipOverlayFlashDark {
+      0% { opacity: 0; }
+      35% { opacity: 1; background: radial-gradient(ellipse 85% 65% at 50% 45%, rgba(0,0,0,0.22), transparent 62%); }
+      100% { opacity: 0; background: transparent; }
     }
     @keyframes packBgCelebratePulse {
       0%, 100% { filter: brightness(0.94) saturate(1.06); }
@@ -2242,6 +2570,10 @@
     .modal-content.pack-opening-modal-unbox .pack-bg-fx {
       display: block;
     }
+    .modal-content.pack-opening-modal-unbox .pack-bg-fx .pack-bg-mesh,
+    .modal-content.pack-opening-modal-unbox .pack-bg-fx .pack-bg-rays {
+      display: none;
+    }
     .pack-bg-fx .pack-bg-aurora {
       position: absolute;
       inset: -35%;
@@ -2254,12 +2586,12 @@
       mix-blend-mode: screen;
     }
     .modal-content.pack-opening-modal-unbox.pack-unbox-celebrate .pack-bg-fx .pack-bg-aurora {
-      animation-duration: 4.2s;
-      opacity: 1;
+      animation: none;
+      opacity: 0.55;
       background:
-        radial-gradient(ellipse 62% 52% at 32% 28%, var(--pack-aurora-rare-a, rgba(42, 255, 158, 0.45)), transparent 54%),
-        radial-gradient(ellipse 58% 48% at 72% 68%, var(--pack-aurora-rare-b, rgba(255, 255, 255, 0.14)), transparent 52%),
-        radial-gradient(ellipse 48% 42% at 50% 50%, var(--pack-aurora-rare-c, rgba(42, 255, 158, 0.12)), transparent 58%);
+        radial-gradient(ellipse 62% 52% at 32% 28%, var(--pack-aurora-rare-a, rgba(42, 255, 158, 0.32)), transparent 54%),
+        radial-gradient(ellipse 58% 48% at 72% 68%, var(--pack-aurora-rare-b, rgba(255, 255, 255, 0.1)), transparent 52%),
+        radial-gradient(ellipse 48% 42% at 50% 50%, var(--pack-aurora-rare-c, rgba(42, 255, 158, 0.08)), transparent 58%);
     }
     @keyframes packAuroraFloat {
       0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
@@ -2316,7 +2648,8 @@
       50% { opacity: 1; transform: scale(1.03); }
     }
     .modal-content.pack-opening-modal-unbox.pack-unbox-peek-mood .pack-bg-fx .pack-bg-vignette {
-      animation: packVignetteBreathe 2.8s ease-in-out infinite;
+      animation: none;
+      opacity: 0.92;
     }
     .pack-unbox-body {
       position: relative;
@@ -2326,6 +2659,19 @@
       padding: 0;
       min-height: 100vh;
       flex: 1;
+    }
+    .pack-unbox-body-lively::before {
+      content: '';
+      position: absolute;
+      inset: -5%;
+      z-index: 4;
+      pointer-events: none;
+      background: radial-gradient(ellipse 70% 55% at 50% 42%, rgba(42, 255, 158, 0.07), transparent 62%);
+      animation: packUnboxBodyGlow 5.5s ease-in-out infinite;
+    }
+    @keyframes packUnboxBodyGlow {
+      0%, 100% { opacity: 0.65; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
     }
     .pack-unbox-pack-center {
       position: absolute;
@@ -2363,10 +2709,10 @@
       animation: packRevealCardIn 0.82s cubic-bezier(0.18, 1.2, 0.28, 1) both;
     }
     @keyframes packRevealCardIn {
-      0% { opacity: 0; transform: scale(0.72) translateY(36px) rotate(-3deg); filter: blur(14px); box-shadow: 0 0 0 rgba(42,255,158,0); }
-      38% { opacity: 1; transform: scale(1.09) translateY(-10px) rotate(1deg); filter: blur(0); box-shadow: 0 0 48px rgba(42,255,158,0.35); }
-      65% { transform: scale(0.96) translateY(4px) rotate(-0.5deg); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
-      100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); filter: blur(0); box-shadow: 0 16px 48px rgba(0,0,0,0.55); }
+      0% { opacity: 0; transform: scale(0.88) translateY(28px) rotate(-2deg); filter: blur(6px); box-shadow: 0 0 0 rgba(42,255,158,0); }
+      40% { opacity: 1; transform: scale(1.04) translateY(-6px) rotate(0.6deg); filter: blur(0); box-shadow: 0 0 36px rgba(42,255,158,0.28); }
+      70% { transform: scale(0.98) translateY(3px) rotate(-0.3deg); box-shadow: 0 12px 36px rgba(0,0,0,0.45); }
+      100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); filter: blur(0); box-shadow: 0 14px 44px rgba(0,0,0,0.5); }
     }
     .pack-reveal-card {
       width: min(92vw, 400px);
@@ -2400,6 +2746,20 @@
       text-shadow: 0 2px 12px rgba(0,0,0,0.75), 0 0 24px rgba(42,255,158,0.15);
       line-height: 1.15;
       margin-bottom: 6px;
+    }
+    .pack-reveal-name.pack-reveal-title-gradient,
+    .pack-reveal-rarity.pack-reveal-rarity-gradient {
+      display: inline-block;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      text-shadow: none;
+      filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55));
+    }
+    .pack-reveal-rarity.pack-reveal-rarity-gradient {
+      border-color: rgba(255,255,255,0.35) !important;
+      background: rgba(0,0,0,0.25) !important;
     }
     .pack-reveal-card.pack-unbox-reveal-anim .pack-reveal-name {
       animation: packRevealNamePop 0.85s cubic-bezier(0.34, 1.25, 0.64, 1) 0.12s both;
@@ -2621,8 +2981,9 @@
       width: 10px;
       height: 10px;
       border-radius: 2px;
-      opacity: 0.95;
-      will-change: transform, opacity;
+      opacity: 0.92;
+      will-change: transform;
+      contain: strict;
     }
     .pack-unbox-half {
       position: absolute;
@@ -2724,22 +3085,26 @@
       filter: blur(2px) brightness(0.5);
     }
     #opening-modal-bg.pack-rarity-celebrate {
-      filter: brightness(0.92);
-      transition: background-image 0.55s ease, background-size 0.55s ease, filter 0.4s ease;
+      filter: brightness(1.02) saturate(1.08);
+      transition: filter 0.35s ease;
       animation:
-        packBgCelebrateFlash 0.65s ease-out 1,
-        packBgCelebratePulse 2.6s ease-in-out 0.65s infinite;
+        packBgCelebrateFlash 0.55s ease-out 1,
+        packBgCelebratePulseSoft 3.2s ease-in-out 0.55s infinite;
     }
     #opening-modal-bg.pack-rarity-celebrate.pack-bg-rarity-animated {
       animation:
-        packBgCelebrateFlash 0.65s ease-out 1,
-        packRarityBgRun 7s linear 0.65s infinite,
-        packBgCelebratePulse 2.4s ease-in-out 0.65s infinite;
+        packBgCelebrateFlash 0.55s ease-out 1,
+        packRarityBgRun 7s linear 0.55s infinite,
+        packBgCelebratePulseSoft 3s ease-in-out 0.55s infinite;
+    }
+    @keyframes packBgCelebratePulseSoft {
+      0%, 100% { filter: brightness(1.02) saturate(1.06); }
+      50% { filter: brightness(1.08) saturate(1.12); }
     }
     @keyframes packBgCelebrateFlash {
-      0% { filter: brightness(1.45) saturate(1.55) contrast(1.08); transform: scale(1.02); }
-      40% { filter: brightness(1.12) saturate(1.3); transform: scale(1); }
-      100% { filter: brightness(0.94) saturate(1.08); transform: scale(1); }
+      0% { filter: brightness(1.12) saturate(1.2); transform: scale(1.01); }
+      45% { filter: brightness(1.06) saturate(1.12); transform: scale(1); }
+      100% { filter: brightness(1.02) saturate(1.08); transform: scale(1); }
     }
     @keyframes packRarityBgRun {
       0% { background-position: 0% 50%; }
@@ -2750,6 +3115,16 @@
         transform: translate3d(var(--cf-dx, 0px), 110vh, 0) rotate(var(--cf-rot, 720deg));
         opacity: 0.35;
       }
+    }
+    .pack-confetti-piece.pack-confetti-grad {
+      background-size: 220% 220% !important;
+      animation:
+        packConfettiFall var(--cf-dur, 2.8s) linear forwards,
+        packConfettiGradDrift 3.2s ease-in-out infinite !important;
+    }
+    @keyframes packConfettiGradDrift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     .modal-body {
@@ -3123,6 +3498,12 @@
       font-size: 1.6rem;
       margin-bottom: 20px;
     }
+    #loginModal .auth-modal-content > h3,
+    #signupModal .auth-modal-content > h3 {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
     .auth-input {
       width: 100%;
       padding: 12px;
@@ -3139,6 +3520,7 @@
       border: none;
       padding: 10px 20px;
       border-radius: 40px;
+      font-family: 'Nunito', sans-serif;
       font-weight: 800;
       cursor: pointer;
       width: 100%;
@@ -3761,8 +4143,14 @@
       border-color: rgba(42,255,158,0.65);
       box-shadow: 0 6px 22px rgba(42,255,158,0.28);
     }
-    .staff-section { display: none; }
-    .staff-section.active { display: block; }
+    .staff-section {
+      display: none;
+      content-visibility: hidden;
+    }
+    .staff-section.active {
+      display: block;
+      content-visibility: visible;
+    }
     .staff-card {
       background: linear-gradient(165deg, rgba(22,28,38,0.95) 0%, rgba(14,18,26,0.92) 100%);
       border: 1px solid rgba(42,255,158,0.18);
@@ -3807,8 +4195,8 @@
     .staff-btn {
       padding: 11px 22px;
       border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.82rem;
+      font-weight: 400;
+      font-size: 0.78rem;
       cursor: pointer;
       border: 1px solid rgba(255,255,255,0.12);
       transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, border-color 0.18s;
@@ -3820,7 +4208,6 @@
       justify-content: center;
       gap: 8px;
       line-height: 1.2;
-      font-family: 'Nunito', sans-serif;
     }
     .staff-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
     .staff-btn:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
@@ -4505,7 +4892,10 @@
     </header>
 
     <!-- Main Page (Games) -->
-    <div class="page main-page active" id="main-page">
+    <div class="page main-page active main-page-games-deferred" id="main-page">
+      <div class="main-games-load-placeholder" id="main-games-load-placeholder" role="status">
+        Games load when you open this page or scroll here — lighter first paint.
+      </div>
       <section class="hero"><div class="carousel-container" id="topGamesCarousel"></div></section>
       <section class="category-browsing-section" id="categoryBrowsingSection"></section>
       <section class="full-games-list" id="fullGamesList">
@@ -4647,10 +5037,26 @@
             <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
           </div>
         </div>
-        <p class="inv-blooks-sub">View and manage your blooks. Tap a blook for details.</p>
+        <p class="inv-blooks-sub">Browse every blook by pack. Locked blooks show as silhouettes. Select a blook to see details on the right.</p>
         <div class="inv-pack-tabs" id="inv-pack-tabs"></div>
-        <div class="inv-blooks-grid-wrap">
-          <div class="inv-blooks-grid" id="inventory-container"></div>
+        <div class="inv-blooks-layout">
+          <div class="inv-blooks-catalog" id="inv-blooks-catalog">
+            <div id="inventory-container"></div>
+          </div>
+          <aside class="inv-blook-detail" id="inv-blook-detail-panel" aria-live="polite">
+            <p class="inv-blook-detail-placeholder" id="inv-blook-detail-placeholder">Select a blook to view stars, art, and how many you own.</p>
+            <div id="inv-blook-detail-body" style="display:none;width:100%;flex-direction:column;align-items:center;flex:1;">
+              <h3 class="inv-blook-detail-title" id="inv-panel-title">Blook</h3>
+              <div class="inv-blook-detail-rarity" id="inv-panel-rarity" style="display:none;">—</div>
+              <div class="inv-blook-detail-stars" id="inv-panel-stars-row"><i class="fas fa-star"></i> <span id="inv-panel-stars">0</span></div>
+              <div class="inv-blook-detail-visual" id="inv-panel-visual"></div>
+              <div class="inv-blook-detail-owned" id="inv-panel-owned">×0</div>
+              <div class="inv-blook-detail-actions" id="inv-panel-actions">
+                <button type="button" class="collect-btn" id="inv-panel-sell-btn">Sell one</button>
+                <button type="button" class="cancel-btn" id="inv-panel-send-btn">Send</button>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
@@ -5117,6 +5523,7 @@
     <div class="modal" id="pack-opening-modal">
       <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
         <div class="modal-background" id="opening-modal-bg"></div>
+        <div class="pack-rip-overlay" id="pack-rip-overlay" aria-hidden="true"></div>
         <div class="pack-bg-fx" id="pack-bg-fx" aria-hidden="true">
           <div class="pack-bg-aurora"></div>
           <div class="pack-bg-mesh"></div>
@@ -5240,7 +5647,7 @@
       </div>
     </div>
 
-    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" frameborder="0"></iframe></div></div>
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0"></iframe></div></div>
     <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
   </div>
 
@@ -5358,15 +5765,8 @@
     const DEFAULT_RARITY_ORDER = ['common','uncommon','rare','epic','legendary','mythical','chroma'];
     let effectiveRarityOrder = [...DEFAULT_RARITY_ORDER];
     let blookRarityDefs = {};
-    const DEFAULT_RARITY_DEFS = {
-      common: { solid: '#c0c0c0', isGradient: false, gradientColors: [], isRunning: false },
-      uncommon: { solid: '#2e7d32', isGradient: false, gradientColors: [], isRunning: false },
-      rare: { solid: '#1565c0', isGradient: false, gradientColors: [], isRunning: false },
-      epic: { solid: '#6a1b9a', isGradient: false, gradientColors: [], isRunning: false },
-      legendary: { solid: '#bf8f00', isGradient: false, gradientColors: [], isRunning: false },
-      mythical: { solid: '#c62828', isGradient: false, gradientColors: [], isRunning: false },
-      chroma: { solid: '#00bcd4', isGradient: false, gradientColors: [], isRunning: false }
-    };
+    /** Unknown rarities only — all real styles come from admin `blookRarityDefs`. */
+    const FALLBACK_RARITY_DEF = { solid: '#a8b0c8', isGradient: false, gradientColors: [], isRunning: false };
     function raritySortIndex(r) {
       const x = (r || 'common').toLowerCase();
       const i = effectiveRarityOrder.indexOf(x);
@@ -5384,13 +5784,12 @@
             if (arr.length) effectiveRarityOrder = arr;
           }
           const rd = d.blookRarityDefs;
-          if (rd && typeof rd === 'object') blookRarityDefs = { ...DEFAULT_RARITY_DEFS, ...rd };
-          else blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+          blookRarityDefs = rd && typeof rd === 'object' ? { ...rd } : {};
         } else {
-          blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+          blookRarityDefs = {};
         }
       } catch (e) {
-        blookRarityDefs = { ...DEFAULT_RARITY_DEFS };
+        blookRarityDefs = {};
       }
     }
 
@@ -5511,6 +5910,17 @@
     const shopPacks = document.getElementById('shop-packs');
     const shopBanners = document.getElementById('shop-banners');
     const inventoryContainer = document.getElementById('inventory-container');
+    const invBlookDetailPanel = document.getElementById('inv-blook-detail-panel');
+    const invBlookDetailPlaceholder = document.getElementById('inv-blook-detail-placeholder');
+    const invBlookDetailBody = document.getElementById('inv-blook-detail-body');
+    const invPanelTitle = document.getElementById('inv-panel-title');
+    const invPanelRarity = document.getElementById('inv-panel-rarity');
+    const invPanelStars = document.getElementById('inv-panel-stars');
+    const invPanelVisual = document.getElementById('inv-panel-visual');
+    const invPanelOwned = document.getElementById('inv-panel-owned');
+    const invPanelActions = document.getElementById('inv-panel-actions');
+    const invPanelSellBtn = document.getElementById('inv-panel-sell-btn');
+    const invPanelSendBtn = document.getElementById('inv-panel-send-btn');
     const friendsList = document.getElementById('friends-list');
     const globalChatContainer = document.getElementById('global-chat-container');
     const globalChatInput = document.getElementById('global-chat-input');
@@ -5547,6 +5957,7 @@
     const packConfettiLayer = document.getElementById('pack-confetti-layer');
     const packUnboxBoost = document.getElementById('pack-unbox-boost');
     const openingModalBg = document.getElementById('opening-modal-bg');
+    const packRipOverlay = document.getElementById('pack-rip-overlay');
     const giftAnimation = document.getElementById('gift-animation');
     const openedGiftName = document.getElementById('opened-gift-name');
     const openedGiftRarity = document.getElementById('opened-gift-rarity');
@@ -5606,6 +6017,8 @@
     let friendChatRenderedIds = new Set();
     let currentCard = null;
     let inventoryUnsubscribe = null;
+    let inventoryCatalogCache = null;
+    let inventoryCatalogLoaded = false;
     let giftWallUnsubscribe = null;
     let userUnsubscribe = null;
     let currentGiftCard = null;
@@ -5613,6 +6026,25 @@
     let selectedUserForGift = null;
     let selectedGiftForSend = null;
     let friendsData = [];
+    let appGamesDataCache = null;
+    let mainPageGamesMounted = false;
+    let mainPageGamesMountPromise = null;
+    let mainPageGamesScrollObserver = null;
+    /** Set true only for email login/signup so we navigate to Profile once (not on every auth refresh). */
+    let redirectToProfileAfterAuth = false;
+
+    /** Resize/compress remote images via wsrv.nl (smaller downloads for game art, blooks, pack UI). */
+    function mediaThumbUrl(url, maxEdge, quality) {
+      const u = String(url || '').trim();
+      if (!u || !/^https?:\/\//i.test(u)) return u;
+      const q = Math.min(100, Math.max(40, Number(quality) || 80));
+      const w = Math.min(1600, Math.max(64, Math.round(Number(maxEdge) || 480)));
+      try {
+        return `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=${w}&output=webp&q=${q}`;
+      } catch (_) {
+        return u;
+      }
+    }
 
     // ========== Helper: show notification ==========
     function showNotification(message, type) {
@@ -5753,6 +6185,7 @@
           img.src = icon;
           img.alt = '';
           img.title = bn;
+          img.loading = 'lazy';
           wrapEl.appendChild(img);
         }
       });
@@ -5843,6 +6276,7 @@
             const img = document.createElement('img');
             img.src = /^https?:\/\//i.test(icon) ? icon : '';
             img.alt = '';
+            img.loading = 'lazy';
             if (!img.src) {
               btn.innerHTML = '<i class="fas fa-award" aria-hidden="true" style="font-size:0.95rem;color:#000;"></i>';
             } else btn.appendChild(img);
@@ -5895,11 +6329,18 @@
         await loadUserProfile(user);
         await ensureDefaultTitlesExist();
         await checkStaffAccess(user);
+        if (redirectToProfileAfterAuth) {
+          redirectToProfileAfterAuth = false;
+          goToProfilePageTab();
+        }
         if (pendingGame) { showConfirmModal(pendingGame); pendingGame = null; }
         sidebar.classList.add('active');
         mainContent.classList.add('sidebar-active');
         const activePage = document.querySelector('.page.active').id;
         switch (activePage) {
+          case 'main-page':
+            if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            break;
           case 'profile-page': loadProfilePage(user.uid); break;
           case 'history-page': loadPlayHistory(user.uid); break;
           case 'shop-page': loadShopPacks(); loadUserBalance(user.uid); break;
@@ -5953,11 +6394,15 @@
       }
       if (!username || !email || !password) { showNotification("Please fill all required fields", "error"); return; }
       try {
+        redirectToProfileAfterAuth = true;
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await saveUserProfile(cred.user.uid, email, username, avatarUrl);
         signupModal.style.display = 'none';
         showNotification("Account created successfully!", "success");
-      } catch (error) { showNotification(error.message, "error"); }
+      } catch (error) {
+        redirectToProfileAfterAuth = false;
+        showNotification(error.message, "error");
+      }
     });
 
     document.getElementById('loginBtn').addEventListener('click', async () => {
@@ -5965,10 +6410,14 @@
       const password = document.getElementById('loginPassword').value;
       if (!email || !password) { showNotification("Enter email and password", "error"); return; }
       try {
+        redirectToProfileAfterAuth = true;
         await signInWithEmailAndPassword(auth, email, password);
         loginModal.style.display = 'none';
         showNotification("Login successful!", "success");
-      } catch (error) { showNotification(error.message, "error"); }
+      } catch (error) {
+        redirectToProfileAfterAuth = false;
+        showNotification(error.message, "error");
+      }
     });
 
     logoutBtn.addEventListener('click', async () => { await signOut(auth); showNotification("Logged out", "success"); });
@@ -6023,7 +6472,12 @@
         const gamesSnapshot = await getDocs(collection(db, "games"));
         const games = gamesSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         const playCounts = {};
-        const playsSnapshot = await getDocs(collection(db, "plays"));
+        let playsSnapshot;
+        try {
+          playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(500)));
+        } catch (_) {
+          playsSnapshot = await getDocs(collection(db, "plays"));
+        }
         playsSnapshot.forEach(d => playCounts[d.data().gameId] = (playCounts[d.data().gameId] || 0) + 1);
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
@@ -6033,14 +6487,75 @@
       } catch(e) { console.error(e); return { topGames: [], newGames: [], allGames: [] }; }
     }
 
+    function goToProfilePageTab() {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      const profileBtn = document.querySelector('.tab-button[data-page="profile-page"]');
+      const profilePage = document.getElementById('profile-page');
+      if (profileBtn) profileBtn.classList.add('active');
+      if (profilePage) profilePage.classList.add('active');
+      if (currentUser?.uid) loadProfilePage(currentUser.uid);
+    }
+
+    function populateIssueGameSelect(allGames) {
+      const sel = document.getElementById('issueGame');
+      if (!sel) return;
+      const list = Array.isArray(allGames) ? allGames : [];
+      const cur = sel.value;
+      sel.innerHTML = '<option value="">-- SELECT A GAME --</option>' +
+        [...list].sort((a, b) => (a.title || '').localeCompare(b.title || '')).map(g =>
+          `<option value="${escapeHtml(g.id)}">${escapeHtml(g.title || '')}</option>`
+        ).join('');
+      if (cur && list.some(g => g.id === cur)) sel.value = cur;
+    }
+
+    async function mountMainPageGamesContent() {
+      if (mainPageGamesMounted) return;
+      if (mainPageGamesMountPromise) return mainPageGamesMountPromise;
+      mainPageGamesMountPromise = (async () => {
+        let data = appGamesDataCache;
+        if (!data) {
+          data = await getGames();
+          appGamesDataCache = data;
+        }
+        renderTopGamesCarousel(data.topGames);
+        renderCategoryBrowsing(data);
+        renderFullGamesList(data.allGames);
+        populateIssueGameSelect(data.allGames);
+        const mp = document.getElementById('main-page');
+        if (mp) mp.classList.remove('main-page-games-deferred');
+        if (mainPageGamesScrollObserver) {
+          mainPageGamesScrollObserver.disconnect();
+          mainPageGamesScrollObserver = null;
+        }
+        mainPageGamesMounted = true;
+        mainPageGamesMountPromise = null;
+      })();
+      return mainPageGamesMountPromise;
+    }
+
+    function ensureMainPageGamesDeferredObserver() {
+      const mp = document.getElementById('main-page');
+      const ph = document.getElementById('main-games-load-placeholder');
+      if (!mp || !ph || mainPageGamesMounted || typeof IntersectionObserver === 'undefined') return;
+      if (mainPageGamesScrollObserver) return;
+      mainPageGamesScrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) mountMainPageGamesContent();
+        });
+      }, { root: mainContent, rootMargin: '120px 0px', threshold: 0.01 });
+      mainPageGamesScrollObserver.observe(ph);
+    }
+
     function renderTopGamesCarousel(topGames) {
       const container = document.getElementById('topGamesCarousel');
       container.innerHTML = '';
       topGames.forEach((game, idx) => {
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
+        const imgEsc = escapeHtml(game.image || '');
         slide.innerHTML = `
-          <div class="slide-background" style="background-image: url('${game.image}')"></div>
+          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -6056,24 +6571,31 @@
       topGames.forEach((_, i)=>{ const dot=document.createElement('div'); dot.className=`carousel-dot ${i===0?'active': ''}`; dot.addEventListener('click', ()=>showSlide(i)); nav.appendChild(dot); });
       container.appendChild(nav);
       document.querySelectorAll('.slide-play-button').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); handleGameClick(btn.dataset.id, btn.dataset.title, btn.dataset.url); }));
+      preloadCarouselSlideBgs(0);
       startCarousel();
     }
 
     let currentSlide=0, interval;
-    function showSlide(i){ const slides=document.querySelectorAll('.carousel-slide'), dots=document.querySelectorAll('.carousel-dot'); if(i>=slides.length)i=0; if(i<0)i=slides.length-1; slides.forEach(s=>s.classList.remove('active')); dots.forEach(d=>d.classList.remove('active')); slides[i].classList.add('active'); dots[i].classList.add('active'); currentSlide=i; }
+    function showSlide(i){ const slides=document.querySelectorAll('.carousel-slide'), dots=document.querySelectorAll('.carousel-dot'); if(i>=slides.length)i=0; if(i<0)i=slides.length-1; slides.forEach(s=>s.classList.remove('active')); dots.forEach(d=>d.classList.remove('active')); slides[i].classList.add('active'); dots[i].classList.add('active'); currentSlide=i; preloadCarouselSlideBgs(i); }
     function nextSlide(){ showSlide(currentSlide+1); }
     function startCarousel(){ clearInterval(interval); interval=setInterval(nextSlide, 5000); }
 
     function createGameCard(game) {
       const card = document.createElement('div');
       card.className = 'game-card';
-      card.style.backgroundImage = `url('${game.image}')`;
       card.dataset.id = game.id;
       card.dataset.title = game.title;
       card.dataset.url = game.url;
+      const bg = document.createElement('div');
+      bg.className = 'game-card-bg';
+      if (game.image) bg.dataset.lazyBg = game.image;
       const rating = game.rating || 3;
       const starsHtml = [1, 2, 3, 4, 5].map(s => `<i class="fas fa-star star ${s <= Math.floor(rating) ? 'filled' : ''}"></i>`).join('');
-      card.innerHTML = `<div class="card-overlay"><div class="game-name">${game.title}</div><div class="card-meta"><i class="${game.multiplayer ? 'fas fa-users mode-multi' : 'fas fa-user mode-single'}"></i><div class="card-rating"><div class="stars">${starsHtml}</div><span class="rating-value">${rating.toFixed(1)}</span></div></div></div>`;
+      const overlay = document.createElement('div');
+      overlay.className = 'card-overlay';
+      overlay.innerHTML = `<div class="game-name">${game.title}</div><div class="card-meta"><i class="${game.multiplayer ? 'fas fa-users mode-multi' : 'fas fa-user mode-single'}"></i><div class="card-rating"><div class="stars">${starsHtml}</div><span class="rating-value">${rating.toFixed(1)}</span></div></div>`;
+      card.appendChild(bg);
+      card.appendChild(overlay);
       card.addEventListener('click', () => handleGameClick(game.id, game.title, game.url));
       return card;
     }
@@ -6086,6 +6608,7 @@
       row.innerHTML = `<h2 class="category-title">${title}</h2><div class="carousel-track-container"><div class="carousel-track"></div><div class="track-nav prev"><i class="fas fa-chevron-left"></i></div><div class="track-nav next"><i class="fas fa-chevron-right"></i></div></div>`;
       const track = row.querySelector('.carousel-track');
       limited.forEach(game => track.appendChild(createGameCard(game)));
+      track.querySelectorAll('.game-card-bg').forEach((bg) => observeLazyGameBg(bg, track));
       container.appendChild(row);
       const prev = row.querySelector('.prev'), next = row.querySelector('.next');
       prev.addEventListener('click', () => track.scrollBy({ left: -260, behavior: 'smooth' }));
@@ -6119,7 +6642,7 @@
         const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
         grid.innerHTML = filtered.map(game => `
           <div class="full-game-item" data-id="${game.id}" data-url="${game.url}" data-title="${game.title}">
-            <div class="full-game-banner" style="background-image: url('${game.image}')"></div>
+            <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(game.image || '')}"></div></div>
             <div class="full-game-info">
               <div class="full-game-title">${game.title}</div>
               <div class="full-game-meta"><span><i class="fas fa-star"></i> ${game.rating||'N/A'}</span><span><i class="${game.multiplayer?'fas fa-users': 'fas fa-user'}"></i> ${game.multiplayer?'Multiplayer': 'Single Player'}</span></div>
@@ -6127,6 +6650,7 @@
           </div>
         `).join('');
         document.querySelectorAll('.full-game-item').forEach(el => { el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url)); });
+        grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
       };
       filterAndRender();
       searchInput.addEventListener('input', filterAndRender);
@@ -6145,6 +6669,7 @@
       contactSectionEl.classList.remove('active');
       homeTab.classList.add('active');
       contactTab.classList.remove('active');
+      mountMainPageGamesContent();
     });
     contactTab.addEventListener('click', (e) => {
       e.preventDefault();
@@ -6153,6 +6678,7 @@
       contactSectionEl.classList.add('active');
       contactTab.classList.add('active');
       homeTab.classList.remove('active');
+      mountMainPageGamesContent();
     });
     document.getElementById('suggest-tab').addEventListener('click', () => {
       document.getElementById('suggest-form-container').style.display = 'block';
@@ -6215,6 +6741,9 @@
         button.classList.add('active');
         document.getElementById(pageId).classList.add('active');
         switch (pageId) {
+          case 'main-page':
+            if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            break;
           case 'profile-page': loadProfilePage(currentUser.uid); break;
           case 'history-page': loadPlayHistory(currentUser.uid); break;
           case 'shop-page': loadShopPacks(); loadUserBalance(currentUser.uid); break;
@@ -6292,7 +6821,7 @@
       const top5 = blooksSnap.docs.sort((a, b) => (b.data().starsGained || 0) - (a.data().starsGained || 0)).slice(0, 5);
       document.getElementById(ids.topBlooks).innerHTML = top5.length ? top5.map(d => {
         const bl = d.data();
-        return `<div class="up-blook-card"><div class="up-blook-img"><img src="${bl.imageUrl || 'https://via.placeholder.com/52'}" alt="${bl.itemName}"></div><div class="up-blook-name">${bl.itemName}</div><div class="up-blook-rarity">${bl.rarity}</div></div>`;
+        return `<div class="up-blook-card"><div class="up-blook-img"><img src="${escapeHtml(bl.imageUrl || 'https://via.placeholder.com/52')}" alt="${escapeHtml(bl.itemName)}" loading="lazy" decoding="async"></div><div class="up-blook-name">${bl.itemName}</div><div class="up-blook-rarity">${bl.rarity}</div></div>`;
       }).join('') : '<div style="color:var(--text-secondary);font-size:0.8rem;">No blooks yet</div>';
 
       const friendIds = friendsSnap.docs.map(d => d.data().friendId);
@@ -6319,6 +6848,7 @@
           const avImg = document.createElement('img');
           avImg.src = f.avatar || defaultAvatar;
           avImg.alt = f.username || '';
+          avImg.loading = 'lazy';
           av.appendChild(avImg);
           const ban = document.createElement('div');
           ban.className = `up-friend-banner${f.banner ? ' has-custom-banner' : ''}`;
@@ -6330,6 +6860,7 @@
             bg.className = 'up-friend-banner-bg';
             bg.src = f.banner;
             bg.alt = '';
+            bg.loading = 'lazy';
             ban.appendChild(bg);
           }
           const textWrap = document.createElement('div');
@@ -6387,7 +6918,7 @@
         const el = document.createElement('div');
         el.className = 'banner-picker-item';
         el.dataset.banner = url;
-        el.innerHTML = `<img src="${escapeHtml(url)}" alt="">`;
+        el.innerHTML = `<img src="${escapeHtml(url)}" alt="" loading="lazy" decoding="async">`;
         grid.appendChild(el);
       });
       const curBanner = d.banner || '';
@@ -6430,7 +6961,7 @@
             const formattedTime = timestamp.toLocaleString(); // simple local date+time
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
-            historyItem.innerHTML = `<img src="${data.gameImage || 'https://placehold.co/60x40'}" alt="${data.gameTitle}"><div class="history-info"><div class="history-title">${data.gameTitle}</div><div class="history-time">${formattedTime}</div></div>`;
+            historyItem.innerHTML = `<img src="${escapeHtml(data.gameImage || 'https://placehold.co/60x40')}" alt="${escapeHtml(data.gameTitle || '')}" loading="lazy" decoding="async"><div class="history-info"><div class="history-title">${data.gameTitle}</div><div class="history-time">${formattedTime}</div></div>`;
             playHistoryList.appendChild(historyItem);
           });
         });
@@ -6544,6 +7075,8 @@
     // ========== Purchase pack and award stars immediately ==========
     async function purchasePack(pack) {
       if (!currentUser) return;
+      if (packOpeningBusy) return;
+      packOpeningBusy = true;
       try {
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
         if (!userDoc.exists()) { showNotification("User data not found", "error"); return; }
@@ -6552,8 +7085,9 @@
         await updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins - pack.price });
         updateMissionProgress('spending', pack.price);
         loadUserBalance(currentUser.uid);
-        openPack(pack, currentUser.uid);
+        await openPack(pack, currentUser.uid);
       } catch(e) { showNotification("Error purchasing pack: " + e.message, "error"); }
+      finally { packOpeningBusy = false; }
     }
 
     // Get item based on weighted chance
@@ -6609,13 +7143,27 @@
     }
 
     function getRarityDef(r) {
-      const key = (r || 'common').toLowerCase();
-      return blookRarityDefs[key] || DEFAULT_RARITY_DEFS[key] || { solid: '#ffffff', isGradient: false, gradientColors: [], isRunning: false };
+      const key = (r || '').toLowerCase().trim() || 'unknown';
+      const raw = blookRarityDefs[key];
+      return raw ? normalizeStaffRarityDef(raw) : FALLBACK_RARITY_DEF;
     }
+
+    function firstRgbFromRarityDef(d) {
+      if (d.isGradient && d.gradientColors && d.gradientColors.length) {
+        for (const c of d.gradientColors) {
+          const t = hexToRgbTriplet(c);
+          if (t) return t;
+        }
+      }
+      return hexToRgbTriplet(d.solid) || [168, 176, 200];
+    }
+
     function getRarityColor(rarity) {
       const d = getRarityDef(rarity);
-      return d.solid || '#ffffff';
+      if (!d.isGradient) return d.solid || '#a8b0c8';
+      return rgbToHex(firstRgbFromRarityDef(d));
     }
+
     function getRarityColorCss(rarity) {
       const d = getRarityDef(rarity);
       if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
@@ -6626,25 +7174,65 @@
         }
         return `${base}; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent`;
       }
-      return d.solid || '#ffffff';
+      return d.solid || '#a8b0c8';
     }
 
-    /** Full-area modal background from rarity (not text-clipped). */
+    /** Pack reveal: rarity label uses admin gradient on text when configured (blook name stays plain). */
+    function applyPackRevealRarityTextStyles(rarity) {
+      const d = getRarityDef(rarity);
+      const nameEl = document.getElementById('opened-gift-name');
+      const rareEl = document.getElementById('opened-gift-rarity');
+      if (nameEl) {
+        nameEl.classList.remove('pack-reveal-title-gradient');
+        nameEl.style.backgroundImage = '';
+        nameEl.style.backgroundSize = '';
+        nameEl.style.backgroundRepeat = '';
+        nameEl.style.animation = '';
+        nameEl.style.webkitTextFillColor = '';
+        nameEl.style.color = '#fff';
+      }
+      if (rareEl) {
+        rareEl.classList.remove('pack-reveal-rarity-gradient');
+        if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
+          rareEl.classList.add('pack-reveal-rarity-gradient');
+          const g = d.gradientColors.join(', ');
+          rareEl.style.color = 'transparent';
+          rareEl.style.webkitTextFillColor = 'transparent';
+          rareEl.style.backgroundImage = `linear-gradient(135deg, ${g})`;
+          rareEl.style.backgroundSize = d.isRunning ? '200% 200%' : '100% 100%';
+          rareEl.style.backgroundRepeat = 'no-repeat';
+          rareEl.style.animation = d.isRunning ? 'runGradient 3s linear infinite' : '';
+        } else {
+          rareEl.style.backgroundImage = '';
+          rareEl.style.backgroundSize = '';
+          rareEl.style.animation = '';
+          rareEl.style.webkitTextFillColor = '';
+          rareEl.style.color = d.solid || '#fff';
+        }
+      }
+    }
+
+    /** Full-area modal / card background — admin gradient uses every stop (no trimming to black). */
     function getRarityBackgroundGradientCss(rarity) {
       const d = getRarityDef(rarity);
+      const rgb = firstRgbFromRarityDef(d);
+      const lit = mixRgb(rgb, [255, 255, 255], 0.38);
+      const mid = mixRgb(rgb, [120, 135, 165], 0.42);
+      const deep = mixRgb(rgb, [38, 46, 62], 0.5);
+      const toRgb = (a) => `rgb(${a[0]},${a[1]},${a[2]})`;
       if (d.isGradient && d.gradientColors && d.gradientColors.length >= 2) {
         const g = d.gradientColors.join(', ');
         return {
-          image: `linear-gradient(145deg, ${g}, #080c14 78%, #030509 100%)`,
-          size: d.isRunning ? '220% 220%' : '100% 100%',
+          image: `linear-gradient(160deg, ${g})`,
+          size: d.isRunning ? '240% 240%' : '100% 100%',
           repeat: 'no-repeat',
           position: d.isRunning ? '0% 50%' : 'center',
           animated: !!d.isRunning
         };
       }
-      const c = d.solid || '#1a2233';
+      const c = toRgb(rgb);
       return {
-        image: `linear-gradient(165deg, ${c} 0%, #0d1218 45%, #030509 100%)`,
+        image: `linear-gradient(168deg, ${c} 0%, ${toRgb(lit)} 38%, ${toRgb(mid)} 70%, ${toRgb(deep)} 100%)`,
         size: '100% 100%',
         repeat: 'no-repeat',
         position: 'center',
@@ -6655,6 +7243,8 @@
     let packConfettiInterval = null;
     let packConfettiStopTimer = null;
     let packAutoUnboxTimer = null;
+    let packRipFlashTimer = null;
+    let packOpeningBusy = false;
 
     function hexToRgbTriplet(hex) {
       const s = String(hex || '').trim();
@@ -6720,35 +7310,49 @@
       }
     }
 
-    function spawnPackConfettiBurst(n, colorPalette) {
+    function getRarityConfettiGradientCss(rarity) {
+      const d = getRarityDef(rarity);
+      if (!d.isGradient || !d.gradientColors || d.gradientColors.length < 2) return '';
+      const g = d.gradientColors.join(', ');
+      return `linear-gradient(125deg, ${g})`;
+    }
+
+    function spawnPackConfettiBurst(n, colorPalette, rarityForGrad) {
       if (!packConfettiLayer) return;
       const colors = Array.isArray(colorPalette) && colorPalette.length
         ? colorPalette
         : ['#2AFF9E', '#FF3D6C', '#FFC107', '#42A5F5', '#AB47BC', '#ffffff'];
+      const grad = rarityForGrad ? getRarityConfettiGradientCss(rarityForGrad) : '';
       const count = Math.max(1, Math.floor(n));
       for (let i = 0; i < count; i++) {
         const el = document.createElement('div');
         el.className = 'pack-confetti-piece';
+        if (grad && Math.random() > 0.35) {
+          el.classList.add('pack-confetti-grad');
+          el.style.background = grad;
+        } else {
+          el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        }
         el.style.left = `${Math.random() * 100}%`;
-        el.style.background = colors[Math.floor(Math.random() * colors.length)];
-        el.style.width = `${6 + Math.random() * 10}px`;
-        el.style.height = `${6 + Math.random() * 10}px`;
+        el.style.width = `${6 + Math.random() * 8}px`;
+        el.style.height = `${6 + Math.random() * 8}px`;
         el.style.borderRadius = Math.random() > 0.45 ? '50%' : '2px';
-        const dur = 2.2 + Math.random() * 2.2;
-        el.style.setProperty('--cf-dx', `${(Math.random() - 0.5) * 160}px`);
-        el.style.setProperty('--cf-rot', `${420 + Math.random() * 540}deg`);
+        const dur = 2.4 + Math.random() * 1.8;
+        el.style.setProperty('--cf-dur', `${dur}s`);
+        el.style.setProperty('--cf-dx', `${(Math.random() - 0.5) * 140}px`);
+        el.style.setProperty('--cf-rot', `${380 + Math.random() * 480}deg`);
         el.style.animation = `packConfettiFall ${dur}s linear forwards`;
         packConfettiLayer.appendChild(el);
         setTimeout(() => { try { el.remove(); } catch (e) {} }, dur * 1000 + 120);
       }
     }
 
-    function startPackConfetti(durationMs, colorPalette) {
+    function startPackConfetti(durationMs, colorPalette, rarityForGrad) {
       stopPackConfetti();
       if (packConfettiLayer) packConfettiLayer.style.display = 'block';
-      spawnPackConfettiBurst(32, colorPalette);
-      packConfettiInterval = setInterval(() => spawnPackConfettiBurst(18, colorPalette), 360);
-      packConfettiStopTimer = setTimeout(() => stopPackConfetti(), durationMs || 15000);
+      spawnPackConfettiBurst(18, colorPalette, rarityForGrad);
+      packConfettiInterval = setInterval(() => spawnPackConfettiBurst(10, colorPalette, rarityForGrad), 520);
+      packConfettiStopTimer = setTimeout(() => stopPackConfetti(), Math.min(durationMs || 9000, 9000));
     }
 
     function ymdUTC(d) {
@@ -6776,7 +7380,7 @@
     function renderStaffRarityDefsList() {
       const list = document.getElementById('staff-rarity-defs-list');
       if (!list) return;
-      const keysSet = new Set([...Object.keys(DEFAULT_RARITY_DEFS), ...Object.keys(blookRarityDefs || {})]);
+      const keysSet = new Set(Object.keys(blookRarityDefs || {}));
       const keys = Array.from(keysSet);
       keys.sort((a, b) => {
         const ia = raritySortIndex(a);
@@ -6801,7 +7405,7 @@
 
     async function deleteStaffRarityDef(key) {
       const k = (key || '').toLowerCase().trim();
-      if (!k || !confirm(`Remove custom style for "${k}"? Built-in default will be used.`)) return;
+      if (!k || !confirm(`Remove style for "${k}"? Items using this rarity will use the neutral fallback until you add it again.`)) return;
       try {
         await updateDoc(doc(db, 'siteConfig', 'settings'), {
           [`blookRarityDefs.${k}`]: deleteField(),
@@ -7053,6 +7657,7 @@
         const img = document.createElement('img');
         img.src = icon;
         img.alt = bd.name || '';
+        img.loading = 'lazy';
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'contain';
@@ -7074,14 +7679,21 @@
         clearTimeout(packAutoUnboxTimer);
         packAutoUnboxTimer = null;
       }
+      if (packRipFlashTimer) {
+        clearTimeout(packRipFlashTimer);
+        packRipFlashTimer = null;
+      }
       stopPackConfetti();
       packOpeningModalInner?.classList.remove('pack-unbox-celebrate', 'pack-unbox-peek-mood');
       if (packOpeningModalInner) {
         ['--pack-inner', '--pack-outer', '--pack-aurora-inner', '--pack-aurora-outer', '--pack-aurora-rare-a', '--pack-aurora-rare-b', '--pack-aurora-rare-c'].forEach(p => packOpeningModalInner.style.removeProperty(p));
       }
       if (openingModalBg) {
-        openingModalBg.classList.remove('pack-rarity-celebrate', 'pack-bg-rarity-animated', 'pack-bg-rip-flash');
+        openingModalBg.classList.remove('pack-rarity-celebrate', 'pack-bg-rarity-animated');
         openingModalBg.style.animation = '';
+      }
+      if (packRipOverlay) {
+        packRipOverlay.classList.remove('pack-bg-rip-flash', 'pack-bg-rip-flash-dark');
       }
       if (packUnboxClickLayer && packUnboxClickHandler) {
         packUnboxClickLayer.removeEventListener('click', packUnboxClickHandler);
@@ -7096,7 +7708,7 @@
       if (packRevealCard) packRevealCard.classList.remove('pack-unbox-reveal-anim');
       if (packUnboxBoost) packUnboxBoost.style.display = 'none';
       packOpeningModalInner?.classList.remove('pack-opening-modal-unbox');
-      packOpeningModalBody?.classList.remove('pack-unbox-body', 'pack-unbox-revealed');
+      packOpeningModalBody?.classList.remove('pack-unbox-body', 'pack-unbox-body-lively', 'pack-unbox-revealed');
       if (packUnboxPackCenter) packUnboxPackCenter.style.display = '';
       giftAnimation.classList.remove('pack-unbox-stage', 'torn', 'pack-unbox-peek', 'pack-unbox-cover-drop', 'pack-unbox-reveal', 'pack-unbox-anim');
       giftAnimation.innerHTML = '';
@@ -7109,6 +7721,7 @@
       openingModalBg.style.backgroundSize = '';
       openingModalBg.style.backgroundRepeat = '';
       openingModalBg.style.backgroundPosition = '';
+      openingModalBg.style.backgroundBlendMode = '';
     }
 
     function applyPackUnboxBackdropVars(innerHex, outerHex, rarity) {
@@ -7128,6 +7741,53 @@
       root.style.setProperty('--pack-aurora-rare-c', toR(rr, 0.14));
     }
 
+    /** Same gradient as pack-opening modal (pre-reveal / "showing" state). */
+    function getPackOpeningBackdropStyle(innerHex, outerHex) {
+      const inner = innerHex || '#5a6a8a';
+      const outer = outerHex || '#1a2233';
+      return {
+        backgroundImage: `linear-gradient(168deg, ${inner} 0%, ${outer} 42%, #030509 88%)`,
+        backgroundSize: '220% 220%',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: '40% 45%',
+        backgroundBlendMode: ''
+      };
+    }
+
+    /** Same gradient as #pack-reveal-card default (unpacking card look). */
+    function getRevealCardBackdropStyle(innerHex, outerHex) {
+      const inner = innerHex || '#5a6a8a';
+      const outer = outerHex || '#1a2233';
+      return {
+        backgroundImage: `linear-gradient(155deg, ${inner} 0%, ${outer} 55%, #05070c 100%)`,
+        backgroundSize: '100% 100%',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundBlendMode: ''
+      };
+    }
+
+    function getRarityDetailBackdropStyle(rarity) {
+      const bg = getRarityBackgroundGradientCss(rarity);
+      return {
+        backgroundImage: bg.image,
+        backgroundSize: bg.size,
+        backgroundRepeat: bg.repeat,
+        backgroundPosition: bg.position,
+        backgroundBlendMode: ''
+      };
+    }
+
+    function applyPackOpeningModalBackdrop(innerHex, outerHex) {
+      if (!openingModalBg) return;
+      const s = getPackOpeningBackdropStyle(innerHex, outerHex);
+      openingModalBg.style.backgroundImage = s.backgroundImage;
+      openingModalBg.style.backgroundSize = s.backgroundSize;
+      openingModalBg.style.backgroundRepeat = s.backgroundRepeat;
+      openingModalBg.style.backgroundPosition = s.backgroundPosition;
+      openingModalBg.style.backgroundBlendMode = s.backgroundBlendMode;
+    }
+
     function showPackOpeningModal(pack, item) {
       resetPackOpeningModalLayout();
 
@@ -7135,40 +7795,42 @@
       const inner = fc.inner || '#5a6a8a';
       const outer = fc.outer || '#1a2233';
       applyPackUnboxBackdropVars(inner, outer, item.rarity);
-      openingModalBg.style.backgroundImage = `linear-gradient(168deg, ${inner} 0%, ${outer} 42%, #030509 88%)`;
-      openingModalBg.style.backgroundSize = '220% 220%';
-      openingModalBg.style.backgroundRepeat = 'no-repeat';
-      openingModalBg.style.backgroundPosition = '40% 45%';
+      applyPackOpeningModalBackdrop(inner, outer);
 
       packOpeningModalInner?.classList.add('pack-opening-modal-unbox');
-      packOpeningModalBody?.classList.add('pack-unbox-body');
+      packOpeningModalBody?.classList.add('pack-unbox-body', 'pack-unbox-body-lively');
 
       openedGiftName.textContent = item.name || '';
-      const rKey = (item.rarity || 'common').toLowerCase();
-      openedGiftRarity.textContent = (item.rarity || 'common').toUpperCase();
+      const rKey = (item.rarity || '').trim().toLowerCase() || 'unknown';
+      openedGiftRarity.textContent = (item.rarity || '?').toUpperCase();
       openedGiftRarity.className = 'pack-reveal-rarity';
-      openedGiftRarity.style.cssText = `color:${getRarityColor(rKey)};background:none;-webkit-text-fill-color:initial;`;
+      applyPackRevealRarityTextStyles(item.rarity);
       const pct = item.chance != null && item.chance !== '' ? Number(item.chance) : null;
       openedGiftChance.textContent = pct != null && Number.isFinite(pct) ? `${pct}%` : '—';
       openedGiftStars.textContent = `Stars: ${item.starsGained != null ? item.starsGained : 0}`;
       const revealUrl = (pack.revealCardBgUrl || '').trim();
       if (packRevealCard) {
         if (revealUrl) {
+          const revealThumb = /^https?:\/\//i.test(revealUrl) ? mediaThumbUrl(revealUrl, 900, 82) : revealUrl;
           packRevealCard.style.backgroundColor = '#0b0e14';
-          packRevealCard.style.backgroundImage = `url(${JSON.stringify(revealUrl)})`;
+          packRevealCard.style.backgroundImage = `url(${JSON.stringify(revealThumb)})`;
           packRevealCard.style.backgroundSize = 'cover';
         } else {
+          const rbg = getRarityBackgroundGradientCss(item.rarity);
           packRevealCard.style.backgroundColor = '#0b0e14';
-          packRevealCard.style.backgroundSize = '100% 100%';
-          packRevealCard.style.backgroundImage = `linear-gradient(155deg, ${inner} 0%, ${outer} 55%, #05070c 100%)`;
+          packRevealCard.style.backgroundImage = rbg.image;
+          packRevealCard.style.backgroundSize = rbg.size;
+          packRevealCard.style.backgroundRepeat = rbg.repeat;
+          packRevealCard.style.backgroundPosition = rbg.position;
         }
       }
       if (packRevealBlookSlot) {
         packRevealBlookSlot.innerHTML = '';
         if (item.imageUrl) {
           const im = document.createElement('img');
-          im.src = item.imageUrl;
+          im.src = mediaThumbUrl(item.imageUrl, 420, 85);
           im.alt = item.name || '';
+          im.decoding = 'async';
           packRevealBlookSlot.appendChild(im);
         } else {
           packRevealBlookSlot.innerHTML = `<i class="fas fa-gift" style="font-size:3rem;color:${getRarityColor(item.rarity)};"></i>`;
@@ -7185,7 +7847,8 @@
       giftAnimation.innerHTML = '';
       giftAnimation.classList.add('pack-unbox-stage');
 
-      const artUrl = (marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack').replace(/\\/g, '/');
+      const artUrlRaw = (marketPackArtUrl(pack) || (pack.backgroundImage || '').trim() || (pack.items?.find(it => it.imageUrl)?.imageUrl) || 'https://placehold.co/280x280/1a1f2e/8899aa?text=Pack').replace(/\\/g, '/');
+      const artUrl = /^https?:\/\//i.test(artUrlRaw) ? mediaThumbUrl(artUrlRaw, 640, 82) : artUrlRaw;
 
       const stack = document.createElement('div');
       stack.className = 'pack-unbox-stack';
@@ -7195,7 +7858,7 @@
         const maxH = Math.min(window.innerHeight * 0.62, 560);
         const w = nw > 0 ? nw : 280;
         const h = nh > 0 ? nh : 280;
-        const scale = Math.min(1, maxW / w, maxH / h) * 1.3;
+        const scale = Math.min(1, maxW / w, maxH / h) * 0.78;
         stack.style.width = `${Math.round(w * scale)}px`;
         stack.style.height = `${Math.round(h * scale)}px`;
       };
@@ -7206,8 +7869,9 @@
       blookClip.className = 'pack-unbox-blook-clip';
       if (item.imageUrl) {
         const bi = document.createElement('img');
-        bi.src = item.imageUrl;
+        bi.src = mediaThumbUrl(item.imageUrl, 420, 85);
         bi.alt = item.name || '';
+        bi.decoding = 'async';
         blookClip.appendChild(bi);
       } else {
         const ic = document.createElement('i');
@@ -7223,6 +7887,7 @@
         im.src = artUrl;
         im.alt = '';
         im.draggable = false;
+        im.decoding = 'async';
         return im;
       };
 
@@ -7287,8 +7952,9 @@
           openingModalBg.style.backgroundSize = bg.size;
           openingModalBg.style.backgroundRepeat = bg.repeat;
           openingModalBg.style.backgroundPosition = bg.position;
-          openingModalBg.style.animation = '';
+          openingModalBg.style.backgroundBlendMode = '';
         }
+        packOpeningModalBody?.classList.remove('pack-unbox-body-lively');
         packOpeningModalInner?.classList.add('pack-unbox-celebrate');
         packOpeningModalInner?.classList.remove('pack-unbox-peek-mood');
       };
@@ -7297,11 +7963,20 @@
         if (giftAnimation.classList.contains('torn')) return;
         giftAnimation.classList.add('torn', 'pack-unbox-peek');
         packOpeningModalInner?.classList.add('pack-unbox-peek-mood');
-        if (openingModalBg) {
-          openingModalBg.classList.remove('pack-bg-rip-flash');
-          void openingModalBg.offsetWidth;
-          openingModalBg.classList.add('pack-bg-rip-flash');
-          setTimeout(() => { openingModalBg?.classList.remove('pack-bg-rip-flash'); }, 700);
+        if (packRipOverlay) {
+          requestAnimationFrame(() => {
+            if (packRipFlashTimer) {
+              clearTimeout(packRipFlashTimer);
+              packRipFlashTimer = null;
+            }
+            packRipOverlay.classList.remove('pack-bg-rip-flash', 'pack-bg-rip-flash-dark');
+            void packRipOverlay.offsetWidth;
+            packRipOverlay.classList.add('pack-bg-rip-flash-dark');
+            packRipFlashTimer = setTimeout(() => {
+              packRipOverlay?.classList.remove('pack-bg-rip-flash-dark');
+              packRipFlashTimer = null;
+            }, 700);
+          });
         }
         if (packUnboxBoost) packUnboxBoost.style.display = 'none';
       };
@@ -7312,34 +7987,37 @@
         giftAnimation.classList.remove('pack-unbox-peek');
         applyRarityCelebrateBg();
         const confettiColors = getRarityConfettiColors(item.rarity);
-        startPackConfetti(15000, confettiColors);
+        startPackConfetti(13000, confettiColors, item.rarity);
         setTimeout(finishRevealCard, 620);
       };
 
       packUnboxClickHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!giftAnimation.classList.contains('torn')) {
-          firstRip();
-          const preConfettiMs = 1000;
-          if (packAutoUnboxTimer) clearTimeout(packAutoUnboxTimer);
-          packAutoUnboxTimer = setTimeout(() => {
-            packAutoUnboxTimer = null;
-            secondReveal();
-          }, preConfettiMs);
-        }
+        if (giftAnimation.classList.contains('torn')) return;
+        firstRip();
+        const preConfettiMs = 1000;
+        if (packAutoUnboxTimer) clearTimeout(packAutoUnboxTimer);
+        packAutoUnboxTimer = setTimeout(() => {
+          packAutoUnboxTimer = null;
+          secondReveal();
+        }, preConfettiMs);
       };
 
       const probe = new Image();
       probe.onload = () => {
         setStackSize(probe.naturalWidth, probe.naturalHeight);
         giftAnimation.appendChild(stack);
-        if (packUnboxClickLayer) packUnboxClickLayer.addEventListener('click', packUnboxClickHandler);
+        if (packUnboxClickLayer) {
+          packUnboxClickLayer.addEventListener('click', packUnboxClickHandler, { once: true });
+        }
       };
       probe.onerror = () => {
         setStackSize(280, 280);
         giftAnimation.appendChild(stack);
-        if (packUnboxClickLayer) packUnboxClickLayer.addEventListener('click', packUnboxClickHandler);
+        if (packUnboxClickLayer) {
+          packUnboxClickLayer.addEventListener('click', packUnboxClickHandler, { once: true });
+        }
       };
       probe.src = artUrl;
 
@@ -7350,6 +8028,7 @@
     let currentInventoryFilter = 'all';
     let inventoryItems = [];
     let invBlookDetailContext = null;
+    let selectedInvSlotKey = null;
     let packBuilderItems = [];
     let staffEditUserInitialBanner = '';
 
@@ -7358,10 +8037,79 @@
       return Math.max(1, Math.floor(n * 0.5));
     }
 
+    function resolvePackDocForInvDetail(rep) {
+      const cache = inventoryCatalogCache || [];
+      const pid = rep && rep.packId;
+      if (pid) {
+        const byId = cache.find(p => p.id === pid);
+        if (byId) return byId;
+      }
+      const pn = (rep && rep.packName || '').trim();
+      if (pn) {
+        return cache.find(p => (p.name || '').trim() === pn) || null;
+      }
+      return null;
+    }
+
+    function applyInvPanelDetailBackground(packDoc, rarityKey) {
+      if (!invBlookDetailPanel) return;
+      invBlookDetailPanel.classList.remove('inv-blook-detail--opening-bg', 'inv-blook-detail--reveal-bg');
+      invBlookDetailPanel.style.backgroundColor = '#07090e';
+      if (!packDoc) {
+        invBlookDetailPanel.style.backgroundImage = 'none';
+        invBlookDetailPanel.style.backgroundSize = '';
+        invBlookDetailPanel.style.backgroundPosition = '';
+        invBlookDetailPanel.style.backgroundRepeat = '';
+        invBlookDetailPanel.style.backgroundBlendMode = '';
+        return;
+      }
+      const fc = marketPackFrameColors(packDoc);
+      const inner = fc.inner || '#5a6a8a';
+      const outer = fc.outer || '#1a2233';
+      const revealUrl = String(packDoc.revealCardBgUrl || '').trim();
+      invBlookDetailPanel.classList.add('inv-blook-detail--reveal-bg');
+      if (revealUrl) {
+        const thumb = /^https?:\/\//i.test(revealUrl) ? mediaThumbUrl(revealUrl, 800, 82) : revealUrl;
+        invBlookDetailPanel.style.backgroundColor = '#0b0e14';
+        invBlookDetailPanel.style.backgroundImage = `url(${JSON.stringify(thumb)})`;
+        invBlookDetailPanel.style.backgroundSize = 'cover';
+        invBlookDetailPanel.style.backgroundRepeat = 'no-repeat';
+        invBlookDetailPanel.style.backgroundPosition = 'center';
+        invBlookDetailPanel.style.backgroundBlendMode = '';
+      } else {
+        const s = getRevealCardBackdropStyle(inner, outer);
+        invBlookDetailPanel.style.backgroundImage = s.backgroundImage;
+        invBlookDetailPanel.style.backgroundSize = s.backgroundSize;
+        invBlookDetailPanel.style.backgroundRepeat = s.backgroundRepeat;
+        invBlookDetailPanel.style.backgroundPosition = s.backgroundPosition;
+        invBlookDetailPanel.style.backgroundBlendMode = s.backgroundBlendMode;
+      }
+    }
+
+    function clearInvBlookDetailPanel() {
+      selectedInvSlotKey = null;
+      if (invBlookDetailPlaceholder) invBlookDetailPlaceholder.style.display = '';
+      if (invBlookDetailBody) {
+        invBlookDetailBody.style.display = 'none';
+        invBlookDetailBody.style.flexDirection = 'column';
+      }
+      if (invPanelRarity) invPanelRarity.style.display = 'none';
+      if (invPanelActions) invPanelActions.style.display = 'none';
+      applyInvPanelDetailBackground(null);
+      document.querySelectorAll('.inv-blook-slot.selected').forEach(el => el.classList.remove('selected'));
+    }
+
+    function refreshInvSlotSelectionUI() {
+      document.querySelectorAll('.inv-blook-slot').forEach((el) => {
+        el.classList.toggle('selected', !!selectedInvSlotKey && el.dataset.slotKey === selectedInvSlotKey);
+      });
+    }
+
     function closeInvBlookModal() {
       const m = document.getElementById('inv-blook-modal');
       if (m) m.style.display = 'none';
       invBlookDetailContext = null;
+      clearInvBlookDetailPanel();
     }
 
     function populateRecipientSelectForInvSend() {
@@ -7375,22 +8123,68 @@
       });
     }
 
-    function openInvBlookDetail(rep, copies) {
-      invBlookDetailContext = { rep, copies: copies || [rep] };
-      const r = (rep.rarity || 'common').toLowerCase();
-      const qty = (copies && copies.length) ? copies.length : 1;
-      const stars = rep.starsGained || 0;
+    function openInvBlookDetail(rep, copies, catalogDef, slotKey) {
+      const cop = copies && copies.length ? copies : [];
+      const unlocked = cop.length > 0;
+      invBlookDetailContext = { rep, copies: cop, catalogDef: catalogDef || null };
+      selectedInvSlotKey = slotKey || null;
+      refreshInvSlotSelectionUI();
+
+      const name = rep.itemName || catalogDef?.name || 'Blook';
+      const stars = Number(rep.starsGained != null ? rep.starsGained : catalogDef?.starsGained) || 0;
+      const imageUrl = String(rep.imageUrl || catalogDef?.imageUrl || '').trim();
+      const packDoc = catalogDef?.packDoc || resolvePackDocForInvDetail(rep);
+      const rKey = (rep.rarity || catalogDef?.rarity || 'common').toLowerCase();
+
+      if (invBlookDetailPlaceholder) invBlookDetailPlaceholder.style.display = 'none';
+      if (invBlookDetailBody) {
+        invBlookDetailBody.style.display = 'flex';
+        invBlookDetailBody.style.flexDirection = 'column';
+      }
+      applyInvPanelDetailBackground(packDoc, rKey);
+
+      if (invPanelTitle) invPanelTitle.textContent = name;
+      if (invPanelRarity) {
+        const rDisp = (rep.rarity || catalogDef?.rarity || 'common').toString();
+        invPanelRarity.textContent = rDisp.toUpperCase();
+        invPanelRarity.style.display = '';
+        const rc = getRarityColor(rKey);
+        invPanelRarity.style.color = rc;
+        invPanelRarity.style.borderColor = `${rc}66`;
+        invPanelRarity.style.background = `${rc}22`;
+      }
+      if (invPanelStars) invPanelStars.textContent = String(stars);
+
+      if (invPanelOwned) {
+        invPanelOwned.textContent = unlocked ? `×${cop.length}` : '×0';
+      }
+
+      if (invPanelVisual) {
+        const panelImg = imageUrl ? escapeHtml(mediaThumbUrl(imageUrl, unlocked ? 420 : 360, 85)) : '';
+        if (unlocked && imageUrl) {
+          invPanelVisual.innerHTML = `<img src="${panelImg}" alt="" loading="lazy" decoding="async">`;
+        } else if (imageUrl) {
+          invPanelVisual.innerHTML = `<div class="inv-blook-detail-silhouette"><img src="${panelImg}" alt="" loading="lazy" decoding="async"><div class="inv-blook-lock-overlay" aria-hidden="true"><span class="material-symbols-outlined">lock</span></div></div>`;
+        } else {
+          const rc = getRarityColor(rKey);
+          invPanelVisual.innerHTML = `<div class="inv-blook-detail-silhouette" style="background:#0a0c10;"><span class="inv-blook-ph" style="color:${rc};font-size:3rem;"><i class="fas fa-dragon"></i></span><div class="inv-blook-lock-overlay" aria-hidden="true"><span class="material-symbols-outlined">lock</span></div></div>`;
+        }
+      }
+
+      if (invPanelActions) invPanelActions.style.display = unlocked ? 'flex' : 'none';
+
+      const r = rKey;
+      const qty = cop.length || 0;
       const sell = invSellPriceForStars(stars);
       const rc = getRarityColor(r);
-
       const vis = document.getElementById('inv-blook-modal-visual');
       if (vis) {
-        vis.innerHTML = rep.imageUrl
-          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="">`
+        vis.innerHTML = imageUrl
+          ? `<img src="${escapeHtml(mediaThumbUrl(imageUrl, 320, 85))}" alt="" decoding="async">`
           : `<span class="inv-blook-ph" style="color:${rc};"><i class="fas fa-dragon"></i></span>`;
       }
       const nm = document.getElementById('inv-blook-modal-name');
-      if (nm) nm.textContent = rep.itemName || 'Blook';
+      if (nm) nm.textContent = name;
       const rr = document.getElementById('inv-blook-modal-rarity');
       if (rr) {
         rr.textContent = r;
@@ -7399,21 +8193,22 @@
         rr.style.background = `${rc}22`;
       }
       const pk = document.getElementById('inv-blook-modal-pack');
-      if (pk) pk.textContent = rep.packName || '—';
+      if (pk) pk.textContent = rep.packName || catalogDef?.packDoc?.name || '—';
       const q = document.getElementById('inv-blook-modal-qty');
-      if (q) q.textContent = String(qty);
+      if (q) q.textContent = String(qty || (unlocked ? cop.length : 0));
       const st = document.getElementById('inv-blook-modal-stars');
       if (st) st.textContent = String(stars);
       const sl = document.getElementById('inv-blook-modal-sell');
       if (sl) sl.textContent = `${sell} tokens (each)`;
-
-      const m = document.getElementById('inv-blook-modal');
-      if (m) m.style.display = 'flex';
     }
 
     async function sellOneInvBlookFromDetail() {
       if (!currentUser || !invBlookDetailContext) return;
       const { copies } = invBlookDetailContext;
+      if (!copies || !copies.length || !copies[0].id) {
+        showNotification('This blook is not in your inventory.', 'error');
+        return;
+      }
       const docId = copies[0].id;
       const rep = copies[0];
       const price = invSellPriceForStars(rep.starsGained || 0);
@@ -7428,7 +8223,10 @@
           transaction.update(uref, { coins: increment(price) });
         });
         showNotification(`Sold for ${price} tokens`, 'success');
-        closeInvBlookModal();
+        invBlookDetailContext = null;
+        const ibm = document.getElementById('inv-blook-modal');
+        if (ibm) ibm.style.display = 'none';
+        clearInvBlookDetailPanel();
       } catch (e) {
         showNotification('Could not sell: ' + (e.message || 'error'), 'error');
       }
@@ -7437,6 +8235,10 @@
     function openInvSendFromDetail() {
       if (!invBlookDetailContext || !currentUser) return;
       const { copies } = invBlookDetailContext;
+      if (!copies || !copies.length || !copies[0].id) {
+        showNotification('Unlock this blook before sending.', 'error');
+        return;
+      }
       const rep = copies[0];
       currentCard = {
         id: rep.id,
@@ -7445,7 +8247,8 @@
         image: rep.imageUrl || '',
         starsGained: rep.starsGained || 0
       };
-      closeInvBlookModal();
+      const ibm = document.getElementById('inv-blook-modal');
+      if (ibm) ibm.style.display = 'none';
       populateRecipientSelectForInvSend();
       if (sendCardName) sendCardName.textContent = rep.itemName || 'Blook';
       if (sendCardType) {
@@ -7453,10 +8256,12 @@
       }
       if (sendCardIcon) {
         sendCardIcon.innerHTML = rep.imageUrl
-          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
+          ? `<img src="${escapeHtml(rep.imageUrl)}" alt="" decoding="async" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
           : '🎁';
       }
       if (sendCardModal) sendCardModal.style.display = 'flex';
+      invBlookDetailContext = null;
+      clearInvBlookDetailPanel();
     }
 
     function openSendCardModal() {
@@ -7468,7 +8273,7 @@
       }
       if (sendCardIcon) {
         sendCardIcon.innerHTML = currentCard.image
-          ? `<img src="${escapeHtml(currentCard.image)}" alt="" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
+          ? `<img src="${escapeHtml(currentCard.image)}" alt="" decoding="async" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`
           : '🎁';
       }
       if (sendCardModal) sendCardModal.style.display = 'flex';
@@ -7491,7 +8296,7 @@
       }
       list.innerHTML = packBuilderItems.map((item, i) => {
         const thumb = item.imageUrl
-          ? `<img src="${escapeHtml(item.imageUrl)}" alt="">`
+          ? `<img src="${escapeHtml(item.imageUrl)}" alt="" loading="lazy" decoding="async">`
           : '<span style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--text-secondary);"><i class="fas fa-cube"></i></span>';
         const label = escapeHtml(item.name || '(unnamed)');
         return `<div class="staff-blook-chip-wrap" style="display:inline-flex;align-items:center;gap:2px;"><button type="button" class="staff-blook-chip" data-idx="${i}">${thumb}<span>${label}</span></button><button type="button" class="staff-blook-chip-del" data-idx="${i}" title="Remove">×</button></div>`;
@@ -7592,26 +8397,46 @@
       document.getElementById('staff-blook-editor-modal').style.display = 'none';
     }
 
+    async function refreshInventoryCatalog() {
+      try {
+        const snap = await getDocs(collection(db, 'packs'));
+        inventoryCatalogCache = snap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .filter(p => p.shopType !== 'banner');
+        inventoryCatalogLoaded = true;
+      } catch (e) {
+        console.error('Inventory catalog load failed', e);
+        inventoryCatalogCache = [];
+        inventoryCatalogLoaded = true;
+      }
+    }
+
+    function invPackMatchesItem(pack, item) {
+      const pid = item.packId;
+      if (pid && pack.id === pid) return true;
+      const pn = (item.packName || '').trim();
+      const pname = (pack.name || '').trim();
+      return pn && pname && pn === pname;
+    }
+
     function renderInventory() {
       if (!inventoryContainer) return;
       inventoryContainer.innerHTML = '';
       const packTabs = document.getElementById('inv-pack-tabs');
 
-      if (inventoryItems.length === 0) {
+      if (!inventoryCatalogLoaded) {
         if (packTabs) packTabs.innerHTML = '';
-        inventoryContainer.innerHTML = '<p class="empty-message">No blooks yet — open some packs!</p>';
+        inventoryContainer.innerHTML = '<p class="inv-blook-empty-msg">Loading your collection…</p>';
         return;
       }
 
-      const packCounts = {};
-      inventoryItems.forEach(item => {
-        const pn = item.packName || 'Unknown pack';
-        packCounts[pn] = (packCounts[pn] || 0) + 1;
-      });
-      const packNames = Object.keys(packCounts).sort();
-      if (!packNames.includes(currentInventoryFilter) && currentInventoryFilter !== 'all') {
-        currentInventoryFilter = 'all';
-      }
+      const catalogPacks = inventoryCatalogCache || [];
+      const itemPacks = catalogPacks.filter(p => (p.items || []).length > 0);
+
+      const countForPack = (pack) => inventoryItems.filter(it => invPackMatchesItem(pack, it)).length;
+
+      const validFilters = new Set(['all', ...itemPacks.map(p => p.id)]);
+      if (!validFilters.has(currentInventoryFilter)) currentInventoryFilter = 'all';
 
       if (packTabs) {
         packTabs.innerHTML = '';
@@ -7628,47 +8453,149 @@
           packTabs.appendChild(b);
         };
         mkTab('All', 'all', inventoryItems.length);
-        packNames.forEach(pn => mkTab(pn, pn, packCounts[pn]));
+        itemPacks.forEach(p => mkTab(p.name || 'Pack', p.id, countForPack(p)));
       }
 
-      const filtered = currentInventoryFilter === 'all' ? inventoryItems : inventoryItems.filter(i => (i.packName || 'Unknown pack') === currentInventoryFilter);
-      const byName = {};
-      filtered.forEach(item => {
-        const key = item.itemName || '?';
-        if (!byName[key]) byName[key] = [];
-        byName[key].push(item);
+      const packsToRender = currentInventoryFilter === 'all'
+        ? itemPacks
+        : itemPacks.filter(p => p.id === currentInventoryFilter);
+
+      const usedItemIds = new Set();
+
+      const pickRep = (copies) => copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
+
+      const renderPackSection = (pack, defs, orphanBucket) => {
+        if (!defs.length) return;
+        const isOrphanSection = pack.id === '__orphan__';
+        const section = document.createElement('section');
+        section.className = 'inv-blook-pack-section';
+        const title = document.createElement('h3');
+        title.className = 'inv-blook-pack-title font-titan-header';
+        title.textContent = pack.name || 'Pack';
+        section.appendChild(title);
+        const rule = document.createElement('div');
+        rule.className = 'inv-blook-pack-rule';
+        section.appendChild(rule);
+        const row = document.createElement('div');
+        row.className = 'inv-blook-row';
+        const sortedDefs = [...defs].sort((a, b) => {
+          const rd = raritySortIndex(a.rarity) - raritySortIndex(b.rarity);
+          if (rd !== 0) return rd;
+          return (a.name || '').localeCompare(b.name || '');
+        });
+        sortedDefs.forEach((def) => {
+          const blookName = def.name || '';
+          const copies = isOrphanSection
+            ? (orphanBucket || []).filter(it => (it.itemName || '') === blookName)
+            : inventoryItems.filter(
+              it => invPackMatchesItem(pack, it) && (it.itemName || '') === blookName
+            );
+          if (!isOrphanSection) copies.forEach(c => usedItemIds.add(c.id));
+          const unlocked = copies.length > 0;
+          const rep = unlocked ? pickRep(copies) : {
+            itemName: blookName,
+            rarity: def.rarity,
+            starsGained: def.starsGained,
+            imageUrl: def.imageUrl || '',
+            packName: pack.name,
+            packId: pack.id
+          };
+          const slotKey = `${pack.id}:${encodeURIComponent(blookName)}`;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `inv-blook-slot${unlocked ? ' unlocked' : ''}`;
+          btn.dataset.slotKey = slotKey;
+          btn.setAttribute('aria-label', unlocked ? `${blookName}, owned ${copies.length}` : `${blookName}, locked`);
+          const inner = document.createElement('div');
+          inner.className = 'inv-blook-slot-inner';
+          const imgUrl = String(def.imageUrl || rep.imageUrl || '').trim();
+          const slotImgSrc = imgUrl ? escapeHtml(mediaThumbUrl(imgUrl, 200, 80)) : '';
+          if (unlocked) {
+            const rc = getRarityColor((def.rarity || rep.rarity || 'common').toLowerCase());
+            if (imgUrl) {
+              inner.innerHTML = `<img src="${slotImgSrc}" alt="" loading="lazy" decoding="async">`;
+            } else {
+              inner.innerHTML = `<span class="inv-blook-ph" style="color:${rc};font-size:1.75rem;"><i class="fas fa-dragon"></i></span>`;
+            }
+            if (copies.length > 1) {
+              const badge = document.createElement('span');
+              badge.className = 'inv-blook-qty-badge';
+              badge.textContent = String(copies.length);
+              btn.appendChild(badge);
+            }
+          } else if (imgUrl) {
+            inner.innerHTML = `
+              <div class="inv-blook-silhouette-wrap">
+                <img class="inv-blook-silhouette-img" src="${slotImgSrc}" alt="" loading="lazy" decoding="async">
+                <div class="inv-blook-lock-overlay" aria-hidden="true"><span class="material-symbols-outlined">lock</span></div>
+              </div>`;
+          } else {
+            const rc = getRarityColor((def.rarity || 'common').toLowerCase());
+            inner.innerHTML = `
+              <div class="inv-blook-silhouette-wrap">
+                <span class="inv-blook-ph" style="color:${rc};font-size:1.75rem;"><i class="fas fa-dragon"></i></span>
+                <div class="inv-blook-lock-overlay" aria-hidden="true"><span class="material-symbols-outlined">lock</span></div>
+              </div>`;
+          }
+          btn.appendChild(inner);
+          const catalogDef = {
+            name: blookName,
+            imageUrl: def.imageUrl,
+            starsGained: def.starsGained,
+            rarity: def.rarity,
+            packDoc: isOrphanSection ? null : pack
+          };
+          btn.addEventListener('click', () => openInvBlookDetail(rep, copies, catalogDef, slotKey));
+          row.appendChild(btn);
+        });
+        section.appendChild(row);
+        inventoryContainer.appendChild(section);
+      };
+
+      packsToRender.forEach((pack) => {
+        const defs = (pack.items || []).map(it => ({
+          name: it.name,
+          rarity: it.rarity,
+          starsGained: it.starsGained,
+          imageUrl: it.imageUrl
+        })).filter(d => d.name);
+        renderPackSection(pack, defs, null);
       });
 
-      const rows = Object.keys(byName).map(k => {
-        const copies = byName[k];
-        const rep = copies.reduce((a, b) => (raritySortIndex(a.rarity) > raritySortIndex(b.rarity) ? a : b));
-        return { copies, rep, count: copies.length };
-      });
-      rows.sort((a, b) => {
-        const rd = raritySortIndex(a.rep.rarity) - raritySortIndex(b.rep.rarity);
-        if (rd !== 0) return rd;
-        return (a.rep.itemName || '').localeCompare(b.rep.itemName || '');
-      });
+      const orphanItems = inventoryItems.filter(it => !usedItemIds.has(it.id));
+      if (orphanItems.length) {
+        const byName = {};
+        orphanItems.forEach(it => {
+          const k = it.itemName || '?';
+          if (!byName[k]) byName[k] = [];
+          byName[k].push(it);
+        });
+        const defs = Object.keys(byName).map(k => {
+          const cop = byName[k];
+          const r = pickRep(cop);
+          return {
+            name: k,
+            rarity: r.rarity,
+            starsGained: r.starsGained,
+            imageUrl: r.imageUrl
+          };
+        });
+        renderPackSection({ id: '__orphan__', name: 'Your blooks', items: defs, shopType: 'item' }, defs, orphanItems);
+      }
 
-      rows.forEach(({ rep, copies, count }) => {
-        const r = (rep.rarity || 'common').toLowerCase();
-        const rc = getRarityColor(r);
-        const cell = document.createElement('div');
-        cell.className = 'inv-blook-cell';
-        cell.innerHTML = `
-          ${count > 1 ? `<span class="inv-blook-qty-badge" style="color:${rc};border-color:${rc}44;">${count}</span>` : ''}
-          <div class="inv-blook-cell-inner">
-            ${rep.imageUrl ? `<img src="${escapeHtml(rep.imageUrl)}" alt="">` : `<span class="inv-blook-ph" style="color:${rc};"><i class="fas fa-dragon"></i></span>`}
-          </div>
-          <div class="inv-blook-cell-name" title="${escapeHtml(rep.itemName)}">${escapeHtml(rep.itemName)}</div>
-        `;
-        cell.addEventListener('click', () => openInvBlookDetail(rep, copies));
-        inventoryContainer.appendChild(cell);
-      });
+      if (!inventoryContainer.children.length) {
+        inventoryContainer.innerHTML = '<p class="inv-blook-empty-msg">No packs in the shop yet. When packs are added, every blook appears here — unlock them by opening packs.</p>';
+      }
+
+      refreshInvSlotSelectionUI();
     }
 
     async function loadInventory(userId) {
       if (inventoryUnsubscribe) inventoryUnsubscribe();
+      inventoryCatalogLoaded = false;
+      renderInventory();
+      await refreshInventoryCatalog();
+      renderInventory();
       const inventoryQuery = query(collection(db, "inventory"), where("userId", "==", userId));
       inventoryUnsubscribe = onSnapshot(inventoryQuery, (snapshot) => {
         inventoryItems = [];
@@ -7861,7 +8788,7 @@
                 friendsData.push(friend);
                 const friendItem = document.createElement('div');
                 friendItem.className = `friend-item${selectedFriend && selectedFriend.id === friend.id ? ' active' : ''}`;
-                friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.username}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${escapeHtml(friend.username || '')}</div>`;
+                friendItem.innerHTML = `<div class="friend-avatar">${friend.avatar ? `<img src="${escapeHtml(friend.avatar)}" alt="${escapeHtml(friend.username || '')}" loading="lazy" decoding="async" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '👤'}</div><div class="friend-name">${escapeHtml(friend.username || '')}</div>`;
                 friendItem.addEventListener('click', () => {
                   document.querySelectorAll('.friend-item').forEach(el => el.classList.remove('active'));
                   friendItem.classList.add('active');
@@ -8080,7 +9007,7 @@
           try {
             const badgesSnap = await getDocs(collection(db, 'badges'));
             const bd = badgesSnap.docs.map(d=>d.data()).find(b=>b.name===userData.badges[0]);
-            if (bd?.icon && /^https?:\/\//i.test(bd.icon)) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}">`;
+            if (bd?.icon && /^https?:\/\//i.test(bd.icon)) topBadgeHtml = `<img class="chat-msg-badge" src="${escapeHtml(bd.icon)}" alt="${escapeHtml(bd.name)}" title="${escapeHtml(bd.name)}" loading="lazy" decoding="async">`;
           } catch(e) {}
         }
       }
@@ -8093,7 +9020,7 @@
       const safeImg = imgUrl && /^https?:\/\//i.test(imgUrl) ? escapeHtml(imgUrl) : '';
       div.innerHTML = `
         <div class="chat-msg-header">
-          <img class="chat-avatar" src="${av}" alt="${safeName}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">
+          <img class="chat-avatar" src="${av}" alt="${safeName}" loading="lazy" decoding="async" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">
           <span class="message-sender clickable-username" style="${titleStyle}" data-user-id="${escapeHtml(msg.senderId)}" data-username="${safeName}">${safeName}</span>
           ${topBadgeHtml}
           <span class="message-time">${escapeHtml(timeStr)}</span>
@@ -8291,7 +9218,7 @@
         document.getElementById('friend-chat-loading')?.classList.add('hidden');
         return;
       }
-      friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${selectedFriend.avatar}" alt="${selectedFriend.username}">` : '<i class="fas fa-user"></i>'} <span>${selectedFriend.username}</span>`;
+      friendChatHeader.innerHTML = `${selectedFriend.avatar ? `<img src="${escapeHtml(selectedFriend.avatar)}" alt="${escapeHtml(selectedFriend.username || '')}" loading="lazy" decoding="async">` : '<i class="fas fa-user"></i>'} <span>${escapeHtml(selectedFriend.username || '')}</span>`;
       friendChatInputArea.style.display = 'flex';
       friendChatRenderedIds = new Set();
       const fLoad = document.getElementById('friend-chat-loading');
@@ -8516,8 +9443,8 @@
           const cardElement = document.createElement('div');
           cardElement.className = 'gift-card-item';
           cardElement.innerHTML = `
-            <div class="gift-card-item-icon ${card.rarity}">${card.imageUrl ? `<img src="${card.imageUrl}" alt="${card.itemName}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 10px;">` : '<i class="fas fa-gift"></i>'}</div>
-            <div class="gift-card-item-info"><div class="gift-card-item-name">${card.itemName}</div><div class="gift-card-item-rarity">${card.rarity}</div><div class="gift-card-item-value">Stars: ${card.starsGained || 0}</div></div>
+            <div class="gift-card-item-icon ${card.rarity}">${card.imageUrl ? `<img src="${escapeHtml(card.imageUrl)}" alt="${escapeHtml(card.itemName || '')}" loading="lazy" decoding="async" style="width: 100%;height: 100%;object-fit: cover;border-radius: 10px;">` : '<i class="fas fa-gift"></i>'}</div>
+            <div class="gift-card-item-info"><div class="gift-card-item-name">${escapeHtml(card.itemName || '')}</div><div class="gift-card-item-rarity">${escapeHtml(card.rarity || '')}</div><div class="gift-card-item-value">Stars: ${card.starsGained || 0}</div></div>
           `;
           cardElement.addEventListener('click', async () => {
             if (selectedUserForGift && selectedUserForGift.id) {
@@ -8562,9 +9489,9 @@
           const giftCard = document.createElement('div');
           giftCard.className = `gift-card ${gift.rarity}`;
           giftCard.innerHTML = `
-            <div class="gift-icon">${gift.imageUrl ? `<img src="${gift.imageUrl}" alt="${gift.itemName}" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '<i class="fas fa-gift"></i>'}</div>
-            <div class="gift-name">${gift.itemName}</div>
-            <div class="gift-sender">From: ${gift.senderName}</div>
+            <div class="gift-icon">${gift.imageUrl ? `<img src="${escapeHtml(gift.imageUrl)}" alt="${escapeHtml(gift.itemName || '')}" loading="lazy" decoding="async" style="width: 100%;height: 100%;object-fit: cover;border-radius: 50%;">` : '<i class="fas fa-gift"></i>'}</div>
+            <div class="gift-name">${escapeHtml(gift.itemName || '')}</div>
+            <div class="gift-sender">From: ${escapeHtml(gift.senderName || '')}</div>
             <div class="gift-stats"><div class="gift-stat"><div class="gift-stat-value">${gift.value}</div><div class="gift-stat-label">Value</div></div><div class="gift-stat"><div class="gift-stat-value">${gift.stars}</div><div class="gift-stat-label">Stars</div></div></div>
           `;
           giftWallContainer.appendChild(giftCard);
@@ -8738,6 +9665,86 @@
       });
     }
 
+    /** Lazy-load game banner images (IntersectionObserver + carousel slide preload). */
+    let lazyGameBgObserver = null;
+    function getLazyGameBgObserver() {
+      if (lazyGameBgObserver) return lazyGameBgObserver;
+      if (typeof IntersectionObserver === 'undefined') return null;
+      lazyGameBgObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          lazyGameBgObserver.unobserve(el);
+          const url = el.dataset.lazyBg;
+          if (!url) return;
+          const loadUrl = mediaThumbUrl(url, 900, 82);
+          const img = new Image();
+          img.onload = () => {
+            el.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
+            el.classList.add('lazy-bg-loaded');
+          };
+          img.onerror = () => el.classList.add('lazy-bg-loaded');
+          img.src = loadUrl;
+        });
+      }, { root: null, rootMargin: '180px 0px', threshold: 0.01 });
+      return lazyGameBgObserver;
+    }
+    function observeLazyGameBg(el, rootEl) {
+      if (!el || !el.dataset.lazyBg) return;
+      const obs = getLazyGameBgObserver();
+      if (!obs) {
+        const url = el.dataset.lazyBg;
+        const loadUrl = mediaThumbUrl(url, 900, 82);
+        el.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
+        el.classList.add('lazy-bg-loaded');
+        return;
+      }
+      try {
+        if (rootEl && typeof IntersectionObserver !== 'undefined') {
+          const rObs = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              rObs.unobserve(entry.target);
+              const t = entry.target;
+              const url = t.dataset.lazyBg;
+              if (!url) return;
+              const loadUrl = mediaThumbUrl(url, 520, 82);
+              const img = new Image();
+              img.onload = () => {
+                t.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
+                t.classList.add('lazy-bg-loaded');
+              };
+              img.onerror = () => t.classList.add('lazy-bg-loaded');
+              img.src = loadUrl;
+            });
+          }, { root: rootEl, rootMargin: '120px 0px', threshold: 0.01 });
+          rObs.observe(el);
+          return;
+        }
+      } catch (_) { /* fall through */ }
+      obs.observe(el);
+    }
+    function preloadCarouselSlideBgs(index) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      if (!slides.length) return;
+      const n = slides.length;
+      const want = new Set([index, (index + 1) % n, (index - 1 + n) % n]);
+      want.forEach((i) => {
+        const bg = slides[i]?.querySelector('.slide-background');
+        if (!bg || !bg.dataset.lazyBg || bg.dataset.bgReady === '1') return;
+        const url = bg.dataset.lazyBg;
+        const loadUrl = mediaThumbUrl(url, 1200, 82);
+        const img = new Image();
+        img.onload = () => {
+          bg.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
+          bg.classList.add('lazy-bg-loaded');
+          bg.dataset.bgReady = '1';
+        };
+        img.onerror = () => { bg.dataset.bgReady = '1'; };
+        img.src = loadUrl;
+      });
+    }
+
     function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
     function parseRgbaColorStop(str) {
@@ -8805,7 +9812,7 @@
       wrap.style.setProperty('--pack-inner', ci);
       wrap.style.setProperty('--pack-outer', co);
       const art = artUrl
-        ? `<img class="market-pack-art" src="${escapeHtml(artUrl)}" alt="">`
+        ? `<img class="market-pack-art" src="${escapeHtml(artUrl)}" alt="" loading="lazy" decoding="async">`
         : '<div class="market-pack-art-placeholder"><i class="fas fa-image"></i></div>';
       const infoBtn = onInfoClick
         ? '<button type="button" class="market-pack-info" title="Drop rates">?</button>'
@@ -8981,7 +9988,7 @@
       const packs = all.filter(p => p.shopType !== 'banner');
       document.getElementById('staff-banner-shop-list').innerHTML = banners.length ? banners.map(p=>{
         const img = p.bannerImageUrl || p.backgroundImage || '';
-        return `<div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px;"><div style="width:120px;height:44px;border-radius:8px;overflow:hidden;background:#1a2a3a;flex-shrink:0;">${img?`<img src="${escapeHtml(img)}" style="width:100%;height:100%;object-fit:cover;">`:''}</div><div style="flex:1;"><strong>${escapeHtml(p.name)}</strong> — ${p.price} coins</div><div><button class="staff-btn staff-btn-primary staff-btn-sm sbn-edit" data-id="${p.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sbn-del" data-id="${p.id}">Del</button></div></div>`;
+        return `<div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px;"><div style="width:120px;height:44px;border-radius:8px;overflow:hidden;background:#1a2a3a;flex-shrink:0;">${img?`<img src="${escapeHtml(img)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">`:''}</div><div style="flex:1;"><strong>${escapeHtml(p.name)}</strong> — ${p.price} coins</div><div><button class="staff-btn staff-btn-primary staff-btn-sm sbn-edit" data-id="${p.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sbn-del" data-id="${p.id}">Del</button></div></div>`;
       }).join('') : '<p style="color:var(--text-secondary);font-size:0.85rem;">No shop banners.</p>';
       document.querySelectorAll('.sbn-edit').forEach(b=>b.addEventListener('click',()=>openStaffBannerShopModal(b.dataset.id)));
       document.querySelectorAll('.sbn-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete banner from shop?')){await deleteDoc(doc(db,'packs',b.dataset.id));loadStaffPacks();loadStaffDashboard();}}));
@@ -9100,7 +10107,7 @@
       const userBadges = data.badges || [];
       const badgesSnap = await getDocs(collection(db,'badges'));
       const allBadges = badgesSnap.docs.map(d=>({id:d.id,...d.data()}));
-      document.getElementById('staff-user-badges-list').innerHTML = userBadges.length ? userBadges.map(bn=>{const bd=allBadges.find(b=>b.name===bn);return `<span class="user-badge" style="background:${bd?bd.bgColor:'#333'};color:${bd?bd.textColor:'#fff'};">${bd&&bd.icon?`<img src="${bd.icon}" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;">`:''} ${escapeHtml(bn)} <i class="fas fa-times sub-rm-badge" data-badge="${escapeHtml(bn)}" style="cursor:pointer;margin-left:4px;"></i></span>`;}).join(' ') : '<span style="color:var(--text-secondary);font-size:0.8rem;">No badges</span>';
+      document.getElementById('staff-user-badges-list').innerHTML = userBadges.length ? userBadges.map(bn=>{const bd=allBadges.find(b=>b.name===bn);return `<span class="user-badge" style="background:${bd?bd.bgColor:'#333'};color:${bd?bd.textColor:'#fff'};">${bd&&bd.icon?`<img src="${escapeHtml(bd.icon)}" loading="lazy" decoding="async" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;">`:''} ${escapeHtml(bn)} <i class="fas fa-times sub-rm-badge" data-badge="${escapeHtml(bn)}" style="cursor:pointer;margin-left:4px;"></i></span>`;}).join(' ') : '<span style="color:var(--text-secondary);font-size:0.8rem;">No badges</span>';
       const addBadgeSelect = document.getElementById('staff-user-add-badge');
       addBadgeSelect.innerHTML = '<option value="">Select badge...</option>' + allBadges.filter(b=>!userBadges.includes(b.name)).map(b=>`<option value="${escapeHtml(b.name)}">${escapeHtml(b.name)}</option>`).join('');
       if(hasPermission('manage_inventory')) {
@@ -9166,7 +10173,7 @@
       if (!hasPermission('manage_badges')) { document.getElementById('staff-badges-list').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
       const snap = await getDocs(collection(db,'badges'));
       const badges = snap.docs.map(d=>({id:d.id,...d.data()}));
-      document.getElementById('staff-badges-list').innerHTML = badges.map(b=>`<div class="staff-card" style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:12px;"><span class="user-badge" style="background:${b.bgColor};color:${b.textColor};font-size:0.85rem;padding:6px 14px;">${b.icon?`<img src="${b.icon}" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;">`:''} ${escapeHtml(b.name)}</span><span style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(b.description||'')}</span></div><div><button class="staff-btn staff-btn-primary staff-btn-sm sb-edit" data-id="${b.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sb-del" data-id="${b.id}">Del</button></div></div>`).join('')||'<p style="color:var(--text-secondary);">No badges created yet.</p>';
+      document.getElementById('staff-badges-list').innerHTML = badges.map(b=>`<div class="staff-card" style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:12px;"><span class="user-badge" style="background:${b.bgColor};color:${b.textColor};font-size:0.85rem;padding:6px 14px;">${b.icon?`<img src="${escapeHtml(b.icon)}" loading="lazy" decoding="async" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;">`:''} ${escapeHtml(b.name)}</span><span style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(b.description||'')}</span></div><div><button class="staff-btn staff-btn-primary staff-btn-sm sb-edit" data-id="${b.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sb-del" data-id="${b.id}">Del</button></div></div>`).join('')||'<p style="color:var(--text-secondary);">No badges created yet.</p>';
       document.querySelectorAll('.sb-edit').forEach(b=>b.addEventListener('click',()=>openStaffEditBadge(b.dataset.id)));
       document.querySelectorAll('.sb-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete badge?')){await deleteDoc(doc(db,'badges',b.dataset.id));loadStaffBadges();}}));
     }
@@ -9749,16 +10756,13 @@
     async function init() {
       await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
-      const gamesData = await getGames();
-      renderTopGamesCarousel(gamesData.topGames);
-      renderCategoryBrowsing(gamesData);
-      renderFullGamesList(gamesData.allGames);
+      appGamesDataCache = await getGames();
+      ensureMainPageGamesDeferredObserver();
       hidePageLoading();
     }
 
     init().catch(() => hidePageLoading());
     setTimeout(hidePageLoading, 12000);
-
     // ========== Event Listeners ==========
     document.getElementById('daily-reward-claim-btn')?.addEventListener('click', () => claimDailyReward());
     document.getElementById('badge-detail-close')?.addEventListener('click', () => {
@@ -9811,6 +10815,8 @@
     document.getElementById('inv-blook-modal-close')?.addEventListener('click', closeInvBlookModal);
     document.getElementById('inv-blook-sell-btn')?.addEventListener('click', () => sellOneInvBlookFromDetail());
     document.getElementById('inv-blook-send-btn')?.addEventListener('click', () => openInvSendFromDetail());
+    invPanelSellBtn?.addEventListener('click', () => sellOneInvBlookFromDetail());
+    invPanelSendBtn?.addEventListener('click', () => openInvSendFromDetail());
     cancelSendBtn?.addEventListener('click', () => { if (sendCardModal) sendCardModal.style.display = 'none'; currentCard = null; });
     sendCardBtn?.addEventListener('click', async () => {
       if (!currentUser || !currentCard) return;
@@ -9869,6 +10875,8 @@
     // Close game modal
     document.querySelector('#gameModal .close').addEventListener('click', () => {
       document.getElementById('gameModal').style.display = 'none';
+      const gf = document.getElementById('gameFrame');
+      if (gf) gf.src = '';
       document.body.style.overflow = 'auto';
     });
   </script>
