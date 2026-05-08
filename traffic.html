@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Macau Traffic Monitor | Traffic</title>
+    <link rel="stylesheet" href="assets/css/site.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="nav-wrap">
+          <a class="brand" href="index.html">
+            <span class="brand-badge">MT</span>
+            <span>Macau Traffic Monitor</span>
+          </a>
+          <button class="menu-toggle" data-menu-toggle aria-label="Toggle menu">
+            Menu
+          </button>
+          <nav class="site-nav" data-site-nav>
+            <a data-nav-link href="index.html">Home</a>
+            <a data-nav-link href="traffic.html">Traffic</a>
+            <a data-nav-link href="cameras.html">Cameras</a>
+            <a data-nav-link href="news.html">News</a>
+            <a data-nav-link href="smg-weather.html">SMG Weather</a>
+            <a data-nav-link href="about.html">About</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="main stack">
+        <section class="hero">
+          <span class="eyebrow">Traffic Dashboard</span>
+          <h1>Current crossing and route conditions</h1>
+          <p class="muted">
+            Route estimates refresh every 30 seconds to provide quick visibility
+            for major Macau corridors.
+          </p>
+          <p class="notice">
+            Last refreshed at <strong data-updated-at>--:--:--</strong>.
+          </p>
+        </section>
+
+        <section class="grid cols-3">
+          <article class="card">
+            <h3>Overall Traffic</h3>
+            <p class="kpi good">Light to moderate</p>
+            <p class="muted">Most core roads are moving with periodic slowdowns.</p>
+          </article>
+          <article class="card">
+            <h3>Border Wait</h3>
+            <p class="kpi warn">~22 min</p>
+            <p class="muted">Heavier flow currently reported at Portas do Cerco.</p>
+          </article>
+          <article class="card">
+            <h3>Suggested Window</h3>
+            <p class="kpi">10:30-16:30</p>
+            <p class="muted">Typically smoother travel outside morning/evening peaks.</p>
+          </article>
+        </section>
+
+        <section class="card">
+          <h2>Major route estimates</h2>
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>Route</th>
+                  <th>Estimated Delay</th>
+                  <th>Congestion</th>
+                </tr>
+              </thead>
+              <tbody data-route-list>
+                <tr>
+                  <td colspan="3" class="muted">Loading latest route estimates...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="inner">
+          <span>&copy; <span data-year></span> Macau Traffic Monitor.</span>
+        </div>
+      </footer>
+    </div>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/traffic.js"></script>
+  </body>
+</html>

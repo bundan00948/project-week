@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Macau Traffic Monitor | SMG Weather</title>
+    <link rel="stylesheet" href="assets/css/site.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="nav-wrap">
+          <a class="brand" href="index.html">
+            <span class="brand-badge">MT</span>
+            <span>Macau Traffic Monitor</span>
+          </a>
+          <button class="menu-toggle" data-menu-toggle aria-label="Toggle menu">
+            Menu
+          </button>
+          <nav class="site-nav" data-site-nav>
+            <a data-nav-link href="index.html">Home</a>
+            <a data-nav-link href="traffic.html">Traffic</a>
+            <a data-nav-link href="cameras.html">Cameras</a>
+            <a data-nav-link href="news.html">News</a>
+            <a data-nav-link href="smg-weather.html">SMG Weather</a>
+            <a data-nav-link href="about.html">About</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="main stack">
+        <section class="hero">
+          <span class="eyebrow">SMG Integration</span>
+          <h1>SMG weather alerts and daily forecast</h1>
+          <p class="muted">
+            This page reads live RSS data from
+            <a
+              href="https://rss.smg.gov.mo/"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-source-link
+              >SMG RSS source</a
+            >
+            and displays weather warning status plus daily forecast blocks.
+          </p>
+        </section>
+
+        <section class="grid cols-2">
+          <article class="card stack">
+            <div>
+              <h2>Weather warning bulletin</h2>
+              <p class="muted" data-alerts-meta></p>
+            </div>
+            <ul class="status-list" data-alerts-list>
+              <li class="loading">Loading latest warning bulletin...</li>
+            </ul>
+          </article>
+
+          <article class="card stack">
+            <div>
+              <h2>Daily forecast</h2>
+              <p class="muted" data-forecast-meta></p>
+            </div>
+            <ul class="status-list" data-forecast-list>
+              <li class="loading">Loading latest forecast data...</li>
+            </ul>
+          </article>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="inner">
+          <span>&copy; <span data-year></span> Macau Traffic Monitor.</span>
+        </div>
+      </footer>
+    </div>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/smg-weather.js"></script>
+  </body>
+</html>
