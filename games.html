@@ -662,6 +662,225 @@
       color: var(--text-secondary);
     }
 
+    /* Movies page */
+    .movies-page {
+      padding: 0 0 48px;
+    }
+    .movies-page .hero {
+      height: 360px;
+      border-bottom: 1px solid rgba(84, 165, 255, 0.28);
+    }
+    .movie-carousel-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .movie-carousel-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: scale(1.03);
+      transition: opacity 0.82s cubic-bezier(0.4, 0, 0.2, 1), transform 0.82s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      padding: 0 5%;
+    }
+    .movie-carousel-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .movie-slide-background {
+      position: absolute;
+      inset: 0;
+      background-color: #0a0d14;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.33);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .movie-slide-background.lazy-bg-loaded {
+      opacity: 1;
+    }
+    .movie-carousel-nav {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 3;
+    }
+    .movie-carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      transition: width 0.28s ease, background 0.28s ease;
+    }
+    .movie-carousel-dot.active {
+      width: 30px;
+      background: #55beff;
+      box-shadow: 0 0 16px rgba(85, 190, 255, 0.65);
+    }
+    .movies-category-selector {
+      padding: 24px 5% 10px;
+    }
+    .movies-category-selector h2 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: #e9f6ff;
+      letter-spacing: -0.02em;
+    }
+    .movies-category-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .movie-category-button {
+      position: relative;
+      min-height: 82px;
+      text-align: left;
+      padding: 14px 16px;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: var(--movie-gradient, linear-gradient(130deg, #324f91 0%, #17284b 100%));
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      border-radius: 14px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+    }
+    .movie-category-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.42);
+    }
+    .movie-category-button.active {
+      outline: 2px solid #9ce3ff;
+      outline-offset: 1px;
+      box-shadow: 0 0 24px rgba(111, 214, 255, 0.42);
+    }
+    .movie-category-title {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+    .movie-category-count {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.92);
+      font-weight: 700;
+    }
+    .movie-category-art {
+      position: absolute;
+      right: 8px;
+      bottom: 6px;
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      opacity: 0.78;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
+    }
+    .movies-list-shell {
+      padding: 12px 5% 0;
+    }
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+    }
+    .movie-card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid rgba(85, 190, 255, 0.18);
+      overflow: hidden;
+      background: #121821;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transition: transform 0.22s ease, border-color 0.22s ease;
+      cursor: pointer;
+    }
+    .movie-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(126, 206, 255, 0.75);
+    }
+    .movie-year-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 2;
+      background: rgba(8, 10, 16, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+    .movie-banner {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0d1118;
+      position: relative;
+      overflow: hidden;
+    }
+    .movie-banner-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .movie-banner-bg.lazy-bg-loaded {
+      opacity: 1;
+    }
+    .movie-card-content {
+      padding: 11px 12px 12px;
+    }
+    .movie-card-title {
+      margin: 0;
+      font-size: 0.94rem;
+      font-weight: 800;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .movie-card-meta {
+      margin-top: 7px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-weight: 700;
+    }
+    .movie-card-score {
+      color: #86daff;
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+    .movie-card-empty {
+      padding: 20px 16px;
+      border: 1px dashed rgba(123, 194, 255, 0.4);
+      border-radius: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+      font-weight: 700;
+    }
+
     /* Header */
     header {
       background: rgba(8, 10, 14, 0.78);
@@ -3620,6 +3839,7 @@
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--neon-green);
+      position: relative;
     }
     .modal-header {
       padding: 12px 20px;
@@ -3628,12 +3848,67 @@
       justify-content: space-between;
       align-items: center;
     }
+    .modal-header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .game-fullscreen-btn {
+      border: 1px solid rgba(85, 190, 255, 0.7);
+      background: rgba(20, 36, 62, 0.95);
+      color: #b8e8ff;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 6px 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .game-fullscreen-btn:hover {
+      background: rgba(40, 73, 120, 0.95);
+    }
     .close {
       font-size: 28px;
       cursor: pointer;
       color: #aaa;
+      background: transparent;
+      border: none;
+      line-height: 1;
     }
     .close:hover { color: var(--neon-green); }
+    .game-exit-fullscreen-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      z-index: 20;
+      display: none;
+      border: 1px solid rgba(255, 85, 85, 0.95);
+      background: #c82424;
+      color: #fff;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+    }
+    .game-exit-fullscreen-btn:hover {
+      background: #ea2d2d;
+    }
+    #gameModal.is-fullscreen .game-exit-fullscreen-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #gameModal.is-fullscreen .modal-content {
+      width: 100vw;
+      max-width: none;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+      border: none;
+    }
     .game-frame { width: 100%; height: calc(100% - 56px); border: none; }
 
     /* Contact section (unchanged) */
@@ -4581,6 +4856,9 @@
     @media (max-width: 768px) {
       .game-card { width: 160px; }
       .track-nav { display: none; }
+      .movies-category-buttons { grid-template-columns: 1fr; }
+      .movie-category-button { min-height: 76px; }
+      .movies-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
       .sidebar {
         width: 100%;
         left: -100%;
@@ -4842,6 +5120,9 @@
       <button class="tab-button active" data-page="main-page">
         <i class="fas fa-home"></i> Main Page
       </button>
+      <button class="tab-button" data-page="movies-page">
+        <i class="fas fa-film"></i> Movies
+      </button>
       <button class="tab-button" data-page="profile-page">
         <i class="fas fa-user"></i> Profile
       </button>
@@ -4902,6 +5183,20 @@
         <h2>ALL GAMES</h2>
         <div class="search-bar-container"><input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..."></div>
         <div class="full-games-grid" id="fullGamesGrid"></div>
+      </section>
+    </div>
+
+    <!-- Movies Page -->
+    <div class="page movies-page" id="movies-page">
+      <section class="hero">
+        <div class="movie-carousel-container" id="topMoviesCarousel"></div>
+      </section>
+      <section class="movies-category-selector">
+        <h2>MOVIES BY CATEGORY</h2>
+        <div class="movies-category-buttons" id="movieCategoryButtons"></div>
+      </section>
+      <section class="movies-list-shell">
+        <div class="movies-grid" id="movieGrid"></div>
       </section>
     </div>
 
@@ -5647,7 +5942,7 @@
       </div>
     </div>
 
-    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><span class="close">×</span></div><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0"></iframe></div></div>
+    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
     <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
   </div>
 
@@ -5896,6 +6191,14 @@
     const loginModal = document.getElementById('loginModal');
     const signupModal = document.getElementById('signupModal');
     const confirmModal = document.getElementById('confirmModal');
+    const gameModal = document.getElementById('gameModal');
+    const gameFrame = document.getElementById('gameFrame');
+    const gameModalTitle = document.getElementById('modalGameTitle');
+    const gameFullscreenBtn = document.getElementById('gameFullscreenBtn');
+    const gameExitFullscreenBtn = document.getElementById('gameExitFullscreenBtn');
+    const moviesCarouselContainer = document.getElementById('topMoviesCarousel');
+    const movieCategoryButtons = document.getElementById('movieCategoryButtons');
+    const movieGrid = document.getElementById('movieGrid');
     const userInfoDiv = document.getElementById('user-info');
     const userAvatar = document.getElementById('user-avatar');
     const userNameSpan = document.getElementById('user-name');
@@ -6009,6 +6312,7 @@
     // Profile modal removed — profiles now use full-page navigation
 
     let pendingGame = null;
+    let pendingMovie = null;
     let selectedFriend = null;
     let currentUser = null;
     let shopPacksUnsub = null;
@@ -6027,9 +6331,16 @@
     let selectedGiftForSend = null;
     let friendsData = [];
     let appGamesDataCache = null;
+    let appMoviesDataCache = null;
     let mainPageGamesMounted = false;
     let mainPageGamesMountPromise = null;
     let mainPageGamesScrollObserver = null;
+    let moviesPageMounted = false;
+    let moviesPageMountPromise = null;
+    let activeMovieCategory = null;
+    let movieCarouselIndex = 0;
+    let movieCarouselInterval = null;
+    const sessionFrameAllowedHosts = new Set();
     /** Set true only for email login/signup so we navigate to Profile once (not on every auth refresh). */
     let redirectToProfileAfterAuth = false;
 
@@ -6044,6 +6355,83 @@
       } catch (_) {
         return u;
       }
+    }
+
+    const MOVIE_CATEGORY_CONFIG = [
+      {
+        key: 'Action',
+        gradient: 'linear-gradient(135deg, #ff763a 0%, #9b1f28 100%)',
+        art: 'https://img.icons8.com/fluency/96/clapperboard.png'
+      },
+      {
+        key: 'Animation',
+        gradient: 'linear-gradient(135deg, #37b3ff 0%, #2744d8 100%)',
+        art: 'https://img.icons8.com/fluency/96/popcorn.png'
+      },
+      {
+        key: 'Sci-Fi',
+        gradient: 'linear-gradient(135deg, #8f6dff 0%, #2a9a9f 100%)',
+        art: 'https://img.icons8.com/fluency/96/sci-fi.png'
+      }
+    ];
+    const DEFAULT_MOVIES = [
+      { id: 'm-action-1', title: 'John Wick: Chapter 4', category: 'Action', releaseYear: 2023, score: 8.2, banner: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/qEVUtrk8_B4', description: 'An elite assassin takes on the High Table.' },
+      { id: 'm-action-2', title: 'Mission: Impossible – Dead Reckoning', category: 'Action', releaseYear: 2023, score: 7.7, banner: 'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/avz06PDqDbM', description: 'Ethan Hunt races to stop a global AI threat.' },
+      { id: 'm-action-3', title: 'Top Gun: Maverick', category: 'Action', releaseYear: 2022, score: 8.3, banner: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/giXco2jaZ_4', description: 'Maverick returns to train the next generation.' },
+      { id: 'm-animation-1', title: 'Spider-Man: Across the Spider-Verse', category: 'Animation', releaseYear: 2023, score: 8.6, banner: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/shW9i6k8cB0', description: 'Miles jumps into a multiverse of Spider heroes.' },
+      { id: 'm-animation-2', title: 'The Super Mario Bros. Movie', category: 'Animation', releaseYear: 2023, score: 7.4, banner: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/TnGl01FkMMo', description: 'Mario and Luigi enter the Mushroom Kingdom.' },
+      { id: 'm-animation-3', title: 'Elemental', category: 'Animation', releaseYear: 2023, score: 7.0, banner: 'https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/hXzcyx9V0xw', description: 'A romance sparks in a city of elements.' },
+      { id: 'm-sci-fi-1', title: 'Dune: Part Two', category: 'Sci-Fi', releaseYear: 2024, score: 8.8, banner: 'https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/U2Qp5pL3ovA', description: 'Paul Atreides rises to confront an empire.' },
+      { id: 'm-sci-fi-2', title: 'The Creator', category: 'Sci-Fi', releaseYear: 2023, score: 7.1, banner: 'https://images.unsplash.com/photo-1616531770192-6eaea74c2456?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/ex3C1-5Dhb8', description: 'A soldier hunts an AI weapon with child form.' },
+      { id: 'm-sci-fi-3', title: 'Interstellar', category: 'Sci-Fi', releaseYear: 2014, score: 8.7, banner: 'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?auto=format&fit=crop&w=1200&q=80', url: 'https://www.youtube.com/embed/zSWdZVtXT7E', description: 'A team travels beyond Earth to save humanity.' }
+    ];
+    const BASE_FRAME_ALLOWED_HOSTS = new Set([
+      String(window.location.hostname || '').toLowerCase(),
+      'www.youtube.com',
+      'youtube.com',
+      'youtube-nocookie.com',
+      'www.youtube-nocookie.com',
+      'player.vimeo.com'
+    ]);
+
+    function normalizeMovieCategory(value) {
+      const raw = String(value || '').trim();
+      if (!raw) return MOVIE_CATEGORY_CONFIG[0].key;
+      const lower = raw.toLowerCase();
+      for (const cfg of MOVIE_CATEGORY_CONFIG) {
+        if (lower === cfg.key.toLowerCase() || lower === cfg.key.toLowerCase().replace('-', '')) return cfg.key;
+      }
+      if (lower.includes('anim')) return 'Animation';
+      if (lower.includes('sci')) return 'Sci-Fi';
+      return 'Action';
+    }
+
+    function movieNewestComparator(a, b) {
+      return (b.releaseYear || 0) - (a.releaseYear || 0) ||
+        (b.score || 0) - (a.score || 0) ||
+        String(a.title || '').localeCompare(String(b.title || ''));
+    }
+
+    function movieTopComparator(a, b) {
+      return (b.score || 0) - (a.score || 0) ||
+        (b.releaseYear || 0) - (a.releaseYear || 0) ||
+        String(a.title || '').localeCompare(String(b.title || ''));
+    }
+
+    function normalizeMovieDoc(raw, fallbackId) {
+      const releaseYear = Number.parseInt(raw.releaseYear || raw.year || raw.release || raw.release_date, 10) || 0;
+      const score = Number.parseFloat(raw.score ?? raw.rating ?? raw.voteAverage ?? 0) || 0;
+      const category = normalizeMovieCategory(raw.category || raw.catagory || raw.genre);
+      return {
+        id: raw.id || fallbackId,
+        title: String(raw.title || raw.name || 'Untitled Movie'),
+        category,
+        releaseYear,
+        score: Number(score.toFixed(1)),
+        banner: String(raw.banner || raw.image || raw.poster || ''),
+        url: String(raw.url || raw.trailerUrl || raw.trailer || ''),
+        description: String(raw.description || raw.overview || 'No description available.')
+      };
     }
 
     // ========== Helper: show notification ==========
@@ -6334,12 +6722,19 @@
           goToProfilePageTab();
         }
         if (pendingGame) { showConfirmModal(pendingGame); pendingGame = null; }
+        if (pendingMovie) {
+          openGameModal(pendingMovie.title, pendingMovie.url, { systemOrdered: true });
+          pendingMovie = null;
+        }
         sidebar.classList.add('active');
         mainContent.classList.add('sidebar-active');
         const activePage = document.querySelector('.page.active').id;
         switch (activePage) {
           case 'main-page':
             if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            break;
+          case 'movies-page':
+            mountMoviesPageContent();
             break;
           case 'profile-page': loadProfilePage(user.uid); break;
           case 'history-page': loadPlayHistory(user.uid); break;
@@ -6428,7 +6823,7 @@
     document.getElementById('closeSignupModal').addEventListener('click', () => { signupModal.style.display = 'none'; });
     document.getElementById('noticeLoginBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; loginModal.style.display = 'flex'; });
     document.getElementById('noticeSignupBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; signupModal.style.display = 'flex'; });
-    document.getElementById('noticeCancelBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; pendingGame = null; });
+    document.getElementById('noticeCancelBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; });
 
     // ========== Game confirmation and play logging ==========
     function showConfirmModal(game) {
@@ -6438,17 +6833,93 @@
       const confirmNo = document.getElementById('confirmNo');
       confirmYes.onclick = async () => {
         confirmModal.style.display = 'none';
+        const opened = openGameModal(game.title, game.url, { systemOrdered: true });
+        if (!opened) return;
         await logGamePlay(game.id, game.title);
-        openGameModal(game.title, game.url);
       };
       confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
     }
 
-    function openGameModal(title, url) {
-      document.getElementById('modalGameTitle').textContent = title;
-      document.getElementById('gameFrame').src = url;
-      document.getElementById('gameModal').style.display = 'block';
+    function normalizeHost(host) {
+      return String(host || '').trim().toLowerCase().replace(/^\[|\]$/g, '');
+    }
+
+    function resolveFrameUrl(rawUrl, options = {}) {
+      const source = String(rawUrl || '').trim();
+      if (!source) return null;
+      let parsed;
+      try {
+        parsed = new URL(source, window.location.href);
+      } catch (_) {
+        return null;
+      }
+      if (!/^https?:$/i.test(parsed.protocol)) return null;
+      const host = normalizeHost(parsed.hostname);
+      if (!host) return null;
+      if (options.systemOrdered) sessionFrameAllowedHosts.add(host);
+      const allowed = Boolean(options.systemOrdered) || BASE_FRAME_ALLOWED_HOSTS.has(host) || sessionFrameAllowedHosts.has(host);
+      if (!allowed) return null;
+      return { href: parsed.toString(), host };
+    }
+
+    function syncGameFullscreenUi() {
+      const modalContent = gameModal?.querySelector('.modal-content');
+      const fullEl = document.fullscreenElement;
+      const inFullscreen = Boolean(fullEl && modalContent && fullEl === modalContent);
+      if (gameModal) gameModal.classList.toggle('is-fullscreen', inFullscreen);
+      if (gameExitFullscreenBtn) {
+        gameExitFullscreenBtn.style.display = inFullscreen ? 'inline-flex' : 'none';
+      }
+      if (gameFullscreenBtn) {
+        gameFullscreenBtn.textContent = inFullscreen ? 'FULLSCREEN ON' : 'FULL SCREEN';
+      }
+    }
+
+    async function requestGameFullscreen() {
+      const modalContent = gameModal?.querySelector('.modal-content');
+      if (!modalContent || !modalContent.requestFullscreen) return;
+      try {
+        await modalContent.requestFullscreen();
+      } catch (_) {
+        showNotification('Fullscreen request blocked by browser', 'error');
+      }
+    }
+
+    async function exitGameFullscreen() {
+      if (!document.fullscreenElement) return;
+      try {
+        await document.exitFullscreen();
+      } catch (_) {}
+    }
+
+    function closeGameModal() {
+      if (gameModal) gameModal.style.display = 'none';
+      if (gameFrame) {
+        gameFrame.src = '';
+        gameFrame.dataset.allowedHost = '';
+        gameFrame.dataset.systemOrdered = '';
+      }
+      document.body.style.overflow = 'auto';
+      exitGameFullscreen();
+      syncGameFullscreenUi();
+    }
+
+    function openGameModal(title, url, options = {}) {
+      const resolved = resolveFrameUrl(url, options);
+      if (!resolved) {
+        showNotification('Blocked external frame URL. Only system-approved hosts are allowed.', 'error');
+        return false;
+      }
+      if (gameModalTitle) gameModalTitle.textContent = title;
+      if (gameFrame) {
+        gameFrame.dataset.allowedHost = resolved.host;
+        gameFrame.dataset.systemOrdered = options.systemOrdered ? '1' : '';
+        gameFrame.src = resolved.href;
+      }
+      if (gameModal) gameModal.style.display = 'block';
       document.body.style.overflow = 'hidden';
+      syncGameFullscreenUi();
+      return true;
     }
 
     async function logGamePlay(gameId, gameTitle) {
@@ -6487,10 +6958,214 @@
       } catch(e) { console.error(e); return { topGames: [], newGames: [], allGames: [] }; }
     }
 
+    async function handleMovieClick(movie) {
+      if (!movie?.url) {
+        showNotification('This movie has no trailer URL yet.', 'error');
+        return;
+      }
+      if (!currentUser) {
+        pendingMovie = movie;
+        noticeModal.style.display = 'flex';
+        return;
+      }
+      openGameModal(movie.title, movie.url, { systemOrdered: true });
+    }
+
+    function buildMoviesData(movieItems) {
+      const moviesByCategory = {};
+      MOVIE_CATEGORY_CONFIG.forEach((cfg) => { moviesByCategory[cfg.key] = []; });
+      (movieItems || []).forEach((movie) => {
+        const fixed = normalizeMovieDoc(movie, movie.id || `movie-${Math.random().toString(16).slice(2)}`);
+        if (!moviesByCategory[fixed.category]) moviesByCategory[fixed.category] = [];
+        moviesByCategory[fixed.category].push(fixed);
+      });
+      Object.keys(moviesByCategory).forEach((cat) => moviesByCategory[cat].sort(movieNewestComparator));
+      const topMovies = MOVIE_CATEGORY_CONFIG
+        .map((cfg) => {
+          const pick = [...(moviesByCategory[cfg.key] || [])].sort(movieTopComparator)[0];
+          return pick ? { ...pick, rankCategory: cfg.key } : null;
+        })
+        .filter(Boolean);
+      const categories = MOVIE_CATEGORY_CONFIG.map((cfg) => ({
+        ...cfg,
+        count: (moviesByCategory[cfg.key] || []).length
+      }));
+      return { categories, topMovies, moviesByCategory };
+    }
+
+    async function getMovies() {
+      try {
+        const snap = await getDocs(collection(db, 'movies'));
+        const fromDb = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id));
+        if (fromDb.length) return buildMoviesData(fromDb);
+      } catch (e) {
+        console.warn('Movies collection load failed, using defaults.', e);
+      }
+      const fallback = DEFAULT_MOVIES.map((m) => normalizeMovieDoc(m, m.id));
+      return buildMoviesData(fallback);
+    }
+
+    function showMovieSlide(index) {
+      if (!moviesCarouselContainer) return;
+      const slides = moviesCarouselContainer.querySelectorAll('.movie-carousel-slide');
+      const dots = moviesCarouselContainer.querySelectorAll('.movie-carousel-dot');
+      if (!slides.length) return;
+      let i = index;
+      if (i >= slides.length) i = 0;
+      if (i < 0) i = slides.length - 1;
+      slides.forEach((s) => s.classList.remove('active'));
+      dots.forEach((d) => d.classList.remove('active'));
+      slides[i].classList.add('active');
+      dots[i]?.classList.add('active');
+      movieCarouselIndex = i;
+    }
+
+    function startMovieCarousel() {
+      clearInterval(movieCarouselInterval);
+      if (!moviesCarouselContainer) return;
+      const count = moviesCarouselContainer.querySelectorAll('.movie-carousel-slide').length;
+      if (count < 2) return;
+      movieCarouselInterval = setInterval(() => showMovieSlide(movieCarouselIndex + 1), 5200);
+    }
+
+    function renderTopMoviesCarousel(topMovies) {
+      if (!moviesCarouselContainer) return;
+      moviesCarouselContainer.innerHTML = '';
+      if (!topMovies.length) {
+        moviesCarouselContainer.innerHTML = '<div class="movie-card-empty">No featured movies available.</div>';
+        return;
+      }
+      topMovies.forEach((movie, idx) => {
+        const slide = document.createElement('div');
+        slide.className = `movie-carousel-slide ${idx === 0 ? 'active' : ''}`;
+        slide.innerHTML = `
+          <div class="movie-slide-background" data-lazy-bg="${escapeHtml(movie.banner || '')}"></div>
+          <div class="slide-content">
+            <div class="slide-info">
+              <h2>${escapeHtml(movie.title)}</h2>
+              <div class="game-meta">
+                <span><i class="fas fa-star"></i> ${movie.score || 'N/A'}</span>
+                <span><i class="fas fa-calendar-alt"></i> ${movie.releaseYear || 'N/A'}</span>
+                <span><i class="fas fa-tag"></i> ${escapeHtml(movie.rankCategory || movie.category || 'Movie')}</span>
+              </div>
+              <p>${escapeHtml(movie.description || 'No description available.')}</p>
+              <button class="slide-play-button movie-watch-button" data-movie-id="${escapeHtml(movie.id)}">WATCH TRAILER</button>
+            </div>
+          </div>
+        `;
+        moviesCarouselContainer.appendChild(slide);
+      });
+      const nav = document.createElement('div');
+      nav.className = 'movie-carousel-nav';
+      topMovies.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = `movie-carousel-dot ${i === 0 ? 'active' : ''}`;
+        dot.addEventListener('click', () => showMovieSlide(i));
+        nav.appendChild(dot);
+      });
+      moviesCarouselContainer.appendChild(nav);
+      moviesCarouselContainer.querySelectorAll('.movie-slide-background').forEach((bg) => observeLazyGameBg(bg));
+      moviesCarouselContainer.querySelectorAll('.movie-watch-button').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const movie = topMovies.find((m) => String(m.id) === String(btn.dataset.movieId));
+          if (movie) handleMovieClick(movie);
+        });
+      });
+      movieCarouselIndex = 0;
+      startMovieCarousel();
+    }
+
+    function renderMovieCategoryButtons(moviesData) {
+      if (!movieCategoryButtons) return;
+      movieCategoryButtons.innerHTML = '';
+      moviesData.categories.forEach((cat) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'movie-category-button';
+        btn.dataset.category = cat.key;
+        btn.style.setProperty('--movie-gradient', cat.gradient);
+        btn.innerHTML = `
+          <div class="movie-category-title">${escapeHtml(cat.key)}</div>
+          <span class="movie-category-count">${cat.count} movie${cat.count === 1 ? '' : 's'}</span>
+          <img class="movie-category-art" src="${escapeHtml(cat.art)}" alt="" loading="lazy" aria-hidden="true">
+        `;
+        btn.addEventListener('click', () => {
+          activeMovieCategory = cat.key;
+          renderMovieGridCards();
+        });
+        movieCategoryButtons.appendChild(btn);
+      });
+    }
+
+    function renderMovieGridCards() {
+      if (!movieGrid || !appMoviesDataCache) return;
+      const selected = activeMovieCategory || MOVIE_CATEGORY_CONFIG[0].key;
+      const selectedList = [...(appMoviesDataCache.moviesByCategory[selected] || [])].sort(movieNewestComparator);
+      movieCategoryButtons?.querySelectorAll('.movie-category-button').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.category === selected);
+      });
+      if (!selectedList.length) {
+        movieGrid.innerHTML = '<div class="movie-card-empty">No movies found in this category yet.</div>';
+        return;
+      }
+      movieGrid.innerHTML = selectedList.map((movie) => `
+        <article class="movie-card" data-movie-id="${escapeHtml(movie.id)}" role="button" tabindex="0">
+          <div class="movie-year-badge">${movie.releaseYear || 'N/A'}</div>
+          <div class="movie-banner"><div class="movie-banner-bg" data-lazy-bg="${escapeHtml(movie.banner || '')}"></div></div>
+          <div class="movie-card-content">
+            <h3 class="movie-card-title">${escapeHtml(movie.title)}</h3>
+            <div class="movie-card-meta"><span>${escapeHtml(movie.category)}</span><span class="movie-card-score">★ ${movie.score || 'N/A'}</span></div>
+          </div>
+        </article>
+      `).join('');
+      movieGrid.querySelectorAll('.movie-banner-bg').forEach((bg) => observeLazyGameBg(bg));
+      movieGrid.querySelectorAll('.movie-card').forEach((card) => {
+        const movie = selectedList.find((m) => String(m.id) === String(card.dataset.movieId));
+        const open = () => movie && handleMovieClick(movie);
+        card.addEventListener('click', open);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            open();
+          }
+        });
+      });
+    }
+
+    function renderMoviesPage(moviesData) {
+      if (!moviesData) return;
+      renderTopMoviesCarousel(moviesData.topMovies || []);
+      renderMovieCategoryButtons(moviesData);
+      if (!activeMovieCategory || !moviesData.moviesByCategory[activeMovieCategory]) {
+        activeMovieCategory = moviesData.categories[0]?.key || MOVIE_CATEGORY_CONFIG[0].key;
+      }
+      renderMovieGridCards();
+    }
+
+    async function mountMoviesPageContent() {
+      if (moviesPageMounted && appMoviesDataCache) {
+        renderMovieGridCards();
+        return;
+      }
+      if (moviesPageMountPromise) return moviesPageMountPromise;
+      moviesPageMountPromise = (async () => {
+        let data = appMoviesDataCache;
+        if (!data) {
+          data = await getMovies();
+          appMoviesDataCache = data;
+        }
+        renderMoviesPage(data);
+        moviesPageMounted = true;
+        moviesPageMountPromise = null;
+      })();
+      return moviesPageMountPromise;
+    }
+
     function goToProfilePageTab() {
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.sidebar-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      const profileBtn = document.querySelector('.tab-button[data-page="profile-page"]');
+      const profileBtn = document.querySelector('.sidebar-tabs .tab-button[data-page="profile-page"]');
       const profilePage = document.getElementById('profile-page');
       if (profileBtn) profileBtn.classList.add('active');
       if (profilePage) profilePage.classList.add('active');
@@ -6732,17 +7407,21 @@
     });
 
     // ========== Sidebar page switching ==========
-    document.querySelectorAll('.tab-button').forEach(button => {
+    document.querySelectorAll('.sidebar-tabs .tab-button').forEach(button => {
       button.addEventListener('click', () => {
         const pageId = button.getAttribute('data-page');
-        if (!currentUser && pageId !== 'main-page') { noticeModal.style.display = 'flex'; return; }
-        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        if (!pageId) return;
+        if (!currentUser && pageId !== 'main-page' && pageId !== 'movies-page') { noticeModal.style.display = 'flex'; return; }
+        document.querySelectorAll('.sidebar-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
         button.classList.add('active');
         document.getElementById(pageId).classList.add('active');
         switch (pageId) {
           case 'main-page':
             if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            break;
+          case 'movies-page':
+            mountMoviesPageContent();
             break;
           case 'profile-page': loadProfilePage(currentUser.uid); break;
           case 'history-page': loadPlayHistory(currentUser.uid); break;
@@ -9346,15 +10025,16 @@
     async function navigateToUserProfile(userId) {
       if (!userId) return;
       if (currentUser && userId === currentUser.uid) {
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelector('[data-page="profile-page"]').classList.add('active');
+        const ownProfileBtn = document.querySelector('.sidebar-tabs .tab-button[data-page="profile-page"]');
+        if (ownProfileBtn) ownProfileBtn.classList.add('active');
         document.getElementById('profile-page').classList.add('active');
         loadProfilePage(currentUser.uid);
         return;
       }
       previousPageId = document.querySelector('.page.active')?.id || 'main-page';
-      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('view-profile-page').classList.add('active');
       viewProfileTargetUid = userId;
@@ -9388,8 +10068,8 @@
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       const target = previousPageId || 'main-page';
       document.getElementById(target).classList.add('active');
-      const tabBtn = document.querySelector(`[data-page="${target}"]`);
-      if (tabBtn) { document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active')); tabBtn.classList.add('active'); }
+      const tabBtn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${target}"]`);
+      if (tabBtn) { document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active')); tabBtn.classList.add('active'); }
       previousPageId = null;
       viewProfileTargetUid = null;
     });
@@ -10757,6 +11437,7 @@
       await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
       appGamesDataCache = await getGames();
+      appMoviesDataCache = await getMovies();
       ensureMainPageGamesDeferredObserver();
       hidePageLoading();
     }
@@ -10764,6 +11445,29 @@
     init().catch(() => hidePageLoading());
     setTimeout(hidePageLoading, 12000);
     // ========== Event Listeners ==========
+    document.addEventListener('fullscreenchange', syncGameFullscreenUi);
+    gameFullscreenBtn?.addEventListener('click', () => requestGameFullscreen());
+    gameExitFullscreenBtn?.addEventListener('click', () => exitGameFullscreen());
+    gameFrame?.addEventListener('load', () => {
+      const allowedHost = normalizeHost(gameFrame.dataset.allowedHost);
+      if (!allowedHost) return;
+      let loadedHost = '';
+      try {
+        loadedHost = normalizeHost(new URL(gameFrame.contentWindow.location.href).hostname);
+      } catch (_) {
+        try {
+          loadedHost = normalizeHost(new URL(gameFrame.src, window.location.href).hostname);
+        } catch (_) {
+          loadedHost = '';
+        }
+      }
+      if (!loadedHost || loadedHost === allowedHost) return;
+      const systemOrdered = gameFrame.dataset.systemOrdered === '1';
+      if (systemOrdered && (BASE_FRAME_ALLOWED_HOSTS.has(loadedHost) || sessionFrameAllowedHosts.has(loadedHost))) return;
+      closeGameModal();
+      showNotification('External redirect inside frame was blocked.', 'error');
+    });
+
     document.getElementById('daily-reward-claim-btn')?.addEventListener('click', () => claimDailyReward());
     document.getElementById('badge-detail-close')?.addEventListener('click', () => {
       const m = document.getElementById('badge-detail-modal');
@@ -10842,6 +11546,7 @@
       if (e.target === sendGiftChatModal) sendGiftChatModal.style.display = 'none';
       if (e.target === sendGiftInventoryModal) sendGiftInventoryModal.style.display = 'none';
       if (e.target === sendCardModal) { sendCardModal.style.display = 'none'; currentCard = null; }
+      if (e.target === gameModal) closeGameModal();
       const ibm = document.getElementById('inv-blook-modal');
       if (e.target === ibm) closeInvBlookModal();
       const bdm = document.getElementById('badge-detail-modal');
@@ -10864,6 +11569,7 @@
         loginModal.style.display = 'none';
         signupModal.style.display = 'none';
         noticeModal.style.display = 'none';
+        closeGameModal();
         document.querySelectorAll('.staff-modal').forEach(m => m.style.display = 'none');
         const bpm = document.getElementById('banner-picker-modal');
         if (bpm) bpm.style.display = 'none';
@@ -10873,12 +11579,7 @@
     });
 
     // Close game modal
-    document.querySelector('#gameModal .close').addEventListener('click', () => {
-      document.getElementById('gameModal').style.display = 'none';
-      const gf = document.getElementById('gameFrame');
-      if (gf) gf.src = '';
-      document.body.style.overflow = 'auto';
-    });
+    document.querySelector('#gameModal .close').addEventListener('click', closeGameModal);
   </script>
 </body>
 </html>
