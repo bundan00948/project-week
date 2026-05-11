@@ -739,7 +739,7 @@
     }
     .movies-category-buttons {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
     }
     .movie-category-button {
@@ -750,8 +750,7 @@
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.18);
       background: var(--movie-gradient, linear-gradient(130deg, #324f91 0%, #17284b 100%));
-      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-      border-radius: 14px;
+      border-radius: 20px;
       cursor: pointer;
       overflow: hidden;
       transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
@@ -793,6 +792,28 @@
     .movies-list-shell {
       padding: 12px 5% 0;
     }
+    .movies-search-row {
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: center;
+    }
+    .movies-search-input {
+      width: 100%;
+      max-width: 580px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(123, 194, 255, 0.4);
+      background: rgba(8, 12, 18, 0.9);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .movies-search-input:focus {
+      border-color: #8ad3ff;
+      box-shadow: 0 0 18px rgba(104, 188, 241, 0.25);
+    }
     .movies-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -824,6 +845,31 @@
       font-size: 0.68rem;
       font-weight: 800;
       letter-spacing: 0.03em;
+    }
+    .movie-favorite-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(8, 10, 16, 0.72);
+      color: rgba(255, 255, 255, 0.85);
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .movie-favorite-btn:hover {
+      transform: scale(1.08);
+    }
+    .movie-favorite-btn.active {
+      color: #ff5d8f;
+      background: rgba(52, 8, 28, 0.8);
+      border-color: rgba(255, 93, 143, 0.8);
     }
     .movie-banner {
       width: 100%;
@@ -4856,7 +4902,7 @@
     @media (max-width: 768px) {
       .game-card { width: 160px; }
       .track-nav { display: none; }
-      .movies-category-buttons { grid-template-columns: 1fr; }
+      .movies-category-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .movie-category-button { min-height: 76px; }
       .movies-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
       .sidebar {
@@ -4905,6 +4951,12 @@
       .chat-viewer-container { flex-direction: column; height: auto; }
       .chat-viewer-sidebar { width: 100%; max-height: 200px; }
       .title-perm-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1280px) and (min-width: 1021px) {
+      .movies-category-buttons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1020px) and (min-width: 769px) {
+      .movies-category-buttons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     /* Full-page loading (Game Universe) */
@@ -5196,6 +5248,9 @@
         <div class="movies-category-buttons" id="movieCategoryButtons"></div>
       </section>
       <section class="movies-list-shell">
+        <div class="movies-search-row">
+          <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
+        </div>
         <div class="movies-grid" id="movieGrid"></div>
       </section>
     </div>
@@ -5457,6 +5512,7 @@
           <div class="staff-sub-tabs" id="staff-sub-tabs">
             <button class="staff-sub-tab active" data-staff-tab="staff-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
             <button class="staff-sub-tab" data-staff-tab="staff-games"><i class="fas fa-gamepad"></i> Games</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-movies"><i class="fas fa-film"></i> Movies</button>
             <button class="staff-sub-tab" data-staff-tab="staff-tags"><i class="fas fa-tags"></i> Tags</button>
             <button class="staff-sub-tab" data-staff-tab="staff-plays"><i class="fas fa-history"></i> Plays & IP</button>
             <button class="staff-sub-tab" data-staff-tab="staff-packs"><i class="fas fa-cubes"></i> Packs & Items</button>
@@ -5481,6 +5537,39 @@
             <div class="staff-card">
               <div class="staff-card-header"><h3>Games Management</h3><div class="staff-flex-row"><input type="text" class="staff-search" id="staff-search-game" placeholder="Search games..."><button class="staff-btn staff-btn-primary" id="staff-add-game-btn"><i class="fas fa-plus"></i> New Game</button></div></div>
               <div style="overflow-x:auto;" id="staff-games-table"></div>
+            </div>
+          </div>
+
+          <!-- Staff Movies -->
+          <div class="staff-section" id="staff-movies">
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Movie Categories</h3></div>
+              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                <input type="hidden" id="staff-movie-category-id">
+                <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Name</label><input id="staff-movie-category-name" placeholder="e.g. Drama"></div>
+                <div class="staff-form-group" style="margin:0;min-width:210px;flex:1.2;"><label>Gradient CSS</label><input id="staff-movie-category-gradient" placeholder="linear-gradient(...)"></div>
+                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Corner art URL</label><input id="staff-movie-category-art" placeholder="https://...png"></div>
+                <div class="staff-form-group" style="margin:0;min-width:90px;"><label>Order</label><input id="staff-movie-category-order" type="number" value="0"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-category-btn" style="margin-bottom:2px;">Save Category</button>
+                <button type="button" class="staff-btn" id="staff-reset-movie-category-btn" style="margin-bottom:2px;">Clear</button>
+              </div>
+              <div id="staff-movie-categories-list" style="margin-top:14px;"></div>
+            </div>
+            <div class="staff-card">
+              <div class="staff-card-header"><h3>Movies Management</h3><div class="staff-flex-row"><input type="text" class="staff-search" id="staff-search-movie" placeholder="Search movies..."></div></div>
+              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                <input type="hidden" id="staff-movie-id">
+                <div class="staff-form-group" style="margin:0;min-width:220px;flex:1.5;"><label>Title</label><input id="staff-movie-title" placeholder="Movie title"></div>
+                <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Category</label><select id="staff-movie-category"></select></div>
+                <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Year</label><input id="staff-movie-year" type="number" min="1900" max="2100" value="2024"></div>
+                <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Score</label><input id="staff-movie-score" type="number" min="0" max="10" step="0.1" value="8.0"></div>
+                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...jpg"></div>
+                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Trailer URL (iframe)</label><input id="staff-movie-url" placeholder="https://www.youtube.com/embed/..."></div>
+                <div class="staff-form-group" style="margin:0;min-width:240px;flex:1.5;"><label>Description</label><input id="staff-movie-desc" placeholder="Short description"></div>
+                <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-btn" style="margin-bottom:2px;">Save Movie</button>
+                <button type="button" class="staff-btn" id="staff-reset-movie-btn" style="margin-bottom:2px;">Clear</button>
+              </div>
+              <div style="overflow-x:auto;margin-top:14px;" id="staff-movies-table"></div>
             </div>
           </div>
 
@@ -6198,6 +6287,7 @@
     const gameExitFullscreenBtn = document.getElementById('gameExitFullscreenBtn');
     const moviesCarouselContainer = document.getElementById('topMoviesCarousel');
     const movieCategoryButtons = document.getElementById('movieCategoryButtons');
+    const movieSearchInput = document.getElementById('movieSearchInput');
     const movieGrid = document.getElementById('movieGrid');
     const userInfoDiv = document.getElementById('user-info');
     const userAvatar = document.getElementById('user-avatar');
@@ -6332,14 +6422,19 @@
     let friendsData = [];
     let appGamesDataCache = null;
     let appMoviesDataCache = null;
+    let appMovieCategoriesCache = null;
     let mainPageGamesMounted = false;
     let mainPageGamesMountPromise = null;
     let mainPageGamesScrollObserver = null;
     let moviesPageMounted = false;
     let moviesPageMountPromise = null;
     let activeMovieCategory = null;
+    let movieSearchQuery = '';
     let movieCarouselIndex = 0;
     let movieCarouselInterval = null;
+    let favoriteMovieIds = new Set();
+    let staffMovieCategoriesCache = [];
+    let staffMoviesCache = [];
     const sessionFrameAllowedHosts = new Set();
     /** Set true only for email login/signup so we navigate to Profile once (not on every auth refresh). */
     let redirectToProfileAfterAuth = false;
@@ -6394,16 +6489,25 @@
       'player.vimeo.com'
     ]);
 
-    function normalizeMovieCategory(value) {
+    function normalizeMovieCategory(value, categories = MOVIE_CATEGORY_CONFIG) {
+      const pool = (Array.isArray(categories) && categories.length) ? categories : MOVIE_CATEGORY_CONFIG;
+      const keysLower = pool.map((cfg) => String(cfg.key || '').toLowerCase());
       const raw = String(value || '').trim();
-      if (!raw) return MOVIE_CATEGORY_CONFIG[0].key;
+      if (!raw) return pool[0].key;
       const lower = raw.toLowerCase();
-      for (const cfg of MOVIE_CATEGORY_CONFIG) {
-        if (lower === cfg.key.toLowerCase() || lower === cfg.key.toLowerCase().replace('-', '')) return cfg.key;
+      for (const cfg of pool) {
+        const keyLower = String(cfg.key || '').toLowerCase();
+        if (lower === keyLower || lower === keyLower.replace('-', '')) return cfg.key;
       }
-      if (lower.includes('anim')) return 'Animation';
-      if (lower.includes('sci')) return 'Sci-Fi';
-      return 'Action';
+      if (lower.includes('anim')) {
+        const i = keysLower.findIndex((k) => k.includes('anim'));
+        if (i >= 0) return pool[i].key;
+      }
+      if (lower.includes('sci')) {
+        const i = keysLower.findIndex((k) => k.includes('sci'));
+        if (i >= 0) return pool[i].key;
+      }
+      return pool[0].key;
     }
 
     function movieNewestComparator(a, b) {
@@ -6418,10 +6522,10 @@
         String(a.title || '').localeCompare(String(b.title || ''));
     }
 
-    function normalizeMovieDoc(raw, fallbackId) {
+    function normalizeMovieDoc(raw, fallbackId, categories) {
       const releaseYear = Number.parseInt(raw.releaseYear || raw.year || raw.release || raw.release_date, 10) || 0;
       const score = Number.parseFloat(raw.score ?? raw.rating ?? raw.voteAverage ?? 0) || 0;
-      const category = normalizeMovieCategory(raw.category || raw.catagory || raw.genre);
+      const category = normalizeMovieCategory(raw.category || raw.catagory || raw.genre, categories);
       return {
         id: raw.id || fallbackId,
         title: String(raw.title || raw.name || 'Untitled Movie'),
@@ -6432,6 +6536,38 @@
         url: String(raw.url || raw.trailerUrl || raw.trailer || ''),
         description: String(raw.description || raw.overview || 'No description available.')
       };
+    }
+
+    async function getMovieCategories() {
+      if (appMovieCategoriesCache?.length) return appMovieCategoriesCache;
+      try {
+        let snap;
+        try {
+          snap = await getDocs(query(collection(db, 'movieCategories'), orderBy('order', 'asc')));
+        } catch (_) {
+          snap = await getDocs(collection(db, 'movieCategories'));
+        }
+        const fromDb = snap.docs.map((d, i) => {
+          const x = d.data() || {};
+          const key = String(x.key || x.name || '').trim();
+          if (!key) return null;
+          return {
+            id: d.id,
+            key,
+            gradient: String(x.gradient || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)'),
+            art: String(x.art || ''),
+            order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
+          };
+        }).filter(Boolean);
+        if (fromDb.length) {
+          appMovieCategoriesCache = fromDb.sort((a, b) => (a.order || 0) - (b.order || 0));
+          return appMovieCategoriesCache;
+        }
+      } catch (e) {
+        console.warn('Movie categories load failed, using defaults.', e);
+      }
+      appMovieCategoriesCache = MOVIE_CATEGORY_CONFIG.map((cfg, i) => ({ ...cfg, order: i }));
+      return appMovieCategoriesCache;
     }
 
     // ========== Helper: show notification ==========
@@ -6461,6 +6597,7 @@
         badges: [],
         displayId,
         ownedBannerIds: [],
+        favoriteMovieIds: [],
         createdAt: serverTimestamp()
       }, { merge: true });
     }
@@ -6612,6 +6749,7 @@
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
+        favoriteMovieIds = new Set(Array.isArray(data.favoriteMovieIds) ? data.favoriteMovieIds.map(String) : []);
         userNameSpan.textContent = data.username || user.email;
         userAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
@@ -6620,6 +6758,7 @@
         renderProfileBadges(data.badges || []);
         refreshStarDisplayBadges(data.badges || []);
       } else {
+        favoriteMovieIds = new Set();
         await saveUserProfile(user.uid, user.email, user.email.split('@')[0], null);
         await loadUserProfile(user);
         return;
@@ -6747,6 +6886,7 @@
           case 'staff-page': loadStaffPanel(); break;
         }
       } else {
+        favoriteMovieIds = new Set();
         currentUserPermissions = [];
         currentUserTitle = 'User';
         applyNonStaffMediaUi();
@@ -6971,38 +7111,65 @@
       openGameModal(movie.title, movie.url, { systemOrdered: true });
     }
 
-    function buildMoviesData(movieItems) {
+    async function toggleFavoriteMovie(movieId) {
+      if (!movieId) return;
+      if (!currentUser) {
+        noticeModal.style.display = 'flex';
+        return;
+      }
+      const id = String(movieId);
+      try {
+        const isFav = favoriteMovieIds.has(id);
+        if (isFav) {
+          await updateDoc(doc(db, 'users', currentUser.uid), { favoriteMovieIds: arrayRemove(id) });
+          favoriteMovieIds.delete(id);
+          showNotification('Removed from favourites', 'success');
+        } else {
+          await updateDoc(doc(db, 'users', currentUser.uid), { favoriteMovieIds: arrayUnion(id) });
+          favoriteMovieIds.add(id);
+          showNotification('Added to favourites', 'success');
+        }
+        renderMovieGridCards();
+      } catch (e) {
+        showNotification('Could not update favourites: ' + e.message, 'error');
+      }
+    }
+
+    function buildMoviesData(movieItems, categories) {
+      const categoryConfig = (Array.isArray(categories) && categories.length) ? categories : MOVIE_CATEGORY_CONFIG;
       const moviesByCategory = {};
-      MOVIE_CATEGORY_CONFIG.forEach((cfg) => { moviesByCategory[cfg.key] = []; });
+      categoryConfig.forEach((cfg) => { moviesByCategory[cfg.key] = []; });
       (movieItems || []).forEach((movie) => {
-        const fixed = normalizeMovieDoc(movie, movie.id || `movie-${Math.random().toString(16).slice(2)}`);
+        const fixed = normalizeMovieDoc(movie, movie.id || `movie-${Math.random().toString(16).slice(2)}`, categoryConfig);
         if (!moviesByCategory[fixed.category]) moviesByCategory[fixed.category] = [];
         moviesByCategory[fixed.category].push(fixed);
       });
       Object.keys(moviesByCategory).forEach((cat) => moviesByCategory[cat].sort(movieNewestComparator));
-      const topMovies = MOVIE_CATEGORY_CONFIG
+      const topMovies = categoryConfig
         .map((cfg) => {
           const pick = [...(moviesByCategory[cfg.key] || [])].sort(movieTopComparator)[0];
           return pick ? { ...pick, rankCategory: cfg.key } : null;
         })
         .filter(Boolean);
-      const categories = MOVIE_CATEGORY_CONFIG.map((cfg) => ({
+      const normalizedCategories = categoryConfig.map((cfg, idx) => ({
         ...cfg,
+        order: Number.isFinite(Number(cfg.order)) ? Number(cfg.order) : idx,
         count: (moviesByCategory[cfg.key] || []).length
       }));
-      return { categories, topMovies, moviesByCategory };
+      return { categories: normalizedCategories, topMovies, moviesByCategory };
     }
 
     async function getMovies() {
+      const categoryConfig = await getMovieCategories();
       try {
         const snap = await getDocs(collection(db, 'movies'));
-        const fromDb = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id));
-        if (fromDb.length) return buildMoviesData(fromDb);
+        const fromDb = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, categoryConfig));
+        if (fromDb.length) return buildMoviesData(fromDb, categoryConfig);
       } catch (e) {
         console.warn('Movies collection load failed, using defaults.', e);
       }
-      const fallback = DEFAULT_MOVIES.map((m) => normalizeMovieDoc(m, m.id));
-      return buildMoviesData(fallback);
+      const fallback = DEFAULT_MOVIES.map((m) => normalizeMovieDoc(m, m.id, categoryConfig));
+      return buildMoviesData(fallback, categoryConfig);
     }
 
     function showMovieSlide(index) {
@@ -7100,18 +7267,21 @@
 
     function renderMovieGridCards() {
       if (!movieGrid || !appMoviesDataCache) return;
-      const selected = activeMovieCategory || MOVIE_CATEGORY_CONFIG[0].key;
-      const selectedList = [...(appMoviesDataCache.moviesByCategory[selected] || [])].sort(movieNewestComparator);
+      const selected = activeMovieCategory || appMoviesDataCache.categories?.[0]?.key || MOVIE_CATEGORY_CONFIG[0].key;
+      const selectedList = [...(appMoviesDataCache.moviesByCategory[selected] || [])]
+        .sort(movieNewestComparator)
+        .filter((movie) => String(movie.title || '').toLowerCase().includes(movieSearchQuery));
       movieCategoryButtons?.querySelectorAll('.movie-category-button').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.category === selected);
       });
       if (!selectedList.length) {
-        movieGrid.innerHTML = '<div class="movie-card-empty">No movies found in this category yet.</div>';
+        movieGrid.innerHTML = '<div class="movie-card-empty">No movies found for this category/search.</div>';
         return;
       }
       movieGrid.innerHTML = selectedList.map((movie) => `
         <article class="movie-card" data-movie-id="${escapeHtml(movie.id)}" role="button" tabindex="0">
           <div class="movie-year-badge">${movie.releaseYear || 'N/A'}</div>
+          <button type="button" class="movie-favorite-btn ${favoriteMovieIds.has(String(movie.id)) ? 'active' : ''}" data-favorite-id="${escapeHtml(movie.id)}" aria-label="Toggle favourite"><i class="fas fa-heart"></i></button>
           <div class="movie-banner"><div class="movie-banner-bg" data-lazy-bg="${escapeHtml(movie.banner || '')}"></div></div>
           <div class="movie-card-content">
             <h3 class="movie-card-title">${escapeHtml(movie.title)}</h3>
@@ -7131,12 +7301,22 @@
           }
         });
       });
+      movieGrid.querySelectorAll('.movie-favorite-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleFavoriteMovie(btn.dataset.favoriteId);
+        });
+      });
     }
 
     function renderMoviesPage(moviesData) {
       if (!moviesData) return;
       renderTopMoviesCarousel(moviesData.topMovies || []);
       renderMovieCategoryButtons(moviesData);
+      if (movieSearchInput && movieSearchInput.value.toLowerCase() !== movieSearchQuery) {
+        movieSearchInput.value = movieSearchQuery;
+      }
       if (!activeMovieCategory || !moviesData.moviesByCategory[activeMovieCategory]) {
         activeMovieCategory = moviesData.categories[0]?.key || MOVIE_CATEGORY_CONFIG[0].key;
       }
@@ -7156,10 +7336,61 @@
           appMoviesDataCache = data;
         }
         renderMoviesPage(data);
+        movieSearchInput?.removeEventListener('input', handleMovieSearchInput);
+        movieSearchInput?.addEventListener('input', handleMovieSearchInput);
         moviesPageMounted = true;
         moviesPageMountPromise = null;
       })();
       return moviesPageMountPromise;
+    }
+
+    function handleMovieSearchInput(e) {
+      movieSearchQuery = String(e?.target?.value || '').trim().toLowerCase();
+      renderMovieGridCards();
+    }
+
+    async function refreshMoviesPageFromAdmin() {
+      appMovieCategoriesCache = null;
+      appMoviesDataCache = null;
+      moviesPageMounted = false;
+      await mountMoviesPageContent();
+    }
+
+    const PAGE_ROUTE_IDS = new Set([
+      'main-page', 'movies-page', 'profile-page', 'history-page', 'shop-page',
+      'inventory-page', 'missions-page', 'chat-page', 'friends-page',
+      'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
+    ]);
+
+    function setRouteHash(routeId) {
+      const id = String(routeId || '').trim();
+      if (!PAGE_ROUTE_IDS.has(id)) return;
+      const nextHash = `#${encodeURIComponent(id)}`;
+      if (window.location.hash === nextHash) return;
+      window.history.replaceState(null, '', nextHash);
+    }
+
+    function routeByHash() {
+      const raw = decodeURIComponent((window.location.hash || '').replace(/^#/, '')).trim();
+      if (!raw) return;
+      if (raw === 'home') {
+        homeTab?.click();
+        return;
+      }
+      if (raw === 'contact') {
+        contactTab?.click();
+        return;
+      }
+      const routeBtn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${raw}"]`);
+      if (routeBtn) {
+        routeBtn.click();
+        return;
+      }
+      const directPage = document.getElementById(raw);
+      if (directPage && directPage.classList.contains('page')) {
+        document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+        directPage.classList.add('active');
+      }
     }
 
     function goToProfilePageTab() {
@@ -7169,6 +7400,7 @@
       const profilePage = document.getElementById('profile-page');
       if (profileBtn) profileBtn.classList.add('active');
       if (profilePage) profilePage.classList.add('active');
+      setRouteHash('profile-page');
       if (currentUser?.uid) loadProfilePage(currentUser.uid);
     }
 
@@ -7344,6 +7576,7 @@
       contactSectionEl.classList.remove('active');
       homeTab.classList.add('active');
       contactTab.classList.remove('active');
+      setRouteHash('home');
       mountMainPageGamesContent();
     });
     contactTab.addEventListener('click', (e) => {
@@ -7353,6 +7586,7 @@
       contactSectionEl.classList.add('active');
       contactTab.classList.add('active');
       homeTab.classList.remove('active');
+      setRouteHash('contact');
       mountMainPageGamesContent();
     });
     document.getElementById('suggest-tab').addEventListener('click', () => {
@@ -7416,6 +7650,7 @@
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
         button.classList.add('active');
         document.getElementById(pageId).classList.add('active');
+        setRouteHash(pageId);
         switch (pageId) {
           case 'main-page':
             if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
@@ -10030,6 +10265,7 @@
         const ownProfileBtn = document.querySelector('.sidebar-tabs .tab-button[data-page="profile-page"]');
         if (ownProfileBtn) ownProfileBtn.classList.add('active');
         document.getElementById('profile-page').classList.add('active');
+        setRouteHash('profile-page');
         loadProfilePage(currentUser.uid);
         return;
       }
@@ -10037,6 +10273,7 @@
       document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('view-profile-page').classList.add('active');
+      setRouteHash('view-profile-page');
       viewProfileTargetUid = userId;
       const addBtn = document.getElementById('vp-add-friend-btn');
       try {
@@ -10070,6 +10307,7 @@
       document.getElementById(target).classList.add('active');
       const tabBtn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${target}"]`);
       if (tabBtn) { document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active')); tabBtn.classList.add('active'); }
+      setRouteHash(target);
       previousPageId = null;
       viewProfileTargetUid = null;
     });
@@ -10570,6 +10808,7 @@
           switch(tab.dataset.staffTab) {
             case 'staff-dashboard': loadStaffDashboard(); break;
             case 'staff-games': loadStaffGames(); break;
+            case 'staff-movies': loadStaffMoviesPanel(); break;
             case 'staff-tags': loadStaffTags(); break;
             case 'staff-plays': loadStaffPlays(); break;
             case 'staff-packs': loadStaffPacks(); break;
@@ -10589,13 +10828,16 @@
     // ========== Staff Dashboard ==========
     async function loadStaffDashboard() {
       if (!hasPermission('view_dashboard')) return;
-      const [gamesSnap, usersSnap, playsSnap, packsSnap, titlesSnap, badgesSnap] = await Promise.all([
+      const [gamesSnap, usersSnap, playsSnap, packsSnap, titlesSnap, badgesSnap, moviesSnap, movieCatsSnap] = await Promise.all([
         getDocs(collection(db,"games")), getDocs(collection(db,"users")),
         getDocs(collection(db,"plays")), getDocs(collection(db,"packs")),
-        getDocs(collection(db,"titles")), getDocs(collection(db,"badges"))
+        getDocs(collection(db,"titles")), getDocs(collection(db,"badges")),
+        getDocs(collection(db,"movies")), getDocs(collection(db,"movieCategories"))
       ]);
       document.getElementById('staff-stats-grid').innerHTML = `
         <div class="staff-stat-card"><h4>Total Games</h4><div class="staff-stat-number">${gamesSnap.size}</div></div>
+        <div class="staff-stat-card"><h4>Total Movies</h4><div class="staff-stat-number">${moviesSnap.size}</div></div>
+        <div class="staff-stat-card"><h4>Movie Categories</h4><div class="staff-stat-number">${movieCatsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Registered Users</h4><div class="staff-stat-number">${usersSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Play Records</h4><div class="staff-stat-number">${playsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Packs</h4><div class="staff-stat-number">${packsSnap.size}</div></div>
@@ -10631,6 +10873,180 @@
       document.getElementById('staff-game-tags').value = (data.tags||[]).join(', ');
       document.getElementById('staff-game-modal-title').textContent = 'Edit Game';
       document.getElementById('staff-game-modal').style.display = 'flex';
+    }
+
+    function resetStaffMovieCategoryForm() {
+      const idEl = document.getElementById('staff-movie-category-id');
+      const nameEl = document.getElementById('staff-movie-category-name');
+      const gradEl = document.getElementById('staff-movie-category-gradient');
+      const artEl = document.getElementById('staff-movie-category-art');
+      const orderEl = document.getElementById('staff-movie-category-order');
+      if (idEl) idEl.value = '';
+      if (nameEl) nameEl.value = '';
+      if (gradEl) gradEl.value = 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
+      if (artEl) artEl.value = '';
+      if (orderEl) orderEl.value = String(staffMovieCategoriesCache.length || 0);
+    }
+
+    function resetStaffMovieForm() {
+      const idEl = document.getElementById('staff-movie-id');
+      const titleEl = document.getElementById('staff-movie-title');
+      const yearEl = document.getElementById('staff-movie-year');
+      const scoreEl = document.getElementById('staff-movie-score');
+      const bannerEl = document.getElementById('staff-movie-banner');
+      const urlEl = document.getElementById('staff-movie-url');
+      const descEl = document.getElementById('staff-movie-desc');
+      if (idEl) idEl.value = '';
+      if (titleEl) titleEl.value = '';
+      if (yearEl) yearEl.value = String(new Date().getFullYear());
+      if (scoreEl) scoreEl.value = '8.0';
+      if (bannerEl) bannerEl.value = '';
+      if (urlEl) urlEl.value = '';
+      if (descEl) descEl.value = '';
+      populateStaffMovieCategorySelect();
+    }
+
+    function populateStaffMovieCategorySelect(active) {
+      const sel = document.getElementById('staff-movie-category');
+      if (!sel) return;
+      const source = staffMovieCategoriesCache.length
+        ? staffMovieCategoriesCache
+        : MOVIE_CATEGORY_CONFIG.map((x, i) => ({ ...x, order: i }));
+      sel.innerHTML = source.map((cat) => `<option value="${escapeHtml(cat.key)}">${escapeHtml(cat.key)}</option>`).join('');
+      const desired = active || source[0]?.key || '';
+      if (desired) sel.value = desired;
+    }
+
+    function renderStaffMovieCategories(categories) {
+      const listEl = document.getElementById('staff-movie-categories-list');
+      if (!listEl) return;
+      if (!categories.length) {
+        listEl.innerHTML = '<p style="color:var(--text-secondary);font-size:0.82rem;">No custom categories yet. Add one above.</p>';
+        return;
+      }
+      listEl.innerHTML = categories.map((cat) => `
+        <div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <span class="staff-badge" style="background:${escapeHtml(cat.gradient || '#2f5ca3')};color:#fff;">${escapeHtml(cat.key)}</span>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Order: ${Number(cat.order) || 0}</span>
+          </div>
+          <div class="staff-flex-row" style="gap:8px;">
+            <button type="button" class="staff-btn staff-btn-primary staff-btn-sm smc-edit" data-id="${escapeHtml(cat.id)}">Edit</button>
+            <button type="button" class="staff-btn staff-btn-danger staff-btn-sm smc-del" data-id="${escapeHtml(cat.id)}">Del</button>
+          </div>
+        </div>
+      `).join('');
+      document.querySelectorAll('.smc-edit').forEach((btn) => btn.addEventListener('click', () => {
+        const cat = categories.find((x) => String(x.id) === String(btn.dataset.id));
+        if (!cat) return;
+        document.getElementById('staff-movie-category-id').value = cat.id || '';
+        document.getElementById('staff-movie-category-name').value = cat.key || '';
+        document.getElementById('staff-movie-category-gradient').value = cat.gradient || '';
+        document.getElementById('staff-movie-category-art').value = cat.art || '';
+        document.getElementById('staff-movie-category-order').value = Number(cat.order) || 0;
+      }));
+      document.querySelectorAll('.smc-del').forEach((btn) => btn.addEventListener('click', async () => {
+        if (!confirm('Delete this movie category?')) return;
+        try {
+          await deleteDoc(doc(db, 'movieCategories', btn.dataset.id));
+          await loadStaffMovieCategories();
+          await refreshMoviesPageFromAdmin();
+          loadStaffDashboard();
+          showNotification('Category deleted', 'success');
+        } catch (e) {
+          showNotification('Delete failed: ' + e.message, 'error');
+        }
+      }));
+    }
+
+    async function loadStaffMovieCategories() {
+      if (!hasPermission('manage_games')) return;
+      let snap;
+      try {
+        snap = await getDocs(query(collection(db, 'movieCategories'), orderBy('order', 'asc')));
+      } catch (_) {
+        snap = await getDocs(collection(db, 'movieCategories'));
+      }
+      staffMovieCategoriesCache = snap.docs.map((d, i) => {
+        const x = d.data() || {};
+        return {
+          id: d.id,
+          key: String(x.key || x.name || '').trim(),
+          gradient: String(x.gradient || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)'),
+          art: String(x.art || ''),
+          order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
+        };
+      }).filter((x) => x.key).sort((a, b) => (a.order || 0) - (b.order || 0));
+      renderStaffMovieCategories(staffMovieCategoriesCache);
+      populateStaffMovieCategorySelect();
+      if (!document.getElementById('staff-movie-category-id')?.value) resetStaffMovieCategoryForm();
+    }
+
+    function renderStaffMovies(movies, filter = '') {
+      const tableEl = document.getElementById('staff-movies-table');
+      if (!tableEl) return;
+      const q = String(filter || '').trim().toLowerCase();
+      const filtered = q ? movies.filter((m) =>
+        String(m.title || '').toLowerCase().includes(q) ||
+        String(m.category || '').toLowerCase().includes(q)
+      ) : movies;
+      tableEl.innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Category</th><th>Year</th><th>Score</th><th>Actions</th></tr></thead><tbody>${filtered.map((m) => `
+        <tr>
+          <td><strong>${escapeHtml(m.title || '')}</strong></td>
+          <td>${escapeHtml(m.category || '')}</td>
+          <td>${m.releaseYear || '—'}</td>
+          <td>${m.score || '—'}</td>
+          <td><button type="button" class="staff-btn staff-btn-primary staff-btn-sm smv-edit" data-id="${escapeHtml(m.id)}">Edit</button> <button type="button" class="staff-btn staff-btn-danger staff-btn-sm smv-del" data-id="${escapeHtml(m.id)}">Del</button></td>
+        </tr>
+      `).join('')}</tbody></table>`;
+      document.querySelectorAll('.smv-edit').forEach((btn) => btn.addEventListener('click', () => {
+        const item = staffMoviesCache.find((x) => String(x.id) === String(btn.dataset.id));
+        if (!item) return;
+        document.getElementById('staff-movie-id').value = item.id || '';
+        document.getElementById('staff-movie-title').value = item.title || '';
+        populateStaffMovieCategorySelect(item.category);
+        document.getElementById('staff-movie-year').value = item.releaseYear || '';
+        document.getElementById('staff-movie-score').value = item.score || 0;
+        document.getElementById('staff-movie-banner').value = item.banner || '';
+        document.getElementById('staff-movie-url').value = item.url || '';
+        document.getElementById('staff-movie-desc').value = item.description || '';
+      }));
+      document.querySelectorAll('.smv-del').forEach((btn) => btn.addEventListener('click', async () => {
+        if (!confirm('Delete this movie?')) return;
+        try {
+          await deleteDoc(doc(db, 'movies', btn.dataset.id));
+          await loadStaffMovies();
+          await refreshMoviesPageFromAdmin();
+          loadStaffDashboard();
+          showNotification('Movie deleted', 'success');
+        } catch (e) {
+          showNotification('Delete failed: ' + e.message, 'error');
+        }
+      }));
+    }
+
+    async function loadStaffMovies() {
+      if (!hasPermission('manage_games')) return;
+      const cats = staffMovieCategoriesCache.length
+        ? staffMovieCategoriesCache
+        : MOVIE_CATEGORY_CONFIG.map((x, i) => ({ ...x, order: i }));
+      const snap = await getDocs(collection(db, 'movies'));
+      staffMoviesCache = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, cats));
+      staffMoviesCache.sort(movieNewestComparator);
+      renderStaffMovies(staffMoviesCache, document.getElementById('staff-search-movie')?.value || '');
+      if (!document.getElementById('staff-movie-id')?.value) resetStaffMovieForm();
+    }
+
+    async function loadStaffMoviesPanel() {
+      if (!hasPermission('manage_games')) {
+        const catList = document.getElementById('staff-movie-categories-list');
+        const movieTable = document.getElementById('staff-movies-table');
+        if (catList) catList.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        if (movieTable) movieTable.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        return;
+      }
+      await loadStaffMovieCategories();
+      await loadStaffMovies();
     }
 
     // ========== Staff Tags ==========
@@ -11010,6 +11426,53 @@
         showNotification('Game saved!','success');
       });
       document.getElementById('staff-search-game')?.addEventListener('input',e=>{const t=e.target.value.toLowerCase();renderStaffGames(staffGamesCache.filter(g=>g.title.toLowerCase().includes(t)));});
+
+      // Movies
+      document.getElementById('staff-save-movie-category-btn')?.addEventListener('click', async () => {
+        const id = document.getElementById('staff-movie-category-id')?.value || '';
+        const key = document.getElementById('staff-movie-category-name')?.value.trim() || '';
+        const gradient = document.getElementById('staff-movie-category-gradient')?.value.trim() || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
+        const art = document.getElementById('staff-movie-category-art')?.value.trim() || '';
+        const order = parseInt(document.getElementById('staff-movie-category-order')?.value, 10) || 0;
+        if (!key) { showNotification('Category name is required', 'error'); return; }
+        const payload = { key, name: key, gradient, art, order, updatedAt: serverTimestamp() };
+        try {
+          if (id) await updateDoc(doc(db, 'movieCategories', id), payload);
+          else await addDoc(collection(db, 'movieCategories'), { ...payload, createdAt: serverTimestamp() });
+          await loadStaffMovieCategories();
+          await refreshMoviesPageFromAdmin();
+          loadStaffDashboard();
+          resetStaffMovieCategoryForm();
+          showNotification('Movie category saved', 'success');
+        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
+      });
+      document.getElementById('staff-reset-movie-category-btn')?.addEventListener('click', resetStaffMovieCategoryForm);
+      document.getElementById('staff-save-movie-btn')?.addEventListener('click', async () => {
+        const id = document.getElementById('staff-movie-id')?.value || '';
+        const title = document.getElementById('staff-movie-title')?.value.trim() || '';
+        const category = document.getElementById('staff-movie-category')?.value || staffMovieCategoriesCache[0]?.key || MOVIE_CATEGORY_CONFIG[0].key;
+        const releaseYear = parseInt(document.getElementById('staff-movie-year')?.value, 10) || new Date().getFullYear();
+        const scoreRaw = parseFloat(document.getElementById('staff-movie-score')?.value);
+        const score = Number.isFinite(scoreRaw) ? Math.max(0, Math.min(10, Number(scoreRaw.toFixed(1)))) : 0;
+        const banner = document.getElementById('staff-movie-banner')?.value.trim() || '';
+        const url = document.getElementById('staff-movie-url')?.value.trim() || '';
+        const description = document.getElementById('staff-movie-desc')?.value.trim() || '';
+        if (!title) { showNotification('Movie title is required', 'error'); return; }
+        const payload = { title, category, releaseYear, score, banner, url, description, updatedAt: serverTimestamp() };
+        try {
+          if (id) await updateDoc(doc(db, 'movies', id), payload);
+          else await addDoc(collection(db, 'movies'), { ...payload, createdAt: serverTimestamp() });
+          await loadStaffMovies();
+          await refreshMoviesPageFromAdmin();
+          loadStaffDashboard();
+          resetStaffMovieForm();
+          showNotification('Movie saved', 'success');
+        } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
+      });
+      document.getElementById('staff-reset-movie-btn')?.addEventListener('click', resetStaffMovieForm);
+      document.getElementById('staff-search-movie')?.addEventListener('input', (e) => {
+        renderStaffMovies(staffMoviesCache, e.target.value);
+      });
 
       // Tags
       document.getElementById('staff-add-tag-btn')?.addEventListener('click',()=>document.getElementById('staff-tag-modal').style.display='flex');
@@ -11444,6 +11907,8 @@
 
     init().catch(() => hidePageLoading());
     setTimeout(hidePageLoading, 12000);
+    window.addEventListener('hashchange', routeByHash);
+    setTimeout(routeByHash, 0);
     // ========== Event Listeners ==========
     document.addEventListener('fullscreenchange', syncGameFullscreenUi);
     gameFullscreenBtn?.addEventListener('click', () => requestGameFullscreen());
