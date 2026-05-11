@@ -147,6 +147,7 @@
       .pack-unbox-body-lively::before { animation: none !important; opacity: 0.5 !important; }
       .pack-unbox-body-lively .pack-bg-fx .pack-bg-aurora { animation: none !important; }
       .pack-confetti-piece { animation: none !important; opacity: 0.6 !important; }
+      .movie-moving-banner-bg { animation: none !important; transform: none !important; }
     }
     .page-content, .main-page {
       position: relative;
@@ -660,6 +661,212 @@
       gap: 12px;
       font-size: 0.7rem;
       color: var(--text-secondary);
+    }
+
+    /* Movies page */
+    .movies-page-inner {
+      padding: 24px 5% 48px;
+    }
+    .movies-page-lead {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin: -8px 0 20px;
+      max-width: 52rem;
+      line-height: 1.45;
+    }
+    .movie-cat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .movie-cat-tab {
+      border: 1px solid rgba(42, 255, 158, 0.35);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text-secondary);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .movie-cat-tab:hover {
+      color: var(--neon-green);
+      border-color: rgba(42, 255, 158, 0.65);
+      transform: translateY(-2px);
+    }
+    .movie-cat-tab.active {
+      background: linear-gradient(120deg, rgba(42, 255, 158, 0.22), rgba(42, 255, 158, 0.08));
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 20px rgba(42, 255, 158, 0.2);
+    }
+    .movie-cat-tab i {
+      font-size: 1rem;
+    }
+    .movie-cat-panel {
+      display: none;
+    }
+    .movie-cat-panel.active {
+      display: block;
+      animation: sitePageFade 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .movie-moving-banner {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 28px;
+      border-radius: 20px;
+      overflow: hidden;
+      min-height: 240px;
+      border: 1px solid rgba(42, 255, 158, 0.22);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      background: #0d1118;
+    }
+    .movie-moving-banner-bg {
+      position: absolute;
+      inset: -10%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      animation: movieBannerKenBurns 16s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .movie-moving-banner-bg.lazy-bg-loaded {
+      opacity: 0.88;
+    }
+    @keyframes movieBannerKenBurns {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.14) translate(-2.5%, 1.5%); }
+    }
+    .movie-moving-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, rgba(6, 8, 12, 0.92) 0%, rgba(6, 8, 12, 0.55) 42%, transparent 78%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .movie-moving-banner-content {
+      position: relative;
+      z-index: 2;
+      padding: 28px 8% 28px 28px;
+      max-width: 420px;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .movie-moving-banner-content h3 {
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1.15;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
+    }
+    .movie-cat-pill {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(42, 255, 158, 0.2);
+      color: var(--neon-green);
+      border: 1px solid rgba(42, 255, 158, 0.45);
+    }
+    .movie-moving-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.92);
+    }
+    .movie-moving-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .movie-moving-meta .movie-score i {
+      color: var(--star-filled);
+    }
+    .movie-card {
+      flex: 0 0 auto;
+      width: 260px;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      background-color: #151A22;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(42, 255, 158, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+      scroll-snap-align: start;
+    }
+    .movie-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      border-color: rgba(42, 255, 158, 0.45);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 24px rgba(42, 255, 158, 0.15);
+    }
+    .movie-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .movie-card-bg.lazy-bg-loaded {
+      opacity: 1;
+    }
+    .movie-card-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.2) 55%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px 14px;
+      pointer-events: none;
+    }
+    .movie-card-title {
+      font-weight: 800;
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .movie-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .movie-card-meta .movie-score-inline {
+      color: var(--star-filled);
+    }
+    .movie-full-list {
+      margin-top: 36px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(42, 255, 158, 0.15);
+    }
+    .movie-full-item .full-game-meta {
+      flex-wrap: wrap;
     }
 
     /* Header */
@@ -4842,6 +5049,9 @@
       <button class="tab-button active" data-page="main-page">
         <i class="fas fa-home"></i> Main Page
       </button>
+      <button class="tab-button" data-page="movies-page">
+        <i class="fas fa-film"></i> Movies
+      </button>
       <button class="tab-button" data-page="profile-page">
         <i class="fas fa-user"></i> Profile
       </button>
@@ -4903,6 +5113,16 @@
         <div class="search-bar-container"><input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..."></div>
         <div class="full-games-grid" id="fullGamesGrid"></div>
       </section>
+    </div>
+
+    <!-- Movies (browse by category; top pick per category uses animated banner) -->
+    <div class="page" id="movies-page">
+      <div class="movies-page-inner page-content">
+        <h2 class="page-title font-titan-header">Movies</h2>
+        <p class="movies-page-lead">Choose one of three categories. The number-one title in each list gets the moving banner at the top; the rest scroll like game rows, with a searchable grid below.</p>
+        <div class="movie-cat-tabs" id="movie-cat-tabs" role="tablist" aria-label="Movie categories"></div>
+        <div id="movies-categories-root"></div>
+      </div>
     </div>
 
     <!-- Profile Page (own profile - Blooket style) -->
@@ -6030,6 +6250,7 @@
     let mainPageGamesMounted = false;
     let mainPageGamesMountPromise = null;
     let mainPageGamesScrollObserver = null;
+    let moviesPageMounted = false;
     /** Set true only for email login/signup so we navigate to Profile once (not on every auth refresh). */
     let redirectToProfileAfterAuth = false;
 
@@ -6340,6 +6561,9 @@
         switch (activePage) {
           case 'main-page':
             if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            break;
+          case 'movies-page':
+            mountMoviesPageIfNeeded();
             break;
           case 'profile-page': loadProfilePage(user.uid); break;
           case 'history-page': loadPlayHistory(user.uid); break;
@@ -6656,6 +6880,206 @@
       searchInput.addEventListener('input', filterAndRender);
     }
 
+    // ========== Movies page (3 categories; top title per category = moving banner only) ==========
+    const MOVIES_CATALOG = [
+      {
+        key: 'action',
+        label: 'Action',
+        tabIcon: 'fa-bolt',
+        movies: [
+          { id: 'mv-a1', title: 'Neon Overdrive', year: 2024, score: 8.6, category: 'Action', banner: 'https://picsum.photos/seed/mvneon/1200/675', url: 'https://en.wikipedia.org/wiki/Action_film' },
+          { id: 'mv-a2', title: 'Harbor Siege', year: 2022, score: 7.9, category: 'Action', banner: 'https://picsum.photos/seed/mvharbor/1200/675', url: 'https://en.wikipedia.org/wiki/Action_film' },
+          { id: 'mv-a3', title: 'Iron Runners', year: 2021, score: 7.4, category: 'Action', banner: 'https://picsum.photos/seed/mviron/1200/675', url: '' },
+          { id: 'mv-a4', title: 'Skyline Raid', year: 2019, score: 7.1, category: 'Action', banner: 'https://picsum.photos/seed/mvsky/1200/675', url: '' },
+          { id: 'mv-a5', title: 'Midnight Convoy', year: 2018, score: 6.8, category: 'Action', banner: 'https://picsum.photos/seed/mvmid/1200/675', url: '' },
+          { id: 'mv-a6', title: 'Rogue Signal', year: 2017, score: 6.5, category: 'Action', banner: 'https://picsum.photos/seed/mvrogue/1200/675', url: '' },
+        ],
+      },
+      {
+        key: 'drama',
+        label: 'Drama',
+        tabIcon: 'fa-theater-masks',
+        movies: [
+          { id: 'mv-d1', title: 'Quiet Harbor', year: 2023, score: 8.5, category: 'Drama', banner: 'https://picsum.photos/seed/mvquiet/1200/675', url: 'https://en.wikipedia.org/wiki/Drama_(film_and_television)' },
+          { id: 'mv-d2', title: 'Letters from Winter', year: 2020, score: 8.0, category: 'Drama', banner: 'https://picsum.photos/seed/mvwinter/1200/675', url: '' },
+          { id: 'mv-d3', title: 'The Last Shift', year: 2019, score: 7.6, category: 'Drama', banner: 'https://picsum.photos/seed/mvshift/1200/675', url: '' },
+          { id: 'mv-d4', title: 'Small Mercies', year: 2016, score: 7.2, category: 'Drama', banner: 'https://picsum.photos/seed/mvmercy/1200/675', url: '' },
+          { id: 'mv-d5', title: 'Paper Boats', year: 2015, score: 6.9, category: 'Drama', banner: 'https://picsum.photos/seed/mvboat/1200/675', url: '' },
+        ],
+      },
+      {
+        key: 'scifi',
+        label: 'Sci‑Fi',
+        tabIcon: 'fa-rocket',
+        movies: [
+          { id: 'mv-s1', title: 'Echo Drift', year: 2025, score: 8.7, category: 'Sci‑Fi', banner: 'https://picsum.photos/seed/mvecho/1200/675', url: 'https://en.wikipedia.org/wiki/Science_fiction_film' },
+          { id: 'mv-s2', title: 'Orbital Garden', year: 2022, score: 8.1, category: 'Sci‑Fi', banner: 'https://picsum.photos/seed/mvorb/1200/675', url: '' },
+          { id: 'mv-s3', title: 'Dust Choir', year: 2020, score: 7.7, category: 'Sci‑Fi', banner: 'https://picsum.photos/seed/mvdust/1200/675', url: '' },
+          { id: 'mv-s4', title: 'Signal Nine', year: 2018, score: 7.3, category: 'Sci‑Fi', banner: 'https://picsum.photos/seed/mvsig9/1200/675', url: '' },
+          { id: 'mv-s5', title: 'Cold Sun', year: 2016, score: 6.9, category: 'Sci‑Fi', banner: 'https://picsum.photos/seed/mvcold/1200/675', url: '' },
+          { id: 'mv-s6', title: 'Archive Tide', year: 2014, score: 6.6, category: 'Sci‑Fi', banner: 'https://picsum.photos/seed/mvarch/1200/675', url: '' },
+        ],
+      },
+    ];
+
+    function handleMoviePick(movie) {
+      if (!movie) return;
+      const u = movie.url ? String(movie.url).trim() : '';
+      if (u && /^https?:\/\//i.test(u)) window.open(u, '_blank', 'noopener,noreferrer');
+      else showNotification(`${movie.title} (${movie.year}) — score ${movie.score}/10 · ${movie.category || ''}`.trim(), 'success');
+    }
+
+    function createMovieCard(movie) {
+      const card = document.createElement('div');
+      card.className = 'movie-card';
+      const bg = document.createElement('div');
+      bg.className = 'movie-card-bg';
+      if (movie.banner) bg.dataset.lazyBg = movie.banner;
+      const overlay = document.createElement('div');
+      overlay.className = 'movie-card-overlay';
+      overlay.innerHTML = `<div class="movie-card-title">${escapeHtml(movie.title)}</div><div class="movie-card-meta"><span>${escapeHtml(String(movie.year))}</span><span class="movie-score-inline"><i class="fas fa-star"></i> ${escapeHtml(String(movie.score))}</span><span>${escapeHtml(movie.category || '')}</span></div>`;
+      card.appendChild(bg);
+      card.appendChild(overlay);
+      card.addEventListener('click', () => handleMoviePick(movie));
+      return card;
+    }
+
+    function mountMoviesPageIfNeeded() {
+      if (moviesPageMounted) return;
+      const tabHost = document.getElementById('movie-cat-tabs');
+      const root = document.getElementById('movies-categories-root');
+      if (!tabHost || !root) return;
+      tabHost.innerHTML = '';
+      root.innerHTML = '';
+      MOVIES_CATALOG.forEach((cat, idx) => {
+        const tab = document.createElement('button');
+        tab.type = 'button';
+        tab.className = 'movie-cat-tab' + (idx === 0 ? ' active' : '');
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+        tab.dataset.movieCat = cat.key;
+        tab.innerHTML = `<i class="fas ${cat.tabIcon}"></i> ${escapeHtml(cat.label)}`;
+        tab.addEventListener('click', () => {
+          tabHost.querySelectorAll('.movie-cat-tab').forEach((t) => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          root.querySelectorAll('.movie-cat-panel').forEach((p) => {
+            p.classList.toggle('active', p.dataset.movieCat === cat.key);
+          });
+        });
+        tabHost.appendChild(tab);
+
+        const panel = document.createElement('div');
+        panel.className = 'movie-cat-panel' + (idx === 0 ? ' active' : '');
+        panel.dataset.movieCat = cat.key;
+        const sorted = [...cat.movies].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+        if (!sorted.length) {
+          panel.innerHTML = '<p style="color:var(--text-secondary);font-weight:700;">No movies in this category yet.</p>';
+          root.appendChild(panel);
+          return;
+        }
+        const top = sorted[0];
+        const rest = sorted.slice(1);
+        const feat = document.createElement('div');
+        feat.className = 'movie-moving-banner';
+        feat.innerHTML = `
+          <div class="movie-moving-banner-bg" data-lazy-bg="${escapeHtml(top.banner || '')}"></div>
+          <div class="movie-moving-banner-content">
+            <span class="movie-cat-pill">${escapeHtml(top.category || cat.label)}</span>
+            <h3>${escapeHtml(top.title)}</h3>
+            <div class="movie-moving-meta">
+              <span><i class="far fa-calendar-alt"></i> ${escapeHtml(String(top.year))}</span>
+              <span class="movie-score"><i class="fas fa-star"></i> ${escapeHtml(String(top.score))}/10</span>
+            </div>
+          </div>`;
+        feat.addEventListener('click', () => handleMoviePick(top));
+        feat.querySelectorAll('.movie-moving-banner-bg').forEach((bg) => observeLazyGameBg(bg));
+        panel.appendChild(feat);
+
+        if (rest.length) {
+          const row = document.createElement('div');
+          row.className = 'category-row movie-more-row';
+          row.innerHTML = `<h2 class="category-title">More in ${escapeHtml(cat.label)}</h2><div class="carousel-track-container"><div class="carousel-track movie-carousel-track"></div><div class="track-nav prev"><i class="fas fa-chevron-left"></i></div><div class="track-nav next"><i class="fas fa-chevron-right"></i></div></div>`;
+          const track = row.querySelector('.carousel-track');
+          rest.slice(0, 12).forEach((m) => track.appendChild(createMovieCard(m)));
+          track.querySelectorAll('.movie-card-bg').forEach((bg) => observeLazyGameBg(bg, track));
+          const prev = row.querySelector('.prev');
+          const next = row.querySelector('.next');
+          prev.addEventListener('click', () => track.scrollBy({ left: -260, behavior: 'smooth' }));
+          next.addEventListener('click', () => track.scrollBy({ left: 260, behavior: 'smooth' }));
+          let isDown = false;
+          let startX = 0;
+          let scrollLeft = 0;
+          track.addEventListener('mousedown', (e) => {
+            isDown = true;
+            track.style.cursor = 'grabbing';
+            startX = e.pageX - track.offsetLeft;
+            scrollLeft = track.scrollLeft;
+          });
+          track.addEventListener('mouseleave', () => { isDown = false; track.style.cursor = 'grab'; });
+          track.addEventListener('mouseup', () => { isDown = false; track.style.cursor = 'grab'; });
+          track.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - track.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            track.scrollLeft = scrollLeft - walk;
+          });
+          track.addEventListener('touchstart', (e) => {
+            isDown = true;
+            startX = e.touches[0].pageX - track.offsetLeft;
+            scrollLeft = track.scrollLeft;
+          }, { passive: true });
+          track.addEventListener('touchend', () => { isDown = false; });
+          track.addEventListener('touchmove', (e) => {
+            if (!isDown) return;
+            const x = e.touches[0].pageX - track.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            track.scrollLeft = scrollLeft - walk;
+          }, { passive: true });
+          panel.appendChild(row);
+        }
+
+        const listSec = document.createElement('section');
+        listSec.className = 'full-games-list movie-full-list';
+        const gridId = `movie-full-grid-${cat.key}`;
+        listSec.innerHTML = `<h2>All ${escapeHtml(cat.label)}</h2><div class="search-bar-container"><input type="text" class="search-input movie-search-input" placeholder="Search titles..."></div><div class="full-games-grid" id="${gridId}"></div>`;
+        const grid = listSec.querySelector(`#${gridId}`);
+        const searchInput = listSec.querySelector('.movie-search-input');
+        const sortedByTitle = [...sorted].sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        const renderGrid = () => {
+          const q = (searchInput.value || '').toLowerCase().trim();
+          const filtered = sortedByTitle.filter((m) => (m.title || '').toLowerCase().includes(q));
+          grid.innerHTML = filtered.map((m) => `
+          <div class="full-game-item movie-full-item" data-mid="${escapeHtml(m.id)}">
+            <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(m.banner || '')}"></div></div>
+            <div class="full-game-info">
+              <div class="full-game-title">${escapeHtml(m.title)}</div>
+              <div class="full-game-meta">
+                <span><i class="far fa-calendar-alt"></i> ${escapeHtml(String(m.year))}</span>
+                <span><i class="fas fa-star"></i> ${escapeHtml(String(m.score))}</span>
+                <span>${escapeHtml(m.category || cat.label)}</span>
+              </div>
+            </div>
+          </div>`).join('');
+          grid.querySelectorAll('.movie-full-item').forEach((el) => {
+            const id = el.getAttribute('data-mid');
+            const found = sortedByTitle.find((x) => x.id === id);
+            if (found) el.addEventListener('click', () => handleMoviePick(found));
+          });
+          grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
+        };
+        renderGrid();
+        searchInput.addEventListener('input', renderGrid);
+        panel.appendChild(listSec);
+        root.appendChild(panel);
+      });
+      moviesPageMounted = true;
+    }
+
     // ========== Tab switching (home/contact) ==========
     const homeTab = document.getElementById('home-tab');
     const contactTab = document.getElementById('contact-tab');
@@ -6735,7 +7159,7 @@
     document.querySelectorAll('.tab-button').forEach(button => {
       button.addEventListener('click', () => {
         const pageId = button.getAttribute('data-page');
-        if (!currentUser && pageId !== 'main-page') { noticeModal.style.display = 'flex'; return; }
+        if (!currentUser && pageId !== 'main-page' && pageId !== 'movies-page') { noticeModal.style.display = 'flex'; return; }
         document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
         button.classList.add('active');
@@ -6743,6 +7167,9 @@
         switch (pageId) {
           case 'main-page':
             if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            break;
+          case 'movies-page':
+            mountMoviesPageIfNeeded();
             break;
           case 'profile-page': loadProfilePage(currentUser.uid); break;
           case 'history-page': loadPlayHistory(currentUser.uid); break;
