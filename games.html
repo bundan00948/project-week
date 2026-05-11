@@ -789,6 +789,11 @@
       pointer-events: none;
       filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
     }
+    .movie-category-art.middle {
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%);
+    }
     .movies-list-shell {
       padding: 12px 5% 0;
     }
@@ -5549,6 +5554,8 @@
                 <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Name</label><input id="staff-movie-category-name" placeholder="e.g. Drama"></div>
                 <div class="staff-form-group" style="margin:0;min-width:210px;flex:1.2;"><label>Gradient CSS</label><input id="staff-movie-category-gradient" placeholder="linear-gradient(...)"></div>
                 <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Corner art URL</label><input id="staff-movie-category-art" placeholder="https://...png"></div>
+                <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art position</label><select id="staff-movie-category-art-pos"><option value="bottom">Bottom</option><option value="middle">Middle</option></select></div>
+                <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art size</label><select id="staff-movie-category-art-scale"><option value="50">50%</option><option value="75">75%</option><option value="100" selected>100%</option><option value="125">125%</option><option value="150">150%</option></select></div>
                 <div class="staff-form-group" style="margin:0;min-width:90px;"><label>Order</label><input id="staff-movie-category-order" type="number" value="0"></div>
                 <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-category-btn" style="margin-bottom:2px;">Save Category</button>
                 <button type="button" class="staff-btn" id="staff-reset-movie-category-btn" style="margin-bottom:2px;">Clear</button>
@@ -6435,6 +6442,8 @@
     let favoriteMovieIds = new Set();
     let staffMovieCategoriesCache = [];
     let staffMoviesCache = [];
+    let pendingPageRoute = null;
+    let authStateKnown = false;
     const sessionFrameAllowedHosts = new Set();
     /** Set true only for email login/signup so we navigate to Profile once (not on every auth refresh). */
     let redirectToProfileAfterAuth = false;
@@ -6522,7 +6531,7 @@
         } catch (_) {
           snap = await getDocs(collection(db, 'movieCategories'));
         }
-        const fromDb = snap.docs.map((d, i) => {
+      const fromDb = snap.docs.map((d, i) => {
           const x = d.data() || {};
           const key = String(x.key || x.name || '').trim();
           if (!key) return null;
@@ -6531,6 +6540,8 @@
             key,
             gradient: String(x.gradient || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)'),
             art: String(x.art || ''),
+            artPosition: String(x.artPosition || 'bottom').toLowerCase() === 'middle' ? 'middle' : 'bottom',
+            artScale: [50, 75, 100, 125, 150].includes(Number(x.artScale)) ? Number(x.artScale) : 100,
             order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
           };
         }).filter(Boolean);
@@ -6799,6 +6810,7 @@
 
     // ========== Auth state observer with owner enforcement ==========
     onAuthStateChanged(auth, async (user) => {
+      authStateKnown = true;
       currentUser = user;
       if (user) {
         const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -6831,6 +6843,16 @@
         await loadUserProfile(user);
         await ensureDefaultTitlesExist();
         await checkStaffAccess(user);
+        if (pendingPageRoute) {
+          const requested = pendingPageRoute;
+          pendingPageRoute = null;
+          const btn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${requested}"]`);
+          if (btn) {
+            isApplyingRoute = true;
+            btn.click();
+            isApplyingRoute = false;
+          }
+        }
         if (redirectToProfileAfterAuth) {
           redirectToProfileAfterAuth = false;
           goToProfilePageTab();
@@ -7126,6 +7148,8 @@
             key,
             gradient: 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)',
             art: '',
+            artPosition: 'bottom',
+            artScale: 100,
             order: idx
           }));
       const topMovies = inferredCategories
@@ -7230,6 +7254,12 @@
       if (!movieCategoryButtons) return;
       movieCategoryButtons.innerHTML = '';
       moviesData.categories.forEach((cat) => {
+        const artScale = [50, 75, 100, 125, 150].includes(Number(cat.artScale)) ? Number(cat.artScale) : 100;
+        const artSizePx = Math.round(64 * (artScale / 100));
+        const artPos = String(cat.artPosition || 'bottom').toLowerCase() === 'middle' ? 'middle' : 'bottom';
+        const artHtml = cat.art
+          ? `<img class="movie-category-art ${artPos}" src="${escapeHtml(cat.art)}" alt="" loading="lazy" aria-hidden="true" style="width:${artSizePx}px;height:${artSizePx}px;">`
+          : '';
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'movie-category-button';
@@ -7238,7 +7268,7 @@
         btn.innerHTML = `
           <div class="movie-category-title">${escapeHtml(cat.key)}</div>
           <span class="movie-category-count">${cat.count} movie${cat.count === 1 ? '' : 's'}</span>
-          <img class="movie-category-art" src="${escapeHtml(cat.art)}" alt="" loading="lazy" aria-hidden="true">
+          ${artHtml}
         `;
         btn.addEventListener('click', () => {
           activeMovieCategory = cat.key;
@@ -7345,6 +7375,9 @@
       'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     let isApplyingRoute = false;
+    function isAuthRequiredPage(pageId) {
+      return pageId !== 'main-page' && pageId !== 'movies-page';
+    }
 
     function setRouteHash(routeId, options = {}) {
       const id = String(routeId || '').trim();
@@ -7384,6 +7417,10 @@
       }
       const routeBtn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${raw}"]`);
       if (routeBtn) {
+        if (isAuthRequiredPage(raw) && !currentUser) {
+          pendingPageRoute = raw;
+          return;
+        }
         isApplyingRoute = true;
         routeBtn.click();
         isApplyingRoute = false;
@@ -7660,7 +7697,14 @@
           setRouteHash(pageId, { reload: true });
           return;
         }
-        if (!currentUser && pageId !== 'main-page' && pageId !== 'movies-page') { noticeModal.style.display = 'flex'; return; }
+        if (!currentUser && isAuthRequiredPage(pageId)) {
+          if (!authStateKnown) {
+            pendingPageRoute = pageId;
+            return;
+          }
+          noticeModal.style.display = 'flex';
+          return;
+        }
         document.querySelectorAll('.sidebar-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
         button.classList.add('active');
@@ -10895,11 +10939,15 @@
       const nameEl = document.getElementById('staff-movie-category-name');
       const gradEl = document.getElementById('staff-movie-category-gradient');
       const artEl = document.getElementById('staff-movie-category-art');
+      const posEl = document.getElementById('staff-movie-category-art-pos');
+      const scaleEl = document.getElementById('staff-movie-category-art-scale');
       const orderEl = document.getElementById('staff-movie-category-order');
       if (idEl) idEl.value = '';
       if (nameEl) nameEl.value = '';
       if (gradEl) gradEl.value = 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
       if (artEl) artEl.value = '';
+      if (posEl) posEl.value = 'bottom';
+      if (scaleEl) scaleEl.value = '100';
       if (orderEl) orderEl.value = String(staffMovieCategoriesCache.length || 0);
     }
 
@@ -10947,6 +10995,7 @@
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <span class="staff-badge" style="background:${escapeHtml(cat.gradient || '#2f5ca3')};color:#fff;">${escapeHtml(cat.key)}</span>
             <span style="font-size:0.78rem;color:var(--text-secondary);">Order: ${Number(cat.order) || 0}</span>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Art: ${escapeHtml(cat.artPosition || 'bottom')} / ${Number(cat.artScale) || 100}%</span>
           </div>
           <div class="staff-flex-row" style="gap:8px;">
             <button type="button" class="staff-btn staff-btn-primary staff-btn-sm smc-edit" data-id="${escapeHtml(cat.id)}">Edit</button>
@@ -10961,6 +11010,8 @@
         document.getElementById('staff-movie-category-name').value = cat.key || '';
         document.getElementById('staff-movie-category-gradient').value = cat.gradient || '';
         document.getElementById('staff-movie-category-art').value = cat.art || '';
+        document.getElementById('staff-movie-category-art-pos').value = cat.artPosition === 'middle' ? 'middle' : 'bottom';
+        document.getElementById('staff-movie-category-art-scale').value = String([50, 75, 100, 125, 150].includes(Number(cat.artScale)) ? Number(cat.artScale) : 100);
         document.getElementById('staff-movie-category-order').value = Number(cat.order) || 0;
       }));
       document.querySelectorAll('.smc-del').forEach((btn) => btn.addEventListener('click', async () => {
@@ -10992,6 +11043,8 @@
           key: String(x.key || x.name || '').trim(),
           gradient: String(x.gradient || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)'),
           art: String(x.art || ''),
+          artPosition: String(x.artPosition || 'bottom').toLowerCase() === 'middle' ? 'middle' : 'bottom',
+          artScale: [50, 75, 100, 125, 150].includes(Number(x.artScale)) ? Number(x.artScale) : 100,
           order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
         };
       }).filter((x) => x.key).sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -11449,9 +11502,12 @@
         const key = document.getElementById('staff-movie-category-name')?.value.trim() || '';
         const gradient = document.getElementById('staff-movie-category-gradient')?.value.trim() || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
         const art = document.getElementById('staff-movie-category-art')?.value.trim() || '';
+        const artPosition = document.getElementById('staff-movie-category-art-pos')?.value === 'middle' ? 'middle' : 'bottom';
+        const artScaleRaw = parseInt(document.getElementById('staff-movie-category-art-scale')?.value, 10);
+        const artScale = [50, 75, 100, 125, 150].includes(artScaleRaw) ? artScaleRaw : 100;
         const order = parseInt(document.getElementById('staff-movie-category-order')?.value, 10) || 0;
         if (!key) { showNotification('Category name is required', 'error'); return; }
-        const payload = { key, name: key, gradient, art, order, updatedAt: serverTimestamp() };
+        const payload = { key, name: key, gradient, art, artPosition, artScale, order, updatedAt: serverTimestamp() };
         try {
           if (id) await updateDoc(doc(db, 'movieCategories', id), payload);
           else await addDoc(collection(db, 'movieCategories'), { ...payload, createdAt: serverTimestamp() });
