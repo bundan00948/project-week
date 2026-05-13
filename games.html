@@ -1139,7 +1139,7 @@
     }
     .movie-info-modal {
       z-index: 1010;
-      background: rgba(0, 0, 0, 0.92);
+      background: rgba(0, 0, 0, 0.74);
     }
     .movie-info-shell {
       position: relative;
@@ -1157,14 +1157,14 @@
       background-size: cover;
       background-position: center;
       transform: scale(1.04);
-      filter: saturate(1.05) brightness(0.46);
+      filter: saturate(1.08) brightness(0.62);
     }
     .movie-info-overlay {
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(4, 7, 12, 0.94) 0%, rgba(4, 7, 12, 0.88) 38%, rgba(4, 7, 12, 0.62) 56%, rgba(4, 7, 12, 0.2) 100%),
-        radial-gradient(circle at 14% 20%, rgba(85, 190, 255, 0.2), transparent 40%);
+        linear-gradient(90deg, rgba(4, 7, 12, 0.72) 0%, rgba(4, 7, 12, 0.52) 42%, rgba(4, 7, 12, 0.16) 74%, rgba(4, 7, 12, 0.04) 100%),
+        radial-gradient(circle at 14% 20%, rgba(85, 190, 255, 0.18), transparent 40%);
     }
     .movie-info-close {
       position: absolute;
@@ -1190,13 +1190,19 @@
     .movie-info-panel {
       position: relative;
       z-index: 2;
-      width: min(560px, 100%);
+      width: min(620px, 100%);
       height: 100%;
-      padding: 88px 42px 36px;
+      padding: 110px 42px 52px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .movie-info-main {
+      margin-top: auto;
+      width: min(480px, 100%);
       display: flex;
       flex-direction: column;
       gap: 14px;
-      overflow-y: auto;
     }
     .movie-info-kicker {
       display: inline-flex;
@@ -1217,25 +1223,25 @@
       color: #fff;
       text-wrap: balance;
     }
+    .movie-info-title-image {
+      display: none;
+      max-width: min(420px, 88%);
+      max-height: 92px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.44));
+    }
+    .movie-info-title-image.active {
+      display: block;
+    }
+    .movie-info-title.has-image-fallback {
+      display: none;
+    }
     .movie-info-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 9px;
-    }
-    .movie-info-preview {
-      width: min(100%, 440px);
-      aspect-ratio: 16 / 9;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(151, 218, 255, 0.35);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-      background: rgba(7, 12, 19, 0.9);
-    }
-    .movie-info-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
     }
     .movie-info-chip {
       display: inline-flex;
@@ -1254,53 +1260,55 @@
     .movie-info-desc {
       margin: 2px 0 0;
       font-size: 0.95rem;
-      line-height: 1.62;
+      line-height: 1.55;
       color: rgba(237, 247, 255, 0.93);
-      white-space: pre-wrap;
-      max-width: 96%;
+      white-space: normal;
+      max-width: 100%;
+      min-height: calc(1.55em * 5);
       text-wrap: pretty;
     }
     .movie-info-actions {
-      margin-top: auto;
-      display: flex;
-      flex-wrap: wrap;
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      padding-top: 10px;
+      min-height: 54px;
+      max-width: 360px;
     }
     .movie-info-watch-btn,
     .movie-info-back-btn {
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.88);
       border-radius: 999px;
       font-weight: 900;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       cursor: pointer;
       padding: 11px 18px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+      background: #0a0a0a;
+      color: #f5f5f5;
     }
     .movie-info-watch-btn {
-      background: linear-gradient(135deg, #65deff 0%, #2f8dff 100%);
-      color: #031021;
-      box-shadow: 0 10px 22px rgba(63, 155, 255, 0.35);
+      background: #0a0a0a;
+      color: #f5f5f5;
     }
-    .movie-info-watch-btn:hover {
+    .movie-info-watch-btn:hover,
+    .movie-info-back-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 26px rgba(63, 155, 255, 0.45);
+      background: #f5f5f5;
+      color: #070707;
     }
     .movie-info-watch-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
       transform: none;
-      box-shadow: none;
+      color: #b8b8b8;
+      background: #161616;
+      border-color: rgba(210, 210, 210, 0.4);
     }
-    .movie-info-back-btn {
-      background: rgba(11, 16, 24, 0.66);
-      border: 1px solid rgba(255, 255, 255, 0.26);
-      color: #d3e8f7;
-    }
-    .movie-info-back-btn:hover {
-      transform: translateY(-2px);
-      background: rgba(22, 32, 45, 0.74);
+    .movie-info-actions.is-long .movie-info-watch-btn,
+    .movie-info-actions.is-long .movie-info-back-btn {
+      border-radius: 14px;
     }
 
     /* Header */
@@ -5327,9 +5335,19 @@
       }
       .movie-info-panel {
         width: 100%;
-        padding: 84px 18px 22px;
+        padding: 106px 18px 26px;
+      }
+      .movie-info-main {
+        width: 100%;
+      }
+      .movie-info-title-image {
+        max-width: 92%;
+        max-height: 72px;
       }
       .movie-info-desc {
+        max-width: 100%;
+      }
+      .movie-info-actions {
         max-width: 100%;
       }
       .sidebar {
@@ -5671,7 +5689,7 @@
         <div class="movies-hero-shell">
           <div class="movies-heading-row">
             <p class="movies-kicker">Now Browsing</p>
-            <h2>Discover your next movie night pick.</h2>
+            <h2>Movies</h2>
             <p class="movies-overview">Featured titles update by category ranking. Filter by genre, search instantly, and open any movie to get a full pre-watch details view.</p>
           </div>
           <div class="movies-hero-stats">
@@ -6011,6 +6029,7 @@
                 <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Year</label><input id="staff-movie-year" type="number" min="1900" max="2100" value="2024"></div>
                 <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Score</label><input id="staff-movie-score" type="number" min="0" max="10" step="0.1" value="8.0"></div>
                 <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...jpg"></div>
+                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Title Image URL</label><input id="staff-movie-title-image" placeholder="Optional: title logo image URL"></div>
                 <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Movie URL (iframe)</label><input id="staff-movie-url" placeholder="https://..."></div>
                 <div class="staff-form-group" style="margin:0;min-width:260px;flex:2;flex-basis:100%;"><label>Description</label><textarea id="staff-movie-desc" rows="2" placeholder="Movie description for the pre-movie screen"></textarea></div>
                 <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-btn" style="margin-bottom:2px;">Save Movie</button>
@@ -6484,20 +6503,20 @@
         <div class="movie-info-overlay"></div>
         <button type="button" class="movie-info-close" id="movieInfoCloseBtn" aria-label="Close movie details">×</button>
         <section class="movie-info-panel">
-          <div class="movie-info-kicker"><i class="fas fa-film" aria-hidden="true"></i> PRE-MOVIE VIEW</div>
-          <h2 class="movie-info-title" id="movieInfoTitle">Movie title</h2>
-          <div class="movie-info-meta">
-            <span class="movie-info-chip"><i class="fas fa-tag" aria-hidden="true"></i><span id="movieInfoCategory">Category</span></span>
-            <span class="movie-info-chip"><i class="fas fa-calendar-alt" aria-hidden="true"></i><span id="movieInfoYear">Year</span></span>
-            <span class="movie-info-chip"><i class="fas fa-star" aria-hidden="true"></i><span id="movieInfoScore">Score</span></span>
-          </div>
-          <div class="movie-info-preview">
-            <img id="movieInfoPreviewImage" src="" alt="Movie banner preview" loading="lazy">
-          </div>
-          <p class="movie-info-desc" id="movieInfoDescription">No description available yet.</p>
-          <div class="movie-info-actions">
-            <button type="button" class="movie-info-watch-btn" id="movieInfoWatchBtn">WATCH MOVIE</button>
-            <button type="button" class="movie-info-back-btn" id="movieInfoBackBtn">BACK</button>
+          <div class="movie-info-main">
+            <div class="movie-info-kicker"><i class="fas fa-film" aria-hidden="true"></i> PRE-MOVIE VIEW</div>
+            <img id="movieInfoTitleImage" class="movie-info-title-image" src="" alt="Movie title logo" loading="lazy">
+            <h2 class="movie-info-title" id="movieInfoTitle">Movie title</h2>
+            <div class="movie-info-meta">
+              <span class="movie-info-chip"><i class="fas fa-tag" aria-hidden="true"></i><span id="movieInfoCategory">Category</span></span>
+              <span class="movie-info-chip"><i class="fas fa-calendar-alt" aria-hidden="true"></i><span id="movieInfoYear">Year</span></span>
+              <span class="movie-info-chip"><i class="fas fa-star" aria-hidden="true"></i><span id="movieInfoScore">Score</span></span>
+            </div>
+            <p class="movie-info-desc" id="movieInfoDescription">No description available yet.</p>
+            <div class="movie-info-actions" id="movieInfoActions">
+              <button type="button" class="movie-info-watch-btn" id="movieInfoWatchBtn">WATCH MOVIE</button>
+              <button type="button" class="movie-info-back-btn" id="movieInfoBackBtn">BACK</button>
+            </div>
           </div>
         </section>
       </div>
@@ -6753,12 +6772,13 @@
     const confirmModal = document.getElementById('confirmModal');
     const movieInfoModal = document.getElementById('movieInfoModal');
     const movieInfoBackground = document.getElementById('movieInfoBackground');
-    const movieInfoPreviewImage = document.getElementById('movieInfoPreviewImage');
+    const movieInfoTitleImageEl = document.getElementById('movieInfoTitleImage');
     const movieInfoTitleEl = document.getElementById('movieInfoTitle');
     const movieInfoCategoryEl = document.getElementById('movieInfoCategory');
     const movieInfoYearEl = document.getElementById('movieInfoYear');
     const movieInfoScoreEl = document.getElementById('movieInfoScore');
     const movieInfoDescriptionEl = document.getElementById('movieInfoDescription');
+    const movieInfoActionsEl = document.getElementById('movieInfoActions');
     const movieInfoWatchBtn = document.getElementById('movieInfoWatchBtn');
     const movieInfoBackBtn = document.getElementById('movieInfoBackBtn');
     const movieInfoCloseBtn = document.getElementById('movieInfoCloseBtn');
@@ -6997,6 +7017,7 @@
         releaseYear,
         score: Number(score.toFixed(1)),
         banner: String(raw.banner || raw.image || raw.poster || ''),
+        titleImage: String(raw.titleImage || raw.titleLogo || raw.titleArt || raw.titleImageUrl || ''),
         description: String(raw.description || raw.desc || raw.synopsis || raw.overview || ''),
         url: String(raw.url || raw.movieUrl || raw.fullMovieUrl || '')
       };
@@ -7551,24 +7572,55 @@
       document.body.style.overflow = gameModalVisible ? 'hidden' : 'auto';
     }
 
+    function formatMovieInfoDescription(rawDescription) {
+      const text = String(rawDescription || '').replace(/\s+/g, ' ').trim();
+      if (!text) return { text: 'No description available yet.', isLong: false };
+      const words = text.split(' ').filter(Boolean);
+      if (words.length <= 70) return { text, isLong: false };
+      return {
+        text: `${words.slice(0, 70).join(' ')} .....`,
+        isLong: true
+      };
+    }
+
     function openMovieInfoModal(movie) {
       if (!movieInfoModal || !movie) return;
       activeMoviePreview = movie;
-      if (movieInfoTitleEl) movieInfoTitleEl.textContent = String(movie.title || 'Untitled Movie');
+      const titleText = String(movie.title || '').trim() || 'Movie title';
+      if (movieInfoTitleEl) {
+        movieInfoTitleEl.textContent = titleText;
+        movieInfoTitleEl.classList.remove('has-image-fallback');
+      }
       if (movieInfoCategoryEl) movieInfoCategoryEl.textContent = String(movie.category || 'Uncategorized');
       if (movieInfoYearEl) movieInfoYearEl.textContent = movie.releaseYear || 'N/A';
       const scoreValue = Number(movie.score);
       if (movieInfoScoreEl) movieInfoScoreEl.textContent = Number.isFinite(scoreValue) && scoreValue > 0 ? scoreValue.toFixed(1) : 'N/A';
+      const descInfo = formatMovieInfoDescription(movie.description);
       if (movieInfoDescriptionEl) {
-        movieInfoDescriptionEl.textContent = String(movie.description || 'No description available yet.');
+        movieInfoDescriptionEl.textContent = descInfo.text;
+      }
+      movieInfoActionsEl?.classList.toggle('is-long', descInfo.isLong);
+      const titleImageUrl = String(movie.titleImage || '').trim();
+      if (movieInfoTitleImageEl) {
+        if (titleImageUrl) {
+          movieInfoTitleImageEl.onerror = () => {
+            movieInfoTitleImageEl.classList.remove('active');
+            movieInfoTitleEl?.classList.remove('has-image-fallback');
+          };
+          movieInfoTitleImageEl.src = titleImageUrl;
+          movieInfoTitleImageEl.alt = `${titleText} title image`;
+          movieInfoTitleImageEl.classList.add('active');
+          movieInfoTitleEl?.classList.add('has-image-fallback');
+        } else {
+          movieInfoTitleImageEl.onerror = null;
+          movieInfoTitleImageEl.src = '';
+          movieInfoTitleImageEl.alt = 'Movie title logo';
+          movieInfoTitleImageEl.classList.remove('active');
+          movieInfoTitleEl?.classList.remove('has-image-fallback');
+        }
       }
       const bannerUrl = String(movie.banner || '').trim();
       const safeBannerCssUrl = bannerUrl.replace(/"/g, '\\"');
-      if (movieInfoPreviewImage) {
-        movieInfoPreviewImage.src = bannerUrl || '';
-        movieInfoPreviewImage.style.visibility = bannerUrl ? 'visible' : 'hidden';
-        movieInfoPreviewImage.alt = bannerUrl ? `${String(movie.title || 'Movie')} banner preview` : 'No movie banner available';
-      }
       if (movieInfoBackground) {
         movieInfoBackground.style.backgroundImage = bannerUrl ? `url("${safeBannerCssUrl}")` : 'none';
       }
@@ -11530,6 +11582,7 @@
       const yearEl = document.getElementById('staff-movie-year');
       const scoreEl = document.getElementById('staff-movie-score');
       const bannerEl = document.getElementById('staff-movie-banner');
+      const titleImageEl = document.getElementById('staff-movie-title-image');
       const descEl = document.getElementById('staff-movie-desc');
       const urlEl = document.getElementById('staff-movie-url');
       if (idEl) idEl.value = '';
@@ -11537,6 +11590,7 @@
       if (yearEl) yearEl.value = String(new Date().getFullYear());
       if (scoreEl) scoreEl.value = '8.0';
       if (bannerEl) bannerEl.value = '';
+      if (titleImageEl) titleImageEl.value = '';
       if (descEl) descEl.value = '';
       if (urlEl) urlEl.value = '';
       populateStaffMovieCategorySelect();
@@ -11652,6 +11706,7 @@
         document.getElementById('staff-movie-year').value = item.releaseYear || '';
         document.getElementById('staff-movie-score').value = item.score || 0;
         document.getElementById('staff-movie-banner').value = item.banner || '';
+        document.getElementById('staff-movie-title-image').value = item.titleImage || '';
         document.getElementById('staff-movie-desc').value = item.description || '';
         document.getElementById('staff-movie-url').value = item.url || '';
       }));
@@ -12100,11 +12155,12 @@
         const scoreRaw = parseFloat(document.getElementById('staff-movie-score')?.value);
         const score = Number.isFinite(scoreRaw) ? Math.max(0, Math.min(10, Number(scoreRaw.toFixed(1)))) : 0;
         const banner = document.getElementById('staff-movie-banner')?.value.trim() || '';
+        const titleImage = document.getElementById('staff-movie-title-image')?.value.trim() || '';
         const description = document.getElementById('staff-movie-desc')?.value.trim() || '';
         const url = document.getElementById('staff-movie-url')?.value.trim() || '';
         if (!title) { showNotification('Movie title is required', 'error'); return; }
         if (!category) { showNotification('Create/select a movie category first', 'error'); return; }
-        const payload = { title, category, releaseYear, score, banner, description, url, updatedAt: serverTimestamp() };
+        const payload = { title, category, releaseYear, score, banner, titleImage, description, url, updatedAt: serverTimestamp() };
         try {
           if (id) await updateDoc(doc(db, 'movies', id), payload);
           else await addDoc(collection(db, 'movies'), { ...payload, createdAt: serverTimestamp() });
