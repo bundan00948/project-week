@@ -5564,7 +5564,7 @@
                 <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Year</label><input id="staff-movie-year" type="number" min="1900" max="2100" value="2024"></div>
                 <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Score</label><input id="staff-movie-score" type="number" min="0" max="10" step="0.1" value="8.0"></div>
                 <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...jpg"></div>
-                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Trailer URL (iframe)</label><input id="staff-movie-url" placeholder="https://www.youtube.com/embed/..."></div>
+                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Movie URL (direct link)</label><input id="staff-movie-url" placeholder="https://example.com/watch/movie"></div>
                 <div class="staff-form-group" style="margin:0;min-width:240px;flex:1.5;"><label>Description</label><input id="staff-movie-desc" placeholder="Short description"></div>
                 <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-btn" style="margin-bottom:2px;">Save Movie</button>
                 <button type="button" class="staff-btn" id="staff-reset-movie-btn" style="margin-bottom:2px;">Clear</button>
@@ -6862,7 +6862,7 @@
         }
         if (pendingGame) { showConfirmModal(pendingGame); pendingGame = null; }
         if (pendingMovie) {
-          openGameModal(pendingMovie.title, pendingMovie.url, { systemOrdered: true });
+          navigateToMovieUrl(pendingMovie);
           pendingMovie = null;
         }
         sidebar.classList.add('active');
@@ -7062,6 +7062,28 @@
       return true;
     }
 
+    function resolveMovieUrl(url) {
+      const source = String(url || '').trim();
+      if (!source) return null;
+      try {
+        const parsed = new URL(source, window.location.href);
+        if (!/^https?:$/i.test(parsed.protocol)) return null;
+        return parsed.toString();
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function navigateToMovieUrl(movie) {
+      const resolved = resolveMovieUrl(movie?.url);
+      if (!resolved) {
+        showNotification('This movie has no valid movie URL yet.', 'error');
+        return false;
+      }
+      window.location.assign(resolved);
+      return true;
+    }
+
     async function logGamePlay(gameId, gameTitle) {
       if (!currentUser) return;
       try {
@@ -7099,16 +7121,13 @@
     }
 
     async function handleMovieClick(movie) {
-      if (!movie?.url) {
-        showNotification('This movie has no trailer URL yet.', 'error');
-        return;
-      }
+      if (!movie?.url) { showNotification('This movie has no movie URL yet.', 'error'); return; }
       if (!currentUser) {
         pendingMovie = movie;
         noticeModal.style.display = 'flex';
         return;
       }
-      openGameModal(movie.title, movie.url, { systemOrdered: true });
+      navigateToMovieUrl(movie);
     }
 
     async function toggleFavoriteMovie(movieId) {
@@ -7215,8 +7234,7 @@
                 <span><i class="fas fa-calendar-alt"></i> ${movie.releaseYear || 'N/A'}</span>
                 <span><i class="fas fa-tag"></i> ${escapeHtml(movie.rankCategory || movie.category || 'Movie')}</span>
               </div>
-              <p>${escapeHtml(movie.description || 'No description available.')}</p>
-              <button class="slide-play-button movie-watch-button" data-movie-id="${escapeHtml(movie.id)}">WATCH TRAILER</button>
+              <button class="slide-play-button movie-watch-button" data-movie-id="${escapeHtml(movie.id)}">OPEN MOVIE</button>
             </div>
           </div>
         `;
