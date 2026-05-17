@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - Movies</title>
-  <meta http-equiv="refresh" content="0; url=games.html?page=movies-page">
   <script>
     (function () {
       const target = new URL("games.html", window.location.href);
       target.searchParams.set("page", "movies-page");
       const sourceParams = new URLSearchParams(window.location.search);
-      const movieId = String(sourceParams.get("movie") || "").trim();
-      if (movieId) target.searchParams.set("movie", movieId);
+      ["movie", "play", "cat", "q"].forEach((key) => {
+        const value = String(sourceParams.get(key) || "").trim();
+        if (value) target.searchParams.set(key, value);
+      });
       window.location.replace(target.toString());
     })();
   </script>

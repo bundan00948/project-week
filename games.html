@@ -1002,7 +1002,7 @@
     }
     .movies-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 14px;
     }
     .movie-card {
@@ -1014,6 +1014,8 @@
       box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
+      content-visibility: auto;
+      contain-intrinsic-size: 280px 250px;
     }
     .movie-card:hover {
       transform: translateY(-3px);
@@ -6912,7 +6914,9 @@
 
     let pendingGame = null;
     let pendingMovie = null;
+    let pendingMovieShouldPlay = false;
     let activeMoviePreview = null;
+    let activeMoviePlaybackId = '';
     let selectedFriend = null;
     let currentUser = null;
     let shopPacksUnsub = null;
@@ -7363,8 +7367,16 @@
         }
         if (pendingGame) { showConfirmModal(pendingGame); pendingGame = null; }
         if (pendingMovie) {
-          openMovieInfoModal(pendingMovie, { syncUrl: true, pushHistory: false });
+          const queuedMovie = pendingMovie;
+          const shouldPlay = pendingMovieShouldPlay;
           pendingMovie = null;
+          pendingMovieShouldPlay = false;
+          if (shouldPlay) beginMoviePlayback(queuedMovie);
+          else openMovieInfoModal(queuedMovie, { syncUrl: true, pushHistory: false });
+        }
+        if (String(new URLSearchParams(window.location.search).get('page') || '').trim() === 'movies-page' && appMoviesDataCache) {
+          maybeOpenMovieFromUrlParam({ closeIfMissing: true });
+          maybePlayMovieFromUrlParam();
         }
         sidebar.classList.add('active');
         mainContent.classList.add('sidebar-active');
@@ -7469,7 +7481,7 @@
     document.getElementById('closeSignupModal').addEventListener('click', () => { signupModal.style.display = 'none'; });
     document.getElementById('noticeLoginBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; loginModal.style.display = 'flex'; });
     document.getElementById('noticeSignupBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; signupModal.style.display = 'flex'; });
-    document.getElementById('noticeCancelBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; });
+    document.getElementById('noticeCancelBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; pendingMovieShouldPlay = false; });
 
     // ========== Game confirmation and play logging ==========
     function showConfirmModal(game) {
@@ -7545,6 +7557,10 @@
         gameFrame.dataset.allowedHost = '';
         gameFrame.dataset.systemOrdered = '';
       }
+      if (activeMoviePlaybackId) {
+        activeMoviePlaybackId = '';
+        updateMoviesQueryParams({ play: null }, { pushHistory: false });
+      }
       document.body.style.overflow = 'auto';
       exitGameFullscreen();
       syncGameFullscreenUi();
@@ -7595,22 +7611,33 @@
       return String(new URLSearchParams(window.location.search).get('movie') || '').trim();
     }
 
-    function updateMoviePreViewUrl(movieId, options = {}) {
-      const nextMovieId = String(movieId || '').trim();
+    function getRequestedMoviePlayIdFromUrl() {
+      return String(new URLSearchParams(window.location.search).get('play') || '').trim();
+    }
+
+    function updateMoviesQueryParams(patch = {}, options = {}) {
       const url = new URL(window.location.href);
-      if (nextMovieId) url.searchParams.set('movie', nextMovieId);
-      else url.searchParams.delete('movie');
-      if (nextMovieId && url.searchParams.get('page') !== 'movies-page') {
+      const keys = ['movie', 'play', 'cat', 'q'];
+      keys.forEach((k) => {
+        if (!(k in patch)) return;
+        const value = String(patch[k] ?? '').trim();
+        if (!value) url.searchParams.delete(k);
+        else url.searchParams.set(k, value);
+      });
+      const hasMovieState = keys.some((k) => String(url.searchParams.get(k) || '').trim());
+      const currentPage = String(url.searchParams.get('page') || '').trim();
+      if (hasMovieState && currentPage !== 'movies-page') {
         url.searchParams.set('page', 'movies-page');
       }
       const next = `${url.pathname}?${url.searchParams.toString()}`;
       const current = `${window.location.pathname}${window.location.search}`;
       if (next === current) return;
-      if (options.pushHistory) {
-        window.history.pushState(null, '', next);
-      } else {
-        window.history.replaceState(null, '', next);
-      }
+      if (options.pushHistory) window.history.pushState(null, '', next);
+      else window.history.replaceState(null, '', next);
+    }
+
+    function updateMoviePreViewUrl(movieId, options = {}) {
+      updateMoviesQueryParams({ movie: movieId || null, play: null }, options);
     }
 
     function findMovieById(movieId) {
@@ -7637,6 +7664,28 @@
         return false;
       }
       openMovieInfoModal(movie, { syncUrl: false });
+      return true;
+    }
+
+    function maybePlayMovieFromUrlParam() {
+      const requestedPlayId = getRequestedMoviePlayIdFromUrl();
+      if (!requestedPlayId) return false;
+      const movie = findMovieById(requestedPlayId) || findMovieById(getRequestedMovieIdFromUrl());
+      if (!movie) {
+        updateMoviesQueryParams({ play: null }, { pushHistory: false });
+        return false;
+      }
+      if (!currentUser) {
+        pendingMovie = movie;
+        pendingMovieShouldPlay = true;
+        noticeModal.style.display = 'flex';
+        return false;
+      }
+      const opened = openGameModal(movie.title, movie.url, { systemOrdered: true });
+      if (!opened) return false;
+      activeMoviePlaybackId = String(movie.id || '');
+      closeMovieInfoModal({ skipUrlUpdate: true });
+      updateMoviesQueryParams({ movie: movie.id || null, play: movie.id || null }, { pushHistory: false });
       return true;
     }
 
@@ -7698,7 +7747,7 @@
         movieInfoWatchBtn.textContent = canWatch ? 'WATCH MOVIE' : 'MOVIE LINK NOT SET';
       }
       if (options.syncUrl !== false) {
-        updateMoviePreViewUrl(movie.id, { pushHistory: Boolean(options.pushHistory) });
+        updateMoviesQueryParams({ movie: movie.id || null, play: null }, { pushHistory: Boolean(options.pushHistory) });
       }
       movieInfoModal.style.display = 'block';
       document.body.style.overflow = 'hidden';
@@ -7709,12 +7758,15 @@
       if (!movie?.url) { showNotification('This movie has no movie URL yet.', 'error'); return; }
       if (!currentUser) {
         pendingMovie = movie;
+        pendingMovieShouldPlay = true;
         noticeModal.style.display = 'flex';
         return;
       }
       const opened = openGameModal(movie.title, movie.url, { systemOrdered: true });
       if (!opened) return;
-      closeMovieInfoModal();
+      activeMoviePlaybackId = String(movie.id || '');
+      closeMovieInfoModal({ skipUrlUpdate: true });
+      updateMoviesQueryParams({ movie: movie.id || null, play: movie.id || null }, { pushHistory: true });
     }
 
     async function logGamePlay(gameId, gameTitle) {
@@ -7755,6 +7807,7 @@
 
     async function handleMovieClick(movie) {
       if (!movie) return;
+      pendingMovieShouldPlay = false;
       openMovieInfoModal(movie, { syncUrl: true, pushHistory: true });
     }
 
@@ -7926,6 +7979,7 @@
         btn.addEventListener('click', () => {
           activeMovieCategory = cat.key;
           renderMovieGridCards();
+          updateMoviesQueryParams({ cat: activeMovieCategory, movie: null, play: null }, { pushHistory: true });
         });
         movieCategoryButtons.appendChild(btn);
       });
@@ -8004,10 +8058,27 @@
       renderMovieGridCards();
     }
 
+    function applyMoviesFiltersFromUrl(moviesData) {
+      const params = new URLSearchParams(window.location.search);
+      const requestedCategory = String(params.get('cat') || '').trim();
+      const validCategories = Object.keys(moviesData?.moviesByCategory || {});
+      if (requestedCategory && validCategories.includes(requestedCategory)) {
+        activeMovieCategory = requestedCategory;
+      } else if (!activeMovieCategory || !validCategories.includes(activeMovieCategory)) {
+        activeMovieCategory = moviesData?.categories?.[0]?.key || '';
+      }
+      movieSearchQuery = String(params.get('q') || '').trim().toLowerCase();
+      if (movieSearchInput && movieSearchInput.value.toLowerCase() !== movieSearchQuery) {
+        movieSearchInput.value = movieSearchQuery;
+      }
+    }
+
     async function mountMoviesPageContent() {
       if (moviesPageMounted && appMoviesDataCache) {
+        applyMoviesFiltersFromUrl(appMoviesDataCache);
         renderMovieGridCards();
         maybeOpenMovieFromUrlParam({ closeIfMissing: true });
+        maybePlayMovieFromUrlParam();
         return;
       }
       if (moviesPageMountPromise) return moviesPageMountPromise;
@@ -8017,8 +8088,10 @@
           data = await getMovies();
           appMoviesDataCache = data;
         }
+        applyMoviesFiltersFromUrl(data);
         renderMoviesPage(data);
         maybeOpenMovieFromUrlParam({ closeIfMissing: true });
+        maybePlayMovieFromUrlParam();
         movieSearchInput?.removeEventListener('input', handleMovieSearchInput);
         movieSearchInput?.addEventListener('input', handleMovieSearchInput);
         moviesPageMounted = true;
@@ -8030,6 +8103,7 @@
     function handleMovieSearchInput(e) {
       movieSearchQuery = String(e?.target?.value || '').trim().toLowerCase();
       renderMovieGridCards();
+      updateMoviesQueryParams({ q: movieSearchQuery || null, movie: null, play: null }, { pushHistory: false });
     }
 
     async function refreshMoviesPageFromAdmin() {
