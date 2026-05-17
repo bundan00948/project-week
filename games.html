@@ -6916,7 +6916,6 @@
     let pendingMovie = null;
     let pendingMovieShouldPlay = false;
     let activeMoviePreview = null;
-    let activeMoviePlaybackId = '';
     let selectedFriend = null;
     let currentUser = null;
     let shopPacksUnsub = null;
@@ -7557,10 +7556,6 @@
         gameFrame.dataset.allowedHost = '';
         gameFrame.dataset.systemOrdered = '';
       }
-      if (activeMoviePlaybackId) {
-        activeMoviePlaybackId = '';
-        updateMoviesQueryParams({ play: null }, { pushHistory: false });
-      }
       document.body.style.overflow = 'auto';
       exitGameFullscreen();
       syncGameFullscreenUi();
@@ -7605,6 +7600,12 @@
       } catch (_) {
         return null;
       }
+    }
+
+    function buildMovieWatchRedirectUrl(movieUrl) {
+      const resolvedMovieUrl = resolveMovieUrl(movieUrl);
+      if (!resolvedMovieUrl) return null;
+      return `https://macautraffic.com/MOVIE/=?${encodeURIComponent(resolvedMovieUrl)}`;
     }
 
     function getRequestedMovieIdFromUrl() {
@@ -7681,11 +7682,14 @@
         noticeModal.style.display = 'flex';
         return false;
       }
-      const opened = openGameModal(movie.title, movie.url, { systemOrdered: true });
-      if (!opened) return false;
-      activeMoviePlaybackId = String(movie.id || '');
+      const redirectUrl = buildMovieWatchRedirectUrl(movie.url);
+      if (!redirectUrl) {
+        showNotification('This movie has no valid movie URL yet.', 'error');
+        updateMoviesQueryParams({ play: null }, { pushHistory: false });
+        return false;
+      }
       closeMovieInfoModal({ skipUrlUpdate: true });
-      updateMoviesQueryParams({ movie: movie.id || null, play: movie.id || null }, { pushHistory: false });
+      window.location.assign(redirectUrl);
       return true;
     }
 
@@ -7755,18 +7759,16 @@
 
     function beginMoviePlayback(movie) {
       if (!movie) return;
-      if (!movie?.url) { showNotification('This movie has no movie URL yet.', 'error'); return; }
+      const redirectUrl = buildMovieWatchRedirectUrl(movie.url);
+      if (!redirectUrl) { showNotification('This movie has no valid movie URL yet.', 'error'); return; }
       if (!currentUser) {
         pendingMovie = movie;
         pendingMovieShouldPlay = true;
         noticeModal.style.display = 'flex';
         return;
       }
-      const opened = openGameModal(movie.title, movie.url, { systemOrdered: true });
-      if (!opened) return;
-      activeMoviePlaybackId = String(movie.id || '');
       closeMovieInfoModal({ skipUrlUpdate: true });
-      updateMoviesQueryParams({ movie: movie.id || null, play: movie.id || null }, { pushHistory: true });
+      window.location.assign(redirectUrl);
     }
 
     async function logGamePlay(gameId, gameTitle) {
