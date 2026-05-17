@@ -7706,15 +7706,15 @@
 
     function beginMoviePlayback(movie) {
       if (!movie) return;
-      const resolved = resolveMovieUrl(movie.url);
-      if (!resolved) { showNotification('This movie has no valid movie URL yet.', 'error'); return; }
+      if (!movie?.url) { showNotification('This movie has no movie URL yet.', 'error'); return; }
       if (!currentUser) {
         pendingMovie = movie;
         noticeModal.style.display = 'flex';
         return;
       }
-      closeMovieInfoModal({ skipUrlUpdate: true });
-      window.location.assign(resolved);
+      const opened = openGameModal(movie.title, movie.url, { systemOrdered: true });
+      if (!opened) return;
+      closeMovieInfoModal();
     }
 
     async function logGamePlay(gameId, gameTitle) {
