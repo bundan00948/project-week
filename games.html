@@ -4855,6 +4855,14 @@
       border-color: rgba(42,255,158,0.65);
       box-shadow: 0 6px 22px rgba(42,255,158,0.28);
     }
+    .staff-sub-tab.is-locked,
+    .staff-sub-tab:disabled {
+      opacity: 0.45;
+      filter: grayscale(0.25);
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
     .staff-section {
       display: none;
       content-visibility: hidden;
@@ -4892,6 +4900,104 @@
       gap: 16px;
       margin-bottom: 28px;
     }
+    .staff-dashboard-overview {
+      margin-bottom: 18px;
+    }
+    .staff-overview-main {
+      background: radial-gradient(circle at 0% 0%, rgba(42,255,158,0.2), rgba(18,26,35,0.95) 45%, rgba(10,14,20,0.95) 100%);
+      border: 1px solid rgba(42,255,158,0.24);
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 12px 34px rgba(0,0,0,0.34), inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+    .staff-overview-main h3 {
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.015em;
+    }
+    .staff-overview-sub {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+    .staff-overview-meta {
+      text-align: right;
+      min-width: 180px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .staff-overview-meta strong {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .staff-perm-pills {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .staff-perm-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(42,255,158,0.22);
+      background: rgba(42,255,158,0.1);
+      color: #bffff0;
+      font-size: 0.73rem;
+      font-weight: 700;
+    }
+    .staff-dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+    .staff-quick-actions-card .staff-flex-row {
+      gap: 10px;
+    }
+    .staff-access-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .staff-access-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.82rem;
+    }
+    .staff-access-item strong {
+      color: var(--text-primary);
+    }
+    .staff-access-pill {
+      font-size: 0.71rem;
+      border-radius: 999px;
+      padding: 3px 9px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    .staff-access-item.is-on {
+      border-color: rgba(42,255,158,0.25);
+      background: rgba(42,255,158,0.07);
+    }
+    .staff-access-item.is-on .staff-access-pill {
+      color: #02170d;
+      background: linear-gradient(135deg, #61ffc0, #2AFF9E);
+    }
+    .staff-access-item.is-off .staff-access-pill {
+      color: #ffd3dd;
+      background: rgba(255,61,108,0.18);
+      border: 1px solid rgba(255,61,108,0.35);
+    }
     .staff-stat-card {
       background: rgba(17,22,31,0.8);
       border: 1px solid rgba(42,255,158,0.12);
@@ -4923,6 +5029,15 @@
     }
     .staff-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
     .staff-btn:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .staff-btn.is-disabled,
+    .staff-btn:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+      pointer-events: none;
+      filter: saturate(0.35);
+      box-shadow: none;
+      transform: none;
+    }
     .staff-btn-primary {
       background: linear-gradient(145deg, #3dffb0 0%, #2AFF9E 40%, #12c77a 100%);
       color: #04120c;
@@ -4993,14 +5108,67 @@
       gap: 8px;
       margin-top: 8px;
     }
+    #staff-title-perms.title-perm-grid {
+      display: block;
+      margin-top: 0;
+    }
+    .title-perm-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0 4px;
+    }
+    .title-perm-count {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .title-perm-section {
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .title-perm-section-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      font-weight: 800;
+      color: #c9f2df;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
     .title-perm-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 8px;
       font-size: 0.82rem;
       padding: 6px 10px;
       background: rgba(255,255,255,0.03);
       border-radius: 10px;
+      border: 1px solid transparent;
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+    .title-perm-item.is-selected {
+      border-color: rgba(42,255,158,0.34);
+      background: rgba(42,255,158,0.08);
+    }
+    .title-perm-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .title-perm-text strong {
+      color: var(--text-primary);
+      font-size: 0.79rem;
+      font-weight: 800;
+    }
+    .title-perm-meta {
+      color: var(--text-secondary);
+      font-size: 0.71rem;
+      line-height: 1.35;
     }
     .title-perm-item input[type="checkbox"] {
       width: 18px;
@@ -5399,6 +5567,9 @@
       .staff-sub-tabs { gap: 4px; }
       .staff-sub-tab { font-size: 0.72rem; padding: 6px 10px; }
       .staff-stats-grid { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
+      .staff-overview-main { flex-direction: column; }
+      .staff-overview-meta { text-align: left; min-width: 0; }
+      .staff-dashboard-grid { grid-template-columns: 1fr; }
       .staff-search { width: 100%; }
       .chat-viewer-container { flex-direction: column; height: auto; }
       .chat-viewer-sidebar { width: 100%; max-height: 200px; }
@@ -5996,8 +6167,12 @@
 
           <!-- Staff Dashboard -->
           <div class="staff-section active" id="staff-dashboard">
+            <div class="staff-dashboard-overview" id="staff-dashboard-overview"></div>
             <div class="staff-stats-grid" id="staff-stats-grid"></div>
-            <div class="staff-card"><h3>Quick Actions</h3><div class="staff-flex-row" style="margin-top:14px;"><button class="staff-btn staff-btn-primary" id="staff-quick-add-game"><i class="fas fa-plus"></i> Add Game</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-pack"><i class="fas fa-plus"></i> Add Pack</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-title"><i class="fas fa-plus"></i> Add Title</button></div></div>
+            <div class="staff-dashboard-grid">
+              <div class="staff-card staff-quick-actions-card"><h3>Quick Actions</h3><div class="staff-flex-row" style="margin-top:14px;"><button class="staff-btn staff-btn-primary" id="staff-quick-add-game"><i class="fas fa-plus"></i> Add Game</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-movie"><i class="fas fa-film"></i> Add Movie</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-pack"><i class="fas fa-plus"></i> Add Pack</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-title"><i class="fas fa-plus"></i> Add Title</button><button class="staff-btn" id="staff-quick-add-mission"><i class="fas fa-tasks"></i> New Mission</button></div></div>
+              <div class="staff-card"><h3>Module Access</h3><div class="staff-access-grid" id="staff-dashboard-access-list"></div></div>
+            </div>
           </div>
 
           <!-- Staff Games -->
@@ -6543,7 +6718,7 @@
 
   <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
 
-  <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
+  <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-toolbar"><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="all">All</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="none">None</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="moderation">Moderation</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="content">Content</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="economy">Economy</button></div><div class="title-perm-count" id="staff-title-perm-count">0 / 0 selected</div><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
 
   <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
 
@@ -9243,6 +9418,11 @@
     }
 
     async function loadStaffRaritySitePanel() {
+      if (!canManageSiteConfig()) {
+        const list = document.getElementById('staff-rarity-defs-list');
+        if (list) list.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        return;
+      }
       await refreshRarityOrderFromServer();
       renderStaffRarityDefsList();
       try {
@@ -9283,6 +9463,12 @@
     async function loadStaffStarBadgesPanel() {
       const pick = document.getElementById('staff-star-badge-pick');
       const status = document.getElementById('staff-star-badge-status');
+      if (!canManageStarBadges()) {
+        if (status) status.textContent = 'No permission.';
+        const list = document.getElementById('staff-star-badge-rules-list');
+        if (list) list.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        return;
+      }
       if (status) status.textContent = '';
       try {
         const s = await getDoc(doc(db, 'siteConfig', 'settings'));
@@ -11327,26 +11513,32 @@
 
     // ========== Permission System ==========
     const ALL_PERMISSIONS = [
-      { key: 'manage_games', label: 'Manage Games', desc: 'Add, edit, delete games' },
-      { key: 'manage_tags', label: 'Manage Tags', desc: 'Add and delete tags' },
-      { key: 'manage_packs', label: 'Manage Packs & Items', desc: 'Create, edit, delete packs' },
-      { key: 'manage_users', label: 'Manage Users', desc: 'Edit user profiles, coins, stars' },
-      { key: 'manage_titles', label: 'Manage Titles', desc: 'Create and edit titles' },
-      { key: 'manage_badges', label: 'Manage Badges', desc: 'Create and assign badges' },
-      { key: 'view_plays', label: 'View Play Logs & IP', desc: 'View play history and IP' },
-      { key: 'delete_plays', label: 'Delete Play Records', desc: 'Remove play records' },
-      { key: 'view_chats', label: 'View All Chats', desc: 'View global and private chats' },
-      { key: 'delete_chats', label: 'Delete Chat Messages', desc: 'Remove chat messages' },
-      { key: 'manage_inventory', label: 'Manage User Inventory', desc: 'View and delete user items' },
-      { key: 'assign_titles', label: 'Assign Titles to Users', desc: 'Change user titles' },
-      { key: 'assign_badges', label: 'Assign Badges to Users', desc: 'Give badges to users' },
-      { key: 'custom_avatar', label: 'Set Custom Avatar for Users', desc: 'Change any user avatar' },
-      { key: 'create_gradient_titles', label: 'Create Gradient Titles', desc: 'Create titles with gradient colors' },
-      { key: 'manage_permissions', label: 'Manage Title Permissions', desc: 'Edit permissions on any title' },
-      { key: 'mute_users', label: 'Mute Users', desc: 'Temp or perm mute users from chat' },
-      { key: 'ban_users', label: 'Ban Users', desc: 'Temp or perm ban users from logging in' },
-      { key: 'view_dashboard', label: 'View Staff Dashboard', desc: 'See stats overview' },
-      { key: 'staff_access', label: 'Staff Panel Access', desc: 'Can open the Staff Panel' },
+      { key: 'staff_access', label: 'Staff Panel Access', desc: 'Can open the Staff Panel', group: 'Core' },
+      { key: 'view_dashboard', label: 'View Staff Dashboard', desc: 'See stats overview', group: 'Core' },
+      { key: 'manage_games', label: 'Manage Games', desc: 'Add, edit, delete games', group: 'Content' },
+      { key: 'manage_movies', label: 'Manage Movies', desc: 'Create, edit, delete movies', group: 'Content' },
+      { key: 'manage_movie_categories', label: 'Manage Movie Categories', desc: 'Maintain movie category visuals and order', group: 'Content' },
+      { key: 'manage_tags', label: 'Manage Tags', desc: 'Add and delete tags', group: 'Content' },
+      { key: 'manage_missions', label: 'Manage Missions', desc: 'Create and update mission rewards', group: 'Content' },
+      { key: 'manage_packs', label: 'Manage Packs & Items', desc: 'Create, edit, delete packs', group: 'Economy' },
+      { key: 'manage_users', label: 'Manage Users', desc: 'Edit user profiles, coins, stars', group: 'Moderation' },
+      { key: 'manage_stars', label: 'Manage User Stars', desc: 'Use the stars adjustment panel', group: 'Economy' },
+      { key: 'manage_inventory', label: 'Manage User Inventory', desc: 'View and delete user items', group: 'Economy' },
+      { key: 'view_plays', label: 'View Play Logs & IP', desc: 'View play history and IP', group: 'Moderation' },
+      { key: 'delete_plays', label: 'Delete Play Records', desc: 'Remove play records', group: 'Moderation' },
+      { key: 'view_chats', label: 'View All Chats', desc: 'View global and private chats', group: 'Moderation' },
+      { key: 'delete_chats', label: 'Delete Chat Messages', desc: 'Remove chat messages', group: 'Moderation' },
+      { key: 'mute_users', label: 'Mute Users', desc: 'Temp or perm mute users from chat', group: 'Moderation' },
+      { key: 'ban_users', label: 'Ban Users', desc: 'Temp or perm ban users from logging in', group: 'Moderation' },
+      { key: 'assign_titles', label: 'Assign Titles to Users', desc: 'Change user titles', group: 'Roles' },
+      { key: 'assign_badges', label: 'Assign Badges to Users', desc: 'Give badges to users', group: 'Roles' },
+      { key: 'custom_avatar', label: 'Set Custom Avatar for Users', desc: 'Change any user avatar', group: 'Roles' },
+      { key: 'manage_titles', label: 'Manage Titles', desc: 'Create and edit titles', group: 'Roles' },
+      { key: 'manage_permissions', label: 'Manage Title Permissions', desc: 'Edit permissions on any title', group: 'Roles' },
+      { key: 'create_gradient_titles', label: 'Create Gradient Titles', desc: 'Create titles with gradient colors', group: 'Roles' },
+      { key: 'manage_badges', label: 'Manage Badges', desc: 'Create and assign badges', group: 'Roles' },
+      { key: 'manage_star_badges', label: 'Manage Star Badge Rules', desc: 'Configure star-threshold badge automation', group: 'Economy' },
+      { key: 'manage_site_config', label: 'Manage Site Config', desc: 'Edit rarity visuals and daily reward settings', group: 'System' },
     ];
 
     let currentUserPermissions = [];
@@ -11380,6 +11572,34 @@
 
     function hasPermission(perm) {
       return currentUserPermissions.includes(perm) || currentUserTitle === 'Owner';
+    }
+
+    function hasAnyPermission(perms = []) {
+      return perms.some((perm) => hasPermission(perm));
+    }
+
+    function canManageMovies() {
+      return hasAnyPermission(['manage_movies', 'manage_games']);
+    }
+
+    function canManageMovieCategories() {
+      return hasAnyPermission(['manage_movie_categories', 'manage_movies', 'manage_games']);
+    }
+
+    function canManageMissions() {
+      return hasAnyPermission(['manage_missions', 'manage_games']);
+    }
+
+    function canManageSiteConfig() {
+      return hasAnyPermission(['manage_site_config', 'manage_packs']);
+    }
+
+    function canManageStars() {
+      return hasAnyPermission(['manage_stars', 'manage_users']);
+    }
+
+    function canManageStarBadges() {
+      return hasAnyPermission(['manage_star_badges', 'manage_badges', 'manage_users']);
     }
 
     async function checkStaffAccess(user) {
@@ -11622,38 +11842,113 @@
     }
 
     // ========== Staff Panel Main ==========
+    const STAFF_TAB_ACCESS_RULES = {
+      'staff-dashboard': () => hasPermission('view_dashboard'),
+      'staff-games': () => hasPermission('manage_games'),
+      'staff-movies': () => canManageMovies(),
+      'staff-tags': () => hasPermission('manage_tags'),
+      'staff-plays': () => hasPermission('view_plays'),
+      'staff-packs': () => hasPermission('manage_packs'),
+      'staff-users': () => hasPermission('manage_users'),
+      'staff-titles': () => hasPermission('manage_titles'),
+      'staff-badges': () => hasPermission('manage_badges'),
+      'staff-rarity': () => canManageSiteConfig(),
+      'staff-missions': () => canManageMissions(),
+      'staff-stars': () => canManageStars(),
+      'staff-star-badges': () => canManageStarBadges(),
+      'staff-chatview': () => hasPermission('view_chats'),
+    };
+    let staffSubTabsBound = false;
+
+    function canAccessStaffTab(tabId) {
+      const checker = STAFF_TAB_ACCESS_RULES[tabId];
+      return checker ? !!checker() : true;
+    }
+
+    function runStaffTabLoader(tabId) {
+      switch (tabId) {
+        case 'staff-dashboard': loadStaffDashboard(); break;
+        case 'staff-games': loadStaffGames(); break;
+        case 'staff-movies': loadStaffMoviesPanel(); break;
+        case 'staff-tags': loadStaffTags(); break;
+        case 'staff-plays': loadStaffPlays(); break;
+        case 'staff-packs': loadStaffPacks(); break;
+        case 'staff-users': loadStaffUsers(); break;
+        case 'staff-titles': loadStaffTitles(); break;
+        case 'staff-badges': loadStaffBadges(); break;
+        case 'staff-missions': loadStaffMissions(); break;
+        case 'staff-star-badges': loadStaffStarBadgesPanel(); break;
+        case 'staff-chatview': loadStaffChatViewer(); break;
+        case 'staff-rarity': loadStaffRaritySitePanel(); break;
+      }
+    }
+
+    function switchStaffSection(tabId, options = {}) {
+      const tab = document.querySelector(`.staff-sub-tab[data-staff-tab="${tabId}"]`);
+      if (!tab || tab.disabled) return false;
+      document.querySelectorAll('.staff-sub-tab[data-staff-tab]').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.staff-section').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      if (!options.skipLoad) runStaffTabLoader(tabId);
+      return true;
+    }
+
+    function refreshStaffTabPermissions(preferredTab = 'staff-dashboard') {
+      const tabs = Array.from(document.querySelectorAll('.staff-sub-tab[data-staff-tab]'));
+      let firstAllowed = '';
+      let activeAllowed = '';
+      tabs.forEach((tab) => {
+        const tabId = tab.dataset.staffTab;
+        const allowed = canAccessStaffTab(tabId);
+        tab.disabled = !allowed;
+        tab.classList.toggle('is-locked', !allowed);
+        tab.setAttribute('aria-disabled', allowed ? 'false' : 'true');
+        const label = tab.textContent.replace(/\s+/g, ' ').trim();
+        tab.title = allowed ? label : `${label} (no permission)`;
+        if (allowed && !firstAllowed) firstAllowed = tabId;
+        if (allowed && tab.classList.contains('active')) activeAllowed = tabId;
+      });
+      const desired = canAccessStaffTab(preferredTab)
+        ? preferredTab
+        : (activeAllowed || firstAllowed);
+      if (desired) switchStaffSection(desired);
+    }
+
+    function refreshStaffQuickActions() {
+      const setState = (id, allowed) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.disabled = !allowed;
+        btn.classList.toggle('is-disabled', !allowed);
+        btn.title = allowed ? btn.textContent.trim() : 'No permission';
+      };
+      setState('staff-quick-add-game', hasPermission('manage_games'));
+      setState('staff-quick-add-movie', canManageMovies());
+      setState('staff-quick-add-pack', hasPermission('manage_packs'));
+      setState('staff-quick-add-title', hasPermission('manage_titles'));
+      setState('staff-quick-add-mission', canManageMissions());
+    }
+
     async function loadStaffPanel() {
       if (!hasPermission('staff_access')) return;
       setupStaffSubTabs();
-      loadStaffDashboard();
+      refreshStaffTabPermissions('staff-dashboard');
     }
 
     function setupStaffSubTabs() {
-      document.querySelectorAll('.staff-sub-tab[data-staff-tab]').forEach(tab => {
+      if (staffSubTabsBound) return;
+      document.querySelectorAll('.staff-sub-tab[data-staff-tab]').forEach((tab) => {
         tab.addEventListener('click', () => {
-          document.querySelectorAll('.staff-sub-tab[data-staff-tab]').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          document.querySelectorAll('.staff-section').forEach(s => s.classList.remove('active'));
-          const target = document.getElementById(tab.dataset.staffTab);
-          if (target) target.classList.add('active');
-          switch(tab.dataset.staffTab) {
-            case 'staff-dashboard': loadStaffDashboard(); break;
-            case 'staff-games': loadStaffGames(); break;
-            case 'staff-movies': loadStaffMoviesPanel(); break;
-            case 'staff-tags': loadStaffTags(); break;
-            case 'staff-plays': loadStaffPlays(); break;
-            case 'staff-packs': loadStaffPacks(); break;
-            case 'staff-users': loadStaffUsers(); break;
-            case 'staff-titles': loadStaffTitles(); break;
-            case 'staff-badges': loadStaffBadges(); break;
-            case 'staff-missions': loadStaffMissions(); break;
-            case 'staff-stars': break;
-            case 'staff-star-badges': loadStaffStarBadgesPanel(); break;
-            case 'staff-chatview': loadStaffChatViewer(); break;
-            case 'staff-rarity': loadStaffRaritySitePanel(); break;
+          if (tab.disabled || !canAccessStaffTab(tab.dataset.staffTab)) {
+            showNotification('No permission for this module', 'error');
+            return;
           }
+          switchStaffSection(tab.dataset.staffTab);
         });
       });
+      staffSubTabsBound = true;
     }
 
     // ========== Staff Dashboard ==========
@@ -11665,6 +11960,26 @@
         getDocs(collection(db,"titles")), getDocs(collection(db,"badges")),
         getDocs(collection(db,"movies")), getDocs(collection(db,"movieCategories"))
       ]);
+      const overviewEl = document.getElementById('staff-dashboard-overview');
+      const accessListEl = document.getElementById('staff-dashboard-access-list');
+      const friendlyPerms = ALL_PERMISSIONS.filter((perm) => currentUserPermissions.includes(perm.key)).slice(0, 8);
+      if (overviewEl) {
+        overviewEl.innerHTML = `
+          <div class="staff-overview-main">
+            <div>
+              <h3>Operations Center</h3>
+              <div class="staff-overview-sub">${escapeHtml(currentUserTitle)} title · ${currentUserPermissions.length} permission${currentUserPermissions.length === 1 ? '' : 's'} active</div>
+              <div class="staff-perm-pills">
+                ${friendlyPerms.length ? friendlyPerms.map((perm) => `<span class="staff-perm-pill">${escapeHtml(perm.label)}</span>`).join('') : '<span class="staff-perm-pill">No delegated permissions</span>'}
+              </div>
+            </div>
+            <div class="staff-overview-meta">
+              <strong>Live sync enabled</strong>
+              Updated ${new Date().toLocaleString()}
+            </div>
+          </div>
+        `;
+      }
       document.getElementById('staff-stats-grid').innerHTML = `
         <div class="staff-stat-card"><h4>Total Games</h4><div class="staff-stat-number">${gamesSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Total Movies</h4><div class="staff-stat-number">${moviesSnap.size}</div></div>
@@ -11675,6 +11990,21 @@
         <div class="staff-stat-card"><h4>Titles</h4><div class="staff-stat-number">${titlesSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Badges</h4><div class="staff-stat-number">${badgesSnap.size}</div></div>
       `;
+      if (accessListEl) {
+        const rows = Object.keys(STAFF_TAB_ACCESS_RULES).map((tabId) => {
+          const tabEl = document.querySelector(`.staff-sub-tab[data-staff-tab="${tabId}"]`);
+          const label = tabEl ? tabEl.textContent.replace(/\s+/g, ' ').trim() : tabId;
+          const allowed = canAccessStaffTab(tabId);
+          return `
+            <div class="staff-access-item ${allowed ? 'is-on' : 'is-off'}">
+              <strong>${escapeHtml(label)}</strong>
+              <span class="staff-access-pill">${allowed ? 'allowed' : 'restricted'}</span>
+            </div>
+          `;
+        });
+        accessListEl.innerHTML = rows.join('');
+      }
+      refreshStaffQuickActions();
     }
 
     // ========== Staff Games ==========
@@ -11803,7 +12133,7 @@
     }
 
     async function loadStaffMovieCategories() {
-      if (!hasPermission('manage_games')) return;
+      if (!canManageMovieCategories()) return;
       let snap;
       try {
         snap = await getDocs(query(collection(db, 'movieCategories'), orderBy('order', 'asc')));
@@ -11872,7 +12202,7 @@
     }
 
     async function loadStaffMovies() {
-      if (!hasPermission('manage_games')) return;
+      if (!canManageMovies()) return;
       const cats = staffMovieCategoriesCache.length ? staffMovieCategoriesCache : [];
       const snap = await getDocs(collection(db, 'movies'));
       staffMoviesCache = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, cats));
@@ -11882,14 +12212,19 @@
     }
 
     async function loadStaffMoviesPanel() {
-      if (!hasPermission('manage_games')) {
+      if (!canManageMovies()) {
         const catList = document.getElementById('staff-movie-categories-list');
         const movieTable = document.getElementById('staff-movies-table');
         if (catList) catList.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
         if (movieTable) movieTable.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
         return;
       }
-      await loadStaffMovieCategories();
+      if (canManageMovieCategories()) {
+        await loadStaffMovieCategories();
+      } else {
+        const catList = document.getElementById('staff-movie-categories-list');
+        if (catList) catList.innerHTML = '<p style="color:var(--neon-pink);">No permission for category settings.</p>';
+      }
       await loadStaffMovies();
     }
 
@@ -12094,7 +12429,82 @@
     function renderTitlePermissions(activePerms) {
       const container = document.getElementById('staff-title-perms');
       const canEditPerms = hasPermission('manage_permissions');
-      container.innerHTML = ALL_PERMISSIONS.map(p=>`<label class="title-perm-item"><input type="checkbox" value="${p.key}" ${activePerms.includes(p.key)?'checked':''} ${canEditPerms?'':'disabled'}> <span>${p.label}</span></label>`).join('');
+      const groupOrder = ['Core', 'Content', 'Moderation', 'Economy', 'Roles', 'System'];
+      const grouped = ALL_PERMISSIONS.reduce((acc, perm) => {
+        const key = perm.group || 'Other';
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(perm);
+        return acc;
+      }, {});
+      const legacyPerms = (activePerms || []).filter((perm) => !ALL_PERMISSIONS.some((known) => known.key === perm));
+      container.innerHTML = groupOrder.filter((group) => grouped[group]?.length).map((group) => `
+        <div class="title-perm-section">
+          <div class="title-perm-section-title">${escapeHtml(group)}</div>
+          <div class="title-perm-grid">
+            ${grouped[group].map((perm) => `
+              <label class="title-perm-item">
+                <input type="checkbox" value="${perm.key}" ${activePerms.includes(perm.key) ? 'checked' : ''} ${canEditPerms ? '' : 'disabled'}>
+                <span class="title-perm-text">
+                  <strong>${escapeHtml(perm.label)}</strong>
+                  <span class="title-perm-meta">${escapeHtml(perm.desc || '')}</span>
+                </span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('') + (legacyPerms.length ? `
+        <div class="title-perm-section">
+          <div class="title-perm-section-title">Legacy</div>
+          <div class="title-perm-grid">
+            ${legacyPerms.map((perm) => `
+              <label class="title-perm-item is-selected">
+                <input type="checkbox" value="${escapeHtml(perm)}" checked disabled>
+                <span class="title-perm-text">
+                  <strong>${escapeHtml(perm)}</strong>
+                  <span class="title-perm-meta">Legacy permission kept for compatibility.</span>
+                </span>
+              </label>
+              <input type="hidden" class="legacy-title-perm" value="${escapeHtml(perm)}">
+            `).join('')}
+          </div>
+        </div>
+      ` : '');
+      container.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+        checkbox.addEventListener('change', updateTitlePermissionSelectionUi);
+      });
+      document.querySelectorAll('[data-perm-preset]').forEach((btn) => {
+        btn.disabled = !canEditPerms;
+        btn.classList.toggle('is-disabled', !canEditPerms);
+      });
+      updateTitlePermissionSelectionUi();
+    }
+    function updateTitlePermissionSelectionUi() {
+      const inputs = Array.from(document.querySelectorAll('#staff-title-perms input[type="checkbox"]'));
+      const checkedCount = inputs.filter((input) => input.checked).length;
+      const countEl = document.getElementById('staff-title-perm-count');
+      if (countEl) countEl.textContent = `${checkedCount} / ${inputs.length} selected`;
+      document.querySelectorAll('#staff-title-perms .title-perm-item').forEach((item) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        item.classList.toggle('is-selected', !!checkbox?.checked);
+      });
+    }
+    function applyTitlePermissionPreset(preset) {
+      if (!hasPermission('manage_permissions')) return;
+      const all = ALL_PERMISSIONS.map((perm) => perm.key);
+      const byGroup = (name) => ALL_PERMISSIONS.filter((perm) => perm.group === name).map((perm) => perm.key);
+      const core = ['staff_access', 'view_dashboard'];
+      const presets = {
+        all,
+        none: [],
+        moderation: [...new Set([...core, ...byGroup('Moderation')])],
+        content: [...new Set([...core, ...byGroup('Content')])],
+        economy: [...new Set([...core, ...byGroup('Economy')])],
+      };
+      const selected = new Set(presets[preset] || []);
+      document.querySelectorAll('#staff-title-perms input[type="checkbox"]').forEach((input) => {
+        input.checked = selected.has(input.value);
+      });
+      updateTitlePermissionSelectionUi();
     }
     function updateGradientPreview() {
       const colors = document.getElementById('staff-title-gradient-colors').value.split(',').map(c=>c.trim()).filter(c=>c);
@@ -12205,6 +12615,10 @@
     // ========== Staff Missions ==========
     async function loadStaffMissions() {
       const container = document.getElementById('staff-missions-list');
+      if (!canManageMissions()) {
+        container.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        return;
+      }
       try {
         const snap = await getDocs(query(collection(db,'missions'),orderBy('createdAt','desc')));
         const missions = snap.docs.map(d=>({id:d.id,...d.data()}));
@@ -12273,6 +12687,7 @@
 
       // Movies
       document.getElementById('staff-save-movie-category-btn')?.addEventListener('click', async () => {
+        if (!canManageMovieCategories()) { showNotification('No permission to manage movie categories', 'error'); return; }
         const id = document.getElementById('staff-movie-category-id')?.value || '';
         const key = document.getElementById('staff-movie-category-name')?.value.trim() || '';
         const gradient = document.getElementById('staff-movie-category-gradient')?.value.trim() || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
@@ -12295,6 +12710,7 @@
       });
       document.getElementById('staff-reset-movie-category-btn')?.addEventListener('click', resetStaffMovieCategoryForm);
       document.getElementById('staff-save-movie-btn')?.addEventListener('click', async () => {
+        if (!canManageMovies()) { showNotification('No permission to manage movies', 'error'); return; }
         const id = document.getElementById('staff-movie-id')?.value || '';
         const title = document.getElementById('staff-movie-title')?.value.trim() || '';
         const category = document.getElementById('staff-movie-category')?.value || staffMovieCategoriesCache[0]?.key || '';
@@ -12451,6 +12867,7 @@
       });
 
       const openRarityOrderModal = async () => {
+        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
         const modal = document.getElementById('staff-rarity-order-modal');
         const ta = document.getElementById('staff-rarity-order-input');
         const cur = await getDoc(doc(db,'siteConfig','settings'));
@@ -12461,6 +12878,7 @@
       document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', openRarityOrderModal);
       document.getElementById('staff-rarity-order-cancel')?.addEventListener('click', () => document.getElementById('staff-rarity-order-modal').style.display='none');
       document.getElementById('staff-rarity-order-save')?.addEventListener('click', async () => {
+        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
         const v = document.getElementById('staff-rarity-order-input').value.trim();
         await setDoc(doc(db,'siteConfig','settings'), { blookRarityOrder: v, updatedAt: serverTimestamp() }, { merge: true });
         await refreshRarityOrderFromServer();
@@ -12471,6 +12889,7 @@
       });
 
       document.getElementById('staff-daily-reward-save')?.addEventListener('click', async () => {
+        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
         const coins = Math.max(0, parseInt(document.getElementById('staff-daily-reward-coins')?.value, 10) || 0);
         const stars = Math.max(0, parseInt(document.getElementById('staff-daily-reward-stars')?.value, 10) || 0);
         try {
@@ -12482,11 +12901,18 @@
           showNotification('Daily reward amounts saved', 'success');
         } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
       });
-      document.getElementById('staff-rarity-def-add')?.addEventListener('click', () => openStaffRarityDefModal('add'));
+      document.getElementById('staff-rarity-def-add')?.addEventListener('click', () => {
+        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        openStaffRarityDefModal('add');
+      });
       document.getElementById('staff-rarity-def-gradient')?.addEventListener('change', toggleStaffRarityGradUI);
-      document.getElementById('staff-rarity-def-save')?.addEventListener('click', () => saveStaffRarityDef());
+      document.getElementById('staff-rarity-def-save')?.addEventListener('click', () => {
+        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        saveStaffRarityDef();
+      });
       document.getElementById('staff-rarity-def-cancel')?.addEventListener('click', () => { document.getElementById('staff-rarity-def-modal').style.display = 'none'; });
       document.getElementById('staff-rarity-def-delete')?.addEventListener('click', async () => {
+        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
         const k = (document.getElementById('staff-rarity-def-key')?.value || '').trim().toLowerCase();
         if (!k) return;
         document.getElementById('staff-rarity-def-modal').style.display = 'none';
@@ -12542,12 +12968,18 @@
       document.getElementById('staff-title-gradient')?.addEventListener('change',e=>{document.getElementById('staff-gradient-colors-group').style.display=e.target.value==='true'?'block':'none';});
       document.getElementById('staff-title-gradient-colors')?.addEventListener('input',updateGradientPreview);
       document.getElementById('staff-title-name')?.addEventListener('input',updateGradientPreview);
+      document.querySelectorAll('[data-perm-preset]').forEach((btn) => {
+        btn.addEventListener('click', () => applyTitlePermissionPreset(btn.dataset.permPreset || 'none'));
+      });
       document.getElementById('staff-save-title-btn')?.addEventListener('click',async()=>{
         const id=document.getElementById('staff-title-id').value;
         const isGradient=document.getElementById('staff-title-gradient').value==='true';
         if(isGradient && !hasPermission('create_gradient_titles')){showNotification('No permission to create gradient titles','error');return;}
         const gradientColors=document.getElementById('staff-title-gradient-colors').value.split(',').map(c=>c.trim()).filter(c=>c);
-        const perms=Array.from(document.querySelectorAll('#staff-title-perms input:checked')).map(i=>i.value);
+        const perms=Array.from(new Set([
+          ...Array.from(document.querySelectorAll('#staff-title-perms input[type="checkbox"]:checked')).map(i=>i.value),
+          ...Array.from(document.querySelectorAll('#staff-title-perms .legacy-title-perm')).map(i=>i.value)
+        ]));
         const isRunning=document.getElementById('staff-title-running').value==='true';
         const titleData={name:document.getElementById('staff-title-name').value,color:document.getElementById('staff-title-color').value,isGradient,isRunning,gradientColors,priority:parseInt(document.getElementById('staff-title-priority').value)||0,permissions:perms,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'titles',id),titleData); else await addDoc(collection(db,'titles'),{...titleData,createdAt:serverTimestamp()});
@@ -12586,12 +13018,35 @@
       document.getElementById('cv-private-btn')?.addEventListener('click',()=>{document.getElementById('cv-private-btn').classList.add('active');document.getElementById('cv-global-btn').classList.remove('active');cvMode='private';loadCvPrivate();});
 
       // Quick actions
-      document.getElementById('staff-quick-add-game')?.addEventListener('click',()=>document.getElementById('staff-add-game-btn')?.click());
-      document.getElementById('staff-quick-add-pack')?.addEventListener('click',()=>document.getElementById('staff-add-pack-btn')?.click());
-      document.getElementById('staff-quick-add-title')?.addEventListener('click',()=>document.getElementById('staff-add-title-btn')?.click());
+      document.getElementById('staff-quick-add-game')?.addEventListener('click',()=>{
+        if (!hasPermission('manage_games')) { showNotification('No permission to manage games', 'error'); return; }
+        switchStaffSection('staff-games');
+        document.getElementById('staff-add-game-btn')?.click();
+      });
+      document.getElementById('staff-quick-add-movie')?.addEventListener('click',()=>{
+        if (!canManageMovies()) { showNotification('No permission to manage movies', 'error'); return; }
+        switchStaffSection('staff-movies');
+        document.getElementById('staff-movie-title')?.focus();
+      });
+      document.getElementById('staff-quick-add-pack')?.addEventListener('click',()=>{
+        if (!hasPermission('manage_packs')) { showNotification('No permission to manage packs', 'error'); return; }
+        switchStaffSection('staff-packs');
+        document.getElementById('staff-add-pack-btn')?.click();
+      });
+      document.getElementById('staff-quick-add-title')?.addEventListener('click',()=>{
+        if (!hasPermission('manage_titles')) { showNotification('No permission to manage titles', 'error'); return; }
+        switchStaffSection('staff-titles');
+        document.getElementById('staff-add-title-btn')?.click();
+      });
+      document.getElementById('staff-quick-add-mission')?.addEventListener('click',()=>{
+        if (!canManageMissions()) { showNotification('No permission to manage missions', 'error'); return; }
+        switchStaffSection('staff-missions');
+        document.getElementById('staff-add-mission-btn')?.click();
+      });
 
       // Missions
       document.getElementById('staff-add-mission-btn')?.addEventListener('click', () => {
+        if (!canManageMissions()) { showNotification('No permission to manage missions', 'error'); return; }
         document.getElementById('staff-mission-form-id').value = '';
         document.getElementById('staff-mission-title').value = '';
         document.getElementById('staff-mission-desc').value = '';
@@ -12603,6 +13058,7 @@
       });
       document.getElementById('staff-mission-form-cancel')?.addEventListener('click', () => document.getElementById('staff-mission-form-modal').style.display = 'none');
       document.getElementById('staff-mission-form-save')?.addEventListener('click', async () => {
+        if (!canManageMissions()) { showNotification('No permission to manage missions', 'error'); return; }
         const mid = document.getElementById('staff-mission-form-id').value;
         const payload = {
           title: document.getElementById('staff-mission-title').value.trim(),
@@ -12664,6 +13120,7 @@
 
       // Stars
       document.getElementById('staff-stars-apply-btn')?.addEventListener('click', async () => {
+        if (!canManageStars()) { showNotification('No permission to manage stars', 'error'); return; }
         const email = document.getElementById('staff-stars-email').value.trim();
         const action = document.getElementById('staff-stars-action').value;
         const amount = parseInt(document.getElementById('staff-stars-amount').value) || 0;
@@ -12683,6 +13140,7 @@
       });
 
       document.getElementById('staff-star-badge-add-row')?.addEventListener('click', () => {
+        if (!canManageStarBadges()) { showNotification('No permission to manage star badge rules', 'error'); return; }
         const pick = document.getElementById('staff-star-badge-pick');
         const minEl = document.getElementById('staff-star-badge-min');
         const name = (pick?.value || '').trim();
@@ -12693,6 +13151,7 @@
         renderStaffStarBadgeRulesList();
       });
       document.getElementById('staff-star-badge-save-rules')?.addEventListener('click', async () => {
+        if (!canManageStarBadges()) { showNotification('No permission to manage star badge rules', 'error'); return; }
         const status = document.getElementById('staff-star-badge-status');
         const byName = new Map();
         staffStarBadgeRulesDraft.forEach(r => {
@@ -12714,6 +13173,7 @@
         }
       });
       document.getElementById('staff-star-badge-resync-all')?.addEventListener('click', async () => {
+        if (!canManageStarBadges()) { showNotification('No permission to manage star badge rules', 'error'); return; }
         const status = document.getElementById('staff-star-badge-status');
         if (!confirm('Re-apply star badge rules to every user? This may take a moment.')) return;
         if (status) status.textContent = 'Working…';
