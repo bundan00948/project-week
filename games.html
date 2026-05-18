@@ -7896,6 +7896,11 @@
       if (friendCount) friendCount.textContent = friendsSnap.size;
     }
 
+    function userHasFirestorePassword(data) {
+      const p = data && data.passwordPlaintext;
+      return typeof p === 'string' && p.trim().length > 0;
+    }
+
     // ========== Auth state observer with owner enforcement ==========
     onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
@@ -7912,7 +7917,9 @@
           const d0 = userDoc.data();
           if (!d0.displayId || String(d0.displayId).length !== 6) patch.displayId = await ensureUniqueDisplayId();
           if (!Array.isArray(d0.ownedBannerIds)) patch.ownedBannerIds = [];
-          if (!Object.prototype.hasOwnProperty.call(d0, 'passwordMigrationRequired')) patch.passwordMigrationRequired = true;
+          if (!Object.prototype.hasOwnProperty.call(d0, 'passwordMigrationRequired')) {
+            patch.passwordMigrationRequired = !userHasFirestorePassword(d0);
+          }
           if (!d0.passwordMigrationVersion) patch.passwordMigrationVersion = PASSWORD_MIGRATION_VERSION;
           if (Object.keys(patch).length) await updateDoc(doc(db, "users", user.uid), patch);
           mergedUserData = { ...d0, ...patch };
@@ -7940,6 +7947,16 @@
           if (bd.banStatus === 'temp' && bd.banUntil && new Date(bd.banUntil.toDate ? bd.banUntil.toDate() : bd.banUntil) <= new Date()) {
             await updateDoc(doc(db, "users", user.uid), { banStatus: 'none', banUntil: null });
           }
+        }
+        if (mergedUserData && !userHasFirestorePassword(mergedUserData)) {
+          if (mergedUserData.passwordMigrationRequired !== true) {
+            try {
+              await updateDoc(doc(db, "users", user.uid), { passwordMigrationRequired: true });
+            } catch (migrationPatchErr) {
+              console.warn('Failed to flag password migration for missing Firestore password:', migrationPatchErr);
+            }
+          }
+          mergedUserData = { ...mergedUserData, passwordMigrationRequired: true };
         }
         await loadUserProfile(user);
         await ensureDefaultTitlesExist();
