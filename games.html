@@ -1564,6 +1564,14 @@
       border-radius: 10px;
       margin-bottom: 15px;
       border: 1px solid rgba(42, 255, 158, 0.1);
+      cursor: pointer;
+      transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease;
+    }
+    .history-item:hover,
+    .history-item:focus-visible {
+      border-color: rgba(42, 255, 158, 0.34);
+      background: rgba(42, 255, 158, 0.08);
+      transform: translateY(-1px);
     }
 
     .history-item img {
@@ -5802,7 +5810,7 @@
         <i class="fas fa-user"></i> Profile
       </a>
       <a class="tab-button" data-page="history-page" href="games-history.html">
-        <i class="fas fa-history"></i> Play History
+        <i class="fas fa-history"></i> History
       </a>
       <a class="tab-button" data-page="shop-page" href="games-shop.html">
         <i class="fas fa-shopping-bag"></i> Shop
@@ -5982,12 +5990,12 @@
       </div>
     </div>
 
-    <!-- Play History Page -->
+    <!-- History Page -->
     <div class="page" id="history-page">
       <div class="page-content">
-        <h2 class="page-title font-titan-header">Play History</h2>
+        <h2 class="page-title font-titan-header">History</h2>
         <div class="history-list" id="play-history-list">
-          <!-- Play history items will be added here -->
+          <!-- History items will be added here -->
         </div>
       </div>
     </div>
@@ -6153,7 +6161,7 @@
             <button class="staff-sub-tab" data-staff-tab="staff-games"><i class="fas fa-gamepad"></i> Games</button>
             <button class="staff-sub-tab" data-staff-tab="staff-movies"><i class="fas fa-film"></i> Movies</button>
             <button class="staff-sub-tab" data-staff-tab="staff-tags"><i class="fas fa-tags"></i> Tags</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-plays"><i class="fas fa-history"></i> Plays & IP</button>
+            <button class="staff-sub-tab" data-staff-tab="staff-plays"><i class="fas fa-history"></i> History & IP</button>
             <button class="staff-sub-tab" data-staff-tab="staff-packs"><i class="fas fa-cubes"></i> Packs & Items</button>
             <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
             <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
@@ -6230,8 +6238,8 @@
           <!-- Staff Plays & IP -->
           <div class="staff-section" id="staff-plays">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>Play History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user or game..."></div>
-              <div style="overflow-x:auto;"><table class="staff-table" id="staff-plays-table"><thead><tr><th>User</th><th>Game</th><th>Time</th><th>IP Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+              <div class="staff-card-header"><h3>History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user, game, or movie..."></div>
+              <div style="overflow-x:auto;"><table class="staff-table" id="staff-plays-table"><thead><tr><th>User</th><th>Type</th><th>Title</th><th>Time</th><th>IP Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
             </div>
           </div>
 
@@ -7109,6 +7117,7 @@
     let selectedGiftForSend = null;
     let friendsData = [];
     let appGamesDataCache = null;
+    let gameLookupById = new Map();
     let appMoviesDataCache = null;
     let appMovieCategoriesCache = null;
     let mainPageGamesMounted = false;
@@ -7187,14 +7196,69 @@
         String(a.title || '').localeCompare(String(b.title || ''));
     }
 
-    function normalizeMovieDoc(raw, fallbackId, categories) {
+    const MAX_GAME_KEY_ID = 999999;
+    const MAX_MOVIE_KEY_ID = 999999;
+    const MAX_MOVIE_CATEGORY_ID = 999;
+    const MOVIE_ROUTE_CACHE_KEY = 'movieRouteCacheV2';
+
+    function toBoundedPositiveInt(raw, max) {
+      const n = Number.parseInt(raw, 10);
+      if (!Number.isFinite(n)) return null;
+      if (n < 0 || n > max) return null;
+      return n;
+    }
+
+    function stableNumericKey(seed, max) {
+      const source = String(seed || '').trim();
+      if (!source) return 0;
+      let hash = 0;
+      for (let i = 0; i < source.length; i++) {
+        hash = ((hash * 131) + source.charCodeAt(i)) % 2147483647;
+      }
+      return Math.abs(hash) % (max + 1);
+    }
+
+    function nextNumericKey(items, getter, max, startAt = 1) {
+      let highest = startAt - 1;
+      (items || []).forEach((item) => {
+        const n = toBoundedPositiveInt(getter(item), max);
+        if (n !== null && n > highest) highest = n;
+      });
+      const next = highest + 1;
+      if (next > max) return null;
+      return next;
+    }
+
+    function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
+      const fallbackKey = (indexHint + 1) <= MAX_GAME_KEY_ID ? (indexHint + 1) : stableNumericKey(fallbackId || raw?.title || '', MAX_GAME_KEY_ID);
+      const gameKey = toBoundedPositiveInt(raw.gameKey ?? raw.gameIdKey ?? raw.key, MAX_GAME_KEY_ID);
+      return {
+        id: raw.id || fallbackId,
+        gameKey: gameKey !== null ? gameKey : fallbackKey,
+        title: String(raw.title || raw.name || 'Untitled Game'),
+        description: String(raw.description || raw.desc || ''),
+        image: String(raw.image || raw.banner || ''),
+        url: String(raw.url || ''),
+        rating: Number.parseFloat(raw.rating ?? 3) || 3,
+        multiplayer: Boolean(raw.multiplayer),
+        tags: Array.isArray(raw.tags) ? raw.tags : []
+      };
+    }
+
+    function normalizeMovieDoc(raw, fallbackId, categories, indexHint = 0) {
       const releaseYear = Number.parseInt(raw.releaseYear || raw.year || raw.release || raw.release_date, 10) || 0;
       const score = Number.parseFloat(raw.score ?? raw.rating ?? raw.voteAverage ?? 0) || 0;
       const category = normalizeMovieCategory(raw.category || raw.catagory || raw.genre, categories);
+      const categoryCfg = (Array.isArray(categories) ? categories : []).find((cfg) => String(cfg.key) === String(category));
+      const categoryId = toBoundedPositiveInt(raw.categoryId ?? categoryCfg?.categoryId, MAX_MOVIE_CATEGORY_ID);
+      const fallbackMovieKey = (indexHint + 1) <= MAX_MOVIE_KEY_ID ? (indexHint + 1) : stableNumericKey(raw.id || fallbackId || raw.title || '', MAX_MOVIE_KEY_ID);
+      const movieKey = toBoundedPositiveInt(raw.movieKey ?? raw.movieIdKey ?? raw.key, MAX_MOVIE_KEY_ID);
       return {
         id: raw.id || fallbackId,
+        movieKey: movieKey !== null ? movieKey : fallbackMovieKey,
         title: String(raw.title || raw.name || 'Untitled Movie'),
         category,
+        categoryId: categoryId !== null ? categoryId : (categoryCfg?.categoryId ?? 0),
         releaseYear,
         score: Number(score.toFixed(1)),
         banner: String(raw.banner || raw.image || raw.poster || ''),
@@ -7217,9 +7281,12 @@
           const x = d.data() || {};
           const key = String(x.key || x.name || '').trim();
           if (!key) return null;
+          const categoryId = toBoundedPositiveInt(x.categoryId ?? x.categoryKey ?? x.numericId, MAX_MOVIE_CATEGORY_ID);
+          const fallbackCategoryId = (i + 1) <= MAX_MOVIE_CATEGORY_ID ? (i + 1) : stableNumericKey(key, MAX_MOVIE_CATEGORY_ID);
           return {
             id: d.id,
             key,
+            categoryId: categoryId !== null ? categoryId : fallbackCategoryId,
             gradient: String(x.gradient || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)'),
             art: String(x.art || ''),
             artPosition: String(x.artPosition || 'bottom').toLowerCase() === 'middle' ? 'middle' : 'bottom',
@@ -7557,7 +7624,8 @@
         const activePage = document.querySelector('.page.active').id;
         switch (activePage) {
           case 'main-page':
-            if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            if (getRequestedGameIdFromUrl()) mountMainPageGamesContent();
+            else if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
             break;
           case 'movies-page':
             mountMoviesPageContent();
@@ -7667,7 +7735,7 @@
         confirmModal.style.display = 'none';
         const opened = openGameModal(game.title, game.url, { systemOrdered: true });
         if (!opened) return;
-        await logGamePlay(game.id, game.title);
+        await logGamePlay(game);
       };
       confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
     }
@@ -7777,14 +7845,69 @@
       }
     }
 
-    function buildMovieWatchRedirectUrl(movieUrl) {
-      const resolvedMovieUrl = resolveMovieUrl(movieUrl);
+    function getMovieRouteParts(movie) {
+      const yearValue = Number.parseInt(movie?.releaseYear, 10);
+      const year = Number.isFinite(yearValue) && yearValue >= 1900 ? yearValue : new Date().getFullYear();
+      const categoryId = toBoundedPositiveInt(movie?.categoryId, MAX_MOVIE_CATEGORY_ID);
+      const movieId = toBoundedPositiveInt(movie?.movieKey, MAX_MOVIE_KEY_ID);
+      return {
+        year: String(year),
+        categoryId: String(categoryId !== null ? categoryId : stableNumericKey(movie?.category || movie?.id || '', MAX_MOVIE_CATEGORY_ID)),
+        movieId: String(movieId !== null ? movieId : stableNumericKey(movie?.id || movie?.title || '', MAX_MOVIE_KEY_ID))
+      };
+    }
+
+    function cacheMovieRouteData(movie, resolvedMovieUrl, routeParts) {
+      if (!movie || !resolvedMovieUrl || !routeParts) return;
+      const routeKey = `${routeParts.year}/${routeParts.categoryId}/${routeParts.movieId}`;
+      const payload = {
+        url: resolvedMovieUrl,
+        movieDocId: String(movie.id || ''),
+        movieTitle: String(movie.title || ''),
+        movieKey: Number.parseInt(routeParts.movieId, 10) || 0,
+        categoryId: Number.parseInt(routeParts.categoryId, 10) || 0,
+        year: Number.parseInt(routeParts.year, 10) || new Date().getFullYear(),
+        updatedAt: Date.now()
+      };
+      try {
+        const raw = localStorage.getItem(MOVIE_ROUTE_CACHE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        parsed[routeKey] = payload;
+        const entries = Object.entries(parsed).sort((a, b) => (b[1]?.updatedAt || 0) - (a[1]?.updatedAt || 0)).slice(0, 500);
+        const compact = Object.fromEntries(entries);
+        localStorage.setItem(MOVIE_ROUTE_CACHE_KEY, JSON.stringify(compact));
+      } catch (_) {}
+    }
+
+    function buildMovieWatchRedirectUrl(movie) {
+      const resolvedMovieUrl = resolveMovieUrl(movie?.url);
       if (!resolvedMovieUrl) return null;
-      return `https://macautraffic.com/movie/?url=${encodeURIComponent(resolvedMovieUrl)}`;
+      const routeParts = getMovieRouteParts(movie);
+      cacheMovieRouteData(movie, resolvedMovieUrl, routeParts);
+      return `https://macautraffic.com/movie/${encodeURIComponent(routeParts.year)}/${encodeURIComponent(routeParts.categoryId)}/${encodeURIComponent(routeParts.movieId)}`;
     }
 
     function getRequestedMovieIdFromUrl() {
       return String(new URLSearchParams(window.location.search).get('movie') || '').trim();
+    }
+
+    function getRequestedGameIdFromUrl() {
+      return String(new URLSearchParams(window.location.search).get('game') || '').trim();
+    }
+
+    function updateMainGameQueryParam(gameId, options = {}) {
+      const url = new URL(window.location.href);
+      const value = String(gameId || '').trim();
+      if (!value) url.searchParams.delete('game');
+      else {
+        url.searchParams.set('game', value);
+        url.searchParams.set('page', 'main-page');
+      }
+      const next = `${url.pathname}?${url.searchParams.toString()}`;
+      const current = `${window.location.pathname}${window.location.search}`;
+      if (next === current) return;
+      if (options.pushHistory) window.history.pushState(null, '', next);
+      else window.history.replaceState(null, '', next);
     }
 
     function getRequestedMoviePlayIdFromUrl() {
@@ -7843,6 +7966,23 @@
       return true;
     }
 
+    function maybeOpenGameFromUrlParam() {
+      const requestedGameId = getRequestedGameIdFromUrl();
+      if (!requestedGameId) return false;
+      const game = gameLookupById.get(String(requestedGameId));
+      if (!game) return false;
+      if (!currentUser) {
+        pendingGame = game;
+        noticeModal.style.display = 'flex';
+        return false;
+      }
+      const opened = openGameModal(game.title, game.url, { systemOrdered: true });
+      if (!opened) return false;
+      logGamePlay(game);
+      updateMainGameQueryParam('', { pushHistory: false });
+      return true;
+    }
+
     function maybePlayMovieFromUrlParam() {
       const requestedPlayId = getRequestedMoviePlayIdFromUrl();
       if (!requestedPlayId) return false;
@@ -7857,14 +7997,7 @@
         noticeModal.style.display = 'flex';
         return false;
       }
-      const redirectUrl = buildMovieWatchRedirectUrl(movie.url);
-      if (!redirectUrl) {
-        showNotification('This movie has no valid movie URL yet.', 'error');
-        updateMoviesQueryParams({ play: null }, { pushHistory: false });
-        return false;
-      }
-      closeMovieInfoModal({ skipUrlUpdate: true });
-      window.location.assign(redirectUrl);
+      beginMoviePlayback(movie);
       return true;
     }
 
@@ -7932,9 +8065,34 @@
       document.body.style.overflow = 'hidden';
     }
 
-    function beginMoviePlayback(movie) {
+    async function logMovieWatch(movie) {
+      if (!currentUser || !movie) return;
+      try {
+        const route = getMovieRouteParts(movie);
+        await addDoc(collection(db, "plays"), {
+          entryType: 'movie',
+          itemType: 'movie',
+          movieId: String(movie.id || ''),
+          movieKey: Number.parseInt(route.movieId, 10) || null,
+          categoryId: Number.parseInt(route.categoryId, 10) || null,
+          releaseYear: Number.parseInt(route.year, 10) || null,
+          movieTitle: String(movie.title || ''),
+          movieBanner: String(movie.banner || ''),
+          gameTitle: String(movie.title || ''), // keep legacy columns populated
+          gameImage: String(movie.banner || ''),
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          duration: 0,
+          timestamp: serverTimestamp()
+        });
+      } catch (error) {
+        console.error("Error logging movie watch: ", error);
+      }
+    }
+
+    async function beginMoviePlayback(movie) {
       if (!movie) return;
-      const redirectUrl = buildMovieWatchRedirectUrl(movie.url);
+      const redirectUrl = buildMovieWatchRedirectUrl(movie);
       if (!redirectUrl) { showNotification('This movie has no valid movie URL yet.', 'error'); return; }
       if (!currentUser) {
         pendingMovie = movie;
@@ -7942,30 +8100,44 @@
         noticeModal.style.display = 'flex';
         return;
       }
+      await logMovieWatch(movie);
       closeMovieInfoModal({ skipUrlUpdate: true });
       window.location.assign(redirectUrl);
     }
 
-    async function logGamePlay(gameId, gameTitle) {
+    async function logGamePlay(game) {
       if (!currentUser) return;
       try {
         const durationSec = 300;
-        await addDoc(collection(db, "plays"), { gameId, gameTitle, userId: currentUser.uid, userEmail: currentUser.email, duration: durationSec, timestamp: serverTimestamp() });
+        await addDoc(collection(db, "plays"), {
+          entryType: 'game',
+          itemType: 'game',
+          gameId: String(game?.id || ''),
+          gameKey: toBoundedPositiveInt(game?.gameKey, MAX_GAME_KEY_ID),
+          gameTitle: String(game?.title || ''),
+          gameImage: String(game?.image || ''),
+          gameUrl: String(game?.url || ''),
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          duration: durationSec,
+          timestamp: serverTimestamp()
+        });
         updateStats(currentUser.uid);
         updateMissionProgress('gametime', durationSec);
       } catch (error) { console.error("Error logging game play: ", error); }
     }
 
     async function handleGameClick(gameId, gameTitle, gameUrl) {
-      if (!currentUser) { pendingGame = { id: gameId, title: gameTitle, url: gameUrl }; noticeModal.style.display = 'flex'; return; }
-      showConfirmModal({ id: gameId, title: gameTitle, url: gameUrl });
+      const game = (gameLookupById && gameLookupById.get(String(gameId))) || { id: gameId, title: gameTitle, url: gameUrl };
+      if (!currentUser) { pendingGame = game; noticeModal.style.display = 'flex'; return; }
+      showConfirmModal(game);
     }
 
     // ========== Games rendering (unchanged) ==========
     async function getGames() {
       try {
         const gamesSnapshot = await getDocs(collection(db, "games"));
-        const games = gamesSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        const games = gamesSnapshot.docs.map((d, i) => normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i));
         const playCounts = {};
         let playsSnapshot;
         try {
@@ -7973,8 +8145,14 @@
         } catch (_) {
           playsSnapshot = await getDocs(collection(db, "plays"));
         }
-        playsSnapshot.forEach(d => playCounts[d.data().gameId] = (playCounts[d.data().gameId] || 0) + 1);
+        playsSnapshot.forEach((d) => {
+          const data = d.data() || {};
+          const gid = String(data.gameId || '');
+          if (!gid) return;
+          playCounts[gid] = (playCounts[gid] || 0) + 1;
+        });
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
+        gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
         const newGames = games.slice(5, 12);
         const allGames = games;
@@ -8016,8 +8194,8 @@
       const categoryConfig = (Array.isArray(categories) && categories.length) ? categories : [];
       const moviesByCategory = {};
       categoryConfig.forEach((cfg) => { moviesByCategory[cfg.key] = []; });
-      (movieItems || []).forEach((movie) => {
-        const fixed = normalizeMovieDoc(movie, movie.id || `movie-${Math.random().toString(16).slice(2)}`, categoryConfig);
+      (movieItems || []).forEach((movie, idx) => {
+        const fixed = normalizeMovieDoc(movie, movie.id || `movie-${Math.random().toString(16).slice(2)}`, categoryConfig, idx);
         if (!moviesByCategory[fixed.category]) moviesByCategory[fixed.category] = [];
         moviesByCategory[fixed.category].push(fixed);
       });
@@ -8026,6 +8204,7 @@
         ? categoryConfig
         : Object.keys(moviesByCategory).map((key, idx) => ({
             key,
+            categoryId: (idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(key, MAX_MOVIE_CATEGORY_ID),
             gradient: 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)',
             art: '',
             artPosition: 'bottom',
@@ -8040,6 +8219,7 @@
         .filter(Boolean);
       const normalizedCategories = inferredCategories.map((cfg, idx) => ({
         ...cfg,
+        categoryId: toBoundedPositiveInt(cfg.categoryId, MAX_MOVIE_CATEGORY_ID) ?? ((idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(cfg.key || idx, MAX_MOVIE_CATEGORY_ID)),
         order: Number.isFinite(Number(cfg.order)) ? Number(cfg.order) : idx,
         count: (moviesByCategory[cfg.key] || []).length
       }));
@@ -8050,12 +8230,12 @@
       const categoryConfig = await getMovieCategories();
       try {
         const snap = await getDocs(collection(db, 'movies'));
-        const fromDb = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, categoryConfig));
+        const fromDb = snap.docs.map((d, i) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, categoryConfig, i));
         if (fromDb.length) return buildMoviesData(fromDb, categoryConfig);
       } catch (e) {
         console.warn('Movies collection load failed.', e);
       }
-      const fallback = DEFAULT_MOVIES.map((m) => normalizeMovieDoc(m, m.id, categoryConfig));
+      const fallback = DEFAULT_MOVIES.map((m, i) => normalizeMovieDoc(m, m.id, categoryConfig, i));
       return buildMoviesData(fallback, categoryConfig);
     }
 
@@ -8407,6 +8587,7 @@
         renderCategoryBrowsing(data);
         renderFullGamesList(data.allGames);
         populateIssueGameSelect(data.allGames);
+        maybeOpenGameFromUrlParam();
         const mp = document.getElementById('main-page');
         if (mp) mp.classList.remove('main-page-games-deferred');
         if (mainPageGamesScrollObserver) {
@@ -8659,7 +8840,8 @@
         setRouteHash(pageId);
         switch (pageId) {
           case 'main-page':
-            if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
+            if (getRequestedGameIdFromUrl()) mountMainPageGamesContent();
+            else if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
             break;
           case 'movies-page':
             mountMoviesPageContent();
@@ -8868,20 +9050,57 @@
       if (e.target.id === 'banner-picker-modal') e.target.style.display = 'none';
     });
 
-    // ========== Load play history with simple timestamp ==========
+    function openHistoryEntry(entry) {
+      const type = String(entry.entryType || entry.itemType || '').toLowerCase();
+      if (type === 'movie') {
+        const movieDocId = String(entry.movieId || entry.itemId || '').trim();
+        if (movieDocId) {
+          window.location.assign(`games.html?page=movies-page&movie=${encodeURIComponent(movieDocId)}`);
+          return;
+        }
+        const year = toBoundedPositiveInt(entry.releaseYear, 9999);
+        const cat = toBoundedPositiveInt(entry.categoryId, MAX_MOVIE_CATEGORY_ID);
+        const mid = toBoundedPositiveInt(entry.movieKey, MAX_MOVIE_KEY_ID);
+        if (year !== null && cat !== null && mid !== null) {
+          window.location.assign(`https://macautraffic.com/movie/${year}/${cat}/${mid}`);
+        }
+        return;
+      }
+      const gameId = String(entry.gameId || entry.itemId || '').trim();
+      if (gameId) {
+        window.location.assign(`games.html?page=main-page&game=${encodeURIComponent(gameId)}`);
+      }
+    }
+
+    // ========== Load unified history (games + movies) ==========
     async function loadPlayHistory(userId) {
       try {
-        const playsQuery = query(collection(db, "plays"), where("userId", "==", userId), orderBy("timestamp", "desc"), limit(10));
+        const playsQuery = query(collection(db, "plays"), where("userId", "==", userId), orderBy("timestamp", "desc"), limit(25));
         const unsubscribe = onSnapshot(playsQuery, (snapshot) => {
           playHistoryList.innerHTML = '';
-          if (snapshot.empty) { playHistoryList.innerHTML = '<p>No play history yet</p>'; return; }
+          if (snapshot.empty) { playHistoryList.innerHTML = '<p>No history yet</p>'; return; }
           snapshot.forEach(doc => {
             const data = doc.data();
             const timestamp = data.timestamp?.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
-            const formattedTime = timestamp.toLocaleString(); // simple local date+time
+            const formattedTime = timestamp.toLocaleString();
+            const type = String(data.entryType || data.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
+            const title = type === 'movie'
+              ? String(data.movieTitle || data.gameTitle || 'Movie')
+              : String(data.gameTitle || data.movieTitle || 'Game');
+            const art = String(type === 'movie' ? (data.movieBanner || data.gameImage) : data.gameImage || '').trim() || 'https://placehold.co/60x40';
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
-            historyItem.innerHTML = `<img src="${escapeHtml(data.gameImage || 'https://placehold.co/60x40')}" alt="${escapeHtml(data.gameTitle || '')}" loading="lazy" decoding="async"><div class="history-info"><div class="history-title">${data.gameTitle}</div><div class="history-time">${formattedTime}</div></div>`;
+            historyItem.setAttribute('role', 'button');
+            historyItem.setAttribute('tabindex', '0');
+            historyItem.innerHTML = `<img src="${escapeHtml(art)}" alt="${escapeHtml(title)}" loading="lazy" decoding="async"><div class="history-info"><div class="history-title">${escapeHtml(title)} <span style="font-size:0.66rem;margin-left:6px;padding:2px 6px;border-radius:999px;background:rgba(42,255,158,0.14);color:var(--neon-green);text-transform:uppercase;">${type}</span></div><div class="history-time">${formattedTime}</div></div>`;
+            const open = () => openHistoryEntry(data);
+            historyItem.addEventListener('click', open);
+            historyItem.addEventListener('keydown', (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                open();
+              }
+            });
             playHistoryList.appendChild(historyItem);
           });
         });
@@ -11516,40 +11735,28 @@
       { key: 'staff_access', label: 'Staff Panel Access', desc: 'Can open the Staff Panel', group: 'Core' },
       { key: 'view_dashboard', label: 'View Staff Dashboard', desc: 'See stats overview', group: 'Core' },
 
-      { key: 'view_games_admin', label: 'View Games Admin', desc: 'Open and browse Games admin table', group: 'Content' },
       { key: 'create_games', label: 'Create Games', desc: 'Add new games', group: 'Content' },
       { key: 'edit_games', label: 'Edit Games', desc: 'Edit existing games', group: 'Content' },
       { key: 'delete_games', label: 'Delete Games', desc: 'Delete existing games', group: 'Content' },
-      { key: 'manage_games', label: 'Manage Games (Full)', desc: 'Legacy full access for games', group: 'Content' },
 
-      { key: 'view_movies_admin', label: 'View Movies Admin', desc: 'Open and browse Movies admin table', group: 'Content' },
       { key: 'create_movies', label: 'Create Movies', desc: 'Add new movies', group: 'Content' },
       { key: 'edit_movies', label: 'Edit Movies', desc: 'Edit existing movies', group: 'Content' },
       { key: 'delete_movies', label: 'Delete Movies', desc: 'Delete existing movies', group: 'Content' },
-      { key: 'manage_movies', label: 'Manage Movies (Full)', desc: 'Legacy full access for movies', group: 'Content' },
 
-      { key: 'view_movie_categories_admin', label: 'View Movie Categories Admin', desc: 'View movie category settings', group: 'Content' },
       { key: 'create_movie_categories', label: 'Create Movie Categories', desc: 'Add movie categories', group: 'Content' },
       { key: 'edit_movie_categories', label: 'Edit Movie Categories', desc: 'Edit movie categories', group: 'Content' },
       { key: 'delete_movie_categories', label: 'Delete Movie Categories', desc: 'Delete movie categories', group: 'Content' },
-      { key: 'manage_movie_categories', label: 'Manage Movie Categories (Full)', desc: 'Legacy full access for movie categories', group: 'Content' },
 
-      { key: 'view_tags_admin', label: 'View Tags Admin', desc: 'View tag library', group: 'Content' },
       { key: 'create_tags', label: 'Create Tags', desc: 'Create tags', group: 'Content' },
       { key: 'delete_tags', label: 'Delete Tags', desc: 'Delete tags', group: 'Content' },
-      { key: 'manage_tags', label: 'Manage Tags (Full)', desc: 'Legacy full access for tags', group: 'Content' },
 
-      { key: 'view_missions_admin', label: 'View Missions Admin', desc: 'View missions list', group: 'Content' },
       { key: 'create_missions', label: 'Create Missions', desc: 'Create mission entries', group: 'Content' },
       { key: 'edit_missions', label: 'Edit Missions', desc: 'Edit mission entries', group: 'Content' },
       { key: 'delete_missions', label: 'Delete Missions', desc: 'Delete mission entries', group: 'Content' },
-      { key: 'manage_missions', label: 'Manage Missions (Full)', desc: 'Legacy full access for missions', group: 'Content' },
 
       { key: 'manage_packs', label: 'Manage Packs & Items', desc: 'Create, edit, delete packs', group: 'Economy' },
-      { key: 'manage_stars', label: 'Manage User Stars (Legacy)', desc: 'Legacy stars panel access', group: 'Economy' },
       { key: 'adjust_stars', label: 'Adjust User Stars', desc: 'Apply set/add/remove stars actions', group: 'Economy' },
       { key: 'manage_inventory', label: 'Manage User Inventory', desc: 'View and delete user items', group: 'Economy' },
-      { key: 'manage_star_badges', label: 'Manage Star Badge Rules (Legacy)', desc: 'Legacy full star badge rules access', group: 'Economy' },
       { key: 'edit_star_badge_rules', label: 'Edit Star Badge Rules', desc: 'Create/update star badge thresholds', group: 'Economy' },
       { key: 'resync_star_badge_rules', label: 'Re-sync Star Badge Rules', desc: 'Re-apply star badge rules to all users', group: 'Economy' },
 
@@ -11557,7 +11764,6 @@
       { key: 'edit_user_profile', label: 'Edit User Profile', desc: 'Edit username and basic account details', group: 'Moderation' },
       { key: 'edit_user_balance', label: 'Edit User Coins/Stars', desc: 'Edit coins and stars in user editor', group: 'Moderation' },
       { key: 'edit_user_moderation', label: 'Edit User Moderation State', desc: 'Set mute/ban status and reasons', group: 'Moderation' },
-      { key: 'manage_users', label: 'Manage Users (Full)', desc: 'Legacy full access for user editor', group: 'Moderation' },
       { key: 'view_plays', label: 'View Play Logs & IP', desc: 'View play history and IP', group: 'Moderation' },
       { key: 'delete_plays', label: 'Delete Play Records', desc: 'Remove play records', group: 'Moderation' },
       { key: 'view_chats', label: 'View All Chats', desc: 'View global and private chats', group: 'Moderation' },
@@ -11573,7 +11779,6 @@
       { key: 'create_gradient_titles', label: 'Create Gradient Titles', desc: 'Create titles with gradient colors', group: 'Roles' },
       { key: 'manage_badges', label: 'Manage Badges', desc: 'Create and assign badges', group: 'Roles' },
 
-      { key: 'manage_site_config', label: 'Manage Site Config (Full)', desc: 'Legacy full site config access', group: 'System' },
       { key: 'edit_daily_reward', label: 'Edit Daily Reward', desc: 'Change daily reward stars/coins', group: 'System' },
       { key: 'edit_rarity_order', label: 'Edit Rarity Order', desc: 'Change rarity sort order', group: 'System' },
       { key: 'edit_rarity_styles', label: 'Edit Rarity Styles', desc: 'Create/update rarity appearance rules', group: 'System' },
@@ -11588,7 +11793,7 @@
       const defaults = [
         { name: 'Owner', color: '#FFD700', isGradient: true, gradientColors: ['#FFD700','#FF6B35','#FF1744'], priority: 1000, permissions: ALL_PERMISSIONS.map(p => p.key) },
         { name: 'Admin', color: '#FF3D6C', isGradient: false, gradientColors: [], priority: 500, permissions: ALL_PERMISSIONS.filter(p => p.key !== 'manage_permissions' && p.key !== 'create_gradient_titles').map(p => p.key) },
-        { name: 'Moderator', color: '#42A5F5', isGradient: false, gradientColors: [], priority: 100, permissions: ['staff_access','view_dashboard','manage_users','view_plays','view_chats','delete_chats','assign_titles','assign_badges','mute_users','ban_users'] },
+        { name: 'Moderator', color: '#42A5F5', isGradient: false, gradientColors: [], priority: 100, permissions: ['staff_access','view_dashboard','view_users_admin','edit_user_profile','edit_user_moderation','view_plays','view_chats','delete_chats','assign_titles','assign_badges','mute_users','ban_users'] },
         { name: 'User', color: '#2AFF9E', isGradient: false, gradientColors: [], priority: 0, permissions: [] },
       ];
       for (const def of defaults) {
@@ -12169,7 +12374,7 @@
         <div class="staff-stat-card"><h4>Total Movies</h4><div class="staff-stat-number">${moviesSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Movie Categories</h4><div class="staff-stat-number">${movieCatsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Registered Users</h4><div class="staff-stat-number">${usersSnap.size}</div></div>
-        <div class="staff-stat-card"><h4>Play Records</h4><div class="staff-stat-number">${playsSnap.size}</div></div>
+        <div class="staff-stat-card"><h4>History Records</h4><div class="staff-stat-number">${playsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Packs</h4><div class="staff-stat-number">${packsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Titles</h4><div class="staff-stat-number">${titlesSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Badges</h4><div class="staff-stat-number">${badgesSnap.size}</div></div>
@@ -12196,13 +12401,22 @@
     async function loadStaffGames() {
       if (!canViewGamesAdmin()) { document.getElementById('staff-games-table').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
       const snap = await getDocs(collection(db,"games"));
-      staffGamesCache = snap.docs.map(d => ({id:d.id,...d.data()}));
+      staffGamesCache = snap.docs.map((d, i) => normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i));
+      if (canEditGame()) {
+        const backfills = [];
+        snap.docs.forEach((d, i) => {
+          const data = d.data() || {};
+          if (toBoundedPositiveInt(data.gameKey ?? data.gameIdKey ?? data.key, MAX_GAME_KEY_ID) !== null) return;
+          backfills.push(updateDoc(doc(db, 'games', d.id), { gameKey: staffGamesCache[i].gameKey, updatedAt: serverTimestamp() }));
+        });
+        if (backfills.length) await Promise.allSettled(backfills);
+      }
       renderStaffGames(staffGamesCache);
     }
     function renderStaffGames(games) {
       const canEdit = canEditGame();
       const canDelete = canDeleteGame();
-      document.getElementById('staff-games-table').innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Tags</th><th>Rating</th><th>Multi</th><th>Actions</th></tr></thead><tbody>${games.map(g=>`<tr><td><strong>${escapeHtml(g.title)}</strong></td><td>${(g.tags||[]).map(t=>`<span class="staff-badge">${escapeHtml(t)}</span>`).join(' ')}</td><td>${g.rating||3}</td><td>${g.multiplayer?'Yes':'No'}</td><td>${canEdit ? `<button class="staff-btn staff-btn-primary staff-btn-sm sg-edit" data-id="${g.id}">Edit</button>` : ''} ${canDelete ? `<button class="staff-btn staff-btn-danger staff-btn-sm sg-del" data-id="${g.id}">Del</button>` : ''}${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}</td></tr>`).join('')}</tbody></table>`;
+      document.getElementById('staff-games-table').innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Game Key</th><th>Tags</th><th>Rating</th><th>Multi</th><th>Actions</th></tr></thead><tbody>${games.map(g=>`<tr><td><strong>${escapeHtml(g.title)}</strong></td><td>${Number.isFinite(Number(g.gameKey)) ? Number(g.gameKey) : '—'}</td><td>${(g.tags||[]).map(t=>`<span class="staff-badge">${escapeHtml(t)}</span>`).join(' ')}</td><td>${g.rating||3}</td><td>${g.multiplayer?'Yes':'No'}</td><td>${canEdit ? `<button class="staff-btn staff-btn-primary staff-btn-sm sg-edit" data-id="${g.id}">Edit</button>` : ''} ${canDelete ? `<button class="staff-btn staff-btn-danger staff-btn-sm sg-del" data-id="${g.id}">Del</button>` : ''}${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}</td></tr>`).join('')}</tbody></table>`;
       document.querySelectorAll('.sg-edit').forEach(b=>b.addEventListener('click',()=>openStaffEditGame(b.dataset.id)));
       document.querySelectorAll('.sg-del').forEach(b=>b.addEventListener('click',async()=>{if(!canDeleteGame()){showNotification('No permission to delete games','error');return;}if(confirm('Delete game?')){await deleteDoc(doc(db,'games',b.dataset.id));loadStaffGames();loadStaffDashboard();}}));
     }
@@ -12287,6 +12501,7 @@
         <div class="staff-card" style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <span class="staff-badge" style="background:${escapeHtml(cat.gradient || '#2f5ca3')};color:#fff;">${escapeHtml(cat.key)}</span>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Category ID: ${Number.isFinite(Number(cat.categoryId)) ? Number(cat.categoryId) : '—'}</span>
             <span style="font-size:0.78rem;color:var(--text-secondary);">Order: ${Number(cat.order) || 0}</span>
             <span style="font-size:0.78rem;color:var(--text-secondary);">Art: ${escapeHtml(cat.artPosition || 'bottom')} / ${Number(cat.artScale) || 100}%</span>
           </div>
@@ -12333,9 +12548,12 @@
       }
       staffMovieCategoriesCache = snap.docs.map((d, i) => {
         const x = d.data() || {};
+        const parsedCategoryId = toBoundedPositiveInt(x.categoryId ?? x.categoryKey ?? x.numericId, MAX_MOVIE_CATEGORY_ID);
+        const fallbackCategoryId = (i + 1) <= MAX_MOVIE_CATEGORY_ID ? (i + 1) : stableNumericKey(x.key || x.name || d.id, MAX_MOVIE_CATEGORY_ID);
         return {
           id: d.id,
           key: String(x.key || x.name || '').trim(),
+          categoryId: parsedCategoryId !== null ? parsedCategoryId : fallbackCategoryId,
           gradient: String(x.gradient || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)'),
           art: String(x.art || ''),
           artPosition: String(x.artPosition || 'bottom').toLowerCase() === 'middle' ? 'middle' : 'bottom',
@@ -12343,6 +12561,15 @@
           order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
         };
       }).filter((x) => x.key).sort((a, b) => (a.order || 0) - (b.order || 0));
+      if (canEditMovieCategory()) {
+        const backfills = [];
+        staffMovieCategoriesCache.forEach((cat) => {
+          const source = snap.docs.find((d) => d.id === cat.id)?.data() || {};
+          if (toBoundedPositiveInt(source.categoryId ?? source.categoryKey ?? source.numericId, MAX_MOVIE_CATEGORY_ID) !== null) return;
+          backfills.push(updateDoc(doc(db, 'movieCategories', cat.id), { categoryId: cat.categoryId, updatedAt: serverTimestamp() }));
+        });
+        if (backfills.length) await Promise.allSettled(backfills);
+      }
       renderStaffMovieCategories(staffMovieCategoriesCache);
       populateStaffMovieCategorySelect();
       if (!document.getElementById('staff-movie-category-id')?.value) resetStaffMovieCategoryForm();
@@ -12358,10 +12585,12 @@
         String(m.title || '').toLowerCase().includes(q) ||
         String(m.category || '').toLowerCase().includes(q)
       ) : movies;
-      tableEl.innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Category</th><th>Year</th><th>Score</th><th>Actions</th></tr></thead><tbody>${filtered.map((m) => `
+      tableEl.innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Movie ID</th><th>Category</th><th>Category ID</th><th>Year</th><th>Score</th><th>Actions</th></tr></thead><tbody>${filtered.map((m) => `
         <tr>
           <td><strong>${escapeHtml(m.title || '')}</strong></td>
+          <td>${Number.isFinite(Number(m.movieKey)) ? Number(m.movieKey) : '—'}</td>
           <td>${escapeHtml(m.category || '')}</td>
+          <td>${Number.isFinite(Number(m.categoryId)) ? Number(m.categoryId) : '—'}</td>
           <td>${m.releaseYear || '—'}</td>
           <td>${m.score || '—'}</td>
           <td>${canEdit ? `<button type="button" class="staff-btn staff-btn-primary staff-btn-sm smv-edit" data-id="${escapeHtml(m.id)}">Edit</button>` : ''} ${canDelete ? `<button type="button" class="staff-btn staff-btn-danger staff-btn-sm smv-del" data-id="${escapeHtml(m.id)}">Del</button>` : ''}${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}</td>
@@ -12399,7 +12628,22 @@
       if (!canViewMoviesAdmin()) return;
       const cats = staffMovieCategoriesCache.length ? staffMovieCategoriesCache : [];
       const snap = await getDocs(collection(db, 'movies'));
-      staffMoviesCache = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, cats));
+      staffMoviesCache = snap.docs.map((d, i) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, cats, i));
+      if (canEditMovie()) {
+        const backfills = [];
+        staffMoviesCache.forEach((movie) => {
+          const source = snap.docs.find((d) => d.id === movie.id)?.data() || {};
+          const hasMovieKey = toBoundedPositiveInt(source.movieKey ?? source.movieIdKey ?? source.key, MAX_MOVIE_KEY_ID) !== null;
+          const hasCategoryId = toBoundedPositiveInt(source.categoryId, MAX_MOVIE_CATEGORY_ID) !== null;
+          if (hasMovieKey && hasCategoryId) return;
+          backfills.push(updateDoc(doc(db, 'movies', movie.id), {
+            movieKey: movie.movieKey,
+            categoryId: movie.categoryId,
+            updatedAt: serverTimestamp()
+          }));
+        });
+        if (backfills.length) await Promise.allSettled(backfills);
+      }
       staffMoviesCache.sort(movieNewestComparator);
       renderStaffMovies(staffMoviesCache, document.getElementById('staff-search-movie')?.value || '');
       if (!document.getElementById('staff-movie-id')?.value) resetStaffMovieForm();
@@ -12439,14 +12683,46 @@
 
     // ========== Staff Plays ==========
     async function loadStaffPlays() {
-      if (!hasPermission('view_plays')) { document.querySelector('#staff-plays-table tbody').innerHTML = '<tr><td colspan="5" style="color:var(--neon-pink);">No permission.</td></tr>'; return; }
+      if (!hasPermission('view_plays')) { document.querySelector('#staff-plays-table tbody').innerHTML = '<tr><td colspan="6" style="color:var(--neon-pink);">No permission.</td></tr>'; return; }
       const snap = await getDocs(query(collection(db,'plays'),orderBy('timestamp','desc')));
       const plays = snap.docs.map(d=>{const data=d.data();return{id:d.id,...data,timestamp:data.timestamp?.toDate?.()||new Date()};});
       renderStaffPlays(plays);
     }
     function renderStaffPlays(plays, filter='') {
-      const filtered = plays.filter(p=>(p.userEmail||p.userId||'').toLowerCase().includes(filter)||(p.gameTitle||'').toLowerCase().includes(filter));
-      document.querySelector('#staff-plays-table tbody').innerHTML = filtered.map(p=>`<tr><td>${escapeHtml(p.userEmail||p.userId||'?')}</td><td>${escapeHtml(p.gameTitle)}</td><td>${p.timestamp.toLocaleString()}</td><td>${p.ipAddress||'N/A'}</td><td>${hasPermission('delete_plays')?`<button class="staff-btn staff-btn-danger staff-btn-sm sp-del" data-id="${p.id}">Del</button>`:''}</td></tr>`).join('');
+      const q = String(filter || '').toLowerCase();
+      const filtered = plays.filter((p) => {
+        const type = String(p.entryType || p.itemType || 'game').toLowerCase();
+        const title = String(p.movieTitle || p.gameTitle || '');
+        return (p.userEmail||p.userId||'').toLowerCase().includes(q) || title.toLowerCase().includes(q) || type.includes(q);
+      });
+      document.querySelector('#staff-plays-table tbody').innerHTML = filtered.map((p) => {
+        const type = String(p.entryType || p.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
+        const title = escapeHtml(String(p.movieTitle || p.gameTitle || 'Untitled'));
+        const openBtn = type === 'movie'
+          ? `<button class="staff-btn staff-btn-sm sph-open" data-type="movie" data-mid="${escapeHtml(String(p.movieId || ''))}" data-year="${escapeHtml(String(p.releaseYear || ''))}" data-cat="${escapeHtml(String(p.categoryId || ''))}" data-mkey="${escapeHtml(String(p.movieKey || ''))}">Open</button>`
+          : `<button class="staff-btn staff-btn-sm sph-open" data-type="game" data-gid="${escapeHtml(String(p.gameId || ''))}">Open</button>`;
+        const delBtn = hasPermission('delete_plays') ? `<button class="staff-btn staff-btn-danger staff-btn-sm sp-del" data-id="${p.id}">Del</button>` : '';
+        return `<tr><td>${escapeHtml(p.userEmail||p.userId||'?')}</td><td style="text-transform:uppercase;">${type}</td><td>${title}</td><td>${p.timestamp.toLocaleString()}</td><td>${p.ipAddress||'N/A'}</td><td>${openBtn} ${delBtn}</td></tr>`;
+      }).join('');
+      document.querySelectorAll('.sph-open').forEach((btn) => btn.addEventListener('click', () => {
+        const type = String(btn.dataset.type || '').toLowerCase();
+        if (type === 'movie') {
+          const mid = String(btn.dataset.mid || '').trim();
+          if (mid) {
+            window.location.assign(`games.html?page=movies-page&movie=${encodeURIComponent(mid)}`);
+            return;
+          }
+          const year = toBoundedPositiveInt(btn.dataset.year, 9999);
+          const cat = toBoundedPositiveInt(btn.dataset.cat, MAX_MOVIE_CATEGORY_ID);
+          const mKey = toBoundedPositiveInt(btn.dataset.mkey, MAX_MOVIE_KEY_ID);
+          if (year !== null && cat !== null && mKey !== null) {
+            window.location.assign(`https://macautraffic.com/movie/${year}/${cat}/${mKey}`);
+          }
+          return;
+        }
+        const gid = String(btn.dataset.gid || '').trim();
+        if (gid) window.location.assign(`games.html?page=main-page&game=${encodeURIComponent(gid)}`);
+      }));
       document.querySelectorAll('.sp-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete play record?')){await deleteDoc(doc(db,'plays',b.dataset.id));loadStaffPlays();loadStaffDashboard();}}));
     }
 
@@ -12917,7 +13193,10 @@
           } catch(err) { showNotification('Image upload failed: '+err.message,'error'); return; }
         }
         if (!imageUrl) { showNotification('Add a cover image URL or upload a file','error'); return; }
-        const gameData={title:document.getElementById('staff-game-title').value,description:document.getElementById('staff-game-desc').value,image:imageUrl,url:document.getElementById('staff-game-url').value,rating:parseFloat(document.getElementById('staff-game-rating').value),multiplayer:document.getElementById('staff-game-multi').value==='true',tags:tagsArr,updatedAt:serverTimestamp()};
+        const existingGame = id ? staffGamesCache.find((g) => String(g.id) === String(id)) : null;
+        const fallbackGameKey = nextNumericKey(staffGamesCache, (g) => g.gameKey, MAX_GAME_KEY_ID, 1);
+        const gameKey = existingGame?.gameKey ?? (fallbackGameKey !== null ? fallbackGameKey : stableNumericKey(id || document.getElementById('staff-game-title').value, MAX_GAME_KEY_ID));
+        const gameData={title:document.getElementById('staff-game-title').value,description:document.getElementById('staff-game-desc').value,image:imageUrl,url:document.getElementById('staff-game-url').value,rating:parseFloat(document.getElementById('staff-game-rating').value),multiplayer:document.getElementById('staff-game-multi').value==='true',tags:tagsArr,gameKey,updatedAt:serverTimestamp()};
         if(id) await updateDoc(doc(db,'games',id),gameData); else await addDoc(collection(db,'games'),{...gameData,createdAt:serverTimestamp()});
         document.getElementById('staff-game-modal').style.display='none';
         loadStaffGames();loadStaffDashboard();
@@ -12937,8 +13216,11 @@
         const artScaleRaw = parseInt(document.getElementById('staff-movie-category-art-scale')?.value, 10);
         const artScale = [50, 75, 100, 125, 150].includes(artScaleRaw) ? artScaleRaw : 100;
         const order = parseInt(document.getElementById('staff-movie-category-order')?.value, 10) || 0;
+        const existing = id ? staffMovieCategoriesCache.find((cat) => String(cat.id) === String(id)) : null;
+        const nextCategoryId = nextNumericKey(staffMovieCategoriesCache, (cat) => cat.categoryId, MAX_MOVIE_CATEGORY_ID, 0);
+        const categoryId = existing?.categoryId ?? (nextCategoryId !== null ? nextCategoryId : stableNumericKey(key || id, MAX_MOVIE_CATEGORY_ID));
         if (!key) { showNotification('Category name is required', 'error'); return; }
-        const payload = { key, name: key, gradient, art, artPosition, artScale, order, updatedAt: serverTimestamp() };
+        const payload = { key, name: key, categoryId, gradient, art, artPosition, artScale, order, updatedAt: serverTimestamp() };
         try {
           if (id) await updateDoc(doc(db, 'movieCategories', id), payload);
           else await addDoc(collection(db, 'movieCategories'), { ...payload, createdAt: serverTimestamp() });
@@ -12963,9 +13245,14 @@
         const titleImage = document.getElementById('staff-movie-title-image')?.value.trim() || '';
         const description = document.getElementById('staff-movie-desc')?.value.trim() || '';
         const url = document.getElementById('staff-movie-url')?.value.trim() || '';
+        const categoryCfg = staffMovieCategoriesCache.find((cat) => String(cat.key) === String(category));
+        const existingMovie = id ? staffMoviesCache.find((movie) => String(movie.id) === String(id)) : null;
+        const nextMovieKey = nextNumericKey(staffMoviesCache, (movie) => movie.movieKey, MAX_MOVIE_KEY_ID, 1);
+        const movieKey = existingMovie?.movieKey ?? (nextMovieKey !== null ? nextMovieKey : stableNumericKey(id || title, MAX_MOVIE_KEY_ID));
+        const categoryId = toBoundedPositiveInt(categoryCfg?.categoryId, MAX_MOVIE_CATEGORY_ID);
         if (!title) { showNotification('Movie title is required', 'error'); return; }
         if (!category) { showNotification('Create/select a movie category first', 'error'); return; }
-        const payload = { title, category, releaseYear, score, banner, titleImage, description, url, updatedAt: serverTimestamp() };
+        const payload = { title, category, categoryId: categoryId !== null ? categoryId : 0, movieKey, releaseYear, score, banner, titleImage, description, url, updatedAt: serverTimestamp() };
         try {
           if (id) await updateDoc(doc(db, 'movies', id), payload);
           else await addDoc(collection(db, 'movies'), { ...payload, createdAt: serverTimestamp() });
@@ -13467,7 +13754,8 @@
       if (requested === 'movies-page') {
         await mountMoviesPageContent();
       } else if (requested === 'main-page' || requested === 'home' || requested === 'contact' || !requested) {
-        ensureMainPageGamesDeferredObserver();
+        if (getRequestedGameIdFromUrl()) await mountMainPageGamesContent();
+        else ensureMainPageGamesDeferredObserver();
       }
       hidePageLoading();
     }

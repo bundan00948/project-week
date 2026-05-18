@@ -7,6 +7,14 @@
   <script>
     (function () {
       const target = new URL("/movie/", window.location.origin);
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const marker = parts.findIndex((part) => part.toLowerCase() === "movie");
+      const year = marker >= 0 ? String(parts[marker + 1] || "").trim() : "";
+      const categoryId = marker >= 0 ? String(parts[marker + 2] || "").trim() : "";
+      const movieId = marker >= 0 ? String(parts[marker + 3] || "").trim() : "";
+      if (year && categoryId && movieId) {
+        target.pathname = `/movie/${encodeURIComponent(year)}/${encodeURIComponent(categoryId)}/${encodeURIComponent(movieId)}`;
+      }
       const raw = String(window.location.search || "").replace(/^\?/, "");
       if (raw.startsWith("=")) {
         try {

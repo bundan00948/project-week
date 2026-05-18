@@ -81,20 +81,42 @@
 
   <script>
     (function () {
+      const MOVIE_ROUTE_CACHE_KEY = "movieRouteCacheV2";
       const backBtn = document.getElementById("backBtn");
       const playerShell = document.getElementById("playerShell");
       const statusMessage = document.getElementById("statusMessage");
       const params = new URLSearchParams(window.location.search);
+      const pathParts = window.location.pathname.split("/").filter(Boolean);
+      const marker = pathParts.findIndex((part) => part.toLowerCase() === "movie");
+      const routeYear = marker >= 0 ? String(pathParts[marker + 1] || "").trim() : "";
+      const routeCategoryId = marker >= 0 ? String(pathParts[marker + 2] || "").trim() : "";
+      const routeMovieId = marker >= 0 ? String(pathParts[marker + 3] || "").trim() : "";
+      const routeKey = routeYear && routeCategoryId && routeMovieId
+        ? `${routeYear}/${routeCategoryId}/${routeMovieId}`
+        : "";
 
-      // Support both modern and legacy patterns:
-      // /movie/?url=<encoded>
-      // /movie/=?<encoded>
-      // /movie/?<encoded>
-      let movieUrl = String(params.get("url") || params.get("u") || "").trim();
+      let routeEntry = null;
+      if (routeKey) {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(MOVIE_ROUTE_CACHE_KEY) || "{}");
+          if (parsed && typeof parsed === "object" && parsed[routeKey]) {
+            routeEntry = parsed[routeKey];
+          }
+        } catch (_) {}
+      }
+
+      let movieUrl = String(routeEntry?.url || "").trim();
       if (!movieUrl) {
-        const rawQuery = String(window.location.search || "").replace(/^\?/, "");
-        if (rawQuery.startsWith("=")) movieUrl = rawQuery.slice(1);
-        else if (rawQuery && !rawQuery.includes("=")) movieUrl = rawQuery;
+        // Legacy fallback:
+        // /movie/?url=<encoded>
+        // /movie/=?<encoded>
+        // /movie/?<encoded>
+        movieUrl = String(params.get("url") || params.get("u") || "").trim();
+        if (!movieUrl) {
+          const rawQuery = String(window.location.search || "").replace(/^\?/, "");
+          if (rawQuery.startsWith("=")) movieUrl = rawQuery.slice(1);
+          else if (rawQuery && !rawQuery.includes("=")) movieUrl = rawQuery;
+        }
       }
 
       let resolvedMovieUrl = "";
@@ -103,12 +125,14 @@
         if (!/^https?:$/i.test(parsed.protocol)) throw new Error("bad protocol");
         resolvedMovieUrl = parsed.toString();
       } catch (_) {
-        statusMessage.textContent = "This movie link is invalid or missing.";
+        statusMessage.textContent = "This movie key is unavailable. Please open the movie from the Movies page again.";
         return;
       }
 
-      // Keep back target stable and fast.
-      backBtn.href = "/games.html?page=movies-page";
+      const backMovieDocId = String(routeEntry?.movieDocId || "").trim();
+      backBtn.href = backMovieDocId
+        ? `/games.html?page=movies-page&movie=${encodeURIComponent(backMovieDocId)}`
+        : "/games.html?page=movies-page";
 
       const frame = document.createElement("iframe");
       frame.className = "movie-frame";
