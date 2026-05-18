@@ -7372,6 +7372,105 @@
     const MAX_MOVIE_CATEGORY_ID = 999;
     const MOVIE_ROUTE_CACHE_KEY = 'movieRouteCacheV2';
     const MOVIE_QUERY_TOKEN_CACHE_KEY = 'movieQueryCacheV1';
+    const AUTH_BRIDGE_COLLECTION = 'authUsers';
+    const AUTH_BRIDGE_VERSION = 'hybrid-auth-firestore-v1';
+    const AUTH_BRIDGE_STRATEGY = 'lazy-auth-event-sync';
+    const authBridgeSyncPromiseByUid = new Map();
+
+    /**
+     * Hybrid auth migration bridge:
+     * lazily mirror each Firebase Auth user into Firestore on auth events.
+     */
+    async function syncAuthIdentityToFirestore(user, context = {}) {
+      if (!user?.uid) return;
+      const uid = String(user.uid);
+      if (authBridgeSyncPromiseByUid.has(uid)) {
+        try { await authBridgeSyncPromiseByUid.get(uid); } catch (_) {}
+        return;
+      }
+      const syncPromise = (async () => {
+        const eventName = String(context.event || 'auth_state_changed').trim() || 'auth_state_changed';
+        const providerIds = [...new Set(
+          (Array.isArray(user.providerData) ? user.providerData : [])
+            .map((provider) => String(provider?.providerId || '').trim())
+            .filter(Boolean)
+        )];
+        if (!providerIds.length && user.providerId) providerIds.push(String(user.providerId));
+        if (!providerIds.length) providerIds.push('password');
+        const email = String(user.email || '').trim();
+        const emailLower = email.toLowerCase();
+        const usernameHint = String(context.username || user.displayName || (email ? email.split('@')[0] : 'user'));
+        const authRef = doc(db, AUTH_BRIDGE_COLLECTION, uid);
+        const profileRef = doc(db, 'users', uid);
+        let authDocExists = false;
+        let profileDocExists = false;
+        try {
+          const authDocSnap = await getDoc(authRef);
+          authDocExists = authDocSnap.exists();
+        } catch (_) {}
+        try {
+          const profileDocSnap = await getDoc(profileRef);
+          profileDocExists = profileDocSnap.exists();
+        } catch (_) {}
+
+        const authPayload = {
+          uid,
+          email,
+          emailLower,
+          usernameHint,
+          firebaseAuth: {
+            uid,
+            emailVerified: Boolean(user.emailVerified),
+            displayName: String(user.displayName || ''),
+            photoURL: String(user.photoURL || ''),
+            phoneNumber: String(user.phoneNumber || ''),
+            providerIds,
+            anonymous: Boolean(user.isAnonymous)
+          },
+          migration: {
+            status: 'lazy_synced',
+            strategy: AUTH_BRIDGE_STRATEGY,
+            version: AUTH_BRIDGE_VERSION,
+            source: 'firebase_auth',
+            lastEvent: eventName,
+            lastSyncedAt: serverTimestamp()
+          },
+          updatedAt: serverTimestamp()
+        };
+        if (!authDocExists) {
+          authPayload.createdAt = serverTimestamp();
+          authPayload.migration.migratedAt = serverTimestamp();
+        }
+
+        const profilePatch = {
+          authUid: uid,
+          authSource: 'firebase-auth',
+          authProviders: providerIds,
+          authEmailVerified: Boolean(user.emailVerified),
+          authMigration: {
+            status: 'lazy_synced',
+            strategy: AUTH_BRIDGE_STRATEGY,
+            version: AUTH_BRIDGE_VERSION,
+            source: 'firebase_auth',
+            lastEvent: eventName,
+            lastSyncedAt: serverTimestamp()
+          }
+        };
+        if (email) profilePatch.email = email;
+        const batch = writeBatch(db);
+        batch.set(authRef, authPayload, { merge: true });
+        if (profileDocExists || context.forceProfileMirror) {
+          batch.set(profileRef, profilePatch, { merge: true });
+        }
+        await batch.commit();
+      })();
+      authBridgeSyncPromiseByUid.set(uid, syncPromise);
+      try {
+        await syncPromise;
+      } finally {
+        authBridgeSyncPromiseByUid.delete(uid);
+      }
+    }
 
     function toBoundedPositiveInt(raw, max) {
       const n = Number.parseInt(raw, 10);
@@ -7498,6 +7597,8 @@
         email,
         username: username || email.split('@')[0],
         avatar,
+        authUid: uid,
+        authSource: 'firebase-auth',
         coins,
         stars: 0,
         title,
@@ -7505,6 +7606,14 @@
         displayId,
         ownedBannerIds: [],
         favoriteMovieIds: [],
+        authMigration: {
+          status: 'profile_created',
+          strategy: AUTH_BRIDGE_STRATEGY,
+          version: AUTH_BRIDGE_VERSION,
+          source: 'firebase_auth',
+          lastEvent: 'profile_init',
+          lastSyncedAt: serverTimestamp()
+        },
         createdAt: serverTimestamp()
       }, { merge: true });
     }
@@ -7747,6 +7856,11 @@
             await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner" });
           }
         }
+        try {
+          await syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true });
+        } catch (syncError) {
+          console.warn('Auth bridge profile sync failed:', syncError);
+        }
         const banCheck = await getDoc(doc(db, "users", user.uid));
         if (banCheck.exists()) {
           const bd = banCheck.data();
@@ -7864,6 +7978,7 @@
         redirectToProfileAfterAuth = true;
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await saveUserProfile(cred.user.uid, email, username, avatarUrl);
+        await syncAuthIdentityToFirestore(cred.user, { event: 'signup', username, forceProfileMirror: true });
         signupModal.style.display = 'none';
         showNotification("Account created successfully!", "success");
       } catch (error) {
@@ -7878,7 +7993,8 @@
       if (!email || !password) { showNotification("Enter email and password", "error"); return; }
       try {
         redirectToProfileAfterAuth = true;
-        await signInWithEmailAndPassword(auth, email, password);
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        await syncAuthIdentityToFirestore(cred.user, { event: 'login', forceProfileMirror: true });
         loginModal.style.display = 'none';
         showNotification("Login successful!", "success");
       } catch (error) {
