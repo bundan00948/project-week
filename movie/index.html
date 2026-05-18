@@ -80,7 +80,7 @@
   </div>
 
   <script>
-    (function () {
+    (async function () {
       const MOVIE_ROUTE_CACHE_KEY = "movieRouteCacheV2";
       const MAX_CATEGORY_ID = 999;
       const MAX_MOVIE_ID = 999999;
@@ -139,6 +139,91 @@
         } catch (_) {}
       }
 
+      const firebaseConfig = {
+        apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
+        authDomain: "blacket-65c5b.firebaseapp.com",
+        databaseURL: "https://blacket-65c5b-default-rtdb.firebaseio.com",
+        projectId: "blacket-65c5b",
+        storageBucket: "blacket-65c5b.firebasestorage.app",
+        messagingSenderId: "497023905730",
+        appId: "1:497023905730:web:a59093052a3f93a476305b",
+        measurementId: "G-XZZR5DH79B"
+      };
+
+      async function fetchRouteEntryFromFirestore() {
+        const yearInt = Number.parseInt(routeYear, 10);
+        const catInt = toBoundedPositiveInt(routeCategoryId, MAX_CATEGORY_ID);
+        const movieInt = toBoundedPositiveInt(routeMovieId, MAX_MOVIE_ID);
+        if (!Number.isFinite(yearInt) || catInt === null || movieInt === null) return null;
+        try {
+          const appModule = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js");
+          const firestoreModule = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js");
+          const app = appModule.getApps().length
+            ? appModule.getApps()[0]
+            : appModule.initializeApp(firebaseConfig);
+          const db = firestoreModule.getFirestore(app);
+          const moviesCol = firestoreModule.collection(db, "movies");
+          let bestDoc = null;
+
+          // Try strict route match first (may require index in some projects).
+          try {
+            const strictQ = firestoreModule.query(
+              moviesCol,
+              firestoreModule.where("movieKey", "==", movieInt),
+              firestoreModule.where("categoryId", "==", catInt),
+              firestoreModule.where("releaseYear", "==", yearInt),
+              firestoreModule.limit(1)
+            );
+            const strictSnap = await firestoreModule.getDocs(strictQ);
+            if (!strictSnap.empty) bestDoc = strictSnap.docs[0];
+          } catch (_) {}
+
+          // Fallback: movieKey only, then rank locally by category/year.
+          if (!bestDoc) {
+            const byKeyQ = firestoreModule.query(
+              moviesCol,
+              firestoreModule.where("movieKey", "==", movieInt),
+              firestoreModule.limit(12)
+            );
+            const byKeySnap = await firestoreModule.getDocs(byKeyQ);
+            if (!byKeySnap.empty) {
+              const sorted = byKeySnap.docs.slice().sort((a, b) => {
+                const da = a.data() || {};
+                const dbb = b.data() || {};
+                const scoreA = (Number(da.categoryId) === catInt ? 2 : 0) + (Number(da.releaseYear) === yearInt ? 1 : 0);
+                const scoreB = (Number(dbb.categoryId) === catInt ? 2 : 0) + (Number(dbb.releaseYear) === yearInt ? 1 : 0);
+                return scoreB - scoreA;
+              });
+              bestDoc = sorted[0] || null;
+            }
+          }
+
+          if (!bestDoc) return null;
+          const data = bestDoc.data() || {};
+          const candidateUrl = String(data.url || data.movieUrl || data.fullMovieUrl || "").trim();
+          if (!candidateUrl) return null;
+          const entry = {
+            url: candidateUrl,
+            movieDocId: bestDoc.id,
+            movieTitle: String(data.title || ""),
+            movieKey: movieInt,
+            categoryId: catInt,
+            year: yearInt,
+            updatedAt: Date.now()
+          };
+          if (routeKey) {
+            try {
+              const parsed = JSON.parse(localStorage.getItem(MOVIE_ROUTE_CACHE_KEY) || "{}");
+              parsed[routeKey] = entry;
+              localStorage.setItem(MOVIE_ROUTE_CACHE_KEY, JSON.stringify(parsed));
+            } catch (_) {}
+          }
+          return entry;
+        } catch (_) {
+          return null;
+        }
+      }
+
       let movieUrl = String(routeEntry?.url || "").trim();
       if (!movieUrl) {
         // Legacy fallback:
@@ -150,6 +235,15 @@
           const rawQuery = String(window.location.search || "").replace(/^\?/, "");
           if (rawQuery.startsWith("=")) movieUrl = rawQuery.slice(1);
           else if (rawQuery && !rawQuery.includes("=")) movieUrl = rawQuery;
+        }
+      }
+
+      if (!movieUrl && routeKey) {
+        statusMessage.textContent = "Resolving movie route...";
+        const fetchedEntry = await fetchRouteEntryFromFirestore();
+        if (fetchedEntry) {
+          routeEntry = fetchedEntry;
+          movieUrl = String(fetchedEntry.url || "").trim();
         }
       }
 

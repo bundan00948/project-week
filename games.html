@@ -8049,15 +8049,6 @@
     function getHistoryEntryLink(entry) {
       const type = String(entry?.entryType || entry?.itemType || '').toLowerCase() === 'movie' ? 'movie' : 'game';
       if (type === 'movie') {
-        const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
-        if (movieDocId) {
-          const previewHref = `games.html?page=movies-page&movie=${encodeURIComponent(movieDocId)}`;
-          return {
-            href: makeAbsoluteUrl(previewHref),
-            action: 'Open',
-            display: 'Movies preview'
-          };
-        }
         const year = toBoundedPositiveInt(entry?.releaseYear, 9999);
         const cat = toBoundedPositiveInt(entry?.categoryId, MAX_MOVIE_CATEGORY_ID);
         const mid = toBoundedPositiveInt(entry?.movieKey, MAX_MOVIE_KEY_ID);
@@ -8068,6 +8059,15 @@
             href: watchHref,
             action: 'Watch',
             display: `Movie watch link (${y})`
+          };
+        }
+        const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
+        if (movieDocId) {
+          const previewHref = `games.html?page=movies-page&movie=${encodeURIComponent(movieDocId)}`;
+          return {
+            href: makeAbsoluteUrl(previewHref),
+            action: 'Open',
+            display: 'Movies preview'
           };
         }
         return null;
