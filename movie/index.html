@@ -82,12 +82,14 @@
   <script>
     (async function () {
       const MOVIE_ROUTE_CACHE_KEY = "movieRouteCacheV2";
+      const MOVIE_QUERY_TOKEN_CACHE_KEY = "movieQueryCacheV1";
       const MAX_CATEGORY_ID = 999;
       const MAX_MOVIE_ID = 999999;
       const backBtn = document.getElementById("backBtn");
       const playerShell = document.getElementById("playerShell");
       const statusMessage = document.getElementById("statusMessage");
       const params = new URLSearchParams(window.location.search);
+      const queryToken = String(params.get("k") || params.get("token") || "").trim();
       const toBoundedPositiveInt = (value, max) => {
         const n = Number.parseInt(value, 10);
         if (!Number.isFinite(n) || n < 0 || n > max) return null;
@@ -111,7 +113,15 @@
         : "";
 
       let routeEntry = null;
-      if (routeKey) {
+      if (queryToken) {
+        try {
+          const parsedTokens = JSON.parse(localStorage.getItem(MOVIE_QUERY_TOKEN_CACHE_KEY) || "{}");
+          if (parsedTokens && typeof parsedTokens === "object" && parsedTokens[queryToken]) {
+            routeEntry = parsedTokens[queryToken];
+          }
+        } catch (_) {}
+      }
+      if (routeKey && !routeEntry) {
         try {
           const parsed = JSON.parse(localStorage.getItem(MOVIE_ROUTE_CACHE_KEY) || "{}");
           if (parsed && typeof parsed === "object") {

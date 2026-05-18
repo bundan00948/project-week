@@ -7371,6 +7371,7 @@
     const MAX_MOVIE_KEY_ID = 999999;
     const MAX_MOVIE_CATEGORY_ID = 999;
     const MOVIE_ROUTE_CACHE_KEY = 'movieRouteCacheV2';
+    const MOVIE_QUERY_TOKEN_CACHE_KEY = 'movieQueryCacheV1';
 
     function toBoundedPositiveInt(raw, max) {
       const n = Number.parseInt(raw, 10);
@@ -8046,16 +8047,60 @@
       }
     }
 
-    function buildMovieQueryRedirectUrl(movieUrl) {
+    function buildMovieQueryToken(seed) {
+      const input = String(seed || '').trim();
+      if (!input) return '';
+      let hash = 2166136261;
+      for (let i = 0; i < input.length; i++) {
+        hash ^= input.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return `m${(hash >>> 0).toString(36).padStart(7, '0')}`;
+    }
+
+    function buildMovieQueryRedirectUrl(movieUrl, metadata = {}) {
       const resolvedMovieUrl = resolveMovieUrl(movieUrl);
       if (!resolvedMovieUrl) return null;
-      return makeAbsoluteUrl(`/movie/?=${encodeURIComponent(resolvedMovieUrl)}`);
+      const tokenSeed = [
+        resolvedMovieUrl,
+        metadata.movieDocId || '',
+        metadata.movieTitle || ''
+      ].join('|');
+      const token = buildMovieQueryToken(tokenSeed);
+      if (!token) return null;
+      try {
+        const raw = localStorage.getItem(MOVIE_QUERY_TOKEN_CACHE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        parsed[token] = {
+          url: resolvedMovieUrl,
+          movieDocId: String(metadata.movieDocId || ''),
+          movieTitle: String(metadata.movieTitle || ''),
+          movieKey: Number.parseInt(metadata.movieKey, 10) || null,
+          categoryId: Number.parseInt(metadata.categoryId, 10) || null,
+          year: Number.parseInt(metadata.year, 10) || null,
+          updatedAt: Date.now()
+        };
+        const entries = Object.entries(parsed)
+          .sort((a, b) => (b[1]?.updatedAt || 0) - (a[1]?.updatedAt || 0))
+          .slice(0, 500);
+        localStorage.setItem(MOVIE_QUERY_TOKEN_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)));
+      } catch (_) {}
+      return makeAbsoluteUrl(`/movie/?k=${encodeURIComponent(token)}`);
     }
 
     function getHistoryEntryLink(entry) {
       const type = String(entry?.entryType || entry?.itemType || '').toLowerCase() === 'movie' ? 'movie' : 'game';
       if (type === 'movie') {
-        const directMovieHref = buildMovieQueryRedirectUrl(entry?.movieUrl || entry?.url || entry?.movieDirectUrl);
+        const directMovieHref = buildMovieQueryRedirectUrl(
+          entry?.movieUrl || entry?.url || entry?.movieDirectUrl,
+          {
+            movieDocId: entry?.movieId || entry?.itemId || '',
+            movieTitle: entry?.movieTitle || entry?.gameTitle || '',
+            movieKey: entry?.movieKey,
+            categoryId: entry?.categoryId,
+            year: entry?.releaseYear
+          }
+        );
         if (directMovieHref) {
           return {
             href: directMovieHref,
@@ -8137,7 +8182,13 @@
       if (!resolvedMovieUrl) return null;
       const routeParts = getMovieRouteParts(movie);
       cacheMovieRouteData(movie, resolvedMovieUrl, routeParts);
-      return buildMovieQueryRedirectUrl(resolvedMovieUrl) || buildMovieWatchRouteUrl(routeParts.year, routeParts.categoryId, routeParts.movieId);
+      return buildMovieQueryRedirectUrl(resolvedMovieUrl, {
+        movieDocId: movie?.id || '',
+        movieTitle: movie?.title || '',
+        movieKey: routeParts.movieId,
+        categoryId: routeParts.categoryId,
+        year: routeParts.year
+      }) || buildMovieWatchRouteUrl(routeParts.year, routeParts.categoryId, routeParts.movieId);
     }
 
     function getRequestedMovieIdFromUrl() {
