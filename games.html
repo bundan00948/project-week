@@ -11515,21 +11515,56 @@
     const ALL_PERMISSIONS = [
       { key: 'staff_access', label: 'Staff Panel Access', desc: 'Can open the Staff Panel', group: 'Core' },
       { key: 'view_dashboard', label: 'View Staff Dashboard', desc: 'See stats overview', group: 'Core' },
-      { key: 'manage_games', label: 'Manage Games', desc: 'Add, edit, delete games', group: 'Content' },
-      { key: 'manage_movies', label: 'Manage Movies', desc: 'Create, edit, delete movies', group: 'Content' },
-      { key: 'manage_movie_categories', label: 'Manage Movie Categories', desc: 'Maintain movie category visuals and order', group: 'Content' },
-      { key: 'manage_tags', label: 'Manage Tags', desc: 'Add and delete tags', group: 'Content' },
-      { key: 'manage_missions', label: 'Manage Missions', desc: 'Create and update mission rewards', group: 'Content' },
+
+      { key: 'view_games_admin', label: 'View Games Admin', desc: 'Open and browse Games admin table', group: 'Content' },
+      { key: 'create_games', label: 'Create Games', desc: 'Add new games', group: 'Content' },
+      { key: 'edit_games', label: 'Edit Games', desc: 'Edit existing games', group: 'Content' },
+      { key: 'delete_games', label: 'Delete Games', desc: 'Delete existing games', group: 'Content' },
+      { key: 'manage_games', label: 'Manage Games (Full)', desc: 'Legacy full access for games', group: 'Content' },
+
+      { key: 'view_movies_admin', label: 'View Movies Admin', desc: 'Open and browse Movies admin table', group: 'Content' },
+      { key: 'create_movies', label: 'Create Movies', desc: 'Add new movies', group: 'Content' },
+      { key: 'edit_movies', label: 'Edit Movies', desc: 'Edit existing movies', group: 'Content' },
+      { key: 'delete_movies', label: 'Delete Movies', desc: 'Delete existing movies', group: 'Content' },
+      { key: 'manage_movies', label: 'Manage Movies (Full)', desc: 'Legacy full access for movies', group: 'Content' },
+
+      { key: 'view_movie_categories_admin', label: 'View Movie Categories Admin', desc: 'View movie category settings', group: 'Content' },
+      { key: 'create_movie_categories', label: 'Create Movie Categories', desc: 'Add movie categories', group: 'Content' },
+      { key: 'edit_movie_categories', label: 'Edit Movie Categories', desc: 'Edit movie categories', group: 'Content' },
+      { key: 'delete_movie_categories', label: 'Delete Movie Categories', desc: 'Delete movie categories', group: 'Content' },
+      { key: 'manage_movie_categories', label: 'Manage Movie Categories (Full)', desc: 'Legacy full access for movie categories', group: 'Content' },
+
+      { key: 'view_tags_admin', label: 'View Tags Admin', desc: 'View tag library', group: 'Content' },
+      { key: 'create_tags', label: 'Create Tags', desc: 'Create tags', group: 'Content' },
+      { key: 'delete_tags', label: 'Delete Tags', desc: 'Delete tags', group: 'Content' },
+      { key: 'manage_tags', label: 'Manage Tags (Full)', desc: 'Legacy full access for tags', group: 'Content' },
+
+      { key: 'view_missions_admin', label: 'View Missions Admin', desc: 'View missions list', group: 'Content' },
+      { key: 'create_missions', label: 'Create Missions', desc: 'Create mission entries', group: 'Content' },
+      { key: 'edit_missions', label: 'Edit Missions', desc: 'Edit mission entries', group: 'Content' },
+      { key: 'delete_missions', label: 'Delete Missions', desc: 'Delete mission entries', group: 'Content' },
+      { key: 'manage_missions', label: 'Manage Missions (Full)', desc: 'Legacy full access for missions', group: 'Content' },
+
       { key: 'manage_packs', label: 'Manage Packs & Items', desc: 'Create, edit, delete packs', group: 'Economy' },
-      { key: 'manage_users', label: 'Manage Users', desc: 'Edit user profiles, coins, stars', group: 'Moderation' },
-      { key: 'manage_stars', label: 'Manage User Stars', desc: 'Use the stars adjustment panel', group: 'Economy' },
+      { key: 'manage_stars', label: 'Manage User Stars (Legacy)', desc: 'Legacy stars panel access', group: 'Economy' },
+      { key: 'adjust_stars', label: 'Adjust User Stars', desc: 'Apply set/add/remove stars actions', group: 'Economy' },
       { key: 'manage_inventory', label: 'Manage User Inventory', desc: 'View and delete user items', group: 'Economy' },
+      { key: 'manage_star_badges', label: 'Manage Star Badge Rules (Legacy)', desc: 'Legacy full star badge rules access', group: 'Economy' },
+      { key: 'edit_star_badge_rules', label: 'Edit Star Badge Rules', desc: 'Create/update star badge thresholds', group: 'Economy' },
+      { key: 'resync_star_badge_rules', label: 'Re-sync Star Badge Rules', desc: 'Re-apply star badge rules to all users', group: 'Economy' },
+
+      { key: 'view_users_admin', label: 'View Users Admin', desc: 'Open users management table', group: 'Moderation' },
+      { key: 'edit_user_profile', label: 'Edit User Profile', desc: 'Edit username and basic account details', group: 'Moderation' },
+      { key: 'edit_user_balance', label: 'Edit User Coins/Stars', desc: 'Edit coins and stars in user editor', group: 'Moderation' },
+      { key: 'edit_user_moderation', label: 'Edit User Moderation State', desc: 'Set mute/ban status and reasons', group: 'Moderation' },
+      { key: 'manage_users', label: 'Manage Users (Full)', desc: 'Legacy full access for user editor', group: 'Moderation' },
       { key: 'view_plays', label: 'View Play Logs & IP', desc: 'View play history and IP', group: 'Moderation' },
       { key: 'delete_plays', label: 'Delete Play Records', desc: 'Remove play records', group: 'Moderation' },
       { key: 'view_chats', label: 'View All Chats', desc: 'View global and private chats', group: 'Moderation' },
       { key: 'delete_chats', label: 'Delete Chat Messages', desc: 'Remove chat messages', group: 'Moderation' },
       { key: 'mute_users', label: 'Mute Users', desc: 'Temp or perm mute users from chat', group: 'Moderation' },
       { key: 'ban_users', label: 'Ban Users', desc: 'Temp or perm ban users from logging in', group: 'Moderation' },
+
       { key: 'assign_titles', label: 'Assign Titles to Users', desc: 'Change user titles', group: 'Roles' },
       { key: 'assign_badges', label: 'Assign Badges to Users', desc: 'Give badges to users', group: 'Roles' },
       { key: 'custom_avatar', label: 'Set Custom Avatar for Users', desc: 'Change any user avatar', group: 'Roles' },
@@ -11537,8 +11572,11 @@
       { key: 'manage_permissions', label: 'Manage Title Permissions', desc: 'Edit permissions on any title', group: 'Roles' },
       { key: 'create_gradient_titles', label: 'Create Gradient Titles', desc: 'Create titles with gradient colors', group: 'Roles' },
       { key: 'manage_badges', label: 'Manage Badges', desc: 'Create and assign badges', group: 'Roles' },
-      { key: 'manage_star_badges', label: 'Manage Star Badge Rules', desc: 'Configure star-threshold badge automation', group: 'Economy' },
-      { key: 'manage_site_config', label: 'Manage Site Config', desc: 'Edit rarity visuals and daily reward settings', group: 'System' },
+
+      { key: 'manage_site_config', label: 'Manage Site Config (Full)', desc: 'Legacy full site config access', group: 'System' },
+      { key: 'edit_daily_reward', label: 'Edit Daily Reward', desc: 'Change daily reward stars/coins', group: 'System' },
+      { key: 'edit_rarity_order', label: 'Edit Rarity Order', desc: 'Change rarity sort order', group: 'System' },
+      { key: 'edit_rarity_styles', label: 'Edit Rarity Styles', desc: 'Create/update rarity appearance rules', group: 'System' },
     ];
 
     let currentUserPermissions = [];
@@ -11578,28 +11616,174 @@
       return perms.some((perm) => hasPermission(perm));
     }
 
+    function canViewGamesAdmin() {
+      return hasAnyPermission(['view_games_admin', 'create_games', 'edit_games', 'delete_games', 'manage_games']);
+    }
+
+    function canCreateGame() {
+      return hasAnyPermission(['create_games', 'manage_games']);
+    }
+
+    function canEditGame() {
+      return hasAnyPermission(['edit_games', 'manage_games']);
+    }
+
+    function canDeleteGame() {
+      return hasAnyPermission(['delete_games', 'manage_games']);
+    }
+
+    function canViewMoviesAdmin() {
+      return hasAnyPermission(['view_movies_admin', 'create_movies', 'edit_movies', 'delete_movies', 'manage_movies', 'manage_games']);
+    }
+
+    function canCreateMovie() {
+      return hasAnyPermission(['create_movies', 'manage_movies', 'manage_games']);
+    }
+
+    function canEditMovie() {
+      return hasAnyPermission(['edit_movies', 'manage_movies', 'manage_games']);
+    }
+
+    function canDeleteMovie() {
+      return hasAnyPermission(['delete_movies', 'manage_movies', 'manage_games']);
+    }
+
+    function canViewMovieCategoriesAdmin() {
+      return hasAnyPermission(['view_movie_categories_admin', 'create_movie_categories', 'edit_movie_categories', 'delete_movie_categories', 'manage_movie_categories', 'manage_movies', 'manage_games']);
+    }
+
+    function canCreateMovieCategory() {
+      return hasAnyPermission(['create_movie_categories', 'manage_movie_categories', 'manage_movies', 'manage_games']);
+    }
+
+    function canEditMovieCategory() {
+      return hasAnyPermission(['edit_movie_categories', 'manage_movie_categories', 'manage_movies', 'manage_games']);
+    }
+
+    function canDeleteMovieCategory() {
+      return hasAnyPermission(['delete_movie_categories', 'manage_movie_categories', 'manage_movies', 'manage_games']);
+    }
+
+    function canViewTagsAdmin() {
+      return hasAnyPermission(['view_tags_admin', 'create_tags', 'delete_tags', 'manage_tags']);
+    }
+
+    function canCreateTag() {
+      return hasAnyPermission(['create_tags', 'manage_tags']);
+    }
+
+    function canDeleteTag() {
+      return hasAnyPermission(['delete_tags', 'manage_tags']);
+    }
+
+    function canViewMissionsAdmin() {
+      return hasAnyPermission(['view_missions_admin', 'create_missions', 'edit_missions', 'delete_missions', 'manage_missions', 'manage_games']);
+    }
+
+    function canCreateMission() {
+      return hasAnyPermission(['create_missions', 'manage_missions', 'manage_games']);
+    }
+
+    function canEditMission() {
+      return hasAnyPermission(['edit_missions', 'manage_missions', 'manage_games']);
+    }
+
+    function canDeleteMission() {
+      return hasAnyPermission(['delete_missions', 'manage_missions', 'manage_games']);
+    }
+
+    function canViewUsersAdmin() {
+      return hasAnyPermission(['view_users_admin', 'edit_user_profile', 'edit_user_balance', 'edit_user_moderation', 'manage_users', 'assign_titles', 'assign_badges', 'custom_avatar', 'manage_inventory', 'mute_users', 'ban_users']);
+    }
+
+    function canEditUserProfile() {
+      return hasAnyPermission(['edit_user_profile', 'manage_users']);
+    }
+
+    function canEditUserBalance() {
+      return hasAnyPermission(['edit_user_balance', 'manage_users']);
+    }
+
+    function canEditUserModeration() {
+      return hasAnyPermission(['edit_user_moderation', 'manage_users', 'mute_users', 'ban_users']);
+    }
+
+    function canAssignUserTitles() {
+      return hasAnyPermission(['assign_titles', 'manage_users', 'manage_titles']);
+    }
+
+    function canAssignUserBadges() {
+      return hasAnyPermission(['assign_badges', 'manage_users', 'manage_badges']);
+    }
+
+    function canEditUserMedia() {
+      return hasAnyPermission(['custom_avatar', 'manage_users']);
+    }
+
+    function canManageUserInventory() {
+      return hasPermission('manage_inventory');
+    }
+
+    function canEditDailyReward() {
+      return hasAnyPermission(['edit_daily_reward', 'manage_site_config', 'manage_packs']);
+    }
+
+    function canEditRarityOrder() {
+      return hasAnyPermission(['edit_rarity_order', 'manage_site_config', 'manage_packs']);
+    }
+
+    function canEditRarityStyles() {
+      return hasAnyPermission(['edit_rarity_styles', 'manage_site_config', 'manage_packs']);
+    }
+
+    function canViewStarsPanel() {
+      return hasAnyPermission(['manage_stars', 'adjust_stars', 'manage_users']);
+    }
+
+    function canAdjustStars() {
+      return hasAnyPermission(['adjust_stars', 'manage_stars', 'manage_users']);
+    }
+
+    function canEditStarBadgeRules() {
+      return hasAnyPermission(['edit_star_badge_rules', 'manage_star_badges', 'manage_badges', 'manage_users']);
+    }
+
+    function canResyncStarBadgeRules() {
+      return hasAnyPermission(['resync_star_badge_rules', 'manage_star_badges', 'manage_badges', 'manage_users']);
+    }
+
     function canManageMovies() {
-      return hasAnyPermission(['manage_movies', 'manage_games']);
+      return canViewMoviesAdmin();
     }
 
     function canManageMovieCategories() {
-      return hasAnyPermission(['manage_movie_categories', 'manage_movies', 'manage_games']);
+      return canViewMovieCategoriesAdmin();
+    }
+
+    function canAccessMoviesPanel() {
+      return canViewMoviesAdmin() || canViewMovieCategoriesAdmin();
     }
 
     function canManageMissions() {
-      return hasAnyPermission(['manage_missions', 'manage_games']);
+      return canViewMissionsAdmin();
     }
 
     function canManageSiteConfig() {
-      return hasAnyPermission(['manage_site_config', 'manage_packs']);
+      return hasAnyPermission([
+        'manage_site_config',
+        'manage_packs',
+        'edit_daily_reward',
+        'edit_rarity_order',
+        'edit_rarity_styles'
+      ]);
     }
 
     function canManageStars() {
-      return hasAnyPermission(['manage_stars', 'manage_users']);
+      return canViewStarsPanel();
     }
 
     function canManageStarBadges() {
-      return hasAnyPermission(['manage_star_badges', 'manage_badges', 'manage_users']);
+      return canEditStarBadgeRules() || canResyncStarBadgeRules();
     }
 
     async function checkStaffAccess(user) {
@@ -11844,17 +12028,17 @@
     // ========== Staff Panel Main ==========
     const STAFF_TAB_ACCESS_RULES = {
       'staff-dashboard': () => hasPermission('view_dashboard'),
-      'staff-games': () => hasPermission('manage_games'),
-      'staff-movies': () => canManageMovies(),
-      'staff-tags': () => hasPermission('manage_tags'),
+      'staff-games': () => canViewGamesAdmin(),
+      'staff-movies': () => canAccessMoviesPanel(),
+      'staff-tags': () => canViewTagsAdmin(),
       'staff-plays': () => hasPermission('view_plays'),
       'staff-packs': () => hasPermission('manage_packs'),
-      'staff-users': () => hasPermission('manage_users'),
+      'staff-users': () => canViewUsersAdmin(),
       'staff-titles': () => hasPermission('manage_titles'),
       'staff-badges': () => hasPermission('manage_badges'),
       'staff-rarity': () => canManageSiteConfig(),
       'staff-missions': () => canManageMissions(),
-      'staff-stars': () => canManageStars(),
+      'staff-stars': () => canViewStarsPanel(),
       'staff-star-badges': () => canManageStarBadges(),
       'staff-chatview': () => hasPermission('view_chats'),
     };
@@ -11924,11 +12108,11 @@
         btn.classList.toggle('is-disabled', !allowed);
         btn.title = allowed ? btn.textContent.trim() : 'No permission';
       };
-      setState('staff-quick-add-game', hasPermission('manage_games'));
-      setState('staff-quick-add-movie', canManageMovies());
+      setState('staff-quick-add-game', canCreateGame());
+      setState('staff-quick-add-movie', canCreateMovie());
       setState('staff-quick-add-pack', hasPermission('manage_packs'));
       setState('staff-quick-add-title', hasPermission('manage_titles'));
-      setState('staff-quick-add-mission', canManageMissions());
+      setState('staff-quick-add-mission', canCreateMission());
     }
 
     async function loadStaffPanel() {
@@ -12010,17 +12194,20 @@
     // ========== Staff Games ==========
     let staffGamesCache = [];
     async function loadStaffGames() {
-      if (!hasPermission('manage_games')) { document.getElementById('staff-games-table').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
+      if (!canViewGamesAdmin()) { document.getElementById('staff-games-table').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
       const snap = await getDocs(collection(db,"games"));
       staffGamesCache = snap.docs.map(d => ({id:d.id,...d.data()}));
       renderStaffGames(staffGamesCache);
     }
     function renderStaffGames(games) {
-      document.getElementById('staff-games-table').innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Tags</th><th>Rating</th><th>Multi</th><th>Actions</th></tr></thead><tbody>${games.map(g=>`<tr><td><strong>${escapeHtml(g.title)}</strong></td><td>${(g.tags||[]).map(t=>`<span class="staff-badge">${escapeHtml(t)}</span>`).join(' ')}</td><td>${g.rating||3}</td><td>${g.multiplayer?'Yes':'No'}</td><td><button class="staff-btn staff-btn-primary staff-btn-sm sg-edit" data-id="${g.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sg-del" data-id="${g.id}">Del</button></td></tr>`).join('')}</tbody></table>`;
+      const canEdit = canEditGame();
+      const canDelete = canDeleteGame();
+      document.getElementById('staff-games-table').innerHTML = `<table class="staff-table"><thead><tr><th>Title</th><th>Tags</th><th>Rating</th><th>Multi</th><th>Actions</th></tr></thead><tbody>${games.map(g=>`<tr><td><strong>${escapeHtml(g.title)}</strong></td><td>${(g.tags||[]).map(t=>`<span class="staff-badge">${escapeHtml(t)}</span>`).join(' ')}</td><td>${g.rating||3}</td><td>${g.multiplayer?'Yes':'No'}</td><td>${canEdit ? `<button class="staff-btn staff-btn-primary staff-btn-sm sg-edit" data-id="${g.id}">Edit</button>` : ''} ${canDelete ? `<button class="staff-btn staff-btn-danger staff-btn-sm sg-del" data-id="${g.id}">Del</button>` : ''}${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}</td></tr>`).join('')}</tbody></table>`;
       document.querySelectorAll('.sg-edit').forEach(b=>b.addEventListener('click',()=>openStaffEditGame(b.dataset.id)));
-      document.querySelectorAll('.sg-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete game?')){await deleteDoc(doc(db,'games',b.dataset.id));loadStaffGames();loadStaffDashboard();}}));
+      document.querySelectorAll('.sg-del').forEach(b=>b.addEventListener('click',async()=>{if(!canDeleteGame()){showNotification('No permission to delete games','error');return;}if(confirm('Delete game?')){await deleteDoc(doc(db,'games',b.dataset.id));loadStaffGames();loadStaffDashboard();}}));
     }
     async function openStaffEditGame(id) {
+      if (!canEditGame()) { showNotification('No permission to edit games', 'error'); return; }
       const d = await getDoc(doc(db,'games',id));
       if(!d.exists()) return;
       const data = d.data();
@@ -12090,6 +12277,8 @@
     function renderStaffMovieCategories(categories) {
       const listEl = document.getElementById('staff-movie-categories-list');
       if (!listEl) return;
+      const canEdit = canEditMovieCategory();
+      const canDelete = canDeleteMovieCategory();
       if (!categories.length) {
         listEl.innerHTML = '<p style="color:var(--text-secondary);font-size:0.82rem;">No custom categories yet. Add one above.</p>';
         return;
@@ -12102,8 +12291,9 @@
             <span style="font-size:0.78rem;color:var(--text-secondary);">Art: ${escapeHtml(cat.artPosition || 'bottom')} / ${Number(cat.artScale) || 100}%</span>
           </div>
           <div class="staff-flex-row" style="gap:8px;">
-            <button type="button" class="staff-btn staff-btn-primary staff-btn-sm smc-edit" data-id="${escapeHtml(cat.id)}">Edit</button>
-            <button type="button" class="staff-btn staff-btn-danger staff-btn-sm smc-del" data-id="${escapeHtml(cat.id)}">Del</button>
+            ${canEdit ? `<button type="button" class="staff-btn staff-btn-primary staff-btn-sm smc-edit" data-id="${escapeHtml(cat.id)}">Edit</button>` : ''}
+            ${canDelete ? `<button type="button" class="staff-btn staff-btn-danger staff-btn-sm smc-del" data-id="${escapeHtml(cat.id)}">Del</button>` : ''}
+            ${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}
           </div>
         </div>
       `).join('');
@@ -12119,6 +12309,7 @@
         document.getElementById('staff-movie-category-order').value = Number(cat.order) || 0;
       }));
       document.querySelectorAll('.smc-del').forEach((btn) => btn.addEventListener('click', async () => {
+        if (!canDeleteMovieCategory()) { showNotification('No permission to delete movie categories', 'error'); return; }
         if (!confirm('Delete this movie category?')) return;
         try {
           await deleteDoc(doc(db, 'movieCategories', btn.dataset.id));
@@ -12133,7 +12324,7 @@
     }
 
     async function loadStaffMovieCategories() {
-      if (!canManageMovieCategories()) return;
+      if (!canViewMovieCategoriesAdmin()) return;
       let snap;
       try {
         snap = await getDocs(query(collection(db, 'movieCategories'), orderBy('order', 'asc')));
@@ -12160,6 +12351,8 @@
     function renderStaffMovies(movies, filter = '') {
       const tableEl = document.getElementById('staff-movies-table');
       if (!tableEl) return;
+      const canEdit = canEditMovie();
+      const canDelete = canDeleteMovie();
       const q = String(filter || '').trim().toLowerCase();
       const filtered = q ? movies.filter((m) =>
         String(m.title || '').toLowerCase().includes(q) ||
@@ -12171,7 +12364,7 @@
           <td>${escapeHtml(m.category || '')}</td>
           <td>${m.releaseYear || '—'}</td>
           <td>${m.score || '—'}</td>
-          <td><button type="button" class="staff-btn staff-btn-primary staff-btn-sm smv-edit" data-id="${escapeHtml(m.id)}">Edit</button> <button type="button" class="staff-btn staff-btn-danger staff-btn-sm smv-del" data-id="${escapeHtml(m.id)}">Del</button></td>
+          <td>${canEdit ? `<button type="button" class="staff-btn staff-btn-primary staff-btn-sm smv-edit" data-id="${escapeHtml(m.id)}">Edit</button>` : ''} ${canDelete ? `<button type="button" class="staff-btn staff-btn-danger staff-btn-sm smv-del" data-id="${escapeHtml(m.id)}">Del</button>` : ''}${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}</td>
         </tr>
       `).join('')}</tbody></table>`;
       document.querySelectorAll('.smv-edit').forEach((btn) => btn.addEventListener('click', () => {
@@ -12188,6 +12381,7 @@
         document.getElementById('staff-movie-url').value = item.url || '';
       }));
       document.querySelectorAll('.smv-del').forEach((btn) => btn.addEventListener('click', async () => {
+        if (!canDeleteMovie()) { showNotification('No permission to delete movies', 'error'); return; }
         if (!confirm('Delete this movie?')) return;
         try {
           await deleteDoc(doc(db, 'movies', btn.dataset.id));
@@ -12202,7 +12396,7 @@
     }
 
     async function loadStaffMovies() {
-      if (!canManageMovies()) return;
+      if (!canViewMoviesAdmin()) return;
       const cats = staffMovieCategoriesCache.length ? staffMovieCategoriesCache : [];
       const snap = await getDocs(collection(db, 'movies'));
       staffMoviesCache = snap.docs.map((d) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, cats));
@@ -12212,29 +12406,35 @@
     }
 
     async function loadStaffMoviesPanel() {
-      if (!canManageMovies()) {
+      if (!canAccessMoviesPanel()) {
         const catList = document.getElementById('staff-movie-categories-list');
         const movieTable = document.getElementById('staff-movies-table');
         if (catList) catList.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
         if (movieTable) movieTable.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
         return;
       }
-      if (canManageMovieCategories()) {
+      if (canViewMovieCategoriesAdmin()) {
         await loadStaffMovieCategories();
       } else {
         const catList = document.getElementById('staff-movie-categories-list');
         if (catList) catList.innerHTML = '<p style="color:var(--neon-pink);">No permission for category settings.</p>';
       }
-      await loadStaffMovies();
+      if (canViewMoviesAdmin()) {
+        await loadStaffMovies();
+      } else {
+        const movieTable = document.getElementById('staff-movies-table');
+        if (movieTable) movieTable.innerHTML = '<p style="color:var(--neon-pink);">No permission for movies list.</p>';
+      }
     }
 
     // ========== Staff Tags ==========
     async function loadStaffTags() {
-      if (!hasPermission('manage_tags')) { document.getElementById('staff-tags-list').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
+      if (!canViewTagsAdmin()) { document.getElementById('staff-tags-list').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
       const snap = await getDocs(collection(db,'tags'));
       const tags = snap.docs.map(d=>({id:d.id,name:d.data().name}));
-      document.getElementById('staff-tags-list').innerHTML = tags.map(t=>`<div class="staff-badge" style="font-size:0.85rem;padding:6px 14px;">${escapeHtml(t.name)} <i class="fas fa-trash-alt st-del-tag" data-id="${t.id}" style="cursor:pointer;color:var(--neon-pink);margin-left:8px;"></i></div>`).join('');
-      document.querySelectorAll('.st-del-tag').forEach(el=>el.addEventListener('click',async()=>{if(confirm('Delete tag?')){await deleteDoc(doc(db,'tags',el.dataset.id));loadStaffTags();}}));
+      const canDelete = canDeleteTag();
+      document.getElementById('staff-tags-list').innerHTML = tags.map(t=>`<div class="staff-badge" style="font-size:0.85rem;padding:6px 14px;">${escapeHtml(t.name)} ${canDelete ? `<i class="fas fa-trash-alt st-del-tag" data-id="${t.id}" style="cursor:pointer;color:var(--neon-pink);margin-left:8px;"></i>` : ''}</div>`).join('');
+      document.querySelectorAll('.st-del-tag').forEach(el=>el.addEventListener('click',async()=>{if(!canDeleteTag()){showNotification('No permission to delete tags','error');return;}if(confirm('Delete tag?')){await deleteDoc(doc(db,'tags',el.dataset.id));loadStaffTags();}}));
     }
 
     // ========== Staff Plays ==========
@@ -12333,21 +12533,32 @@
 
     // ========== Staff Users ==========
     async function loadStaffUsers() {
-      if (!hasPermission('manage_users')) { document.getElementById('staff-users-table').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
+      if (!canViewUsersAdmin()) { document.getElementById('staff-users-table').innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>'; return; }
       const snap = await getDocs(collection(db,'users'));
       const users = snap.docs.map(d=>({id:d.id,...d.data()}));
       renderStaffUsers(users);
     }
     function renderStaffUsers(users, filter='') {
+      const canOpenEditor = canViewUsersAdmin();
+      const canEditAny = canEditUserProfile() || canEditUserBalance() || canAssignUserTitles() || canAssignUserBadges() || canEditUserModeration() || canEditUserMedia() || canManageUserInventory();
       const q = filter.toLowerCase().trim();
       const filtered = users.filter(u => {
         const idStr = u.displayId != null ? String(u.displayId) : '';
         return (u.username||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q) || idStr.includes(q);
       });
-      document.getElementById('staff-users-table').innerHTML = `<table class="staff-table"><thead><tr><th>User</th><th>ID</th><th>Email</th><th>Coins</th><th>Stars</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>${filtered.map(u=>{const muteTag=u.muteStatus&&u.muteStatus!=='none'?`<span style="color:#FFB347;font-size:0.7rem;">🔇${u.muteStatus}</span>`:'';const banTag=u.banStatus&&u.banStatus!=='none'?`<span style="color:#FF3D6C;font-size:0.7rem;">🚫${u.banStatus}</span>`:'';const did=(u.displayId!=null&&String(u.displayId).length===6)?String(u.displayId):'—';return `<tr><td>${escapeHtml(u.username||'?')}</td><td style="font-weight:800;">${escapeHtml(did)}</td><td>${escapeHtml(u.email)}</td><td>${u.coins||0}</td><td>${u.stars||0}</td><td>${escapeHtml(u.title||'User')}</td><td>${muteTag} ${banTag}${!muteTag&&!banTag?'<span style="color:var(--neon-green);font-size:0.7rem;">✓</span>':''}</td><td><button class="staff-btn staff-btn-primary staff-btn-sm su-edit" data-id="${u.id}">Edit</button></td></tr>`;}).join('')}</tbody></table>`;
+      document.getElementById('staff-users-table').innerHTML = `<table class="staff-table"><thead><tr><th>User</th><th>ID</th><th>Email</th><th>Coins</th><th>Stars</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead><tbody>${filtered.map(u=>{const muteTag=u.muteStatus&&u.muteStatus!=='none'?`<span style="color:#FFB347;font-size:0.7rem;">🔇${u.muteStatus}</span>`:'';const banTag=u.banStatus&&u.banStatus!=='none'?`<span style="color:#FF3D6C;font-size:0.7rem;">🚫${u.banStatus}</span>`:'';const did=(u.displayId!=null&&String(u.displayId).length===6)?String(u.displayId):'—';const action = canOpenEditor ? `<button class="staff-btn staff-btn-primary staff-btn-sm su-edit" data-id="${u.id}">${canEditAny ? 'Edit' : 'View'}</button>` : '<span style="color:var(--text-secondary);font-size:0.78rem;">No access</span>';return `<tr><td>${escapeHtml(u.username||'?')}</td><td style="font-weight:800;">${escapeHtml(did)}</td><td>${escapeHtml(u.email)}</td><td>${u.coins||0}</td><td>${u.stars||0}</td><td>${escapeHtml(u.title||'User')}</td><td>${muteTag} ${banTag}${!muteTag&&!banTag?'<span style="color:var(--neon-green);font-size:0.7rem;">✓</span>':''}</td><td>${action}</td></tr>`;}).join('')}</tbody></table>`;
       document.querySelectorAll('.su-edit').forEach(b=>b.addEventListener('click',()=>openStaffEditUser(b.dataset.id)));
     }
     async function openStaffEditUser(uid) {
+      if (!canViewUsersAdmin()) { showNotification('No permission to view users', 'error'); return; }
+      const canEditProfile = canEditUserProfile();
+      const canEditBalance = canEditUserBalance();
+      const canEditModeration = canEditUserModeration();
+      const canAssignTitles = canAssignUserTitles();
+      const canAssignBadges = canAssignUserBadges();
+      const canEditMedia = canEditUserMedia();
+      const canEditInventory = canManageUserInventory();
+      const canSubmit = canEditProfile || canEditBalance || canEditModeration || canAssignTitles || canEditMedia;
       const userDoc = await getDoc(doc(db,'users',uid));
       if(!userDoc.exists()) return;
       const data = userDoc.data();
@@ -12364,36 +12575,60 @@
       document.getElementById('staff-edit-coins').value = data.coins||0;
       document.getElementById('staff-edit-stars').value = data.stars||0;
       document.getElementById('staff-edit-avatar').value = '';
+      document.getElementById('staff-edit-username').disabled = !canEditProfile;
+      document.getElementById('staff-edit-coins').disabled = !canEditBalance;
+      document.getElementById('staff-edit-stars').disabled = !canEditBalance;
+      document.getElementById('staff-edit-avatar').disabled = !canEditMedia;
       staffEditUserInitialBanner = data.banner || '';
       const bUrl = document.getElementById('staff-edit-banner-url');
       if (bUrl) bUrl.value = data.banner || '';
+      if (bUrl) bUrl.disabled = !canEditMedia;
       const bFile = document.getElementById('staff-edit-banner-file');
       if (bFile) bFile.value = '';
+      if (bFile) bFile.disabled = !canEditMedia;
       document.getElementById('staff-edit-mute').value = data.muteStatus || 'none';
       document.getElementById('staff-edit-ban').value = data.banStatus || 'none';
       document.getElementById('staff-edit-mod-reason').value = data.modReason || '';
+      document.getElementById('staff-edit-mute').disabled = !canEditModeration;
+      document.getElementById('staff-edit-ban').disabled = !canEditModeration;
+      document.getElementById('staff-edit-mod-reason').disabled = !canEditModeration;
       document.getElementById('staff-mute-until-group').style.display = data.muteStatus === 'temp' ? 'block' : 'none';
       document.getElementById('staff-ban-until-group').style.display = data.banStatus === 'temp' ? 'block' : 'none';
+      document.getElementById('staff-edit-mute-until').disabled = !canEditModeration;
+      document.getElementById('staff-edit-ban-until').disabled = !canEditModeration;
       if (data.muteUntil) { try { document.getElementById('staff-edit-mute-until').value = new Date(data.muteUntil.toDate ? data.muteUntil.toDate() : data.muteUntil).toISOString().slice(0,16); } catch(e){} }
       if (data.banUntil) { try { document.getElementById('staff-edit-ban-until').value = new Date(data.banUntil.toDate ? data.banUntil.toDate() : data.banUntil).toISOString().slice(0,16); } catch(e){} }
       const titleSelect = document.getElementById('staff-edit-user-title');
       const titlesSnap = await getDocs(collection(db,'titles'));
       titleSelect.innerHTML = titlesSnap.docs.map(d=>{const t=d.data();return `<option value="${escapeHtml(t.name)}" ${t.name===(data.title||'User')?'selected':''}>${escapeHtml(t.name)}</option>`;}).join('');
+      titleSelect.disabled = !canAssignTitles;
       const userBadges = data.badges || [];
       const badgesSnap = await getDocs(collection(db,'badges'));
       const allBadges = badgesSnap.docs.map(d=>({id:d.id,...d.data()}));
-      document.getElementById('staff-user-badges-list').innerHTML = userBadges.length ? userBadges.map(bn=>{const bd=allBadges.find(b=>b.name===bn);return `<span class="user-badge" style="background:${bd?bd.bgColor:'#333'};color:${bd?bd.textColor:'#fff'};">${bd&&bd.icon?`<img src="${escapeHtml(bd.icon)}" loading="lazy" decoding="async" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;">`:''} ${escapeHtml(bn)} <i class="fas fa-times sub-rm-badge" data-badge="${escapeHtml(bn)}" style="cursor:pointer;margin-left:4px;"></i></span>`;}).join(' ') : '<span style="color:var(--text-secondary);font-size:0.8rem;">No badges</span>';
+      document.getElementById('staff-user-badges-list').innerHTML = userBadges.length ? userBadges.map(bn=>{const bd=allBadges.find(b=>b.name===bn);return `<span class="user-badge" style="background:${bd?bd.bgColor:'#333'};color:${bd?bd.textColor:'#fff'};">${bd&&bd.icon?`<img src="${escapeHtml(bd.icon)}" loading="lazy" decoding="async" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;">`:''} ${escapeHtml(bn)} ${canAssignBadges ? `<i class="fas fa-times sub-rm-badge" data-badge="${escapeHtml(bn)}" style="cursor:pointer;margin-left:4px;"></i>` : ''}</span>`;}).join(' ') : '<span style="color:var(--text-secondary);font-size:0.8rem;">No badges</span>';
       const addBadgeSelect = document.getElementById('staff-user-add-badge');
       addBadgeSelect.innerHTML = '<option value="">Select badge...</option>' + allBadges.filter(b=>!userBadges.includes(b.name)).map(b=>`<option value="${escapeHtml(b.name)}">${escapeHtml(b.name)}</option>`).join('');
-      if(hasPermission('manage_inventory')) {
+      addBadgeSelect.disabled = !canAssignBadges;
+      document.getElementById('staff-assign-badge-btn').disabled = !canAssignBadges;
+      if(canEditInventory) {
         const invSnap = await getDocs(query(collection(db,'inventory'),where('userId','==',uid)));
         document.getElementById('staff-user-inventory').innerHTML = invSnap.docs.map(d=>{const it=d.data();return `<div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;"><div><strong>${escapeHtml(it.itemName)}</strong> <span class="staff-badge">${it.rarity}</span></div><button class="staff-btn staff-btn-danger staff-btn-sm sui-del" data-id="${d.id}" data-uid="${uid}">Del</button></div>`;}).join('')||'<span style="color:var(--text-secondary);font-size:0.8rem;">Empty inventory</span>';
         document.querySelectorAll('.sui-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete item?')){await deleteDoc(doc(db,'inventory',b.dataset.id));openStaffEditUser(b.dataset.uid);}}));
+      } else {
+        document.getElementById('staff-user-inventory').innerHTML = '<span style="color:var(--text-secondary);font-size:0.8rem;">No inventory permission</span>';
       }
       document.querySelectorAll('.sub-rm-badge').forEach(b=>b.addEventListener('click',async()=>{
+        if (!canAssignBadges) return;
         await updateDoc(doc(db,'users',uid),{badges:arrayRemove(b.dataset.badge)});
         openStaffEditUser(uid);
       }));
+      const clearBannerBtn = document.getElementById('staff-clear-banner-btn');
+      if (clearBannerBtn) clearBannerBtn.disabled = !canEditMedia;
+      const updateBtn = document.getElementById('staff-update-user-btn');
+      if (updateBtn) {
+        updateBtn.disabled = !canSubmit;
+        updateBtn.title = canSubmit ? 'Update' : 'No permission';
+      }
       document.getElementById('staff-user-modal').style.display = 'flex';
     }
 
@@ -12615,15 +12850,18 @@
     // ========== Staff Missions ==========
     async function loadStaffMissions() {
       const container = document.getElementById('staff-missions-list');
-      if (!canManageMissions()) {
+      if (!canViewMissionsAdmin()) {
         container.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
         return;
       }
+      const canEdit = canEditMission();
+      const canDelete = canDeleteMission();
       try {
         const snap = await getDocs(query(collection(db,'missions'),orderBy('createdAt','desc')));
         const missions = snap.docs.map(d=>({id:d.id,...d.data()}));
-        container.innerHTML = missions.length ? missions.map(m=>`<div class="staff-card" style="margin-bottom:10px;"><div class="staff-card-header"><h3 style="font-size:0.9rem;">${escapeHtml(m.title)}</h3><div><button class="staff-btn staff-btn-primary staff-btn-sm sm-edit" data-id="${m.id}">Edit</button> <button class="staff-btn staff-btn-danger staff-btn-sm sm-del" data-id="${m.id}">Delete</button></div></div><div style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(m.description||'')} | Type: ${m.type} | Target: ${m.target} | Reward: ${m.rewardCoins||0} coins, ${m.rewardStars||0} stars</div></div>`).join('') : '<p style="color:var(--text-secondary);">No missions.</p>';
+        container.innerHTML = missions.length ? missions.map(m=>`<div class="staff-card" style="margin-bottom:10px;"><div class="staff-card-header"><h3 style="font-size:0.9rem;">${escapeHtml(m.title)}</h3><div>${canEdit ? `<button class="staff-btn staff-btn-primary staff-btn-sm sm-edit" data-id="${m.id}">Edit</button>` : ''} ${canDelete ? `<button class="staff-btn staff-btn-danger staff-btn-sm sm-del" data-id="${m.id}">Delete</button>` : ''}${!canEdit && !canDelete ? '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>' : ''}</div></div><div style="font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(m.description||'')} | Type: ${m.type} | Target: ${m.target} | Reward: ${m.rewardCoins||0} coins, ${m.rewardStars||0} stars</div></div>`).join('') : '<p style="color:var(--text-secondary);">No missions.</p>';
         container.querySelectorAll('.sm-edit').forEach(b=>b.addEventListener('click',async()=>{
+          if (!canEditMission()) { showNotification('No permission to edit missions', 'error'); return; }
           const d = await getDoc(doc(db,'missions',b.dataset.id));
           if(!d.exists()) return;
           const x = d.data();
@@ -12636,7 +12874,7 @@
           document.getElementById('staff-mission-rstars').value = x.rewardStars||0;
           document.getElementById('staff-mission-form-modal').style.display='flex';
         }));
-        container.querySelectorAll('.sm-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete mission?')){await deleteDoc(doc(db,'missions',b.dataset.id));loadStaffMissions();}}));
+        container.querySelectorAll('.sm-del').forEach(b=>b.addEventListener('click',async()=>{if(!canDeleteMission()){showNotification('No permission to delete missions','error');return;}if(confirm('Delete mission?')){await deleteDoc(doc(db,'missions',b.dataset.id));loadStaffMissions();}}));
       } catch(e) { container.innerHTML = '<p style="color:var(--neon-pink);">Error loading missions.</p>'; }
     }
 
@@ -12661,11 +12899,13 @@
     // ========== Staff Panel Event Listeners ==========
     function setupStaffEventListeners() {
       // Games
-      document.getElementById('staff-add-game-btn')?.addEventListener('click',()=>{document.getElementById('staff-game-id').value='';document.getElementById('staff-game-form').reset();document.getElementById('staff-game-modal-title').textContent='Add Game';document.getElementById('staff-game-modal').style.display='flex';});
+      document.getElementById('staff-add-game-btn')?.addEventListener('click',()=>{if(!canCreateGame()){showNotification('No permission to create games','error');return;}document.getElementById('staff-game-id').value='';document.getElementById('staff-game-form').reset();document.getElementById('staff-game-modal-title').textContent='Add Game';document.getElementById('staff-game-modal').style.display='flex';});
       document.getElementById('staff-close-game-modal')?.addEventListener('click',()=>document.getElementById('staff-game-modal').style.display='none');
       document.getElementById('staff-game-form')?.addEventListener('submit',async(e)=>{
         e.preventDefault();
         const id=document.getElementById('staff-game-id').value;
+        if (id && !canEditGame()) { showNotification('No permission to edit games','error'); return; }
+        if (!id && !canCreateGame()) { showNotification('No permission to create games','error'); return; }
         const tagsArr=document.getElementById('staff-game-tags').value.split(',').map(t=>t.trim()).filter(t=>t);
         let imageUrl = document.getElementById('staff-game-image').value.trim();
         const imgFile = document.getElementById('staff-game-image-file')?.files?.[0];
@@ -12687,8 +12927,9 @@
 
       // Movies
       document.getElementById('staff-save-movie-category-btn')?.addEventListener('click', async () => {
-        if (!canManageMovieCategories()) { showNotification('No permission to manage movie categories', 'error'); return; }
         const id = document.getElementById('staff-movie-category-id')?.value || '';
+        if (id && !canEditMovieCategory()) { showNotification('No permission to edit movie categories', 'error'); return; }
+        if (!id && !canCreateMovieCategory()) { showNotification('No permission to create movie categories', 'error'); return; }
         const key = document.getElementById('staff-movie-category-name')?.value.trim() || '';
         const gradient = document.getElementById('staff-movie-category-gradient')?.value.trim() || 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
         const art = document.getElementById('staff-movie-category-art')?.value.trim() || '';
@@ -12710,8 +12951,9 @@
       });
       document.getElementById('staff-reset-movie-category-btn')?.addEventListener('click', resetStaffMovieCategoryForm);
       document.getElementById('staff-save-movie-btn')?.addEventListener('click', async () => {
-        if (!canManageMovies()) { showNotification('No permission to manage movies', 'error'); return; }
         const id = document.getElementById('staff-movie-id')?.value || '';
+        if (id && !canEditMovie()) { showNotification('No permission to edit movies', 'error'); return; }
+        if (!id && !canCreateMovie()) { showNotification('No permission to create movies', 'error'); return; }
         const title = document.getElementById('staff-movie-title')?.value.trim() || '';
         const category = document.getElementById('staff-movie-category')?.value || staffMovieCategoriesCache[0]?.key || '';
         const releaseYear = parseInt(document.getElementById('staff-movie-year')?.value, 10) || new Date().getFullYear();
@@ -12740,9 +12982,9 @@
       });
 
       // Tags
-      document.getElementById('staff-add-tag-btn')?.addEventListener('click',()=>document.getElementById('staff-tag-modal').style.display='flex');
+      document.getElementById('staff-add-tag-btn')?.addEventListener('click',()=>{if(!canCreateTag()){showNotification('No permission to create tags','error');return;}document.getElementById('staff-tag-modal').style.display='flex';});
       document.getElementById('staff-close-tag-modal')?.addEventListener('click',()=>document.getElementById('staff-tag-modal').style.display='none');
-      document.getElementById('staff-save-tag-btn')?.addEventListener('click',async()=>{const n=document.getElementById('staff-new-tag-name').value.trim();if(n){await addDoc(collection(db,'tags'),{name:n});document.getElementById('staff-tag-modal').style.display='none';document.getElementById('staff-new-tag-name').value='';loadStaffTags();showNotification('Tag created!','success');}});
+      document.getElementById('staff-save-tag-btn')?.addEventListener('click',async()=>{if(!canCreateTag()){showNotification('No permission to create tags','error');return;}const n=document.getElementById('staff-new-tag-name').value.trim();if(n){await addDoc(collection(db,'tags'),{name:n});document.getElementById('staff-tag-modal').style.display='none';document.getElementById('staff-new-tag-name').value='';loadStaffTags();showNotification('Tag created!','success');}});
 
       // Packs
       document.getElementById('staff-pack-add-item-btn')?.addEventListener('click', () => openStaffBlookEditor(-1));
@@ -12867,7 +13109,7 @@
       });
 
       const openRarityOrderModal = async () => {
-        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        if (!canEditRarityOrder()) { showNotification('No permission to edit rarity order', 'error'); return; }
         const modal = document.getElementById('staff-rarity-order-modal');
         const ta = document.getElementById('staff-rarity-order-input');
         const cur = await getDoc(doc(db,'siteConfig','settings'));
@@ -12878,7 +13120,7 @@
       document.getElementById('staff-set-rarity-order-btn')?.addEventListener('click', openRarityOrderModal);
       document.getElementById('staff-rarity-order-cancel')?.addEventListener('click', () => document.getElementById('staff-rarity-order-modal').style.display='none');
       document.getElementById('staff-rarity-order-save')?.addEventListener('click', async () => {
-        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        if (!canEditRarityOrder()) { showNotification('No permission to edit rarity order', 'error'); return; }
         const v = document.getElementById('staff-rarity-order-input').value.trim();
         await setDoc(doc(db,'siteConfig','settings'), { blookRarityOrder: v, updatedAt: serverTimestamp() }, { merge: true });
         await refreshRarityOrderFromServer();
@@ -12889,7 +13131,7 @@
       });
 
       document.getElementById('staff-daily-reward-save')?.addEventListener('click', async () => {
-        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        if (!canEditDailyReward()) { showNotification('No permission to edit daily reward', 'error'); return; }
         const coins = Math.max(0, parseInt(document.getElementById('staff-daily-reward-coins')?.value, 10) || 0);
         const stars = Math.max(0, parseInt(document.getElementById('staff-daily-reward-stars')?.value, 10) || 0);
         try {
@@ -12902,17 +13144,17 @@
         } catch (e) { showNotification('Save failed: ' + e.message, 'error'); }
       });
       document.getElementById('staff-rarity-def-add')?.addEventListener('click', () => {
-        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        if (!canEditRarityStyles()) { showNotification('No permission to edit rarity styles', 'error'); return; }
         openStaffRarityDefModal('add');
       });
       document.getElementById('staff-rarity-def-gradient')?.addEventListener('change', toggleStaffRarityGradUI);
       document.getElementById('staff-rarity-def-save')?.addEventListener('click', () => {
-        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        if (!canEditRarityStyles()) { showNotification('No permission to edit rarity styles', 'error'); return; }
         saveStaffRarityDef();
       });
       document.getElementById('staff-rarity-def-cancel')?.addEventListener('click', () => { document.getElementById('staff-rarity-def-modal').style.display = 'none'; });
       document.getElementById('staff-rarity-def-delete')?.addEventListener('click', async () => {
-        if (!canManageSiteConfig()) { showNotification('No permission for site config', 'error'); return; }
+        if (!canEditRarityStyles()) { showNotification('No permission to edit rarity styles', 'error'); return; }
         const k = (document.getElementById('staff-rarity-def-key')?.value || '').trim().toLowerCase();
         if (!k) return;
         document.getElementById('staff-rarity-def-modal').style.display = 'none';
@@ -12929,34 +13171,46 @@
       document.getElementById('staff-edit-ban')?.addEventListener('change',e=>{document.getElementById('staff-ban-until-group').style.display=e.target.value==='temp'?'block':'none';});
       document.getElementById('staff-update-user-btn')?.addEventListener('click',async()=>{
         const uid=document.getElementById('staff-edit-user-id').value;
-        const updates={username:document.getElementById('staff-edit-username').value,coins:parseInt(document.getElementById('staff-edit-coins').value),stars:parseInt(document.getElementById('staff-edit-stars').value)};
-        if(hasPermission('assign_titles')) updates.title=document.getElementById('staff-edit-user-title').value;
+        if (!uid) return;
+        const updates={};
+        if (canEditUserProfile()) updates.username=document.getElementById('staff-edit-username').value;
+        if (canEditUserBalance()) {
+          updates.coins=parseInt(document.getElementById('staff-edit-coins').value);
+          updates.stars=parseInt(document.getElementById('staff-edit-stars').value);
+        }
+        if(canAssignUserTitles()) updates.title=document.getElementById('staff-edit-user-title').value;
         const avatarVal=document.getElementById('staff-edit-avatar').value.trim();
-        if(avatarVal && hasPermission('custom_avatar')) updates.avatar=avatarVal;
+        if(avatarVal && canEditUserMedia()) updates.avatar=avatarVal;
         const bannerUrlField = document.getElementById('staff-edit-banner-url')?.value.trim() || '';
         const bannerFile = document.getElementById('staff-edit-banner-file')?.files?.[0];
-        let bannerVal = bannerUrlField;
-        if (bannerFile) {
-          try {
-            const storageRef = ref(storage, `profile-banners/${uid}_${Date.now()}_${bannerFile.name}`);
-            const snapshot = await uploadBytes(storageRef, bannerFile);
-            bannerVal = await getDownloadURL(snapshot.ref);
-          } catch (err) { showNotification('Banner upload failed: '+err.message,'error'); return; }
+        if (canEditUserMedia()) {
+          let bannerVal = bannerUrlField;
+          if (bannerFile) {
+            try {
+              const storageRef = ref(storage, `profile-banners/${uid}_${Date.now()}_${bannerFile.name}`);
+              const snapshot = await uploadBytes(storageRef, bannerFile);
+              bannerVal = await getDownloadURL(snapshot.ref);
+            } catch (err) { showNotification('Banner upload failed: '+err.message,'error'); return; }
+          }
+          if (bannerVal) updates.banner = bannerVal;
+          else if (!bannerFile && bannerUrlField === '' && staffEditUserInitialBanner) updates.banner = null;
         }
-        if (bannerVal) updates.banner = bannerVal;
-        else if (!bannerFile && bannerUrlField === '' && staffEditUserInitialBanner) updates.banner = null;
-        updates.muteStatus=document.getElementById('staff-edit-mute').value;
-        updates.banStatus=document.getElementById('staff-edit-ban').value;
-        updates.modReason=document.getElementById('staff-edit-mod-reason').value;
-        if(updates.muteStatus==='temp'){const v=document.getElementById('staff-edit-mute-until').value;if(v) updates.muteUntil=new Date(v);else updates.muteUntil=null;} else {updates.muteUntil=null;}
-        if(updates.banStatus==='temp'){const v=document.getElementById('staff-edit-ban-until').value;if(v) updates.banUntil=new Date(v);else updates.banUntil=null;} else {updates.banUntil=null;}
+        if (canEditUserModeration()) {
+          updates.muteStatus=document.getElementById('staff-edit-mute').value;
+          updates.banStatus=document.getElementById('staff-edit-ban').value;
+          updates.modReason=document.getElementById('staff-edit-mod-reason').value;
+          if(updates.muteStatus==='temp'){const v=document.getElementById('staff-edit-mute-until').value;if(v) updates.muteUntil=new Date(v);else updates.muteUntil=null;} else {updates.muteUntil=null;}
+          if(updates.banStatus==='temp'){const v=document.getElementById('staff-edit-ban-until').value;if(v) updates.banUntil=new Date(v);else updates.banUntil=null;} else {updates.banUntil=null;}
+        }
+        if (!Object.keys(updates).length) { showNotification('No editable fields for your permission level','error'); return; }
         await updateDoc(doc(db,'users',uid),updates);
-        if (typeof updates.stars === 'number') syncStarBadgesForUser(uid, updates.stars);
+        if (typeof updates.stars === 'number' && Number.isFinite(updates.stars)) syncStarBadgesForUser(uid, updates.stars);
         document.getElementById('staff-user-modal').style.display='none';
         loadStaffUsers();
         showNotification('User updated!','success');
       });
       document.getElementById('staff-assign-badge-btn')?.addEventListener('click',async()=>{
+        if (!canAssignUserBadges()) { showNotification('No permission to assign badges','error'); return; }
         const uid=document.getElementById('staff-edit-user-id').value;
         const badge=document.getElementById('staff-user-add-badge').value;
         if(badge && uid){await updateDoc(doc(db,'users',uid),{badges:arrayUnion(badge)});openStaffEditUser(uid);showNotification('Badge assigned!','success');}
@@ -13019,12 +13273,12 @@
 
       // Quick actions
       document.getElementById('staff-quick-add-game')?.addEventListener('click',()=>{
-        if (!hasPermission('manage_games')) { showNotification('No permission to manage games', 'error'); return; }
+        if (!canCreateGame()) { showNotification('No permission to create games', 'error'); return; }
         switchStaffSection('staff-games');
         document.getElementById('staff-add-game-btn')?.click();
       });
       document.getElementById('staff-quick-add-movie')?.addEventListener('click',()=>{
-        if (!canManageMovies()) { showNotification('No permission to manage movies', 'error'); return; }
+        if (!canCreateMovie()) { showNotification('No permission to create movies', 'error'); return; }
         switchStaffSection('staff-movies');
         document.getElementById('staff-movie-title')?.focus();
       });
@@ -13039,14 +13293,14 @@
         document.getElementById('staff-add-title-btn')?.click();
       });
       document.getElementById('staff-quick-add-mission')?.addEventListener('click',()=>{
-        if (!canManageMissions()) { showNotification('No permission to manage missions', 'error'); return; }
+        if (!canCreateMission()) { showNotification('No permission to create missions', 'error'); return; }
         switchStaffSection('staff-missions');
         document.getElementById('staff-add-mission-btn')?.click();
       });
 
       // Missions
       document.getElementById('staff-add-mission-btn')?.addEventListener('click', () => {
-        if (!canManageMissions()) { showNotification('No permission to manage missions', 'error'); return; }
+        if (!canCreateMission()) { showNotification('No permission to create missions', 'error'); return; }
         document.getElementById('staff-mission-form-id').value = '';
         document.getElementById('staff-mission-title').value = '';
         document.getElementById('staff-mission-desc').value = '';
@@ -13058,8 +13312,9 @@
       });
       document.getElementById('staff-mission-form-cancel')?.addEventListener('click', () => document.getElementById('staff-mission-form-modal').style.display = 'none');
       document.getElementById('staff-mission-form-save')?.addEventListener('click', async () => {
-        if (!canManageMissions()) { showNotification('No permission to manage missions', 'error'); return; }
         const mid = document.getElementById('staff-mission-form-id').value;
+        if (mid && !canEditMission()) { showNotification('No permission to edit missions', 'error'); return; }
+        if (!mid && !canCreateMission()) { showNotification('No permission to create missions', 'error'); return; }
         const payload = {
           title: document.getElementById('staff-mission-title').value.trim(),
           description: document.getElementById('staff-mission-desc').value.trim(),
@@ -13120,7 +13375,7 @@
 
       // Stars
       document.getElementById('staff-stars-apply-btn')?.addEventListener('click', async () => {
-        if (!canManageStars()) { showNotification('No permission to manage stars', 'error'); return; }
+        if (!canAdjustStars()) { showNotification('No permission to adjust stars', 'error'); return; }
         const email = document.getElementById('staff-stars-email').value.trim();
         const action = document.getElementById('staff-stars-action').value;
         const amount = parseInt(document.getElementById('staff-stars-amount').value) || 0;
@@ -13140,7 +13395,7 @@
       });
 
       document.getElementById('staff-star-badge-add-row')?.addEventListener('click', () => {
-        if (!canManageStarBadges()) { showNotification('No permission to manage star badge rules', 'error'); return; }
+        if (!canEditStarBadgeRules()) { showNotification('No permission to edit star badge rules', 'error'); return; }
         const pick = document.getElementById('staff-star-badge-pick');
         const minEl = document.getElementById('staff-star-badge-min');
         const name = (pick?.value || '').trim();
@@ -13151,7 +13406,7 @@
         renderStaffStarBadgeRulesList();
       });
       document.getElementById('staff-star-badge-save-rules')?.addEventListener('click', async () => {
-        if (!canManageStarBadges()) { showNotification('No permission to manage star badge rules', 'error'); return; }
+        if (!canEditStarBadgeRules()) { showNotification('No permission to edit star badge rules', 'error'); return; }
         const status = document.getElementById('staff-star-badge-status');
         const byName = new Map();
         staffStarBadgeRulesDraft.forEach(r => {
@@ -13173,7 +13428,7 @@
         }
       });
       document.getElementById('staff-star-badge-resync-all')?.addEventListener('click', async () => {
-        if (!canManageStarBadges()) { showNotification('No permission to manage star badge rules', 'error'); return; }
+        if (!canResyncStarBadgeRules()) { showNotification('No permission to re-apply star badge rules', 'error'); return; }
         const status = document.getElementById('staff-star-badge-status');
         if (!confirm('Re-apply star badge rules to every user? This may take a moment.')) return;
         if (status) status.textContent = 'Working…';
