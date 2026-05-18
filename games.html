@@ -1709,6 +1709,37 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .history-link-row {
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .history-link-button {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(120, 203, 255, 0.4);
+      background: linear-gradient(135deg, rgba(49, 129, 255, 0.24), rgba(56, 208, 255, 0.14));
+      color: #def4ff;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .history-link-button:hover,
+    .history-link-button:focus-visible {
+      border-color: rgba(120, 203, 255, 0.72);
+      background: linear-gradient(135deg, rgba(49, 129, 255, 0.34), rgba(56, 208, 255, 0.24));
+      transform: translateY(-1px);
+      color: #fff;
+    }
     .history-empty {
       max-width: 980px;
       margin: 0 auto;
@@ -8011,6 +8042,61 @@
       return `https://macautraffic.com/movie/${encodeURIComponent(String(safeYear))}/${encodeURIComponent(catPart)}/${encodeURIComponent(moviePart)}`;
     }
 
+    function makeAbsoluteUrl(rawHref) {
+      const href = String(rawHref || '').trim();
+      if (!href) return '';
+      try {
+        return new URL(href, window.location.origin).toString();
+      } catch (_) {
+        return href;
+      }
+    }
+
+    function formatHistoryLinkDisplay(href) {
+      const absolute = makeAbsoluteUrl(href);
+      if (!absolute) return '';
+      try {
+        const parsed = new URL(absolute);
+        return `${parsed.host}${parsed.pathname}${parsed.search}`;
+      } catch (_) {
+        return absolute;
+      }
+    }
+
+    function getHistoryEntryLink(entry) {
+      const type = String(entry?.entryType || entry?.itemType || '').toLowerCase() === 'movie' ? 'movie' : 'game';
+      if (type === 'movie') {
+        const year = toBoundedPositiveInt(entry?.releaseYear, 9999);
+        const cat = toBoundedPositiveInt(entry?.categoryId, MAX_MOVIE_CATEGORY_ID);
+        const mid = toBoundedPositiveInt(entry?.movieKey, MAX_MOVIE_KEY_ID);
+        const watchHref = buildMovieWatchRouteUrl(year, cat, mid);
+        if (watchHref) {
+          return {
+            href: watchHref,
+            action: 'Watch',
+            display: formatHistoryLinkDisplay(watchHref)
+          };
+        }
+        const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
+        if (!movieDocId) return null;
+        const fallbackHref = `games.html?page=movies-page&movie=${encodeURIComponent(movieDocId)}`;
+        return {
+          href: makeAbsoluteUrl(fallbackHref),
+          action: 'Open',
+          display: formatHistoryLinkDisplay(fallbackHref)
+        };
+      }
+      const gameId = String(entry?.gameId || entry?.itemId || '').trim();
+      if (!gameId) return null;
+      const gameHref = `games.html?page=main-page&game=${encodeURIComponent(gameId)}`;
+      const gameKey = formatGameRouteKey(entry?.gameKey);
+      return {
+        href: makeAbsoluteUrl(gameHref),
+        action: 'Play',
+        display: gameKey ? `GAME-${gameKey} | ${formatHistoryLinkDisplay(gameHref)}` : formatHistoryLinkDisplay(gameHref)
+      };
+    }
+
     function getMovieRouteParts(movie) {
       const yearValue = Number.parseInt(movie?.releaseYear, 10);
       const year = Number.isFinite(yearValue) && yearValue >= 1900 ? yearValue : new Date().getFullYear();
@@ -9219,26 +9305,9 @@
     });
 
     function openHistoryEntry(entry) {
-      const type = String(entry.entryType || entry.itemType || '').toLowerCase();
-      if (type === 'movie') {
-        const movieDocId = String(entry.movieId || entry.itemId || '').trim();
-        if (movieDocId) {
-          window.location.assign(`games.html?page=movies-page&movie=${encodeURIComponent(movieDocId)}`);
-          return;
-        }
-        const year = toBoundedPositiveInt(entry.releaseYear, 9999);
-        const cat = toBoundedPositiveInt(entry.categoryId, MAX_MOVIE_CATEGORY_ID);
-        const mid = toBoundedPositiveInt(entry.movieKey, MAX_MOVIE_KEY_ID);
-        const movieRouteUrl = buildMovieWatchRouteUrl(year, cat, mid);
-        if (movieRouteUrl) {
-          window.location.assign(movieRouteUrl);
-        }
-        return;
-      }
-      const gameId = String(entry.gameId || entry.itemId || '').trim();
-      if (gameId) {
-        window.location.assign(`games.html?page=main-page&game=${encodeURIComponent(gameId)}`);
-      }
+      const target = getHistoryEntryLink(entry);
+      if (!target?.href) return;
+      window.location.assign(target.href);
     }
 
     // ========== Load unified history (games + movies) ==========
@@ -9280,23 +9349,9 @@
             historyItem.className = 'history-item';
             historyItem.setAttribute('role', 'button');
             historyItem.setAttribute('tabindex', '0');
-            const movieRouteLabel = (type === 'movie')
-              ? (() => {
-                  const year = Number.parseInt(data.releaseYear, 10) || new Date().getFullYear();
-                  const categoryPart = formatCategoryRouteId(data.categoryId) || '000';
-                  const moviePart = formatMovieRouteId(data.movieKey) || '000000';
-                  return `/${year}/${categoryPart}/${moviePart}`;
-                })()
-              : null;
-            const gameRouteLabel = type === 'game'
-              ? (() => {
-                  const gamePart = formatGameRouteKey(data.gameKey);
-                  if (gamePart) return `Game #${gamePart}`;
-                  return String(data.gameId || '').trim() ? 'Open game details' : 'Game entry';
-                })()
-              : null;
-            const routeLabel = movieRouteLabel || gameRouteLabel || 'Open entry';
-            const actionLabel = type === 'movie' ? 'Watch' : 'Play';
+            const linkMeta = getHistoryEntryLink(data);
+            const routeLabel = String(linkMeta?.display || 'No link available');
+            const actionLabel = String(linkMeta?.action || (type === 'movie' ? 'Watch' : 'Play'));
             const typeLabel = type === 'movie' ? 'Movie' : 'Game';
             historyItem.innerHTML = `
               <div class="history-banner-wrap">
@@ -9311,12 +9366,20 @@
                 </div>
                 <div class="history-meta">
                   <span><i class="fas fa-clock"></i>${escapeHtml(formattedTime)}</span>
-                  <span><i class="fas fa-link"></i>${escapeHtml(routeLabel)}</span>
+                  <span><i class="fas fa-shield-alt"></i>Secure route</span>
                 </div>
-                <div class="history-route-pill">${escapeHtml(routeLabel)}</div>
+                <div class="history-link-row">
+                  <div class="history-route-pill" title="${escapeHtml(routeLabel)}">${escapeHtml(routeLabel)}</div>
+                  ${linkMeta?.href ? `<a class="history-link-button" data-history-link href="${escapeHtml(linkMeta.href)}"><i class="fas fa-up-right-from-square"></i><span>Open link</span></a>` : ''}
+                </div>
               </div>
             `;
             const open = () => openHistoryEntry(data);
+            historyItem.querySelectorAll('[data-history-link]').forEach((linkEl) => {
+              linkEl.addEventListener('click', (event) => {
+                event.stopPropagation();
+              });
+            });
             historyItem.addEventListener('click', open);
             historyItem.addEventListener('keydown', (event) => {
               if (event.key === 'Enter' || event.key === ' ') {
@@ -12928,31 +12991,16 @@
       document.querySelector('#staff-plays-table tbody').innerHTML = filtered.map((p) => {
         const type = String(p.entryType || p.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
         const title = escapeHtml(String(p.movieTitle || p.gameTitle || 'Untitled'));
-        const openBtn = type === 'movie'
-          ? `<button class="staff-btn staff-btn-sm sph-open" data-type="movie" data-mid="${escapeHtml(String(p.movieId || ''))}" data-year="${escapeHtml(String(p.releaseYear || ''))}" data-cat="${escapeHtml(String(p.categoryId || ''))}" data-mkey="${escapeHtml(String(p.movieKey || ''))}">Open</button>`
-          : `<button class="staff-btn staff-btn-sm sph-open" data-type="game" data-gid="${escapeHtml(String(p.gameId || ''))}">Open</button>`;
+        const target = getHistoryEntryLink(p);
+        const openBtn = target?.href
+          ? `<button class="staff-btn staff-btn-sm sph-open" data-url="${escapeHtml(target.href)}">Open</button>`
+          : '';
         const delBtn = hasPermission('delete_plays') ? `<button class="staff-btn staff-btn-danger staff-btn-sm sp-del" data-id="${p.id}">Del</button>` : '';
         return `<tr><td>${escapeHtml(p.userEmail||p.userId||'?')}</td><td style="text-transform:uppercase;">${type}</td><td>${title}</td><td>${p.timestamp.toLocaleString()}</td><td>${p.ipAddress||'N/A'}</td><td>${openBtn} ${delBtn}</td></tr>`;
       }).join('');
       document.querySelectorAll('.sph-open').forEach((btn) => btn.addEventListener('click', () => {
-        const type = String(btn.dataset.type || '').toLowerCase();
-        if (type === 'movie') {
-          const mid = String(btn.dataset.mid || '').trim();
-          if (mid) {
-            window.location.assign(`games.html?page=movies-page&movie=${encodeURIComponent(mid)}`);
-            return;
-          }
-          const year = toBoundedPositiveInt(btn.dataset.year, 9999);
-          const cat = toBoundedPositiveInt(btn.dataset.cat, MAX_MOVIE_CATEGORY_ID);
-          const mKey = toBoundedPositiveInt(btn.dataset.mkey, MAX_MOVIE_KEY_ID);
-          const movieRouteUrl = buildMovieWatchRouteUrl(year, cat, mKey);
-          if (movieRouteUrl) {
-            window.location.assign(movieRouteUrl);
-          }
-          return;
-        }
-        const gid = String(btn.dataset.gid || '').trim();
-        if (gid) window.location.assign(`games.html?page=main-page&game=${encodeURIComponent(gid)}`);
+        const targetUrl = String(btn.dataset.url || '').trim();
+        if (targetUrl) window.location.assign(targetUrl);
       }));
       document.querySelectorAll('.sp-del').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete play record?')){await deleteDoc(doc(db,'plays',b.dataset.id));loadStaffPlays();loadStaffDashboard();}}));
     }
