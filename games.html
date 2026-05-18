@@ -6668,8 +6668,8 @@
     <!-- Notice Modal (unlogged users) -->
     <div id="noticeModal" class="notice-modal">
       <div class="notice-modal-content">
-        <h3><i class="fas fa-exclamation-triangle"></i> Login Required</h3>
-        <p>You need to be logged in to access this page.<br>Please login or sign up to continue.</p>
+        <h3><i class="fas fa-exclamation-triangle"></i> Please sign in</h3>
+        <p>You need to be signed in to your <strong>Game Universe</strong> account to open this.<br>Choose <strong>Log in</strong> if you already have an account, or <strong>Sign up</strong> to create one.</p>
         <div class="confirm-buttons" style="margin-top: 20px;">
           <button id="noticeLoginBtn" class="confirm-yes">Login</button>
           <button id="noticeSignupBtn" class="confirm-no">Sign Up</button>
@@ -6678,20 +6678,23 @@
       </div>
     </div>
 
-    <!-- Login Modal (email first → password; path depends on Firestore password state) -->
+    <!-- Login Modal: email first, then password (policy-friendly flow) -->
     <div id="loginModal" class="auth-modal">
       <div class="auth-modal-content">
-        <h3><i class="fas fa-sign-in-alt"></i> Login</h3>
+        <h3><i class="fas fa-sign-in-alt"></i> Log in to Game Universe</h3>
+        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;margin:-6px 0 14px;text-align:left;">
+          Same account you created on this site — we just ask for your <strong>email first</strong>, then your <strong>password</strong>, so the steps are clear.
+        </p>
         <div id="loginWizardStep1">
-          <div class="login-step-pill">Step 1 of 2 — Email</div>
-          <input type="email" id="loginEmail" class="auth-input" placeholder="Email" autocomplete="username">
+          <div class="login-step-pill">Step 1 of 2 — Your email</div>
+          <input type="email" id="loginEmail" class="auth-input" placeholder="Email you used when you signed up" autocomplete="username">
           <button type="button" id="loginEmailNextBtn" class="auth-btn">Continue</button>
         </div>
         <div id="loginWizardStep2" style="display: none;">
-          <div class="login-step-pill">Step 2 of 2 — Password</div>
+          <div class="login-step-pill">Step 2 of 2 — Your password</div>
           <p id="loginWizardEmailPreview" class="login-wizard-email-preview" aria-live="polite"></p>
           <p id="loginWizardHint" class="login-wizard-hint"></p>
-          <input type="password" id="loginPassword" class="auth-input" placeholder="Password" autocomplete="current-password">
+          <input type="password" id="loginPassword" class="auth-input" placeholder="Your account password" autocomplete="current-password">
           <button type="button" id="loginBtn" class="auth-btn">Log in</button>
           <button type="button" id="loginWizardBackBtn" class="auth-btn auth-btn-secondary">Change email</button>
         </div>
@@ -6727,13 +6730,13 @@
     <!-- Password Migration Modal -->
     <div id="passwordMigrationModal" class="auth-modal">
       <div class="auth-modal-content">
-        <h3><i class="fas fa-shield-alt"></i> Create your Game password</h3>
-        <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.45;text-align:left;margin-bottom:12px;">
-          One-time setup: create your <strong>Game password</strong> (saved to your Firestore profile). Your sign-in password is updated to match. After this, use this Game password on the login screen — not an old account-only password.
+        <h3><i class="fas fa-shield-alt"></i> One quick update for your account</h3>
+        <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;text-align:left;margin-bottom:12px;">
+          We’ve improved how logins work on <strong>Game Universe</strong>. Please choose the <strong>new password you want to use from now on</strong> for this website. It replaces the password from when you first created your account. After you save, <strong>use only this new password</strong> the next time you sign in — including if you open the site on another device.
         </p>
-        <input type="password" id="passwordMigrationNew" class="auth-input" placeholder="New password (min 6 chars)">
-        <input type="password" id="passwordMigrationConfirm" class="auth-input" placeholder="Confirm new password">
-        <button id="passwordMigrationSaveBtn" class="auth-btn">Save Game password</button>
+        <input type="password" id="passwordMigrationNew" class="auth-input" placeholder="New password (at least 6 characters)">
+        <input type="password" id="passwordMigrationConfirm" class="auth-input" placeholder="Type the new password again">
+        <button id="passwordMigrationSaveBtn" class="auth-btn">Save new password</button>
       </div>
     </div>
 
@@ -7722,7 +7725,7 @@
       if (passwordMigrationConfirmInput) passwordMigrationConfirmInput.value = '';
       if (passwordMigrationSaveBtn) {
         passwordMigrationSaveBtn.disabled = false;
-        passwordMigrationSaveBtn.textContent = 'Save Game password';
+        passwordMigrationSaveBtn.textContent = 'Save new password';
       }
     }
 
@@ -8099,11 +8102,11 @@
     function setLoginWizardPasswordHint(path) {
       if (!loginWizardHint) return;
       if (path === 'firestore') {
-        loginWizardHint.innerHTML = 'Use your <strong>Game password</strong> (saved on your account in Firestore). This is what you use here after setup — including if you changed it in Settings.';
+        loginWizardHint.innerHTML = 'Use the <strong>password you already use on Game Universe</strong> (the one you picked after any past update, or the same one you use in <strong>Settings</strong> if you changed it there).';
       } else if (path === 'auth_first') {
-        loginWizardHint.innerHTML = 'Use your <strong>original Firebase account password</strong> for this step. After you sign in, you must create your <strong>Game password</strong> once; <strong>later logins use that Game password only</strong> (your old account-only password will no longer apply once you set a new one).';
+        loginWizardHint.innerHTML = 'Use the <strong>password you used when you first created this account</strong>. After you sign in, we’ll ask you <strong>once</strong> to choose a <strong>new password for this site</strong>. After that, <strong>always use the new one</strong> when you come back — your very first password won’t work anymore once you’ve saved the new one.';
       } else {
-        loginWizardHint.innerHTML = 'Enter the password for this email. If you have not finished the one-time Game password setup, use your existing account password first; you will be prompted to set your Game password after.';
+        loginWizardHint.innerHTML = 'Enter the <strong>password for this account</strong>. If you still need to finish the one-time update we mentioned, use the <strong>password from when you signed up</strong> first; we’ll walk you through picking a new site password right after.';
       }
     }
 
@@ -8315,7 +8318,7 @@
           updatedAt: serverTimestamp()
         }, { merge: true });
         hidePasswordMigrationModal();
-        showNotification('Password updated successfully', 'success');
+        showNotification('All set! Use your new password next time you sign in to Game Universe.', 'success');
       } catch (error) {
         const code = String(error?.code || '');
         if (code.includes('requires-recent-login')) {
@@ -8327,7 +8330,7 @@
       } finally {
         if (passwordMigrationSaveBtn && passwordMigrationModal?.style.display === 'flex') {
           passwordMigrationSaveBtn.disabled = false;
-          passwordMigrationSaveBtn.textContent = 'Save Game password';
+          passwordMigrationSaveBtn.textContent = 'Save new password';
         }
       }
     });
@@ -12492,7 +12495,7 @@
               },
               updatedAt: serverTimestamp()
             }, { merge: true });
-            showNotification("Password updated successfully", "success");
+            showNotification("Your Game Universe password was updated.", "success");
           } catch (error) {
             showNotification("Error updating password: " + error.message, "error");
             return;
@@ -13633,13 +13636,13 @@
         section.className = 'staff-card';
         section.style.marginTop = '12px';
         section.innerHTML = `
-          <h4 style="font-size:0.9rem;margin-bottom:10px;">Auth Email & Password Controls</h4>
+          <h4 style="font-size:0.9rem;margin-bottom:10px;">Account email & password (staff)</h4>
           <div class="staff-form-group" style="margin:0 0 8px;">
             <label>Email</label>
             <input id="staff-user-email-view" readonly style="opacity:0.85;">
           </div>
           <div class="staff-form-group" style="margin:0 0 8px;">
-            <label>Stored password (Firestore)</label>
+            <label>Stored site password (if visible for your role)</label>
             <input id="staff-user-password-view" readonly style="opacity:0.85;">
           </div>
           <div class="staff-form-group" style="margin:0 0 8px;">
@@ -13647,7 +13650,7 @@
             <input id="staff-user-password-set" type="text" placeholder="Enter new password">
           </div>
           <div class="staff-form-group" style="margin:0 0 8px;">
-            <label>Password status</label>
+            <label>One-time login update</label>
             <input id="staff-user-password-state" readonly style="opacity:0.85;">
           </div>
           <div class="staff-form-group" style="margin:0 0 8px;">
@@ -13656,11 +13659,11 @@
           </div>
           <div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;">
             <button type="button" class="staff-btn staff-btn-primary" id="staff-set-user-password-btn">Set Password</button>
-            <button type="button" class="staff-btn staff-btn-primary" id="staff-force-password-reset-btn">Require Reset Next Login</button>
-            <button type="button" class="staff-btn" id="staff-clear-password-reset-btn">Mark Reset Complete</button>
+            <button type="button" class="staff-btn staff-btn-primary" id="staff-force-password-reset-btn">Require password update next visit</button>
+            <button type="button" class="staff-btn" id="staff-clear-password-reset-btn">Clear required update</button>
           </div>
           <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:8px;">
-            Password values are not viewable. Staff can only force/reset password migration state.
+            Password text may be hidden depending on role. Use the buttons to require or clear the player’s <strong>one-time “update your password”</strong> step when they next open the site.
           </div>
         `;
         modalContent.appendChild(section);
@@ -13770,7 +13773,7 @@
         passwordSetEl.disabled = !canSetPasswords;
       }
       const required = data.passwordMigrationRequired === true;
-      if (stateEl) stateEl.value = required ? 'Reset required on next login' : 'Up to date';
+      if (stateEl) stateEl.value = required ? 'Player must update password on next visit' : 'No update required';
       let changedAtText = 'Never';
       const changedAt = data.passwordChangedAt || authData?.password?.changedAt || null;
       if (changedAt) {
@@ -14438,7 +14441,7 @@
           try {
             await updatePassword(currentUser, nextPassword);
           } catch (error) {
-            showNotification('Stored password set, but Auth update failed: ' + (error?.message || 'Unknown error'), 'error');
+            showNotification('Saved on profile, but the sign-in password could not be updated: ' + (error?.message || 'Unknown error'), 'error');
           }
         }
         await openStaffEditUser(uid);
@@ -14459,7 +14462,7 @@
           updatedAt: serverTimestamp()
         }, { merge: true });
         await openStaffEditUser(uid);
-        showNotification('User will be asked for a new password on next login', 'success');
+        showNotification('This player will be asked to update their password the next time they open the site.', 'success');
       });
       document.getElementById('staff-clear-password-reset-btn')?.addEventListener('click', async () => {
         if (!canSetUserPasswords()) { showNotification('No permission to manage user passwords', 'error'); return; }
@@ -14476,7 +14479,7 @@
           updatedAt: serverTimestamp()
         }, { merge: true });
         await openStaffEditUser(uid);
-        showNotification('Password migration state marked complete', 'success');
+        showNotification('This player no longer needs the one-time password update.', 'success');
       });
       document.getElementById('staff-assign-badge-btn')?.addEventListener('click',async()=>{
         if (!canAssignUserBadges()) { showNotification('No permission to assign badges','error'); return; }
