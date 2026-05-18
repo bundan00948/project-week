@@ -8046,9 +8046,23 @@
       }
     }
 
+    function buildMovieQueryRedirectUrl(movieUrl) {
+      const resolvedMovieUrl = resolveMovieUrl(movieUrl);
+      if (!resolvedMovieUrl) return null;
+      return makeAbsoluteUrl(`/movie/?=${encodeURIComponent(resolvedMovieUrl)}`);
+    }
+
     function getHistoryEntryLink(entry) {
       const type = String(entry?.entryType || entry?.itemType || '').toLowerCase() === 'movie' ? 'movie' : 'game';
       if (type === 'movie') {
+        const directMovieHref = buildMovieQueryRedirectUrl(entry?.movieUrl || entry?.url || entry?.movieDirectUrl);
+        if (directMovieHref) {
+          return {
+            href: directMovieHref,
+            action: 'Watch',
+            display: 'Movie direct link'
+          };
+        }
         const year = toBoundedPositiveInt(entry?.releaseYear, 9999);
         const cat = toBoundedPositiveInt(entry?.categoryId, MAX_MOVIE_CATEGORY_ID);
         const mid = toBoundedPositiveInt(entry?.movieKey, MAX_MOVIE_KEY_ID);
@@ -8123,7 +8137,7 @@
       if (!resolvedMovieUrl) return null;
       const routeParts = getMovieRouteParts(movie);
       cacheMovieRouteData(movie, resolvedMovieUrl, routeParts);
-      return buildMovieWatchRouteUrl(routeParts.year, routeParts.categoryId, routeParts.movieId);
+      return buildMovieQueryRedirectUrl(resolvedMovieUrl) || buildMovieWatchRouteUrl(routeParts.year, routeParts.categoryId, routeParts.movieId);
     }
 
     function getRequestedMovieIdFromUrl() {
@@ -8308,6 +8322,7 @@
       if (!currentUser || !movie) return;
       try {
         const route = getMovieRouteParts(movie);
+        const resolvedMovieUrl = resolveMovieUrl(movie.url);
         await addDoc(collection(db, "plays"), {
           entryType: 'movie',
           itemType: 'movie',
@@ -8317,6 +8332,7 @@
           releaseYear: Number.parseInt(route.year, 10) || null,
           movieTitle: String(movie.title || ''),
           movieBanner: String(movie.banner || ''),
+          movieUrl: resolvedMovieUrl || '',
           gameTitle: String(movie.title || ''), // keep legacy columns populated
           gameImage: String(movie.banner || ''),
           userId: currentUser.uid,

@@ -233,7 +233,13 @@
         movieUrl = String(params.get("url") || params.get("u") || "").trim();
         if (!movieUrl) {
           const rawQuery = String(window.location.search || "").replace(/^\?/, "");
-          if (rawQuery.startsWith("=")) movieUrl = rawQuery.slice(1);
+          if (rawQuery.startsWith("=")) {
+            try {
+              movieUrl = decodeURIComponent(rawQuery.slice(1));
+            } catch (_) {
+              movieUrl = rawQuery.slice(1);
+            }
+          }
           else if (rawQuery && !rawQuery.includes("=")) movieUrl = rawQuery;
         }
       }
