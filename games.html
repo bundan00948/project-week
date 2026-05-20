@@ -7543,7 +7543,6 @@
     const MAX_MOVIE_KEY_ID = 999999;
     const MAX_MOVIE_CATEGORY_ID = 999;
     const MOVIE_ROUTE_CACHE_KEY = 'movieRouteCacheV2';
-    const MOVIE_QUERY_TOKEN_CACHE_KEY = 'movieQueryCacheV1';
     const AUTH_BRIDGE_COLLECTION = 'authUsers';
     const AUTH_BRIDGE_VERSION = 'hybrid-auth-firestore-v1';
     const AUTH_BRIDGE_STRATEGY = 'lazy-auth-event-sync';
@@ -8656,67 +8655,9 @@
       }
     }
 
-    function buildMovieQueryToken(seed) {
-      const input = String(seed || '').trim();
-      if (!input) return '';
-      let hash = 2166136261;
-      for (let i = 0; i < input.length; i++) {
-        hash ^= input.charCodeAt(i);
-        hash = Math.imul(hash, 16777619);
-      }
-      return `m${(hash >>> 0).toString(36).padStart(7, '0')}`;
-    }
-
-    function buildMovieQueryRedirectUrl(movieUrl, metadata = {}) {
-      const resolvedMovieUrl = resolveMovieUrl(movieUrl);
-      if (!resolvedMovieUrl) return null;
-      const tokenSeed = [
-        resolvedMovieUrl,
-        metadata.movieDocId || '',
-        metadata.movieTitle || ''
-      ].join('|');
-      const token = buildMovieQueryToken(tokenSeed);
-      if (!token) return null;
-      try {
-        const raw = localStorage.getItem(MOVIE_QUERY_TOKEN_CACHE_KEY);
-        const parsed = raw ? JSON.parse(raw) : {};
-        parsed[token] = {
-          url: resolvedMovieUrl,
-          movieDocId: String(metadata.movieDocId || ''),
-          movieTitle: String(metadata.movieTitle || ''),
-          movieKey: Number.parseInt(metadata.movieKey, 10) || null,
-          categoryId: Number.parseInt(metadata.categoryId, 10) || null,
-          year: Number.parseInt(metadata.year, 10) || null,
-          updatedAt: Date.now()
-        };
-        const entries = Object.entries(parsed)
-          .sort((a, b) => (b[1]?.updatedAt || 0) - (a[1]?.updatedAt || 0))
-          .slice(0, 500);
-        localStorage.setItem(MOVIE_QUERY_TOKEN_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)));
-      } catch (_) {}
-      return makeAbsoluteUrl(`/movie/?k=${encodeURIComponent(token)}`);
-    }
-
     function getHistoryEntryLink(entry) {
       const type = String(entry?.entryType || entry?.itemType || '').toLowerCase() === 'movie' ? 'movie' : 'game';
       if (type === 'movie') {
-        const directMovieHref = buildMovieQueryRedirectUrl(
-          entry?.movieUrl || entry?.url || entry?.movieDirectUrl,
-          {
-            movieDocId: entry?.movieId || entry?.itemId || '',
-            movieTitle: entry?.movieTitle || entry?.gameTitle || '',
-            movieKey: entry?.movieKey,
-            categoryId: entry?.categoryId,
-            year: entry?.releaseYear
-          }
-        );
-        if (directMovieHref) {
-          return {
-            href: directMovieHref,
-            action: 'Watch',
-            display: 'Movie direct link'
-          };
-        }
         const year = toBoundedPositiveInt(entry?.releaseYear, 9999);
         const cat = toBoundedPositiveInt(entry?.categoryId, MAX_MOVIE_CATEGORY_ID);
         const mid = toBoundedPositiveInt(entry?.movieKey, MAX_MOVIE_KEY_ID);
@@ -8791,13 +8732,8 @@
       if (!resolvedMovieUrl) return null;
       const routeParts = getMovieRouteParts(movie);
       cacheMovieRouteData(movie, resolvedMovieUrl, routeParts);
-      return buildMovieQueryRedirectUrl(resolvedMovieUrl, {
-        movieDocId: movie?.id || '',
-        movieTitle: movie?.title || '',
-        movieKey: routeParts.movieId,
-        categoryId: routeParts.categoryId,
-        year: routeParts.year
-      }) || buildMovieWatchRouteUrl(routeParts.year, routeParts.categoryId, routeParts.movieId);
+      // Use /movie/{year}/{category}/{movieKey} so any visitor can resolve the stream from Firestore.
+      return buildMovieWatchRouteUrl(routeParts.year, routeParts.categoryId, routeParts.movieId);
     }
 
     function getRequestedMovieIdFromUrl() {
