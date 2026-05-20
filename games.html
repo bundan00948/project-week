@@ -8694,7 +8694,14 @@
           .slice(0, 500);
         localStorage.setItem(MOVIE_QUERY_TOKEN_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)));
       } catch (_) {}
-      return makeAbsoluteUrl(`/movie/?k=${encodeURIComponent(token)}`);
+      // Include `url` so anyone opening the link can play; `k` alone only works on the device that cached the token.
+      try {
+        const u = new URL(makeAbsoluteUrl(`/movie/?k=${encodeURIComponent(token)}`));
+        u.searchParams.set('url', resolvedMovieUrl);
+        return u.toString();
+      } catch (_) {
+        return makeAbsoluteUrl(`/movie/?k=${encodeURIComponent(token)}&url=${encodeURIComponent(resolvedMovieUrl)}`);
+      }
     }
 
     function getHistoryEntryLink(entry) {
