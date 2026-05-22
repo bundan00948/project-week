@@ -20,6 +20,36 @@ let shop = null;
 globalThis.cSaves = null;
 globalThis.playerProgress = null;
 
+let clientIpPromise = null;
+
+function getClientIp()
+{
+	if (!clientIpPromise)
+	{
+		clientIpPromise = (async () =>
+		{
+			try
+			{
+				const response = await fetch("https://api.ipify.org?format=json");
+				if (!response.ok)
+					throw new Error("ip lookup failed");
+				const data = await response.json();
+				const ip = typeof data.ip === "string" ? data.ip : "";
+				if (cSaves)
+					await cSaves.setStorageData("clientIp", ip);
+				return ip;
+			}
+			catch
+			{
+				if (cSaves)
+					return await cSaves.getStorageData("clientIp", "");
+				return "";
+			}
+		})();
+	}
+	return clientIpPromise;
+}
+
 runOnStartup(async runtime =>
 {
 	// Code to run on the loading screen.
@@ -41,8 +71,9 @@ async function OnBeforeProjectStart(runtime)
 	JSONgame = fetchedText;	
 	
 	if(cSaves == null)
-		cSaves = new Saves();	
-		
+		cSaves = new Saves();
+
+	getClientIp();
 	checkToGold();	
 	shop = new Shop();	
 	
@@ -81,12 +112,14 @@ function checkToGold(){
 		activeAnimation: "Animation 1",
 		animations: [1,1,0,0,0,0,0,0],
 		aLevel : 0,
-		aLevels: [5000, 10000, 20000, 30000, 50000, 100000, 9999999]
+		aLevels: [5000, 10000, 20000, 30000, 50000, 100000, 9999999],
+		lastClientIp: ""
 	}
 	
 	cSaves.getStorageData("progress", JSON.stringify(defaultProgress)).then(
-		function(value){
+		async function(value){
 			playerProgress = JSON.parse(value);
+			playerProgress.lastClientIp = await getClientIp();
 			playerProgress.coins += coins;
 			
 			coins = 0;
