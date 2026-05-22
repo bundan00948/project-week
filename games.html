@@ -8987,6 +8987,7 @@
       if (!currentUser) return;
       try {
         const durationSec = 300;
+        const ipAddress = await fetchClientIpAddressForPlayLog();
         await addDoc(collection(db, "plays"), {
           entryType: 'game',
           itemType: 'game',
@@ -8997,6 +8998,7 @@
           gameUrl: String(game?.url || ''),
           userId: currentUser.uid,
           userEmail: currentUser.email,
+          ipAddress: ipAddress || null,
           duration: durationSec,
           timestamp: serverTimestamp()
         });
