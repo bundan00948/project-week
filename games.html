@@ -6534,7 +6534,7 @@
           <!-- Staff Plays & IP -->
           <div class="staff-section" id="staff-plays">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user, game, or movie..."></div>
+              <div class="staff-card-header"><h3>History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user, game, movie, or IP..."></div>
               <div style="overflow-x:auto;"><table class="staff-table" id="staff-plays-table"><thead><tr><th>User</th><th>Type</th><th>Title</th><th>Time</th><th>IP Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
             </div>
           </div>
@@ -7049,7 +7049,7 @@
 
   <div class="staff-modal" id="staff-rarity-def-modal"><div class="staff-modal-content" style="max-width:440px;"><h3 id="staff-rarity-def-modal-title">Rarity style</h3><input type="hidden" id="staff-rarity-def-key"><div class="staff-form-group"><label>Rarity id (slug)</label><input id="staff-rarity-def-key-input" placeholder="e.g. legendary"></div><div class="staff-form-group"><label>Solid color</label><input id="staff-rarity-def-solid" type="color" value="#c0c0c0"></div><div class="staff-form-group"><label>Use gradient</label><select id="staff-rarity-def-gradient"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-form-group" id="staff-rarity-def-grad-wrap" style="display:none;"><label>Gradient colors (comma-separated hex)</label><input id="staff-rarity-def-grad-colors" placeholder="#aabbcc, #112233"></div><div class="staff-form-group" id="staff-rarity-def-run-wrap" style="display:none;"><label>Animated gradient</label><select id="staff-rarity-def-running"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-flex-row" style="margin-top:16px;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-def-save">Save</button><button type="button" class="staff-btn staff-btn-danger" id="staff-rarity-def-delete" style="display:none;">Delete</button><button type="button" class="staff-btn" id="staff-rarity-def-cancel">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
+  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><h4 style="margin-top:14px;font-size:0.9rem;">IP addresses</h4><div id="staff-user-ip-summary" style="font-size:0.8rem;line-height:1.45;color:var(--text-secondary);background:rgba(0,0,0,0.28);padding:10px;border-radius:10px;margin-bottom:2px;">Loading…</div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
 
   <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-toolbar"><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="all">All</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="none">None</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="moderation">Moderation</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="content">Content</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="economy">Economy</button></div><div class="title-perm-count" id="staff-title-perm-count">0 / 0 selected</div><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
 
@@ -7794,6 +7794,7 @@
         displayId,
         ownedBannerIds: [],
         favoriteMovieIds: [],
+        ...(options.registrationIpAddress ? { registrationIpAddress: String(options.registrationIpAddress) } : {}),
         passwordMigrationRequired: requirePasswordMigration,
         passwordMigrationVersion: PASSWORD_MIGRATION_VERSION,
         passwordChangedAt: requirePasswordMigration ? null : serverTimestamp(),
@@ -8315,8 +8316,9 @@
       if (!username || !email || !password) { showNotification("Please fill all required fields", "error"); return; }
       try {
         redirectToProfileAfterAuth = true;
+        const registrationIpAddress = await fetchClientIpAddressForPlayLog();
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await saveUserProfile(cred.user.uid, email, username, avatarUrl, { requirePasswordMigration: false, initialPassword: password });
+        await saveUserProfile(cred.user.uid, email, username, avatarUrl, { requirePasswordMigration: false, initialPassword: password, registrationIpAddress });
         await syncAuthIdentityToFirestore(cred.user, { event: 'signup', username, forceProfileMirror: true });
         signupModal.style.display = 'none';
         showNotification("Account created successfully!", "success");
@@ -8926,11 +8928,26 @@
       document.body.style.overflow = 'hidden';
     }
 
+
+    /** Resolves the visitor's public IP for play logs (staff/admin History & IP). */
+    async function fetchClientIpAddressForPlayLog() {
+      try {
+        const response = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+        if (!response.ok) return null;
+        const body = await response.json();
+        const ip = body && typeof body.ip === "string" ? body.ip.trim() : "";
+        return ip || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
     async function logMovieWatch(movie) {
       if (!currentUser || !movie) return;
       try {
         const route = getMovieRouteParts(movie);
         const resolvedMovieUrl = resolveMovieUrl(movie.url);
+        const ipAddress = await fetchClientIpAddressForPlayLog();
         await addDoc(collection(db, "plays"), {
           entryType: 'movie',
           itemType: 'movie',
@@ -8945,6 +8962,7 @@
           gameImage: String(movie.banner || ''),
           userId: currentUser.uid,
           userEmail: currentUser.email,
+          ipAddress: ipAddress || null,
           duration: 0,
           timestamp: serverTimestamp()
         });
@@ -8972,6 +8990,7 @@
       if (!currentUser) return;
       try {
         const durationSec = 300;
+        const ipAddress = await fetchClientIpAddressForPlayLog();
         await addDoc(collection(db, "plays"), {
           entryType: 'game',
           itemType: 'game',
@@ -8982,6 +9001,7 @@
           gameUrl: String(game?.url || ''),
           userId: currentUser.uid,
           userEmail: currentUser.email,
+          ipAddress: ipAddress || null,
           duration: durationSec,
           timestamp: serverTimestamp()
         });
@@ -13631,7 +13651,8 @@
       const filtered = plays.filter((p) => {
         const type = String(p.entryType || p.itemType || 'game').toLowerCase();
         const title = String(p.movieTitle || p.gameTitle || '');
-        return (p.userEmail||p.userId||'').toLowerCase().includes(q) || title.toLowerCase().includes(q) || type.includes(q);
+        const ipStr = String(p.ipAddress || '').toLowerCase();
+        return (p.userEmail||p.userId||'').toLowerCase().includes(q) || title.toLowerCase().includes(q) || type.includes(q) || ipStr.includes(q);
       });
       document.querySelector('#staff-plays-table tbody').innerHTML = filtered.map((p) => {
         const type = String(p.entryType || p.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
@@ -13641,7 +13662,8 @@
           ? `<button class="staff-btn staff-btn-sm sph-open" data-url="${escapeHtml(target.href)}">Open</button>`
           : '';
         const delBtn = hasPermission('delete_plays') ? `<button class="staff-btn staff-btn-danger staff-btn-sm sp-del" data-id="${p.id}">Del</button>` : '';
-        return `<tr><td>${escapeHtml(p.userEmail||p.userId||'?')}</td><td style="text-transform:uppercase;">${type}</td><td>${title}</td><td>${p.timestamp.toLocaleString()}</td><td>${p.ipAddress||'N/A'}</td><td>${openBtn} ${delBtn}</td></tr>`;
+        const ipCell = escapeHtml(String(p.ipAddress || '').trim() || 'N/A');
+        return `<tr><td>${escapeHtml(p.userEmail||p.userId||'?')}</td><td style="text-transform:uppercase;">${type}</td><td>${title}</td><td>${p.timestamp.toLocaleString()}</td><td style="font-family:ui-monospace,monospace;font-size:0.82rem;word-break:break-all;">${ipCell}</td><td>${openBtn} ${delBtn}</td></tr>`;
       }).join('');
       document.querySelectorAll('.sph-open').forEach((btn) => btn.addEventListener('click', () => {
         const targetUrl = String(btn.dataset.url || '').trim();
@@ -13793,6 +13815,60 @@
       }
       return section;
     }
+
+    async function loadStaffUserIpSummaryIntoModal(uid, userData) {
+      const el = document.getElementById('staff-user-ip-summary');
+      if (!el) return;
+      const canSeePlays = hasPermission('view_plays');
+      const regIp = userData.registrationIpAddress ? String(userData.registrationIpAddress).trim() : '';
+      if (!canSeePlays) {
+        el.innerHTML = '<div><strong>Registration IP</strong><br><span style="font-family:ui-monospace,monospace;">'
+          + escapeHtml(regIp || 'Not recorded')
+          + '</span></div><p style="margin-top:8px;opacity:0.85;font-size:0.76rem;">Distinct IPs from activity require the <strong>View Play Logs &amp; IP</strong> permission.</p>';
+        return;
+      }
+      el.textContent = 'Loading…';
+      let rows = [];
+      try {
+        const snap = await getDocs(query(collection(db, 'plays'), where('userId', '==', uid), orderBy('timestamp', 'desc'), limit(200)));
+        rows = snap.docs.map((d) => d.data());
+      } catch (e) {
+        console.warn('staff user ip plays query', e);
+        el.innerHTML = '<span style="color:var(--neon-pink)">Could not load play IPs (Firestore index or rules).</span>';
+        return;
+      }
+      const ts = (x) => {
+        try {
+          const t = x && x.timestamp && x.timestamp.toDate ? x.timestamp.toDate() : new Date(x && x.timestamp ? x.timestamp : 0);
+          return t.getTime() || 0;
+        } catch (_) {
+          return 0;
+        }
+      };
+      rows.sort((a, b) => ts(b) - ts(a));
+      let latest = '';
+      const distinct = [];
+      const seen = new Set();
+      for (const r of rows) {
+        const ip = r && r.ipAddress != null ? String(r.ipAddress).trim() : '';
+        if (!ip) continue;
+        if (!latest) latest = ip;
+        if (!seen.has(ip)) {
+          seen.add(ip);
+          distinct.push(ip);
+        }
+      }
+      const regLine = regIp ? escapeHtml(regIp) : '<span style="opacity:0.75">Not recorded (account predates IP capture)</span>';
+      const latestLine = latest ? escapeHtml(latest) : '<span style="opacity:0.75">No logged plays with an IP yet</span>';
+      const distinctHtml = distinct.length
+        ? '<ul style="margin:6px 0 0 18px;padding:0;">' + distinct.map((ip) => '<li style="margin:3px 0;font-family:ui-monospace,monospace;">' + escapeHtml(ip) + '</li>').join('') + '</ul>'
+        : '<div style="opacity:0.75;margin-top:4px;">No distinct IPs in recent play logs.</div>';
+      el.innerHTML = (
+        '<div><strong>Latest (from activity)</strong><br><span style="font-family:ui-monospace,monospace;">' + latestLine + '</span></div>'
+        + '<div style="margin-top:10px;"><strong>Registration</strong><br><span style="font-family:ui-monospace,monospace;">' + regLine + '</span></div>'
+        + '<div style="margin-top:10px;"><strong>Distinct IPs</strong> <span style="opacity:0.75;font-weight:500;">(one row per address, newest first)</span>' + distinctHtml + '</div>'
+      );
+    }
     async function openStaffEditUser(uid) {
       if (!canViewUsersAdmin()) { showNotification('No permission to view users', 'error'); return; }
       const canEditProfile = canEditUserProfile();
@@ -13918,6 +13994,7 @@
         clearBtn.disabled = !canSetPasswords;
         clearBtn.dataset.uid = uid;
       }
+      await loadStaffUserIpSummaryIntoModal(uid, data);
       document.getElementById('staff-user-modal').style.display = 'flex';
     }
 
