@@ -39,12 +39,18 @@
       box-sizing: border-box;
     }
 
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
+
     body {
       background-color: var(--bg-dark);
       background-image: linear-gradient(165deg, #06080d 0%, #0b0f18 35%, #080a0f 70%, #0a1018 100%);
       font-family: 'Nunito', sans-serif;
       color: var(--text-primary);
-      overflow-x: hidden;
+      height: 100%;
+      overflow: hidden;
       display: flex;
       position: relative;
     }
@@ -278,11 +284,18 @@
       flex: 1;
       margin-left: 0;
       transition: margin-left 0.3s ease;
-      height: 100vh;
+      height: 100%;
+      min-height: 0;
+      overflow-x: hidden;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      min-height: 0;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    @supports (height: 100dvh) {
+      html, body { height: 100dvh; }
+      .sidebar { height: 100dvh; }
     }
 
     .main-content.sidebar-active {
@@ -7208,7 +7221,11 @@
     }
 
     function computeStarBadgeUpdates(stars, currentBadges, rules) {
-      const badges = Array.isArray(currentBadges) ? [...currentBadges] : [];
+      const badges = [...new Set(
+        (Array.isArray(currentBadges) ? currentBadges : [])
+          .map(b => String(b).trim())
+          .filter(Boolean)
+      )];
       const ruleMap = new Map();
       rules.forEach(rule => {
         const name = String(rule.badgeName || '').trim();
@@ -7876,6 +7893,7 @@
 
     let starBadgeMetaCache = null;
     let starBadgeMetaCacheTime = 0;
+    let starBadgeRenderGeneration = 0;
     async function getStarBadgeMetaMap() {
       const now = Date.now();
       if (starBadgeMetaCache && now - starBadgeMetaCacheTime < 60000) return starBadgeMetaCache;
@@ -7907,17 +7925,17 @@
       return uniq.slice(0, cap);
     }
 
-    async function renderStarSlotBadgesInto(wrapEl, fallbackEl, badgeNames, max) {
+    async function renderStarSlotBadgesInto(wrapEl, fallbackEl, badgeNames, max, renderGen) {
       if (!wrapEl) return;
       wrapEl.querySelectorAll('.star-slot-badge-img, .star-slot-badge-fa').forEach(n => n.remove());
+      if (fallbackEl) fallbackEl.style.display = '';
       const ruleSet = await getStarBadgeRulesNameSet();
+      if (renderGen != null && renderGen !== starBadgeRenderGeneration) return;
       const picks = pickStarSlotBadgeNames(badgeNames, max, ruleSet);
-      if (!picks.length) {
-        if (fallbackEl) fallbackEl.style.display = '';
-        return;
-      }
+      if (!picks.length) return;
       if (fallbackEl) fallbackEl.style.display = 'none';
       const meta = await getStarBadgeMetaMap();
+      if (renderGen != null && renderGen !== starBadgeRenderGeneration) return;
       picks.forEach(bn => {
         const bd = meta[bn];
         if (!bd) return;
@@ -7942,34 +7960,28 @@
           wrapEl.appendChild(img);
         }
       });
+      if (renderGen != null && renderGen !== starBadgeRenderGeneration) return;
       if (!wrapEl.querySelector('.star-slot-badge-img, .star-slot-badge-fa') && fallbackEl) fallbackEl.style.display = '';
     }
 
     async function refreshStarDisplayBadges(badgeNames) {
-      await renderStarSlotBadgesInto(
-        document.getElementById('sidebar-stars-icon-wrap'),
-        document.getElementById('sidebar-stars-fallback-icon'),
-        badgeNames,
-        1
-      );
-      await renderStarSlotBadgesInto(
-        document.getElementById('shop-stars-icon-wrap'),
-        document.getElementById('shop-stars-fallback-icon'),
-        badgeNames,
-        1
-      );
-      await renderStarSlotBadgesInto(
-        document.getElementById('profile-stars-icon-wrap'),
-        document.getElementById('profile-stars-fallback-icon'),
-        badgeNames,
-        1
-      );
-      await renderStarSlotBadgesInto(
-        document.getElementById('vp-stars-icon-wrap'),
-        document.getElementById('vp-stars-fallback-icon'),
-        badgeNames,
-        1
-      );
+      const renderGen = ++starBadgeRenderGeneration;
+      const slots = [
+        ['sidebar-stars-icon-wrap', 'sidebar-stars-fallback-icon'],
+        ['shop-stars-icon-wrap', 'shop-stars-fallback-icon'],
+        ['profile-stars-icon-wrap', 'profile-stars-fallback-icon'],
+        ['vp-stars-icon-wrap', 'vp-stars-fallback-icon'],
+      ];
+      for (const [wrapId, fbId] of slots) {
+        if (renderGen !== starBadgeRenderGeneration) return;
+        await renderStarSlotBadgesInto(
+          document.getElementById(wrapId),
+          document.getElementById(fbId),
+          badgeNames,
+          1,
+          renderGen
+        );
+      }
     }
 
     async function loadUserProfile(user) {
@@ -7999,12 +8011,22 @@
     async function renderProfileBadges(badgeNames, containerId) {
       const container = document.getElementById(containerId || 'profile-badges');
       if (!container) return;
-      if (!badgeNames || badgeNames.length === 0) { container.innerHTML = ''; return; }
+      const uniqueNames = [...new Set(
+        (Array.isArray(badgeNames) ? badgeNames : [])
+          .map(b => String(b).trim())
+          .filter(Boolean)
+      )];
+      if (!uniqueNames.length) { container.innerHTML = ''; return; }
       try {
+        const ruleSet = await getStarBadgeRulesNameSet();
+        const displayNames = ruleSet.size
+          ? uniqueNames.filter(b => !ruleSet.has(b))
+          : uniqueNames;
+        if (!displayNames.length) { container.innerHTML = ''; return; }
         const badgesSnap = await getDocs(collection(db, 'badges'));
         const allBadges = badgesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         container.innerHTML = '';
-        badgeNames.forEach(bn => {
+        displayNames.forEach(bn => {
           const bd = allBadges.find(b => b.name === bn);
           if (!bd) return;
           const icon = bd.icon || '';
@@ -8511,7 +8533,7 @@
         gameFrame.dataset.allowedHost = '';
         gameFrame.dataset.systemOrdered = '';
       }
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
       exitGameFullscreen();
       syncGameFullscreenUi();
     }
@@ -8540,7 +8562,7 @@
       if (movieInfoModal) movieInfoModal.style.display = 'none';
       activeMoviePreview = null;
       const gameModalVisible = gameModal && gameModal.style.display === 'block';
-      document.body.style.overflow = gameModalVisible ? 'hidden' : 'auto';
+      document.body.style.overflow = gameModalVisible ? 'hidden' : '';
       if (!options.skipUrlUpdate && (wasOpen || getRequestedMovieIdFromUrl())) {
         updateMoviePreViewUrl('', { pushHistory: false });
       }
