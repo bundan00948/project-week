@@ -73,7 +73,7 @@
 </head>
 <body>
   <div class="top-bar">
-    <a class="back-btn" id="backBtn" href="/films" aria-label="Back to movies">← Back</a>
+    <a class="back-btn" id="backBtn" href="/games/movies" aria-label="Back to movies">← Back</a>
   </div>
   <div class="player-shell" id="playerShell">
     <div class="status" id="statusMessage">Loading movie...</div>
@@ -275,8 +275,8 @@
 
       const backMovieDocId = String(routeEntry?.movieDocId || "").trim();
       backBtn.href = backMovieDocId
-        ? `/films?movie=${encodeURIComponent(backMovieDocId)}`
-        : "/films";
+        ? `/games/movies?movie=${encodeURIComponent(backMovieDocId)}`
+        : "/games/movies";
 
       const frame = document.createElement("iframe");
       frame.className = "movie-frame";
