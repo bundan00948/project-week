@@ -53,6 +53,44 @@ js = js.replace(/\bfriendSendChatBtn\.addEventListener/g, 'friendSendChatBtn?.ad
 js = js.replace(/\bfriendChatInput\.addEventListener/g, 'friendChatInput?.addEventListener');
 js = js.replace(/\baddFriendBtn\.addEventListener/g, 'addFriendBtn?.addEventListener');
 js = js.replace(/document\.querySelector\('#gameModal \.close'\)\.addEventListener/g, "document.querySelector('#gameModal .close')?.addEventListener");
+js = js.replace(/\blogoutBtn\.addEventListener/g, 'logoutBtn?.addEventListener');
+js = js.replace(
+  /document\.getElementById\('suggest-tab'\)\.addEventListener/g,
+  "document.getElementById('suggest-tab')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('report-tab'\)\.addEventListener/g,
+  "document.getElementById('report-tab')?.addEventListener"
+);
+js = js.replace(
+  /document\.querySelectorAll\('\.sidebar-tabs \.tab-button, #home-tab, #contact-tab'\)\.forEach\([\s\S]*?\}\);\s*\n\s*document\.getElementById\('suggest-tab'\)/,
+  "document.getElementById('suggest-tab')"
+);
+js = js.replace(
+  /if \(isAuthRequiredPage\(getCurrentPageId\(\)\)\) \{\s*window\.location\.assign\('\/games\/dashboard'\);\s*\}/,
+  `const loggedOutPageId = getCurrentPageId();
+        if (isAuthRequiredPage(loggedOutPageId)) {
+          if (noticeModal) noticeModal.style.display = 'flex';
+        } else {
+          await loadActivePageContent(loggedOutPageId);
+        }`
+);
+js = js.replace(
+  /function isAuthRequiredPage\(pageId\) \{\s*return pageId !== 'main-page' && pageId !== 'movies-page' && pageId !== 'home' && pageId !== 'contact';\s*\}/,
+  `function isAuthRequiredPage(pageId) {
+      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
+      return !publicPages.has(pageId);
+    }`
+);
+js = js.replace(
+  /case 'main-page':\s*case 'home':\s*case 'contact':\s*if \(getRequestedGameIdFromUrl\(\)\) await mountMainPageGamesContent\(\);\s*else ensureMainPageGamesDeferredObserver\(\);\s*break;/,
+  `case 'main-page':
+        case 'home':
+          await mountMainPageGamesContent();
+          break;
+        case 'contact':
+          break;`
+);
 
 js = js.replace(
   /window\.addEventListener\('click', \(e\) => \{([\s\S]*?)\}\);/,
