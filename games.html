@@ -3,38 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-    (function () {
-      var file = (location.pathname.split('/').pop() || '').split('?')[0];
-      if (file !== 'games.html') return;
-      var params = new URLSearchParams(location.search);
-      var page = String(params.get('page') || '').trim();
-      var map = {
-        'home': 'games-home.html',
-        'contact': 'games-contact.html',
-        'main-page': 'games-main.html',
-        'movies-page': 'games-movies.html',
-        'profile-page': 'games-profile.html',
-        'history-page': 'games-history.html',
-        'shop-page': 'games-shop.html',
-        'inventory-page': 'games-inventory.html',
-        'missions-page': 'games-missions.html',
-        'chat-page': 'games-chat.html',
-        'friends-page': 'games-friends.html',
-        'settings-page': 'games-settings.html',
-        'staff-page': 'games-staff.html',
-        'view-profile-page': 'games-view-profile.html'
-      };
-      var targetFile = map[page] || 'games-main.html';
-      var target = new URL(targetFile, location.href);
-      ['game', 'movie', 'play', 'cat', 'q', 'uid'].forEach(function (key) {
-        var value = String(params.get(key) || '').trim();
-        if (value) target.searchParams.set(key, value);
-      });
-      target.searchParams.delete('page');
-      location.replace(target.toString());
-    })();
-  </script>
   <title>Game Universe - All Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -6132,37 +6100,37 @@
     
     <div class="sidebar-scroll">
     <div class="sidebar-tabs">
-      <a class="tab-button active" data-page="main-page" href="games-main.html">
+      <a class="tab-button active" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button" data-page="movies-page" href="games-movies.html">
+      <a class="tab-button" data-page="movies-page" href="/films">
         <i class="fas fa-film"></i> Movies
       </a>
-      <a class="tab-button" data-page="profile-page" href="games-profile.html">
+      <a class="tab-button" data-page="profile-page" href="/profile">
         <i class="fas fa-user"></i> Profile
       </a>
-      <a class="tab-button" data-page="history-page" href="games-history.html">
+      <a class="tab-button" data-page="history-page" href="/history">
         <i class="fas fa-history"></i> History
       </a>
-      <a class="tab-button" data-page="shop-page" href="games-shop.html">
+      <a class="tab-button" data-page="shop-page" href="/shop">
         <i class="fas fa-shopping-bag"></i> Shop
       </a>
-      <a class="tab-button" data-page="inventory-page" href="games-inventory.html">
+      <a class="tab-button" data-page="inventory-page" href="/inventory">
         <i class="fas fa-box-open"></i> Inventory
       </a>
-      <a class="tab-button" data-page="missions-page" href="games-missions.html">
+      <a class="tab-button" data-page="missions-page" href="/missions">
         <i class="fas fa-tasks"></i> Missions
       </a>
-      <a class="tab-button" data-page="chat-page" href="games-chat.html">
+      <a class="tab-button" data-page="chat-page" href="/chat">
         <i class="fas fa-comments"></i> Chat
       </a>
-      <a class="tab-button" data-page="friends-page" href="games-friends.html">
+      <a class="tab-button" data-page="friends-page" href="/friends">
         <i class="fas fa-user-friends"></i> Friends
       </a>
-      <a class="tab-button" data-page="settings-page" href="games-settings.html">
+      <a class="tab-button" data-page="settings-page" href="/settings">
         <i class="fas fa-cog"></i> Settings
       </a>
-      <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="games-staff.html" style="display:none;">
+      <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/staff" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
       </a>
     </div>
@@ -6180,8 +6148,8 @@
       <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
       <nav>
         <ul>
-          <li><a href="games-home.html" class="active" id="home-tab">Home</a></li>
-          <li><a href="games-contact.html" id="contact-tab">Contact Us</a></li>
+          <li><a href="/home" class="active" id="home-tab">Home</a></li>
+          <li><a href="/contact" id="contact-tab">Contact Us</a></li>
           <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
         </ul>
       </nav>
@@ -8203,7 +8171,7 @@
           pendingPageRoute = null;
         }
         if (isAuthRequiredPage(getCurrentPageId())) {
-          window.location.assign('games-main.html');
+          window.location.assign('/dashboard');
         }
       }
     });
@@ -8715,7 +8683,7 @@
         }
         const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
         if (movieDocId) {
-          const previewHref = `games-movies.html?movie=${encodeURIComponent(movieDocId)}`;
+          const previewHref = `/films?movie=${encodeURIComponent(movieDocId)}`;
           return {
             href: makeAbsoluteUrl(previewHref),
             action: 'Open',
@@ -8726,7 +8694,7 @@
       }
       const gameId = String(entry?.gameId || entry?.itemId || '').trim();
       if (!gameId) return null;
-      const gameHref = `games-main.html?game=${encodeURIComponent(gameId)}`;
+      const gameHref = `/dashboard?game=${encodeURIComponent(gameId)}`;
       return {
         href: makeAbsoluteUrl(gameHref),
         action: 'Play',
@@ -8791,9 +8759,9 @@
     function updateMainGameQueryParam(gameId, options = {}) {
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
-      const file = getCurrentPageFilename();
-      if (file !== 'games-main.html' && file !== 'games-home.html') {
-        url.pathname = url.pathname.replace(/[^/]+$/, 'games-main.html');
+      const path = getCurrentRoutePath();
+      if (path !== '/dashboard' && path !== '/home') {
+        url.pathname = '/dashboard';
       }
       url.searchParams.delete('page');
       if (!value) url.searchParams.delete('game');
@@ -8811,8 +8779,8 @@
 
     function updateMoviesQueryParams(patch = {}, options = {}) {
       const url = new URL(window.location.href);
-      if (getCurrentPageFilename() !== 'games-movies.html') {
-        url.pathname = url.pathname.replace(/[^/]+$/, 'games-movies.html');
+      if (getCurrentRoutePath() !== '/films') {
+        url.pathname = '/films';
       }
       url.searchParams.delete('page');
       const keys = ['movie', 'play', 'cat', 'q'];
@@ -9390,33 +9358,35 @@
       'inventory-page', 'missions-page', 'chat-page', 'friends-page',
       'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
-    const PAGE_FILE_MAP = {
-      'home': 'games-home.html',
-      'contact': 'games-contact.html',
-      'main-page': 'games-main.html',
-      'movies-page': 'games-movies.html',
-      'profile-page': 'games-profile.html',
-      'history-page': 'games-history.html',
-      'shop-page': 'games-shop.html',
-      'inventory-page': 'games-inventory.html',
-      'missions-page': 'games-missions.html',
-      'chat-page': 'games-chat.html',
-      'friends-page': 'games-friends.html',
-      'settings-page': 'games-settings.html',
-      'staff-page': 'games-staff.html',
-      'view-profile-page': 'games-view-profile.html'
+    const PAGE_PATH_MAP = {
+      'home': '/home',
+      'contact': '/contact',
+      'main-page': '/dashboard',
+      'movies-page': '/films',
+      'profile-page': '/profile',
+      'history-page': '/history',
+      'shop-page': '/shop',
+      'inventory-page': '/inventory',
+      'missions-page': '/missions',
+      'chat-page': '/chat',
+      'friends-page': '/friends',
+      'settings-page': '/settings',
+      'staff-page': '/staff',
+      'view-profile-page': '/user'
     };
+    const PATH_TO_PAGE_ID = Object.fromEntries(
+      Object.entries(PAGE_PATH_MAP).map(([pageId, path]) => [path, pageId])
+    );
 
-    function getCurrentPageFilename() {
-      return (window.location.pathname.split('/').pop() || 'games.html').split('?')[0];
+    function getCurrentRoutePath() {
+      let path = window.location.pathname.replace(/\/index\.html$/i, '');
+      if (path.length > 1) path = path.replace(/\/+$/, '');
+      return path || '/dashboard';
     }
 
     function getCurrentPageId() {
-      const file = getCurrentPageFilename();
-      for (const [pageId, pageFile] of Object.entries(PAGE_FILE_MAP)) {
-        if (pageFile === file) return pageId;
-      }
-      return 'main-page';
+      const path = getCurrentRoutePath();
+      return PATH_TO_PAGE_ID[path] || 'main-page';
     }
 
     function isAuthRequiredPage(pageId) {
@@ -9426,9 +9396,9 @@
     function navigateToPage(routeId, options = {}) {
       const id = String(routeId || '').trim();
       if (!PAGE_ROUTE_IDS.has(id)) return;
-      const file = PAGE_FILE_MAP[id];
-      if (!file) return;
-      const url = new URL(file, window.location.href);
+      const path = PAGE_PATH_MAP[id];
+      if (!path) return;
+      const url = new URL(path, window.location.origin);
       if (options.query) {
         Object.entries(options.query).forEach(([key, value]) => {
           const next = String(value ?? '').trim();
@@ -12470,14 +12440,14 @@
         navigateToPage('profile-page');
         return;
       }
-      sessionStorage.setItem('gamesViewProfileReturn', PAGE_FILE_MAP[getCurrentPageId()] || 'games-main.html');
-      window.location.assign(`games-view-profile.html?uid=${encodeURIComponent(userId)}`);
+      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/dashboard');
+      window.location.assign(`/user?uid=${encodeURIComponent(userId)}`);
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
     window.showUserModal = showUserProfileModal;
 
     document.getElementById('vp-back-btn')?.addEventListener('click', () => {
-      const ret = sessionStorage.getItem('gamesViewProfileReturn') || 'games-main.html';
+      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/dashboard';
       sessionStorage.removeItem('gamesViewProfileReturn');
       window.location.assign(ret);
     });
