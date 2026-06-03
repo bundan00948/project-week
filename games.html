@@ -8170,8 +8170,11 @@
         if (pendingPageRoute && isAuthRequiredPage(pendingPageRoute)) {
           pendingPageRoute = null;
         }
-        if (isAuthRequiredPage(getCurrentPageId())) {
-          window.location.assign('/games/dashboard');
+        const loggedOutPageId = getCurrentPageId();
+        if (isAuthRequiredPage(loggedOutPageId)) {
+          if (noticeModal) noticeModal.style.display = 'flex';
+        } else {
+          await loadActivePageContent(loggedOutPageId);
         }
       }
     });
@@ -8347,7 +8350,7 @@
       }
     });
 
-    logoutBtn.addEventListener('click', async () => { await signOut(auth); showNotification("Logged out", "success"); });
+    logoutBtn?.addEventListener('click', async () => { await signOut(auth); showNotification("Logged out", "success"); });
 
     document.getElementById('showSignup').addEventListener('click', () => {
       loginModal.style.display = 'none';
@@ -9393,7 +9396,8 @@
     }
 
     function isAuthRequiredPage(pageId) {
-      return pageId !== 'main-page' && pageId !== 'movies-page' && pageId !== 'home' && pageId !== 'contact';
+      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
+      return !publicPages.has(pageId);
     }
 
     function navigateToPage(routeId, options = {}) {
@@ -9626,9 +9630,9 @@
       switch (pageId) {
         case 'main-page':
         case 'home':
+          await mountMainPageGamesContent();
+          break;
         case 'contact':
-          if (getRequestedGameIdFromUrl()) await mountMainPageGamesContent();
-          else ensureMainPageGamesDeferredObserver();
           break;
         case 'movies-page':
           await mountMoviesPageContent();
@@ -9672,25 +9676,11 @@
       }
     }
 
-    document.querySelectorAll('.sidebar-tabs .tab-button, #home-tab, #contact-tab').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        const pageId = link.getAttribute('data-page') || (link.id === 'home-tab' ? 'home' : link.id === 'contact-tab' ? 'contact' : '');
-        if (!pageId || !isAuthRequiredPage(pageId)) return;
-        if (!currentUser) {
-          e.preventDefault();
-          if (!authStateKnown) {
-            pendingPageRoute = pageId;
-            return;
-          }
-          noticeModal.style.display = 'flex';
-        }
-      });
-    });
-    document.getElementById('suggest-tab').addEventListener('click', () => {
+    document.getElementById('suggest-tab')?.addEventListener('click', () => {
       document.getElementById('suggest-form-container').style.display = 'block';
       document.getElementById('report-form-container').style.display = 'none';
     });
-    document.getElementById('report-tab').addEventListener('click', () => {
+    document.getElementById('report-tab')?.addEventListener('click', () => {
       document.getElementById('suggest-form-container').style.display = 'none';
       document.getElementById('report-form-container').style.display = 'block';
     });
