@@ -3,6 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      var file = (location.pathname.split('/').pop() || '').split('?')[0];
+      if (file !== 'games.html') return;
+      var params = new URLSearchParams(location.search);
+      var page = String(params.get('page') || '').trim();
+      var map = {
+        'home': 'games-home.html',
+        'contact': 'games-contact.html',
+        'main-page': 'games-main.html',
+        'movies-page': 'games-movies.html',
+        'profile-page': 'games-profile.html',
+        'history-page': 'games-history.html',
+        'shop-page': 'games-shop.html',
+        'inventory-page': 'games-inventory.html',
+        'missions-page': 'games-missions.html',
+        'chat-page': 'games-chat.html',
+        'friends-page': 'games-friends.html',
+        'settings-page': 'games-settings.html',
+        'staff-page': 'games-staff.html',
+        'view-profile-page': 'games-view-profile.html'
+      };
+      var targetFile = map[page] || 'games-main.html';
+      var target = new URL(targetFile, location.href);
+      ['game', 'movie', 'play', 'cat', 'q', 'uid'].forEach(function (key) {
+        var value = String(params.get(key) || '').trim();
+        if (value) target.searchParams.set(key, value);
+      });
+      target.searchParams.delete('page');
+      location.replace(target.toString());
+    })();
+  </script>
   <title>Game Universe - All Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8130,12 +8162,7 @@
         if (pendingPageRoute) {
           const requested = pendingPageRoute;
           pendingPageRoute = null;
-          const btn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${requested}"]`);
-          if (btn) {
-            isApplyingRoute = true;
-            btn.click();
-            isApplyingRoute = false;
-          }
+          navigateToPage(requested);
         }
         if (redirectToProfileAfterAuth) {
           redirectToProfileAfterAuth = false;
@@ -8150,31 +8177,13 @@
           if (shouldPlay) beginMoviePlayback(queuedMovie);
           else openMovieInfoModal(queuedMovie, { syncUrl: true, pushHistory: false });
         }
-        if (String(new URLSearchParams(window.location.search).get('page') || '').trim() === 'movies-page' && appMoviesDataCache) {
+        if (getCurrentPageId() === 'movies-page' && appMoviesDataCache) {
           maybeOpenMovieFromUrlParam({ closeIfMissing: true });
           maybePlayMovieFromUrlParam();
         }
         sidebar.classList.add('active');
         mainContent.classList.add('sidebar-active');
-        const activePage = document.querySelector('.page.active').id;
-        switch (activePage) {
-          case 'main-page':
-            if (getRequestedGameIdFromUrl()) mountMainPageGamesContent();
-            else if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
-            break;
-          case 'movies-page':
-            mountMoviesPageContent();
-            break;
-          case 'profile-page': loadProfilePage(user.uid); break;
-          case 'history-page': loadPlayHistory(user.uid); break;
-          case 'shop-page': loadShopPacks(); loadUserBalance(user.uid); break;
-          case 'inventory-page': loadInventory(user.uid); loadFriends(user.uid); break;
-          case 'missions-page': loadMissions(user.uid); break;
-          case 'chat-page': loadGlobalChat(); break;
-          case 'friends-page': loadFriends(user.uid); break;
-          case 'settings-page': loadSettings(user.uid); break;
-          case 'staff-page': loadStaffPanel(); break;
-        }
+        await loadActivePageContent(getCurrentPageId());
       } else {
         favoriteMovieIds = new Set();
         currentUserPermissions = [];
@@ -8192,8 +8201,9 @@
         if (missionProgressUnsub) { missionProgressUnsub(); missionProgressUnsub = null; }
         if (pendingPageRoute && isAuthRequiredPage(pendingPageRoute)) {
           pendingPageRoute = null;
-          noticeModal.style.display = 'flex';
-          setRouteHash('main-page');
+        }
+        if (isAuthRequiredPage(getCurrentPageId())) {
+          window.location.assign('games-main.html');
         }
       }
     });
@@ -8705,7 +8715,7 @@
         }
         const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
         if (movieDocId) {
-          const previewHref = `games.html?page=movies-page&movie=${encodeURIComponent(movieDocId)}`;
+          const previewHref = `games-movies.html?movie=${encodeURIComponent(movieDocId)}`;
           return {
             href: makeAbsoluteUrl(previewHref),
             action: 'Open',
@@ -8716,7 +8726,7 @@
       }
       const gameId = String(entry?.gameId || entry?.itemId || '').trim();
       if (!gameId) return null;
-      const gameHref = `games.html?page=main-page&game=${encodeURIComponent(gameId)}`;
+      const gameHref = `games-main.html?game=${encodeURIComponent(gameId)}`;
       return {
         href: makeAbsoluteUrl(gameHref),
         action: 'Play',
@@ -8781,11 +8791,13 @@
     function updateMainGameQueryParam(gameId, options = {}) {
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
-      if (!value) url.searchParams.delete('game');
-      else {
-        url.searchParams.set('game', value);
-        url.searchParams.set('page', 'main-page');
+      const file = getCurrentPageFilename();
+      if (file !== 'games-main.html' && file !== 'games-home.html') {
+        url.pathname = url.pathname.replace(/[^/]+$/, 'games-main.html');
       }
+      url.searchParams.delete('page');
+      if (!value) url.searchParams.delete('game');
+      else url.searchParams.set('game', value);
       const next = `${url.pathname}?${url.searchParams.toString()}`;
       const current = `${window.location.pathname}${window.location.search}`;
       if (next === current) return;
@@ -8799,6 +8811,10 @@
 
     function updateMoviesQueryParams(patch = {}, options = {}) {
       const url = new URL(window.location.href);
+      if (getCurrentPageFilename() !== 'games-movies.html') {
+        url.pathname = url.pathname.replace(/[^/]+$/, 'games-movies.html');
+      }
+      url.searchParams.delete('page');
       const keys = ['movie', 'play', 'cat', 'q'];
       keys.forEach((k) => {
         if (!(k in patch)) return;
@@ -8806,11 +8822,6 @@
         if (!value) url.searchParams.delete(k);
         else url.searchParams.set(k, value);
       });
-      const hasMovieState = keys.some((k) => String(url.searchParams.get(k) || '').trim());
-      const currentPage = String(url.searchParams.get('page') || '').trim();
-      if (hasMovieState && currentPage !== 'movies-page') {
-        url.searchParams.set('page', 'movies-page');
-      }
       const next = `${url.pathname}?${url.searchParams.toString()}`;
       const current = `${window.location.pathname}${window.location.search}`;
       if (next === current) return;
@@ -9392,78 +9403,48 @@
       'chat-page': 'games-chat.html',
       'friends-page': 'games-friends.html',
       'settings-page': 'games-settings.html',
-      'staff-page': 'games-staff.html'
+      'staff-page': 'games-staff.html',
+      'view-profile-page': 'games-view-profile.html'
     };
-    let isApplyingRoute = false;
-    function isAuthRequiredPage(pageId) {
-      return pageId !== 'main-page' && pageId !== 'movies-page';
+
+    function getCurrentPageFilename() {
+      return (window.location.pathname.split('/').pop() || 'games.html').split('?')[0];
     }
 
-    function setRouteHash(routeId, options = {}) {
+    function getCurrentPageId() {
+      const file = getCurrentPageFilename();
+      for (const [pageId, pageFile] of Object.entries(PAGE_FILE_MAP)) {
+        if (pageFile === file) return pageId;
+      }
+      return 'main-page';
+    }
+
+    function isAuthRequiredPage(pageId) {
+      return pageId !== 'main-page' && pageId !== 'movies-page' && pageId !== 'home' && pageId !== 'contact';
+    }
+
+    function navigateToPage(routeId, options = {}) {
       const id = String(routeId || '').trim();
       if (!PAGE_ROUTE_IDS.has(id)) return;
-      if (options.reload) {
-        const file = PAGE_FILE_MAP[id] || `games.html?page=${encodeURIComponent(id)}`;
-        const currentFile = window.location.pathname.split('/').pop() || 'games.html';
-        if (currentFile === file) {
-          window.location.reload();
-        } else {
-          window.location.assign(file);
-        }
-        return;
+      const file = PAGE_FILE_MAP[id];
+      if (!file) return;
+      const url = new URL(file, window.location.href);
+      if (options.query) {
+        Object.entries(options.query).forEach(([key, value]) => {
+          const next = String(value ?? '').trim();
+          if (!next) url.searchParams.delete(key);
+          else url.searchParams.set(key, next);
+        });
       }
-      const url = new URL(window.location.href);
-      url.searchParams.set('page', id);
-      const nextPath = `${url.pathname}?${url.searchParams.toString()}`;
-      const currentPath = `${window.location.pathname}${window.location.search}`;
-      if (nextPath !== currentPath) {
-        window.history.replaceState(null, '', nextPath);
-      }
-    }
-
-    function routeByHash() {
-      const rawParam = new URLSearchParams(window.location.search).get('page');
-      const raw = String(rawParam || decodeURIComponent((window.location.hash || '').replace(/^#/, '')) || '').trim();
-      if (!raw) return;
-      if (raw === 'home') {
-        isApplyingRoute = true;
-        homeTab?.click();
-        isApplyingRoute = false;
-        return;
-      }
-      if (raw === 'contact') {
-        isApplyingRoute = true;
-        contactTab?.click();
-        isApplyingRoute = false;
-        return;
-      }
-      const routeBtn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${raw}"]`);
-      if (routeBtn) {
-        if (isAuthRequiredPage(raw) && !currentUser) {
-          pendingPageRoute = raw;
-          return;
-        }
-        isApplyingRoute = true;
-        routeBtn.click();
-        isApplyingRoute = false;
-        return;
-      }
-      const directPage = document.getElementById(raw);
-      if (directPage && directPage.classList.contains('page')) {
-        document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
-        directPage.classList.add('active');
-      }
+      url.searchParams.delete('page');
+      const next = `${url.pathname}${url.search}`;
+      const current = `${window.location.pathname}${window.location.search}`;
+      if (next === current) window.location.reload();
+      else window.location.assign(url.toString());
     }
 
     function goToProfilePageTab() {
-      document.querySelectorAll('.sidebar-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      const profileBtn = document.querySelector('.sidebar-tabs .tab-button[data-page="profile-page"]');
-      const profilePage = document.getElementById('profile-page');
-      if (profileBtn) profileBtn.classList.add('active');
-      if (profilePage) profilePage.classList.add('active');
-      setRouteHash('profile-page');
-      if (currentUser?.uid) loadProfilePage(currentUser.uid);
+      navigateToPage('profile-page');
     }
 
     function populateIssueGameSelect(allGames) {
@@ -9634,33 +9615,103 @@
     const categorySection = document.getElementById('categoryBrowsingSection');
     const fullGamesListSec = document.getElementById('fullGamesList');
     const contactSectionEl = document.getElementById('contact-section');
-    homeTab.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!isApplyingRoute) {
-        setRouteHash('home', { reload: true });
+
+    function applyMainShellLayout(pageId) {
+      const showGames = pageId !== 'contact';
+      if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
+      if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
+      contactSectionEl?.classList.toggle('active', pageId === 'contact');
+      homeTab?.classList.toggle('active', pageId === 'home' || pageId === 'main-page');
+      contactTab?.classList.toggle('active', pageId === 'contact');
+    }
+
+    function activateInitialPage(pageId) {
+      document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+      document.querySelectorAll('.sidebar-tabs .tab-button').forEach((btn) => btn.classList.remove('active'));
+      homeTab?.classList.remove('active');
+      contactTab?.classList.remove('active');
+
+      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
+        document.getElementById('main-page')?.classList.add('active');
+        applyMainShellLayout(pageId);
+        if (pageId === 'main-page') {
+          document.querySelector('.sidebar-tabs .tab-button[data-page="main-page"]')?.classList.add('active');
+        }
         return;
       }
-      categorySection.style.display = 'block';
-      fullGamesListSec.style.display = 'block';
-      contactSectionEl.classList.remove('active');
-      homeTab.classList.add('active');
-      contactTab.classList.remove('active');
-      setRouteHash('home');
-      mountMainPageGamesContent();
-    });
-    contactTab.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!isApplyingRoute) {
-        setRouteHash('contact', { reload: true });
+
+      if (pageId === 'view-profile-page') {
+        document.getElementById('view-profile-page')?.classList.add('active');
         return;
       }
-      categorySection.style.display = 'none';
-      fullGamesListSec.style.display = 'none';
-      contactSectionEl.classList.add('active');
-      contactTab.classList.add('active');
-      homeTab.classList.remove('active');
-      setRouteHash('contact');
-      mountMainPageGamesContent();
+
+      document.getElementById(pageId)?.classList.add('active');
+      document.querySelector(`.sidebar-tabs .tab-button[data-page="${pageId}"]`)?.classList.add('active');
+    }
+
+    async function loadActivePageContent(pageId) {
+      switch (pageId) {
+        case 'main-page':
+        case 'home':
+        case 'contact':
+          if (getRequestedGameIdFromUrl()) await mountMainPageGamesContent();
+          else ensureMainPageGamesDeferredObserver();
+          break;
+        case 'movies-page':
+          await mountMoviesPageContent();
+          break;
+        case 'profile-page':
+          if (currentUser?.uid) loadProfilePage(currentUser.uid);
+          break;
+        case 'history-page':
+          if (currentUser?.uid) loadPlayHistory(currentUser.uid);
+          break;
+        case 'shop-page':
+          if (currentUser?.uid) {
+            loadShopPacks();
+            loadUserBalance(currentUser.uid);
+          }
+          break;
+        case 'inventory-page':
+          if (currentUser?.uid) {
+            loadInventory(currentUser.uid);
+            loadFriends(currentUser.uid);
+          }
+          break;
+        case 'missions-page':
+          if (currentUser?.uid) loadMissions(currentUser.uid);
+          break;
+        case 'chat-page':
+          loadGlobalChat();
+          break;
+        case 'friends-page':
+          if (currentUser?.uid) loadFriends(currentUser.uid);
+          break;
+        case 'settings-page':
+          if (currentUser?.uid) loadSettings(currentUser.uid);
+          break;
+        case 'staff-page':
+          loadStaffPanel();
+          break;
+        case 'view-profile-page':
+          await loadViewProfilePage(String(new URLSearchParams(window.location.search).get('uid') || '').trim());
+          break;
+      }
+    }
+
+    document.querySelectorAll('.sidebar-tabs .tab-button, #home-tab, #contact-tab').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const pageId = link.getAttribute('data-page') || (link.id === 'home-tab' ? 'home' : link.id === 'contact-tab' ? 'contact' : '');
+        if (!pageId || !isAuthRequiredPage(pageId)) return;
+        if (!currentUser) {
+          e.preventDefault();
+          if (!authStateKnown) {
+            pendingPageRoute = pageId;
+            return;
+          }
+          noticeModal.style.display = 'flex';
+        }
+      });
     });
     document.getElementById('suggest-tab').addEventListener('click', () => {
       document.getElementById('suggest-form-container').style.display = 'block';
@@ -9711,58 +9762,6 @@
       } catch (err) {
         if (msgEl) { msgEl.textContent = 'Could not submit: ' + err.message; msgEl.style.color = '#FF3D6C'; }
       }
-    });
-
-    // ========== Sidebar page switching ==========
-    document.querySelectorAll('.sidebar-tabs .tab-button').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const pageId = button.getAttribute('data-page');
-        if (!pageId) return;
-        e.preventDefault();
-        if (!isApplyingRoute) {
-          if (!currentUser && isAuthRequiredPage(pageId)) {
-            if (!authStateKnown) {
-              pendingPageRoute = pageId;
-              return;
-            }
-            noticeModal.style.display = 'flex';
-            return;
-          }
-          setRouteHash(pageId, { reload: true });
-          return;
-        }
-        if (!currentUser && isAuthRequiredPage(pageId)) {
-          if (!authStateKnown) {
-            pendingPageRoute = pageId;
-            return;
-          }
-          noticeModal.style.display = 'flex';
-          return;
-        }
-        document.querySelectorAll('.sidebar-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-        button.classList.add('active');
-        document.getElementById(pageId).classList.add('active');
-        setRouteHash(pageId);
-        switch (pageId) {
-          case 'main-page':
-            if (getRequestedGameIdFromUrl()) mountMainPageGamesContent();
-            else if (!mainPageGamesMounted) ensureMainPageGamesDeferredObserver();
-            break;
-          case 'movies-page':
-            mountMoviesPageContent();
-            break;
-          case 'profile-page': loadProfilePage(currentUser.uid); break;
-          case 'history-page': loadPlayHistory(currentUser.uid); break;
-          case 'shop-page': loadShopPacks(); loadUserBalance(currentUser.uid); break;
-          case 'inventory-page': loadInventory(currentUser.uid); loadFriends(currentUser.uid); break;
-          case 'missions-page': loadMissions(currentUser.uid); break;
-          case 'chat-page': loadGlobalChat(); break;
-          case 'friends-page': loadFriends(currentUser.uid); break;
-          case 'settings-page': loadSettings(currentUser.uid); break;
-          case 'staff-page': loadStaffPanel(); break;
-        }
-      });
     });
 
     // ========== Load profile page ==========
@@ -12436,25 +12435,10 @@
     }
 
     // ===== Navigate to user profile page (full page, not popup) =====
-    let previousPageId = null;
     let viewProfileTargetUid = null;
-    async function navigateToUserProfile(userId) {
+
+    async function loadViewProfilePage(userId) {
       if (!userId) return;
-      if (currentUser && userId === currentUser.uid) {
-        document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const ownProfileBtn = document.querySelector('.sidebar-tabs .tab-button[data-page="profile-page"]');
-        if (ownProfileBtn) ownProfileBtn.classList.add('active');
-        document.getElementById('profile-page').classList.add('active');
-        setRouteHash('profile-page');
-        loadProfilePage(currentUser.uid);
-        return;
-      }
-      previousPageId = document.querySelector('.page.active')?.id || 'main-page';
-      document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('view-profile-page').classList.add('active');
-      setRouteHash('view-profile-page');
       viewProfileTargetUid = userId;
       const addBtn = document.getElementById('vp-add-friend-btn');
       try {
@@ -12477,20 +12461,25 @@
             addBtn.disabled = !fr.empty;
           }
         }
-      } catch(e) { console.error(e); showNotification("Could not load profile", "error"); }
+      } catch (e) { console.error(e); showNotification('Could not load profile', 'error'); }
+    }
+
+    function navigateToUserProfile(userId) {
+      if (!userId) return;
+      if (currentUser && userId === currentUser.uid) {
+        navigateToPage('profile-page');
+        return;
+      }
+      sessionStorage.setItem('gamesViewProfileReturn', PAGE_FILE_MAP[getCurrentPageId()] || 'games-main.html');
+      window.location.assign(`games-view-profile.html?uid=${encodeURIComponent(userId)}`);
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
     window.showUserModal = showUserProfileModal;
 
     document.getElementById('vp-back-btn')?.addEventListener('click', () => {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      const target = previousPageId || 'main-page';
-      document.getElementById(target).classList.add('active');
-      const tabBtn = document.querySelector(`.sidebar-tabs .tab-button[data-page="${target}"]`);
-      if (tabBtn) { document.querySelectorAll('.sidebar-tabs .tab-button').forEach(b => b.classList.remove('active')); tabBtn.classList.add('active'); }
-      setRouteHash(target);
-      previousPageId = null;
-      viewProfileTargetUid = null;
+      const ret = sessionStorage.getItem('gamesViewProfileReturn') || 'games-main.html';
+      sessionStorage.removeItem('gamesViewProfileReturn');
+      window.location.assign(ret);
     });
     document.getElementById('vp-add-friend-btn')?.addEventListener('click', async () => {
       if (!currentUser || !viewProfileTargetUid || viewProfileTargetUid === currentUser.uid) return;
@@ -14961,20 +14950,14 @@
     async function init() {
       await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
-      const requested = String(new URLSearchParams(window.location.search).get('page') || '').trim();
-      if (requested === 'movies-page') {
-        await mountMoviesPageContent();
-      } else if (requested === 'main-page' || requested === 'home' || requested === 'contact' || !requested) {
-        if (getRequestedGameIdFromUrl()) await mountMainPageGamesContent();
-        else ensureMainPageGamesDeferredObserver();
-      }
+      const pageId = getCurrentPageId();
+      activateInitialPage(pageId);
+      await loadActivePageContent(pageId);
       hidePageLoading();
     }
 
     init().catch(() => hidePageLoading());
     setTimeout(hidePageLoading, 12000);
-    window.addEventListener('popstate', routeByHash);
-    setTimeout(routeByHash, 0);
     // ========== Event Listeners ==========
     document.addEventListener('fullscreenchange', syncGameFullscreenUi);
     gameFullscreenBtn?.addEventListener('click', () => requestGameFullscreen());
