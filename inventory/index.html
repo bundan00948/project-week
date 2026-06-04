@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
+  <title>Game Universe - Inventory</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
@@ -30,7 +30,7 @@
       <a class="tab-button" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
       <a class="tab-button" data-page="profile-page" href="/profile">
@@ -42,7 +42,7 @@
       <a class="tab-button" data-page="shop-page" href="/shop">
         <i class="fas fa-shopping-bag"></i> Shop
       </a>
-      <a class="tab-button" data-page="inventory-page" href="/inventory">
+      <a class="tab-button active" data-page="inventory-page" href="/inventory">
         <i class="fas fa-box-open"></i> Inventory
       </a>
       <a class="tab-button" data-page="missions-page" href="/missions">
@@ -79,39 +79,58 @@
               <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
             </ul>
           </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
-              </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
+    <!-- Inventory Page (Blooket My Blooks–style layout) -->
+        <div class="page active" id="inventory-page">
+          <div class="page-content inv-blooks-page">
+            <div class="inv-blooks-top">
+              <h2 class="page-title font-titan-header">My Blooks</h2>
+              <div class="inv-blooks-tokens" id="inv-blooks-tokens" aria-live="polite">
+                <span class="inv-token-pill"><i class="fas fa-coins"></i> <span id="inv-tokens-display">0</span></span>
               </div>
             </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
+            <p class="inv-blooks-sub">Browse every blook by pack. Locked blooks show as silhouettes. Select a blook to see details on the right.</p>
+            <div class="inv-pack-tabs" id="inv-pack-tabs"></div>
+            <div class="inv-blooks-layout">
+              <div class="inv-blooks-catalog" id="inv-blooks-catalog">
+                <div id="inventory-container"></div>
+              </div>
+              <aside class="inv-blook-detail" id="inv-blook-detail-panel" aria-live="polite">
+                <p class="inv-blook-detail-placeholder" id="inv-blook-detail-placeholder">Select a blook to view stars, art, and how many you own.</p>
+                <div id="inv-blook-detail-body" style="display:none;width:100%;flex-direction:column;align-items:center;flex:1;">
+                  <h3 class="inv-blook-detail-title" id="inv-panel-title">Blook</h3>
+                  <div class="inv-blook-detail-rarity" id="inv-panel-rarity" style="display:none;">—</div>
+                  <div class="inv-blook-detail-stars" id="inv-panel-stars-row"><i class="fas fa-star"></i> <span id="inv-panel-stars">0</span></div>
+                  <div class="inv-blook-detail-visual" id="inv-panel-visual"></div>
+                  <div class="inv-blook-detail-owned" id="inv-panel-owned">×0</div>
+                  <div class="inv-blook-detail-actions" id="inv-panel-actions">
+                    <button type="button" class="collect-btn" id="inv-panel-sell-btn">Sell one</button>
+                    <button type="button" class="cancel-btn" id="inv-panel-send-btn">Send</button>
+                  </div>
+                </div>
+              </aside>
             </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
+          </div>
+        </div>
+    
+        <div class="modal inv-blook-modal" id="inv-blook-modal" style="display:none;z-index:9500;">
+          <div class="modal-content inv-blook-modal-content">
+            <div class="modal-body inv-blook-modal-body">
+              <button type="button" class="inv-blook-modal-close" id="inv-blook-modal-close" aria-label="Close">&times;</button>
+              <div class="inv-blook-modal-visual" id="inv-blook-modal-visual"></div>
+              <h2 class="inv-blook-modal-name" id="inv-blook-modal-name">Blook</h2>
+              <div class="inv-blook-modal-rarity" id="inv-blook-modal-rarity">Common</div>
+              <div class="inv-blook-modal-meta">
+                <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Pack</span><span id="inv-blook-modal-pack">—</span></div>
+                <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Quantity</span><span id="inv-blook-modal-qty">1</span></div>
+                <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Star value</span><span id="inv-blook-modal-stars">0</span></div>
+                <div class="inv-blook-meta-row"><span class="inv-blook-meta-label">Sell for</span><span id="inv-blook-modal-sell">0 tokens</span></div>
+              </div>
+              <div class="inv-blook-modal-actions">
+                <button type="button" class="collect-btn inv-blook-sell-btn" id="inv-blook-sell-btn">Sell</button>
+                <button type="button" class="cancel-btn inv-blook-send-btn" id="inv-blook-send-btn">Send</button>
+              </div>
             </div>
-            <div class="movies-grid" id="movieGrid"></div>
-          </section>
+          </div>
         </div>
   </div>
 <!-- Notice Modal (unlogged users) -->
@@ -437,6 +456,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+  <script type="module" src="/assets/js/games-universe/pages/inventory.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
+  <title>Game Universe - Staff</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
@@ -30,7 +30,7 @@
       <a class="tab-button" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
       <a class="tab-button" data-page="profile-page" href="/profile">
@@ -57,7 +57,7 @@
       <a class="tab-button" data-page="settings-page" href="/settings">
         <i class="fas fa-cog"></i> Settings
       </a>
-      <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/staff" style="display:none;">
+      <a class="tab-button active" data-page="staff-page" id="staff-panel-tab" href="/staff" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
       </a>
     </div>
@@ -79,39 +79,237 @@
               <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
             </ul>
           </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
+    <!-- Staff Panel Page -->
+        <div class="page active" id="staff-page">
+          <div class="page-content">
+            <h2 class="page-title font-titan-header"><i class="fas fa-shield-alt" style="color:var(--neon-green);margin-right:10px;"></i>Staff Panel</h2>
+            <div class="staff-panel-container">
+              <div class="staff-sub-tabs" id="staff-sub-tabs">
+                <button class="staff-sub-tab active" data-staff-tab="staff-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-games"><i class="fas fa-gamepad"></i> Games</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-movies"><i class="fas fa-film"></i> Movies</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-tags"><i class="fas fa-tags"></i> Tags</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-plays"><i class="fas fa-history"></i> History & IP</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-packs"><i class="fas fa-cubes"></i> Packs & Items</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-users"><i class="fas fa-users"></i> Users</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-titles"><i class="fas fa-crown"></i> Titles</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-star-badges"><i class="fas fa-medal"></i> Star badges</button>
+                <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
               </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
+    
+              <!-- Staff Dashboard -->
+              <div class="staff-section active" id="staff-dashboard">
+                <div class="staff-dashboard-overview" id="staff-dashboard-overview"></div>
+                <div class="staff-stats-grid" id="staff-stats-grid"></div>
+                <div class="staff-dashboard-grid">
+                  <div class="staff-card staff-quick-actions-card"><h3>Quick Actions</h3><div class="staff-flex-row" style="margin-top:14px;"><button class="staff-btn staff-btn-primary" id="staff-quick-add-game"><i class="fas fa-plus"></i> Add Game</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-movie"><i class="fas fa-film"></i> Add Movie</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-pack"><i class="fas fa-plus"></i> Add Pack</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-title"><i class="fas fa-plus"></i> Add Title</button><button class="staff-btn" id="staff-quick-add-mission"><i class="fas fa-tasks"></i> New Mission</button></div></div>
+                  <div class="staff-card"><h3>Module Access</h3><div class="staff-access-grid" id="staff-dashboard-access-list"></div></div>
+                </div>
+              </div>
+    
+              <!-- Staff Games -->
+              <div class="staff-section" id="staff-games">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Games Management</h3><div class="staff-flex-row"><input type="text" class="staff-search" id="staff-search-game" placeholder="Search games..."><button class="staff-btn staff-btn-primary" id="staff-add-game-btn"><i class="fas fa-plus"></i> New Game</button></div></div>
+                  <div style="overflow-x:auto;" id="staff-games-table"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Movies -->
+              <div class="staff-section" id="staff-movies">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Movie Categories</h3></div>
+                  <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                    <input type="hidden" id="staff-movie-category-id">
+                    <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Name</label><input id="staff-movie-category-name" placeholder="e.g. Drama"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:210px;flex:1.2;"><label>Gradient CSS</label><input id="staff-movie-category-gradient" placeholder="linear-gradient(...)"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Corner art URL</label><input id="staff-movie-category-art" placeholder="https://...png"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art position</label><select id="staff-movie-category-art-pos"><option value="bottom">Bottom</option><option value="middle">Middle</option></select></div>
+                    <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art size</label><select id="staff-movie-category-art-scale"><option value="50">50%</option><option value="75">75%</option><option value="100" selected>100%</option><option value="125">125%</option><option value="150">150%</option></select></div>
+                    <div class="staff-form-group" style="margin:0;min-width:90px;"><label>Order</label><input id="staff-movie-category-order" type="number" value="0"></div>
+                    <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-category-btn" style="margin-bottom:2px;">Save Category</button>
+                    <button type="button" class="staff-btn" id="staff-reset-movie-category-btn" style="margin-bottom:2px;">Clear</button>
+                  </div>
+                  <div id="staff-movie-categories-list" style="margin-top:14px;"></div>
+                </div>
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Movies Management</h3><div class="staff-flex-row"><input type="text" class="staff-search" id="staff-search-movie" placeholder="Search movies..."></div></div>
+                  <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                    <input type="hidden" id="staff-movie-id">
+                    <div class="staff-form-group" style="margin:0;min-width:220px;flex:1.5;"><label>Title</label><input id="staff-movie-title" placeholder="Movie title"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Category</label><select id="staff-movie-category"></select></div>
+                    <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Year</label><input id="staff-movie-year" type="number" min="1900" max="2100" value="2024"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Score</label><input id="staff-movie-score" type="number" min="0" max="10" step="0.1" value="8.0"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...jpg"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Title Image URL</label><input id="staff-movie-title-image" placeholder="Optional: title logo image URL"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:200px;flex:1.2;"><label>Trailer (YouTube URL or ID)</label><input id="staff-movie-trailer" placeholder="Optional — plays behind pre-movie view"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Movie URL (direct link)</label><input id="staff-movie-url" placeholder="https://..."></div>
+                    <div class="staff-form-group" style="margin:0;min-width:260px;flex:2;flex-basis:100%;"><label>Description</label><textarea id="staff-movie-desc" rows="2" placeholder="Movie description for the pre-movie screen"></textarea></div>
+                    <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-btn" style="margin-bottom:2px;">Save Movie</button>
+                    <button type="button" class="staff-btn" id="staff-reset-movie-btn" style="margin-bottom:2px;">Clear</button>
+                  </div>
+                  <div style="overflow-x:auto;margin-top:14px;" id="staff-movies-table"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Tags -->
+              <div class="staff-section" id="staff-tags">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Tags Library</h3><button class="staff-btn staff-btn-primary" id="staff-add-tag-btn"><i class="fas fa-plus"></i> New Tag</button></div>
+                  <div id="staff-tags-list" class="staff-flex-row" style="gap:10px;flex-wrap:wrap;"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Plays & IP -->
+              <div class="staff-section" id="staff-plays">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user, game, movie, or IP..."></div>
+                  <div style="overflow-x:auto;"><table class="staff-table" id="staff-plays-table"><thead><tr><th>User</th><th>Type</th><th>Title</th><th>Time</th><th>IP Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+                </div>
+              </div>
+    
+              <!-- Staff Packs & Items -->
+              <div class="staff-section" id="staff-packs">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Packs & Items</h3><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button class="staff-btn staff-btn-primary" id="staff-add-banner-shop-btn"><i class="fas fa-image"></i> Shop banner</button><button class="staff-btn staff-btn-primary" id="staff-add-pack-btn"><i class="fas fa-plus"></i> Create Pack</button></div></div>
+                  <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Profile banners (sold in Shop)</h4>
+                  <div id="staff-banner-shop-list" style="margin-bottom:20px;"></div>
+                  <h4 style="font-size:0.85rem;margin:12px 0 8px;color:var(--text-secondary);">Packs</h4>
+                  <div id="staff-packs-list"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Users -->
+              <div class="staff-section" id="staff-users">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>User Accounts</h3><input type="text" class="staff-search" id="staff-search-user" placeholder="Search by username/email/ID..."></div>
+                  <div class="staff-mod-quick" id="staff-mod-quick-panel">
+                    <div class="staff-form-group" style="margin:0;">
+                      <label>Quick lookup (6-digit ID, email, or username)</label>
+                      <input type="text" id="staff-mod-lookup" placeholder="e.g. 123456 or user@email.com">
+                    </div>
+                    <div class="staff-form-group" style="margin:0;">
+                      <label>Action</label>
+                      <select id="staff-mod-action">
+                        <option value="open">Open user editor</option>
+                        <option value="mute_1h">Mute 1 hour</option>
+                        <option value="mute_24h">Mute 24 hours</option>
+                        <option value="mute_perm">Mute permanently</option>
+                        <option value="unmute">Clear mute</option>
+                        <option value="ban_24h">Ban 24 hours</option>
+                        <option value="ban_7d">Ban 7 days</option>
+                        <option value="ban_perm">Ban permanently</option>
+                        <option value="unban">Clear ban</option>
+                      </select>
+                    </div>
+                    <div class="staff-form-group" style="margin:0;flex:2;">
+                      <label>Reason (optional)</label>
+                      <input type="text" id="staff-mod-reason-quick" placeholder="Shown to the user if banned">
+                    </div>
+                    <button type="button" class="staff-btn staff-btn-primary" id="staff-mod-apply-btn" style="align-self:flex-end;margin-bottom:2px;">Apply</button>
+                  </div>
+                  <div style="overflow-x:auto;" id="staff-users-table"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Titles Manager -->
+              <div class="staff-section" id="staff-titles">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Title & Permission Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-title-btn"><i class="fas fa-plus"></i> Create Title</button></div>
+                  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px;">Titles determine user permissions. Owners can create gradient titles, assign colors, and set permissions.</p>
+                  <div id="staff-titles-list"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Badges Manager -->
+              <div class="staff-section" id="staff-badges">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Badge Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-badge-btn"><i class="fas fa-plus"></i> Create Badge</button></div>
+                  <div id="staff-badges-list"></div>
+                </div>
+              </div>
+    
+              <!-- Staff: Rarity styles + daily reward -->
+              <div class="staff-section" id="staff-rarity">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Daily login reward</h3></div>
+                  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Coins and stars granted once per calendar day when users claim on the Missions page.</p>
+                  <div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;align-items:flex-end;">
+                    <div class="staff-form-group" style="margin:0;"><label>Coins</label><input type="number" id="staff-daily-reward-coins" value="50" min="0"></div>
+                    <div class="staff-form-group" style="margin:0;"><label>Stars</label><input type="number" id="staff-daily-reward-stars" value="10" min="0"></div>
+                    <button type="button" class="staff-btn staff-btn-primary" id="staff-daily-reward-save">Save daily reward</button>
+                  </div>
+                </div>
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Rarity order</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-order-open"><i class="fas fa-sort"></i> Edit order</button></div>
+                  <p style="font-size:0.82rem;color:var(--text-secondary);">Sort order for inventory and pack editor lists.</p>
+                </div>
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Rarity appearance</h3><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-rarity-def-add"><i class="fas fa-plus"></i> Add rarity</button></div>
+                  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Solid color, optional gradient, optional animation. Used for blook highlights and inventory.</p>
+                  <div id="staff-rarity-defs-list"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Missions -->
+              <div class="staff-section" id="staff-missions">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Mission Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-mission-btn"><i class="fas fa-plus"></i> Create Mission</button></div>
+                  <div id="staff-missions-list"></div>
+                </div>
+              </div>
+    
+              <!-- Staff Stars -->
+              <div class="staff-section" id="staff-stars">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Modify User Stars</h3></div>
+                  <div class="staff-flex-row" style="gap:10px;align-items:flex-end;">
+                    <div class="staff-form-group" style="flex:2;"><label>User Email</label><input id="staff-stars-email" placeholder="user@example.com"></div>
+                    <div class="staff-form-group" style="flex:1;"><label>Action</label><select id="staff-stars-action"><option value="set">Set to</option><option value="add">Add</option><option value="remove">Remove</option></select></div>
+                    <div class="staff-form-group" style="flex:1;"><label>Amount</label><input type="number" id="staff-stars-amount" value="0"></div>
+                    <button class="staff-btn staff-btn-primary" id="staff-stars-apply-btn" style="margin-bottom:14px;">Apply</button>
+                  </div>
+                  <div id="staff-stars-result" style="margin-top:12px;"></div>
+                </div>
+              </div>
+    
+              <!-- Star threshold badges (auto-award by total stars) -->
+              <div class="staff-section" id="staff-star-badges">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Star threshold badges</h3></div>
+                  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Create badges under <strong>Badges</strong> first. Add rules here: when a user’s <strong>total stars</strong> reach the minimum, that badge is added. If stars drop below a threshold, that badge is removed. Manual badges (not listed here) are never touched.</p>
+                  <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;">
+                    <div class="staff-form-group" style="margin:0;min-width:200px;"><label>Badge</label><select id="staff-star-badge-pick"><option value="">Select badge…</option></select></div>
+                    <div class="staff-form-group" style="margin:0;"><label>Min stars</label><input type="number" id="staff-star-badge-min" value="100" min="0" step="1"></div>
+                    <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-add-row">Add rule</button>
+                  </div>
+                  <div id="staff-star-badge-rules-list" style="margin-bottom:14px;"></div>
+                  <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;">
+                    <button type="button" class="staff-btn staff-btn-primary" id="staff-star-badge-save-rules">Save rules</button>
+                    <button type="button" class="staff-btn" id="staff-star-badge-resync-all">Re-apply to all users</button>
+                  </div>
+                  <p id="staff-star-badge-status" style="font-size:0.78rem;color:var(--text-secondary);margin-top:12px;"></p>
+                </div>
+              </div>
+    
+              <!-- Staff Chat Viewer -->
+              <div class="staff-section" id="staff-chatview">
+                <div class="staff-card">
+                  <div class="staff-card-header"><h3>Chat Viewer</h3><div class="staff-flex-row"><button class="staff-sub-tab active" id="cv-global-btn">Global Chat</button><button class="staff-sub-tab" id="cv-private-btn">Private Chats</button></div></div>
+                  <div class="chat-viewer-container">
+                    <div class="chat-viewer-sidebar" id="cv-sidebar">
+                      <div style="color:var(--text-secondary);font-size:0.8rem;padding:8px;">Select chat type above</div>
+                    </div>
+                    <div class="chat-viewer-messages" id="cv-messages"></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
-            </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-            </div>
-            <div class="movies-grid" id="movieGrid"></div>
-          </section>
+          </div>
         </div>
   </div>
 <!-- Notice Modal (unlogged users) -->
@@ -437,6 +635,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+  <script type="module" src="/assets/js/games-universe/pages/staff.js"></script>
 </body>
 </html>

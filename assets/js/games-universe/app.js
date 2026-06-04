@@ -1593,7 +1593,7 @@
         }
         const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
         if (movieDocId) {
-          const previewHref = `/games/movies?movie=${encodeURIComponent(movieDocId)}`;
+          const previewHref = `/movies?movie=${encodeURIComponent(movieDocId)}`;
           return {
             href: makeAbsoluteUrl(previewHref),
             action: 'Open',
@@ -1604,7 +1604,7 @@
       }
       const gameId = String(entry?.gameId || entry?.itemId || '').trim();
       if (!gameId) return null;
-      const gameHref = `/games/dashboard?game=${encodeURIComponent(gameId)}`;
+      const gameHref = `/dashboard?game=${encodeURIComponent(gameId)}`;
       return {
         href: makeAbsoluteUrl(gameHref),
         action: 'Play',
@@ -1670,8 +1670,8 @@
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/games/dashboard' && path !== '/games/home') {
-        url.pathname = '/games/dashboard';
+      if (path !== '/dashboard' && path !== '/home') {
+        url.pathname = '/dashboard';
       }
       url.searchParams.delete('page');
       if (!value) url.searchParams.delete('game');
@@ -1689,8 +1689,8 @@
 
     function updateMoviesQueryParams(patch = {}, options = {}) {
       const url = new URL(window.location.href);
-      if (getCurrentRoutePath() !== '/games/movies') {
-        url.pathname = '/games/movies';
+      if (getCurrentRoutePath() !== '/movies') {
+        url.pathname = '/movies';
       }
       url.searchParams.delete('page');
       const keys = ['movie', 'play', 'cat', 'q'];
@@ -2269,25 +2269,25 @@
       'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     const PAGE_PATH_MAP = {
-      'home': '/games/home',
-      'contact': '/games/contact',
-      'main-page': '/games/dashboard',
-      'movies-page': '/games/movies',
-      'profile-page': '/games/profile',
-      'history-page': '/games/history',
-      'shop-page': '/games/shop',
-      'inventory-page': '/games/inventory',
-      'missions-page': '/games/missions',
-      'chat-page': '/games/chat',
-      'friends-page': '/games/friends',
-      'settings-page': '/games/settings',
-      'staff-page': '/games/staff',
-      'view-profile-page': '/games/user'
+      'home': '/home',
+      'contact': '/contact',
+      'main-page': '/dashboard',
+      'movies-page': '/movies',
+      'profile-page': '/profile',
+      'history-page': '/history',
+      'shop-page': '/shop',
+      'inventory-page': '/inventory',
+      'missions-page': '/missions',
+      'chat-page': '/chat',
+      'friends-page': '/friends',
+      'settings-page': '/settings',
+      'staff-page': '/staff',
+      'view-profile-page': '/user'
     };
     const PATH_TO_PAGE_ID = Object.fromEntries(
       Object.entries(PAGE_PATH_MAP).map(([pageId, path]) => [path, pageId])
     );
-    PATH_TO_PAGE_ID['/games'] = 'main-page';
+    PATH_TO_PAGE_ID['/dashboard'] = 'main-page';
 
     function getCurrentPageId() {
       return String(window.__GU_PAGE__ || 'main-page').trim() || 'main-page';
@@ -5337,14 +5337,14 @@
         navigateToPage('profile-page');
         return;
       }
-      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/games/dashboard');
-      window.location.assign(`/games/user?uid=${encodeURIComponent(userId)}`);
+      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/dashboard');
+      window.location.assign(`/user?uid=${encodeURIComponent(userId)}`);
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
     window.showUserModal = showUserProfileModal;
 
     document.getElementById('vp-back-btn')?.addEventListener('click', () => {
-      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/games/dashboard';
+      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/dashboard';
       sessionStorage.removeItem('gamesViewProfileReturn');
       window.location.assign(ret);
     });
@@ -5459,8 +5459,9 @@
     async function loadSettings(userId) {
       const userDoc = await getDoc(doc(db, "users", userId));
       if (userDoc.exists()) {
-        currentAvatar.src = userDoc.data().avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        usernameInput.value = userDoc.data().username || "";
+        const avatar = userDoc.data().avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+        if (currentAvatar) currentAvatar.src = avatar;
+        if (usernameInput) usernameInput.value = userDoc.data().username || "";
       }
       const urlIn = document.getElementById('avatar-url-input');
       if (urlIn) urlIn.value = '';
