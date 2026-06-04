@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
+  <title>Game Universe - User Profile</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
@@ -30,7 +30,7 @@
       <a class="tab-button" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
       <a class="tab-button" data-page="profile-page" href="/profile">
@@ -79,39 +79,50 @@
               <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
             </ul>
           </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
+    <!-- View Other User Profile Page (navigated, not popup) -->
+        <div class="page active" id="view-profile-page">
+          <div class="page-content">
+            <div class="staff-flex-row" style="margin-bottom:16px;gap:10px;flex-wrap:wrap;align-items:center;">
+              <button class="staff-btn staff-btn-primary" id="vp-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+              <button type="button" class="staff-btn staff-btn-primary" id="vp-add-friend-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add friend</button>
+            </div>
+            <div class="up-container" id="vp-container">
+              <div class="up-header">
+                <div class="up-avatar"><img id="vp-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Avatar"></div>
+                <div class="up-header-banner-wrap">
+                  <div class="up-banner" id="vp-banner-wrap">
+                    <div class="up-banner-pattern"></div>
+                    <img id="vp-banner" class="up-banner-bg" src="" alt="Banner">
+                    <div class="up-banner-content">
+                      <div class="up-banner-name-block">
+                        <div id="vp-username" style="font-size:1rem;font-weight:900;color:#fff;">Username</div>
+                      </div>
+                      <span class="up-title-badge" id="vp-title">User</span>
+                    </div>
+                  </div>
+                  <div id="vp-badges" class="up-badges-row" aria-label="Badges"></div>
+                </div>
               </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
+              <div class="up-stats-row">
+                <div class="up-stat"><div class="up-stat-icon" id="vp-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="vp-stars-fallback-icon"></i></div><div><div class="up-stat-val" id="vp-stars">0</div><div class="up-stat-lbl">Stars</div></div></div>
+                <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-clock" style="color:#2AFF9E;"></i></div><div><div class="up-stat-val" id="vp-playtime">0h 0m</div><div class="up-stat-lbl">Playtime</div></div></div>
+                <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-gamepad" style="color:#42A5F5;"></i></div><div><div class="up-stat-val" id="vp-plays">0</div><div class="up-stat-lbl">Plays</div></div></div>
+                <div class="up-stat"><div class="up-stat-icon"><i class="fas fa-user-friends" style="color:#AB47BC;"></i></div><div><div class="up-stat-val" id="vp-friends">0</div><div class="up-stat-lbl">Friends</div></div></div>
+              </div>
+              <div class="up-section">
+                <div class="up-section-header"><i class="fas fa-box-open"></i> Blooks Unlocked <span class="up-section-count"><span id="vp-blook-count">0</span> / <span id="vp-blook-total">0</span></span></div>
+                <div class="progress-bar"><div class="progress-fill" id="vp-blook-progress"></div></div>
+              </div>
+              <div class="up-section">
+                <div class="up-section-header"><i class="fas fa-trophy"></i> Top 5 Blooks</div>
+                <div class="up-blooks-grid" id="vp-top-blooks"></div>
+              </div>
+              <div class="up-section">
+                <div class="up-section-header"><i class="fas fa-user-friends"></i> Friends</div>
+                <div class="up-friends-list" id="vp-friends-list"></div>
               </div>
             </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
-            </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-            </div>
-            <div class="movies-grid" id="movieGrid"></div>
-          </section>
+          </div>
         </div>
   </div>
 <!-- Notice Modal (unlogged users) -->
@@ -437,6 +448,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+  <script type="module" src="/assets/js/games-universe/pages/user.js"></script>
 </body>
 </html>

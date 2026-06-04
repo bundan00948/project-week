@@ -6089,7 +6089,7 @@
 <body>
 <script>
 if (/\\/games\\.html$/i.test(location.pathname)) {
-  location.replace('/games/dashboard' + location.search + location.hash);
+  location.replace('/dashboard' + location.search + location.hash);
 }
 </script>
   <div class="site-bg-atlas" aria-hidden="true"></div>
@@ -6106,37 +6106,37 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     
     <div class="sidebar-scroll">
     <div class="sidebar-tabs">
-      <a class="tab-button active" data-page="main-page" href="/games/dashboard">
+      <a class="tab-button active" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button" data-page="movies-page" href="/games/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
-      <a class="tab-button" data-page="profile-page" href="/games/profile">
+      <a class="tab-button" data-page="profile-page" href="/profile">
         <i class="fas fa-user"></i> Profile
       </a>
-      <a class="tab-button" data-page="history-page" href="/games/history">
+      <a class="tab-button" data-page="history-page" href="/history">
         <i class="fas fa-history"></i> History
       </a>
-      <a class="tab-button" data-page="shop-page" href="/games/shop">
+      <a class="tab-button" data-page="shop-page" href="/shop">
         <i class="fas fa-shopping-bag"></i> Shop
       </a>
-      <a class="tab-button" data-page="inventory-page" href="/games/inventory">
+      <a class="tab-button" data-page="inventory-page" href="/inventory">
         <i class="fas fa-box-open"></i> Inventory
       </a>
-      <a class="tab-button" data-page="missions-page" href="/games/missions">
+      <a class="tab-button" data-page="missions-page" href="/missions">
         <i class="fas fa-tasks"></i> Missions
       </a>
-      <a class="tab-button" data-page="chat-page" href="/games/chat">
+      <a class="tab-button" data-page="chat-page" href="/chat">
         <i class="fas fa-comments"></i> Chat
       </a>
-      <a class="tab-button" data-page="friends-page" href="/games/friends">
+      <a class="tab-button" data-page="friends-page" href="/friends">
         <i class="fas fa-user-friends"></i> Friends
       </a>
-      <a class="tab-button" data-page="settings-page" href="/games/settings">
+      <a class="tab-button" data-page="settings-page" href="/settings">
         <i class="fas fa-cog"></i> Settings
       </a>
-      <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/games/staff" style="display:none;">
+      <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/staff" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
       </a>
     </div>
@@ -6154,8 +6154,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
       <nav>
         <ul>
-          <li><a href="/games/home" class="active" id="home-tab">Home</a></li>
-          <li><a href="/games/contact" id="contact-tab">Contact Us</a></li>
+              <li><a href="/home" class="active" id="home-tab">Home</a></li>
+              <li><a href="/contact" id="contact-tab">Contact Us</a></li>
           <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
         </ul>
       </nav>
@@ -8698,7 +8698,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         }
         const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
         if (movieDocId) {
-          const previewHref = `/games/movies?movie=${encodeURIComponent(movieDocId)}`;
+          const previewHref = `/movies?movie=${encodeURIComponent(movieDocId)}`;
           return {
             href: makeAbsoluteUrl(previewHref),
             action: 'Open',
@@ -8709,7 +8709,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       }
       const gameId = String(entry?.gameId || entry?.itemId || '').trim();
       if (!gameId) return null;
-      const gameHref = `/games/dashboard?game=${encodeURIComponent(gameId)}`;
+      const gameHref = `/dashboard?game=${encodeURIComponent(gameId)}`;
       return {
         href: makeAbsoluteUrl(gameHref),
         action: 'Play',
@@ -8775,8 +8775,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/games/dashboard' && path !== '/games/home') {
-        url.pathname = '/games/dashboard';
+      if (path !== '/dashboard' && path !== '/home') {
+        url.pathname = '/dashboard';
       }
       url.searchParams.delete('page');
       if (!value) url.searchParams.delete('game');
@@ -8794,8 +8794,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     function updateMoviesQueryParams(patch = {}, options = {}) {
       const url = new URL(window.location.href);
-      if (getCurrentRoutePath() !== '/games/movies') {
-        url.pathname = '/games/movies';
+      if (getCurrentRoutePath() !== '/movies') {
+        url.pathname = '/movies';
       }
       url.searchParams.delete('page');
       const keys = ['movie', 'play', 'cat', 'q'];
@@ -9374,32 +9374,35 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     const PAGE_PATH_MAP = {
-      'home': '/games/home',
-      'contact': '/games/contact',
-      'main-page': '/games/dashboard',
-      'movies-page': '/games/movies',
-      'profile-page': '/games/profile',
-      'history-page': '/games/history',
-      'shop-page': '/games/shop',
-      'inventory-page': '/games/inventory',
-      'missions-page': '/games/missions',
-      'chat-page': '/games/chat',
-      'friends-page': '/games/friends',
-      'settings-page': '/games/settings',
-      'staff-page': '/games/staff',
-      'view-profile-page': '/games/user'
+      'home': '/home',
+      'contact': '/contact',
+      'main-page': '/dashboard',
+      'movies-page': '/movies',
+      'profile-page': '/profile',
+      'history-page': '/history',
+      'shop-page': '/shop',
+      'inventory-page': '/inventory',
+      'missions-page': '/missions',
+      'chat-page': '/chat',
+      'friends-page': '/friends',
+      'settings-page': '/settings',
+      'staff-page': '/staff',
+      'view-profile-page': '/user'
     };
     const PATH_TO_PAGE_ID = Object.fromEntries(
       Object.entries(PAGE_PATH_MAP).map(([pageId, path]) => [path, pageId])
     );
-    PATH_TO_PAGE_ID['/games'] = 'main-page';
+    PATH_TO_PAGE_ID['/dashboard'] = 'main-page';
 
     function getCurrentRoutePath() {
       let path = window.location.pathname.replace(/\/index\.html$/i, '');
       if (path.length > 1) path = path.replace(/\/+$/, '');
-      if (path === '/games') return '/games/dashboard';
-      if (path.startsWith('/games/')) return path;
-      return '/games/dashboard';
+      if (path === '/games' || /\/games\.html$/i.test(window.location.pathname)) return '/dashboard';
+      if (path.startsWith('/games/')) {
+        const legacy = path.slice('/games'.length) || '/dashboard';
+        return legacy.startsWith('/') ? legacy : `/${legacy}`;
+      }
+      return path || '/dashboard';
     }
 
     function getCurrentPageId() {
@@ -12451,14 +12454,14 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         navigateToPage('profile-page');
         return;
       }
-      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/games/dashboard');
-      window.location.assign(`/games/user?uid=${encodeURIComponent(userId)}`);
+      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/dashboard');
+      window.location.assign(`/user?uid=${encodeURIComponent(userId)}`);
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
     window.showUserModal = showUserProfileModal;
 
     document.getElementById('vp-back-btn')?.addEventListener('click', () => {
-      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/games/dashboard';
+      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/dashboard';
       sessionStorage.removeItem('gamesViewProfileReturn');
       window.location.assign(ret);
     });

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
+  <title>Game Universe - Settings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
@@ -30,7 +30,7 @@
       <a class="tab-button" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
       <a class="tab-button" data-page="profile-page" href="/profile">
@@ -54,7 +54,7 @@
       <a class="tab-button" data-page="friends-page" href="/friends">
         <i class="fas fa-user-friends"></i> Friends
       </a>
-      <a class="tab-button" data-page="settings-page" href="/settings">
+      <a class="tab-button active" data-page="settings-page" href="/settings">
         <i class="fas fa-cog"></i> Settings
       </a>
       <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/staff" style="display:none;">
@@ -79,39 +79,52 @@
               <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
             </ul>
           </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
+    <!-- Settings Page -->
+        <div class="page active" id="settings-page">
+          <div class="page-content">
+            <h2 class="page-title font-titan-header">Settings</h2>
+            <div class="settings-section">
+              <div class="settings-form">
+                <div class="form-group">
+                  <label for="current-avatar">Current Avatar</label>
+                  <div class="avatar-preview">
+                    <img id="current-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Current Avatar">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" id="username" placeholder="Enter new username">
+                </div>
+                
+                <div class="form-group">
+                  <label for="avatar-upload">Change Avatar</label>
+                  <input type="url" id="avatar-url-input" class="auth-input staff-only-url-field" placeholder="Or paste image URL (staff)" style="display:none;margin-bottom:8px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(42,255,158,0.2);background:rgba(0,0,0,0.3);color:#fff;">
+                  <label class="file-label">
+                    <i class="fas fa-upload"></i> Choose Image
+                    <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                  </label>
+                </div>
+    
+                <div class="form-group">
+                  <label for="current-password">Current Password</label>
+                  <input type="password" id="current-password" placeholder="Enter current password">
+                </div>
+                
+                <div class="form-group">
+                  <label for="new-password">New Password</label>
+                  <input type="password" id="new-password" placeholder="Enter new password">
+                </div>
+                
+                <div class="form-group">
+                  <label for="confirm-password">Confirm New Password</label>
+                  <input type="password" id="confirm-password" placeholder="Confirm new password">
+                </div>
+                
+                <button class="settings-btn" id="save-settings-btn">Save Changes</button>
               </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
-              </div>
             </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
-            </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-            </div>
-            <div class="movies-grid" id="movieGrid"></div>
-          </section>
+          </div>
         </div>
   </div>
 <!-- Notice Modal (unlogged users) -->
@@ -437,6 +450,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+  <script type="module" src="/assets/js/games-universe/pages/settings.js"></script>
 </body>
 </html>

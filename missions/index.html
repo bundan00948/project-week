@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
+  <title>Game Universe - Missions</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
@@ -30,7 +30,7 @@
       <a class="tab-button" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
       <a class="tab-button" data-page="profile-page" href="/profile">
@@ -45,7 +45,7 @@
       <a class="tab-button" data-page="inventory-page" href="/inventory">
         <i class="fas fa-box-open"></i> Inventory
       </a>
-      <a class="tab-button" data-page="missions-page" href="/missions">
+      <a class="tab-button active" data-page="missions-page" href="/missions">
         <i class="fas fa-tasks"></i> Missions
       </a>
       <a class="tab-button" data-page="chat-page" href="/chat">
@@ -79,39 +79,20 @@
               <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
             </ul>
           </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
-              </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
-              </div>
+    <!-- Missions Page -->
+        <div class="page active" id="missions-page">
+          <div class="page-content">
+            <h2 class="page-title font-titan-header">Daily Missions</h2>
+            <div class="daily-reward-card" id="daily-reward-card">
+              <h3><i class="fas fa-gift"></i> Daily reward</h3>
+              <p id="daily-reward-desc">Claim your free bonus once per day.</p>
+              <button type="button" class="daily-reward-btn" id="daily-reward-claim-btn">Claim</button>
+              <div class="daily-reward-pill" id="daily-reward-status"></div>
             </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
+            <div class="missions-container" id="missions-container">
+              <!-- Missions will be added here -->
             </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-            </div>
-            <div class="movies-grid" id="movieGrid"></div>
-          </section>
+          </div>
         </div>
   </div>
 <!-- Notice Modal (unlogged users) -->
@@ -437,6 +418,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+  <script type="module" src="/assets/js/games-universe/pages/missions.js"></script>
 </body>
 </html>

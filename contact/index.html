@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
+  <title>Game Universe - Contact</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
@@ -27,10 +27,10 @@
     
     <div class="sidebar-scroll">
     <div class="sidebar-tabs">
-      <a class="tab-button" data-page="main-page" href="/dashboard">
+      <a class="tab-button active" data-page="main-page" href="/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
+      <a class="tab-button" data-page="movies-page" href="/movies">
         <i class="fas fa-film"></i> Movies
       </a>
       <a class="tab-button" data-page="profile-page" href="/profile">
@@ -75,44 +75,54 @@
           <nav>
             <ul>
                   <li><a href="/home" id="home-tab">Home</a></li>
-                  <li><a href="/contact" id="contact-tab">Contact Us</a></li>
+                  <li><a href="/contact" class="active" id="contact-tab">Contact Us</a></li>
               <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
             </ul>
           </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
-              </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
-              </div>
-            </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
-            </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-            </div>
-            <div class="movies-grid" id="movieGrid"></div>
+    <!-- Main Page (Games) -->
+        <div class="page main-page" style="display:none" aria-hidden="true" active main-page-games-deferred" id="main-page">
+          <div class="main-games-load-placeholder" id="main-games-load-placeholder" role="status">
+            Games load when you open this page or scroll here — lighter first paint.
+          </div>
+          <section class="hero"><div class="carousel-container" id="topGamesCarousel"></div></section>
+          <section class="category-browsing-section" id="categoryBrowsingSection"></section>
+          <section class="full-games-list" id="fullGamesList">
+            <h2>ALL GAMES</h2>
+            <div class="search-bar-container"><input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..."></div>
+            <div class="full-games-grid" id="fullGamesGrid"></div>
           </section>
         </div>
+    <section class="contact-section active" id="contact-section">
+          <div class="section-title"><h2>CONTACT US</h2><p>Have a suggestion or found an issue? Let us know!</p></div>
+          <div class="tab-navigation"><button class="tab-button active" id="suggest-tab">Suggest a Game</button><button class="tab-button" id="report-tab">Report an Issue</button></div>
+          <div class="contact-container">
+            <div class="form-container" id="suggest-form-container">
+              <h3>SUGGEST A GAME</h3>
+              <form id="suggestGameForm">
+                <div class="form-group"><label>YOUR NAME</label><input type="text" id="suggestName" required></div>
+                <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="suggestEmail" required></div>
+                <div class="form-group"><label>GAME TITLE</label><input type="text" id="gameTitle" required></div>
+                <div class="form-group staff-only-suggest-banner-url"><label>GAME BANNER URL</label><input type="text" id="gameBanner" placeholder="Image URL (staff only)"></div>
+                <div class="form-group"><label>UPLOAD BANNER IMAGE</label><input type="file" id="gameBannerFile" accept="image/*"></div>
+                <div class="form-group"><label>GAME LINK</label><input type="text" id="gameLink" placeholder="https://..." required></div>
+                <div class="form-group"><label>GAME DESCRIPTION</label><textarea id="gameDescription" required></textarea></div>
+                <button type="submit" class="submit-btn">SUBMIT SUGGESTION</button>
+                <div id="suggestMessage" class="form-message"></div>
+              </form>
+            </div>
+            <div class="form-container" id="report-form-container" style="display: none;">
+              <h3>REPORT AN ISSUE</h3>
+              <form id="reportIssueForm">
+                <div class="form-group"><label>YOUR NAME</label><input type="text" id="reportName" required></div>
+                <div class="form-group"><label>YOUR EMAIL</label><input type="email" id="reportEmail" required></div>
+                <div class="form-group"><label>SELECT GAME</label><select id="issueGame"><option value="">-- SELECT A GAME --</option></select></div>
+                <div class="form-group"><label>ISSUE DESCRIPTION</label><textarea id="issueDescription" required></textarea></div>
+                <button type="submit" class="submit-btn">REPORT ISSUE</button>
+                <div id="reportMessage" class="form-message"></div>
+              </form>
+            </div>
+          </div>
+        </section>
   </div>
 <!-- Notice Modal (unlogged users) -->
     <div id="noticeModal" class="notice-modal">
@@ -437,6 +447,6 @@
       </div>
     </div>
   </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+  <script type="module" src="/assets/js/games-universe/pages/contact.js"></script>
 </body>
 </html>
