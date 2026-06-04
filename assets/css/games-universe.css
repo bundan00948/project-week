@@ -5891,6 +5891,7 @@
       transition: opacity 0.35s ease, visibility 0.35s ease;
     }
     .page-loading-overlay.hidden {
+      display: none !important;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -6073,3 +6074,4 @@
 
 /* Standalone page files */
 .page { display: block !important; }
+.page-loading-overlay.hidden { display: none !important; }

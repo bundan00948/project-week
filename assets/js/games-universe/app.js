@@ -54,7 +54,7 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
+    try { getAnalytics(app); } catch (_) { /* analytics optional */ }
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
@@ -170,6 +170,7 @@
       const el = document.getElementById('page-loading-overlay');
       if (el) {
         el.classList.add('hidden');
+        el.style.display = 'none';
         el.setAttribute('aria-busy', 'false');
       }
     }
@@ -890,11 +891,11 @@
       if (userDoc.exists()) {
         const data = userDoc.data();
         favoriteMovieIds = new Set(Array.isArray(data.favoriteMovieIds) ? data.favoriteMovieIds.map(String) : []);
-        userNameSpan.textContent = data.username || user.email;
-        userAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        profileUsername.textContent = data.username || user.email;
-        applyTitleStyle(profileTitle, data.title || "User");
+        if (userNameSpan) userNameSpan.textContent = data.username || user.email;
+        if (userAvatar) userAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+        if (profileAvatar) profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+        if (profileUsername) profileUsername.textContent = data.username || user.email;
+        if (profileTitle) applyTitleStyle(profileTitle, data.title || "User");
         renderProfileBadges(data.badges || []);
         refreshStarDisplayBadges(data.badges || []);
       } else {
@@ -904,7 +905,7 @@
         await loadUserProfile(user);
         return;
       }
-      userInfoDiv.style.display = 'flex';
+      if (userInfoDiv) userInfoDiv.style.display = 'flex';
       updateStats(user.uid);
     }
 
@@ -977,6 +978,7 @@
     onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
       currentUser = user;
+      try {
       if (user) {
         let mergedUserData = null;
         const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -1050,17 +1052,17 @@
           maybeOpenMovieFromUrlParam({ closeIfMissing: true });
           maybePlayMovieFromUrlParam();
         }
-        sidebar.classList.add('active');
-        mainContent.classList.add('sidebar-active');
+        sidebar?.classList.add('active');
+        mainContent?.classList.add('sidebar-active');
         await loadActivePageContent(getCurrentPageId());
       } else {
         favoriteMovieIds = new Set();
         currentUserPermissions = [];
         currentUserTitle = 'User';
         applyNonStaffMediaUi();
-        userInfoDiv.style.display = 'none';
-        sidebar.classList.remove('active');
-        mainContent.classList.remove('sidebar-active');
+        if (userInfoDiv) userInfoDiv.style.display = 'none';
+        sidebar?.classList.remove('active');
+        mainContent?.classList.remove('sidebar-active');
         if (globalChatUnsubscribe) globalChatUnsubscribe();
         if (friendChatUnsubscribe) friendChatUnsubscribe();
         if (inventoryUnsubscribe) inventoryUnsubscribe();
@@ -1077,6 +1079,10 @@
         } else {
           await loadActivePageContent(loggedOutPageId);
         }
+      }
+      } catch (authErr) {
+        console.error('Auth state handler failed:', authErr);
+        hidePageLoading();
       }
     });
 
@@ -2460,6 +2466,7 @@
     function renderFullGamesList(allGames) {
       const grid = document.getElementById('fullGamesGrid');
       const searchInput = document.getElementById('gameSearchInput');
+      if (!grid || !searchInput) return;
       const sortedGames = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
       const filterAndRender = () => {
         const query = searchInput.value.toLowerCase().trim();
@@ -2910,6 +2917,7 @@
 
     // ========== Shop packs & banners ==========
     async function loadShopPacks() {
+      if (!shopPacks) return;
       try {
         if (shopPacksUnsub) { shopPacksUnsub(); shopPacksUnsub = null; }
         const packsQuery = query(collection(db, "packs"), orderBy("createdAt", "desc"));
@@ -4719,6 +4727,7 @@
 
     // ========== Friends List ==========
     async function loadFriends(userId) {
+      if (!friendsList) return;
       try {
         if (friendsListUnsub) { friendsListUnsub(); friendsListUnsub = null; }
         if (friendRequestsUnsub) { friendRequestsUnsub(); friendRequestsUnsub = null; }
@@ -5068,6 +5077,7 @@
 
     // ========== Global Chat ==========
     async function loadGlobalChat() {
+      if (!globalChatContainer) return;
       if (globalChatUnsubscribe) globalChatUnsubscribe();
       globalChatRenderedIds = new Set();
       const loadingEl = document.getElementById('global-chat-loading');
@@ -5411,10 +5421,10 @@
       userUnsubscribe = onSnapshot(doc(db, "users", userId), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          coinsDisplay.textContent = data.coins || 0;
-          starsDisplay.textContent = data.stars || 0;
-          shopCoins.textContent = data.coins || 0;
-          shopStars.textContent = data.stars || 0;
+          if (coinsDisplay) coinsDisplay.textContent = data.coins || 0;
+          if (starsDisplay) starsDisplay.textContent = data.stars || 0;
+          if (shopCoins) shopCoins.textContent = data.coins || 0;
+          if (shopStars) shopStars.textContent = data.stars || 0;
           const itd = document.getElementById('inv-tokens-display');
           if (itd) itd.textContent = data.coins || 0;
           refreshStarDisplayBadges(data.badges || []);
@@ -5424,6 +5434,7 @@
 
     // ========== Gift wall (received gifts) ==========
     async function loadGiftWall(userId) {
+      if (!giftWallContainer) return;
       if (giftWallUnsubscribe) giftWallUnsubscribe();
       const giftWallQuery = query(collection(db, "giftwall"), where("recipientId", "==", userId), orderBy("timestamp", "desc"));
       giftWallUnsubscribe = onSnapshot(giftWallQuery, (snapshot) => {
