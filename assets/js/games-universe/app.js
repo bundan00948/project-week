@@ -1207,7 +1207,7 @@
       }
     });
 
-    document.getElementById('signupBtn')?.addEventListener('click', async () => {
+    document.getElementById('signupBtn').addEventListener('click', async () => {
       const username = document.getElementById('signupUsername').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
@@ -1259,26 +1259,26 @@
 
     logoutBtn?.addEventListener('click', async () => { await signOut(auth); showNotification("Logged out", "success"); });
 
-    document.getElementById('showSignup')?.addEventListener('click', () => {
-      if (loginModal) loginModal.style.display = 'none';
+    document.getElementById('showSignup').addEventListener('click', () => {
+      loginModal.style.display = 'none';
       resetLoginWizard();
-      if (signupModal) signupModal.style.display = 'flex';
+      signupModal.style.display = 'flex';
     });
-    document.getElementById('showLogin')?.addEventListener('click', () => {
-      if (signupModal) signupModal.style.display = 'none';
+    document.getElementById('showLogin').addEventListener('click', () => {
+      signupModal.style.display = 'none';
       openLoginModalFresh();
     });
-    document.getElementById('closeLoginModal')?.addEventListener('click', () => {
-      if (loginModal) loginModal.style.display = 'none';
+    document.getElementById('closeLoginModal').addEventListener('click', () => {
+      loginModal.style.display = 'none';
       resetLoginWizard();
     });
-    document.getElementById('closeSignupModal')?.addEventListener('click', () => { if (signupModal) signupModal.style.display = 'none'; });
-    document.getElementById('noticeLoginBtn')?.addEventListener('click', () => {
-      if (noticeModal) noticeModal.style.display = 'none';
+    document.getElementById('closeSignupModal').addEventListener('click', () => { signupModal.style.display = 'none'; });
+    document.getElementById('noticeLoginBtn').addEventListener('click', () => {
+      noticeModal.style.display = 'none';
       openLoginModalFresh();
     });
-    document.getElementById('noticeSignupBtn')?.addEventListener('click', () => { if (noticeModal) noticeModal.style.display = 'none'; if (signupModal) signupModal.style.display = 'flex'; });
-    document.getElementById('noticeCancelBtn')?.addEventListener('click', () => { if (noticeModal) noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; pendingMovieShouldPlay = false; });
+    document.getElementById('noticeSignupBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; signupModal.style.display = 'flex'; });
+    document.getElementById('noticeCancelBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; pendingMovieShouldPlay = false; });
     passwordMigrationSaveBtn?.addEventListener('click', async () => {
       if (!currentUser || !passwordMigrationPromptUid || String(currentUser.uid) !== String(passwordMigrationPromptUid)) {
         showNotification('Session changed. Please log in again.', 'error');
@@ -2377,7 +2377,6 @@
 
     function renderTopGamesCarousel(topGames) {
       const container = document.getElementById('topGamesCarousel');
-      if (!container) return;
       container.innerHTML = '';
       topGames.forEach((game, idx) => {
         const slide = document.createElement('div');
@@ -2454,7 +2453,6 @@
 
     function renderCategoryBrowsing(gamesData) {
       const container = document.getElementById('categoryBrowsingSection');
-      if (!container) return;
       container.innerHTML = '';
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
@@ -3018,7 +3016,7 @@
       } else { chanceList.innerHTML = '<div class="chance-item">No items in this pack</div>'; }
       chanceModal.style.display = 'flex';
     }
-    closeChanceModal?.addEventListener('click', () => { if (chanceModal) chanceModal.style.display = 'none'; });
+    closeChanceModal.addEventListener('click', () => { chanceModal.style.display = 'none'; });
 
     // ========== Purchase pack and award stars immediately ==========
     async function purchasePack(pack) {
@@ -5413,7 +5411,7 @@
       } catch(e) { showNotification("Error loading items", "error"); console.error(e); }
     }
 
-    cancelSendGiftInventoryBtn?.addEventListener('click', () => { if (sendGiftInventoryModal) sendGiftInventoryModal.style.display = 'none'; });
+    cancelSendGiftInventoryBtn.addEventListener('click', () => { sendGiftInventoryModal.style.display = 'none'; });
 
     // ========== Load user balance (coins & stars) ==========
     async function loadUserBalance(userId) {
@@ -5468,7 +5466,7 @@
       applyNonStaffMediaUi();
     }
 
-    saveSettingsBtn?.addEventListener('click', async () => {
+    saveSettingsBtn.addEventListener('click', async () => {
       if (!currentUser) return;
       try {
         const updates = {};
@@ -7817,18 +7815,14 @@
 
     // ========== Initialize the app ==========
     async function init() {
+      await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
+      await loadActivePageContent(pageId);
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
-      try {
-        await refreshRarityOrderFromServer();
-        await loadActivePageContent(pageId);
-      } catch (err) {
-        console.error('Game Universe init failed:', err);
-      }
     }
 
     init().catch(() => hidePageLoading());
