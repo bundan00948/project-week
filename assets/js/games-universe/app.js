@@ -1,6 +1,5 @@
 // Import required Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
     import { 
       getAuth,     
       createUserWithEmailAndPassword,     
@@ -61,7 +60,11 @@
       if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
       else setTimeout(fn, 16);
     };
-    scheduleAppIdle(() => { try { getAnalytics(app); } catch (_) { /* analytics optional */ } });
+    scheduleAppIdle(() => {
+      import('https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js')
+        .then(({ getAnalytics }) => { try { getAnalytics(app); } catch (_) {} })
+        .catch(() => {});
+    }, 4000);
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -918,8 +921,8 @@
         if (profileAvatar) profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         if (profileUsername) profileUsername.textContent = data.username || user.email;
         if (profileTitle) applyTitleStyle(profileTitle, data.title || "User");
-        renderProfileBadges(data.badges || []);
-        refreshStarDisplayBadges(data.badges || []);
+        scheduleIdleWork(() => renderProfileBadges(data.badges || []), 1200);
+        scheduleIdleWork(() => refreshStarDisplayBadges(data.badges || []), 800);
       } else {
         hidePasswordMigrationModal();
         favoriteMovieIds = new Set();
@@ -928,7 +931,7 @@
         return;
       }
       if (userInfoDiv) userInfoDiv.style.display = 'flex';
-      updateStats(user.uid);
+      scheduleIdleWork(() => updateStats(user.uid), 2500);
     }
 
     async function renderProfileBadges(badgeNames, containerId) {
@@ -997,7 +1000,11 @@
     }
 
     // ========== Auth state observer with owner enforcement ==========
-    onAuthStateChanged(auth, async (user) => {
+    let authListenerStarted = false;
+    function startAuthListener() {
+      if (authListenerStarted) return;
+      authListenerStarted = true;
+      onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
       currentUser = user;
       try {
@@ -1024,11 +1031,11 @@
             mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner" };
           }
         }
-        try {
-          await syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true });
-        } catch (syncError) {
-          console.warn('Auth bridge profile sync failed:', syncError);
-        }
+        scheduleIdleWork(() => {
+          syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true }).catch((syncError) => {
+            console.warn('Auth bridge profile sync failed:', syncError);
+          });
+        }, 600);
         const banCheck = await getDoc(doc(db, "users", user.uid));
         if (banCheck.exists()) {
           const bd = banCheck.data();
@@ -1107,6 +1114,8 @@
         hidePageLoading();
       }
     });
+    }
+    requestAnimationFrame(() => scheduleIdleWork(startAuthListener, 80));
 
     // ========== Sign up, login, logout (unchanged) ==========
     avatarUpload?.addEventListener('change', () => {
@@ -2415,8 +2424,11 @@
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
+        const lcpBg = idx === 0 && game.image
+          ? `<img class="slide-background-img" src="${escapeHtml(mediaThumbUrl(game.image, 1200, 82))}" alt="" fetchpriority="high" decoding="async" width="1200" height="420">`
+          : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
         slide.innerHTML = `
-          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
+          ${lcpBg}
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -2488,6 +2500,7 @@
       const container = document.getElementById('categoryBrowsingSection');
       if (!container) return;
       container.innerHTML = '';
+      container.classList.remove('is-mounted');
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
       const tagGroups = {};
@@ -2496,6 +2509,7 @@
       const initialTags = tagKeys.slice(0, 6);
       const deferredTags = tagKeys.slice(6);
       initialTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
+      container.classList.add('is-mounted');
       if (deferredTags.length) {
         scheduleIdleWork(() => {
           deferredTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
@@ -2518,7 +2532,8 @@
       const mountList = () => {
         if (fullGamesListMounted) return;
         fullGamesListMounted = true;
-        renderFullGamesList(allGames);
+        renderFullGamesList(allGames, { sync: true });
+        section.classList.add('is-mounted');
       };
       if (typeof IntersectionObserver === 'undefined') {
         mountList();
@@ -2536,7 +2551,7 @@
       fullGamesListSectionObserver.observe(section);
     }
 
-    function renderFullGamesList(allGames) {
+    function renderFullGamesList(allGames, options = {}) {
       const grid = document.getElementById('fullGamesGrid');
       const searchInput = document.getElementById('gameSearchInput');
       if (!grid || !searchInput) return;
@@ -2565,10 +2580,15 @@
         });
         return startIndex + chunk.length;
       };
-      const filterAndRender = () => {
+      const filterAndRender = (sync = false) => {
         const query = searchInput.value.toLowerCase().trim();
         const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
         grid.innerHTML = '';
+        if (sync) {
+          let idx = 0;
+          while (idx < filtered.length) idx = renderChunk(filtered, idx);
+          return;
+        }
         let idx = 0;
         const pump = () => {
           idx = renderChunk(filtered, idx);
@@ -2576,10 +2596,10 @@
         };
         pump();
       };
-      filterAndRender();
+      filterAndRender(Boolean(options.sync));
       if (!fullGamesSearchBound) {
         fullGamesSearchBound = true;
-        searchInput.addEventListener('input', filterAndRender);
+        searchInput.addEventListener('input', () => filterAndRender(false));
       }
     }
 
@@ -2589,9 +2609,6 @@
     const contactSectionEl = document.getElementById('contact-section');
 
     function applyMainShellLayout(pageId) {
-      const showGames = pageId !== 'contact';
-      if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
-      if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
       contactSectionEl?.classList.toggle('active', pageId === 'contact');
     }
 
@@ -6029,6 +6046,7 @@
         const url = bg.dataset.lazyBg;
         const loadUrl = mediaThumbUrl(url, 1200, 82);
         const img = new Image();
+        if (i === index && 'fetchPriority' in img) img.fetchPriority = 'high';
         img.onload = () => {
           bg.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
           bg.classList.add('lazy-bg-loaded');
