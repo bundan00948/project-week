@@ -3,440 +3,445 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Movies</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://wsrv.nl" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/games-universe.css">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Movies</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06080d;
+      --panel: rgba(9, 13, 20, 0.92);
+      --border: rgba(171, 207, 255, 0.14);
+      --muted: #b8c8de;
+      --accent: #55beff;
+      --text: #eef3fb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.45;
+    }
+    header {
+      padding: 16px 18px 8px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6, 8, 13, 0.96);
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    header p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+      max-width: 52rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 11, 18, 0.9);
+    }
+    .toolbar label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 200px;
+    }
+    .toolbar input[type="search"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0f131b;
+      color: var(--text);
+      font: inherit;
+    }
+    .cats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 18px 4px;
+    }
+    .cat-btn {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(130deg, #324f91 0%, #17284b 100%);
+    }
+    .cat-btn.active {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      padding: 14px 18px 28px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+    }
+    .card-banner {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      display: block;
+      background: #111822 center/cover no-repeat #0a0e14;
+      object-fit: cover;
+    }
+    .card-body {
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+    .card-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+    .card-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .card-desc {
+      margin: 0;
+      font-size: 0.76rem;
+      color: var(--muted);
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .watch {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 0;
+      font-weight: 800;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-decoration: none;
+      background: linear-gradient(135deg, #3a8fd6, #6b4dff);
+      color: #fff;
+    }
+    .watch[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    #status {
+      padding: 28px 18px;
+      text-align: center;
+      color: var(--muted);
+    }
+    #status.err { color: #ff8b9d; }
+    .foot {
+      padding: 16px 18px 28px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .foot a { color: var(--accent); }
+  </style>
 </head>
 <body>
-<div class="site-bg-atlas" aria-hidden="true"></div>
-  <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
-    <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
-    <div class="loading-universe-label">GAME UNIVERSE</div>
+  <header>
+    <h1>Movies</h1>
+    <p>Unlisted catalogue. No account required. Watch opens in the separate movie player.</p>
+  </header>
+  <div class="toolbar">
+    <label>Search titles
+      <input type="search" id="q" placeholder="Type to filter…" autocomplete="off">
+    </label>
   </div>
-<!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <i class="fas fa-user"></i>
-      <h2>USER PANEL</h2>
-    </div>
-    
-    <div class="sidebar-scroll">
-    <div class="sidebar-tabs">
-      <a class="tab-button" data-page="main-page" href="/dashboard">
-        <i class="fas fa-home"></i> Main Page
-      </a>
-      <a class="tab-button active" data-page="movies-page" href="/movies">
-        <i class="fas fa-film"></i> Movies
-      </a>
-      <a class="tab-button" data-page="profile-page" href="/profile">
-        <i class="fas fa-user"></i> Profile
-      </a>
-      <a class="tab-button" data-page="history-page" href="/history">
-        <i class="fas fa-history"></i> History
-      </a>
-      <a class="tab-button" data-page="shop-page" href="/shop">
-        <i class="fas fa-shopping-bag"></i> Shop
-      </a>
-      <a class="tab-button" data-page="inventory-page" href="/inventory">
-        <i class="fas fa-box-open"></i> Inventory
-      </a>
-      <a class="tab-button" data-page="missions-page" href="/missions">
-        <i class="fas fa-tasks"></i> Missions
-      </a>
-      <a class="tab-button" data-page="chat-page" href="/chat">
-        <i class="fas fa-comments"></i> Chat
-      </a>
-      <a class="tab-button" data-page="friends-page" href="/friends">
-        <i class="fas fa-user-friends"></i> Friends
-      </a>
-      <a class="tab-button" data-page="settings-page" href="/settings">
-        <i class="fas fa-cog"></i> Settings
-      </a>
-      <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/staff" style="display:none;">
-        <i class="fas fa-shield-alt"></i> Staff Panel
-      </a>
-    </div>
-    </div>
-    <div class="visually-hidden-balance-hooks" style="display:none;" aria-hidden="true">
-      <span id="coins-display">0</span>
-      <span id="stars-display">0</span>
-      <div id="sidebar-stars-icon-wrap"><i class="fas fa-star" style="color:#FFC107;" id="sidebar-stars-fallback-icon"></i></div>
-    </div>
-  </div>
-  <!-- Main Content -->
-  <div class="main-content" id="main-content">
-    <header>
-          <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
-          <nav>
-            <ul>
-                  <li><a href="/home" id="home-tab">Home</a></li>
-                  <li><a href="/contact" id="contact-tab">Contact Us</a></li>
-              <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
-            </ul>
-          </nav></header>
-    <!-- Movies Page -->
-        <div class="page movies-page active" id="movies-page">
-          <section class="hero movies-hero">
-            <div class="movies-hero-shell">
-              <p class="movies-kicker">Spotlight &amp; catalogue</p>
-              <div class="movies-heading-row">
-                <h2>Movies</h2>
-                <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
+  <div class="cats" id="cats" hidden></div>
+  <div id="status">Loading catalogue…</div>
+  <main class="grid" id="grid" hidden></main>
+  <p class="foot">This page is not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
+
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
+      authDomain: "blacket-65c5b.firebaseapp.com",
+      databaseURL: "https://blacket-65c5b-default-rtdb.firebaseio.com",
+      projectId: "blacket-65c5b",
+      storageBucket: "blacket-65c5b.firebasestorage.app",
+      messagingSenderId: "497023905730",
+      appId: "1:497023905730:web:a59093052a3f93a476305b",
+      measurementId: "G-XZZR5DH79B"
+    };
+
+    const MAX_MOVIE_KEY_ID = 999999;
+    const MAX_MOVIE_CATEGORY_ID = 999;
+
+    const statusEl = document.getElementById("status");
+    const gridEl = document.getElementById("grid");
+    const catsEl = document.getElementById("cats");
+    const qEl = document.getElementById("q");
+
+    function escapeHtml(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function toBoundedPositiveInt(raw, max) {
+      const n = Number.parseInt(raw, 10);
+      if (!Number.isFinite(n) || n < 0 || n > max) return null;
+      return n;
+    }
+
+    function stableNumericKey(seed, max) {
+      const source = String(seed || "").trim();
+      if (!source) return 0;
+      let hash = 0;
+      for (let i = 0; i < source.length; i++) {
+        hash = ((hash * 131) + source.charCodeAt(i)) % 2147483647;
+      }
+      return Math.abs(hash) % (max + 1);
+    }
+
+    function normalizeMovieCategory(value, pool) {
+      const keysLower = pool.map((cfg) => String(cfg.key || "").toLowerCase());
+      const raw = String(value || "").trim();
+      if (!pool.length) return raw || "Uncategorized";
+      if (!raw) return pool[0].key;
+      const lower = raw.toLowerCase();
+      for (const cfg of pool) {
+        const keyLower = String(cfg.key || "").toLowerCase();
+        if (lower === keyLower || lower === keyLower.replace("-", "")) return cfg.key;
+      }
+      if (lower.includes("anim")) {
+        const i = keysLower.findIndex((k) => k.includes("anim"));
+        if (i >= 0) return pool[i].key;
+      }
+      if (lower.includes("sci")) {
+        const i = keysLower.findIndex((k) => k.includes("sci"));
+        if (i >= 0) return pool[i].key;
+      }
+      return raw || pool[0].key;
+    }
+
+    function normalizeMovieDoc(raw, fallbackId, categories, indexHint = 0) {
+      const releaseYear = Number.parseInt(raw.releaseYear || raw.year || raw.release || raw.release_date, 10) || 0;
+      const score = Number.parseFloat(raw.score ?? raw.rating ?? raw.voteAverage ?? 0) || 0;
+      const category = normalizeMovieCategory(raw.category || raw.catagory || raw.genre, categories);
+      const categoryCfg = (Array.isArray(categories) ? categories : []).find((cfg) => String(cfg.key) === String(category));
+      const categoryId = toBoundedPositiveInt(raw.categoryId ?? categoryCfg?.categoryId, MAX_MOVIE_CATEGORY_ID);
+      const fallbackMovieKey = (indexHint + 1) <= MAX_MOVIE_KEY_ID ? (indexHint + 1) : stableNumericKey(raw.id || fallbackId || raw.title || "", MAX_MOVIE_KEY_ID);
+      const movieKey = toBoundedPositiveInt(raw.movieKey ?? raw.movieIdKey ?? raw.key, MAX_MOVIE_KEY_ID);
+      return {
+        id: raw.id || fallbackId,
+        movieKey: movieKey !== null ? movieKey : fallbackMovieKey,
+        title: String(raw.title || raw.name || "Untitled Movie"),
+        category,
+        categoryId: categoryId !== null ? categoryId : (categoryCfg?.categoryId ?? 0),
+        releaseYear,
+        score: Number(score.toFixed(1)),
+        banner: String(raw.banner || raw.image || raw.poster || ""),
+        description: String(raw.description || raw.desc || raw.synopsis || raw.overview || ""),
+        url: String(raw.url || raw.movieUrl || raw.fullMovieUrl || "")
+      };
+    }
+
+    function movieNewestComparator(a, b) {
+      return (b.releaseYear || 0) - (a.releaseYear || 0) ||
+        (b.score || 0) - (a.score || 0) ||
+        String(a.title || "").localeCompare(String(b.title || ""));
+    }
+
+    function buildMoviesData(movieItems, categoryConfig) {
+      const cfg = (Array.isArray(categoryConfig) && categoryConfig.length) ? categoryConfig : [];
+      const moviesByCategory = {};
+      cfg.forEach((c) => { moviesByCategory[c.key] = []; });
+      (movieItems || []).forEach((movie, idx) => {
+        const fixed = normalizeMovieDoc(movie, movie.id || `m-${idx}`, cfg, idx);
+        if (!moviesByCategory[fixed.category]) moviesByCategory[fixed.category] = [];
+        moviesByCategory[fixed.category].push(fixed);
+      });
+      Object.keys(moviesByCategory).forEach((cat) => moviesByCategory[cat].sort(movieNewestComparator));
+      const inferredCategories = cfg.length
+        ? cfg
+        : Object.keys(moviesByCategory).map((key, idx) => ({
+            key,
+            categoryId: (idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(key, MAX_MOVIE_CATEGORY_ID),
+            order: idx
+          }));
+      const normalizedCategories = inferredCategories.map((c, idx) => ({
+        ...c,
+        categoryId: toBoundedPositiveInt(c.categoryId, MAX_MOVIE_CATEGORY_ID) ?? ((idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(c.key || idx, MAX_MOVIE_CATEGORY_ID)),
+        order: Number.isFinite(Number(c.order)) ? Number(c.order) : idx,
+        count: (moviesByCategory[c.key] || []).length
+      }));
+      return { categories: normalizedCategories, moviesByCategory };
+    }
+
+    function resolveMovieUrl(url) {
+      const source = String(url || "").trim();
+      if (!source) return null;
+      try {
+        const parsed = new URL(source, window.location.href);
+        if (!/^https?:$/i.test(parsed.protocol)) return null;
+        return parsed.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    function watchPlayerHref(movie) {
+      const u = resolveMovieUrl(movie.url);
+      if (!u) return null;
+      return new URL(`/movie/?u=${encodeURIComponent(u)}`, window.location.origin).toString();
+    }
+
+    async function loadDb() {
+      const appModule = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js");
+      const fsModule = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js");
+      const app = appModule.getApps().length ? appModule.getApps()[0] : appModule.initializeApp(firebaseConfig);
+      const db = fsModule.getFirestore(app);
+
+      let categoryRows = [];
+      try {
+        let snap;
+        try {
+          snap = await fsModule.getDocs(fsModule.query(fsModule.collection(db, "movieCategories"), fsModule.orderBy("order", "asc")));
+        } catch {
+          snap = await fsModule.getDocs(fsModule.collection(db, "movieCategories"));
+        }
+        categoryRows = snap.docs.map((d, i) => {
+          const x = d.data() || {};
+          const key = String(x.key || x.name || "").trim();
+          if (!key) return null;
+          const categoryId = toBoundedPositiveInt(x.categoryId ?? x.categoryKey ?? x.numericId, MAX_MOVIE_CATEGORY_ID);
+          const fallbackCategoryId = (i + 1) <= MAX_MOVIE_CATEGORY_ID ? (i + 1) : stableNumericKey(key, MAX_MOVIE_CATEGORY_ID);
+          return {
+            id: d.id,
+            key,
+            categoryId: categoryId !== null ? categoryId : fallbackCategoryId,
+            order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
+          };
+        }).filter(Boolean).sort((a, b) => (a.order || 0) - (b.order || 0));
+      } catch (e) {
+        console.warn("movieCategories:", e);
+      }
+
+      let movies = [];
+      try {
+        const snap = await fsModule.getDocs(fsModule.collection(db, "movies"));
+        movies = snap.docs.map((d, i) => normalizeMovieDoc({ id: d.id, ...d.data() }, d.id, categoryRows, i));
+      } catch (e) {
+        console.warn("movies:", e);
+      }
+
+      return buildMoviesData(movies, categoryRows);
+    }
+
+    let data = null;
+    let activeCat = "";
+    let q = "";
+
+    function visibleList() {
+      const list = [...(data.moviesByCategory[activeCat] || [])];
+      const needle = q.trim().toLowerCase();
+      if (!needle) return list;
+      return list.filter((m) => String(m.title || "").toLowerCase().includes(needle));
+    }
+
+    function render() {
+      if (!data) return;
+      const list = visibleList();
+      gridEl.innerHTML = list.length
+        ? list.map((m) => {
+            const href = watchPlayerHref(m);
+            const bannerHtml = m.banner
+              ? `<img class="card-banner" src="${escapeHtml(m.banner)}" alt="" loading="lazy">`
+              : `<div class="card-banner" aria-hidden="true"></div>`;
+            const watch = href
+              ? `<a class="watch" href="${escapeHtml(href)}">Watch</a>`
+              : `<button type="button" class="watch" disabled>No URL</button>`;
+            return `<article class="card">
+              ${bannerHtml}
+              <div class="card-body">
+                <h2 class="card-title">${escapeHtml(m.title)}</h2>
+                <div class="card-meta">${escapeHtml(m.category)} · ${m.releaseYear || "—"} · ★ ${m.score || "—"}</div>
+                <p class="card-desc">${escapeHtml(m.description || "")}</p>
+                ${watch}
               </div>
-              <div class="movies-hero-stats">
-                <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-                <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
-              </div>
-            </div>
-            <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-          </section>
-          <section class="movies-category-selector">
-            <div class="movies-section-head">
-              <h2>Browse by category</h2>
-              <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
-            </div>
-            <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-          </section>
-          <section class="movies-list-shell">
-            <div class="movies-search-row">
-              <label class="movies-search-box" for="movieSearchInput">
-                <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-                <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-              </label>
-              <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-            </div>
-            <div class="movies-grid" id="movieGrid"></div>
-          </section>
-        </div>
-  </div>
-<!-- Notice Modal (unlogged users) -->
-    <div id="noticeModal" class="notice-modal">
-      <div class="notice-modal-content">
-        <h3><i class="fas fa-exclamation-triangle"></i> Please sign in</h3>
-        <p>You need to be signed in to your <strong>Game Universe</strong> account to open this.<br>Choose <strong>Log in</strong> if you already have an account, or <strong>Sign up</strong> to create one.</p>
-        <div class="confirm-buttons" style="margin-top: 20px;">
-          <button id="noticeLoginBtn" class="confirm-yes">Login</button>
-          <button id="noticeSignupBtn" class="confirm-no">Sign Up</button>
-          <button id="noticeCancelBtn" class="confirm-no" style="background: #3a3f4a;">Cancel</button>
-        </div>
-      </div>
-    </div>
+            </article>`;
+          }).join("")
+        : `<div class="empty-grid" style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted);">No titles in this view.</div>`;
+    }
 
-    <!-- Login Modal: email first, then password (policy-friendly flow) -->
-    <div id="loginModal" class="auth-modal">
-      <div class="auth-modal-content">
-        <h3><i class="fas fa-sign-in-alt"></i> Log in to Game Universe</h3>
-        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;margin:-6px 0 14px;text-align:left;">
-          Same account you created on this site — we just ask for your <strong>email first</strong>, then your <strong>password</strong>, so the steps are clear.
-        </p>
-        <div id="loginWizardStep1">
-          <div class="login-step-pill">Step 1 of 2 — Your email</div>
-          <input type="email" id="loginEmail" class="auth-input" placeholder="Email for your Game Universe account" autocomplete="username">
-          <button type="button" id="loginEmailNextBtn" class="auth-btn">Continue</button>
-        </div>
-        <div id="loginWizardStep2" style="display: none;">
-          <div class="login-step-pill">Step 2 of 2 — Your password</div>
-          <p id="loginWizardEmailPreview" class="login-wizard-email-preview" aria-live="polite"></p>
-          <p id="loginWizardHint" class="login-wizard-hint"></p>
-          <input type="password" id="loginPassword" class="auth-input" placeholder="Your account password" autocomplete="current-password">
-          <button type="button" id="loginBtn" class="auth-btn">Log in</button>
-          <button type="button" id="loginWizardBackBtn" class="auth-btn auth-btn-secondary">Change email</button>
-        </div>
-        <div class="switch-auth">Don't have an account? <a id="showSignup">Sign up</a></div>
-        <button class="close-modal" id="closeLoginModal">Cancel</button>
-      </div>
-    </div>
+    function renderCats() {
+      catsEl.innerHTML = "";
+      data.categories.forEach((c) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "cat-btn" + (c.key === activeCat ? " active" : "");
+        b.textContent = `${c.key} (${c.count})`;
+        b.addEventListener("click", () => {
+          activeCat = c.key;
+          catsEl.querySelectorAll(".cat-btn").forEach((x) => x.classList.remove("active"));
+          b.classList.add("active");
+          render();
+        });
+        catsEl.appendChild(b);
+      });
+    }
 
-    <!-- Signup Modal with file upload -->
-    <div id="signupModal" class="auth-modal">
-      <div class="auth-modal-content">
-        <h3><i class="fas fa-user-plus"></i> Sign Up</h3>
-        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.45;margin-bottom:12px;text-align:left;">
-          Welcome to <strong style="color:var(--neon-green);">Game Universe</strong>. After you join: use the sidebar to browse games, open the <strong>Shop</strong> for packs and profile banners, collect blooks in <strong>Inventory</strong>, complete <strong>Daily Missions</strong>, and chat in <strong>Chat</strong> or <strong>Friends</strong>. Your profile shows stats, badges, and friends. Each account has a public <strong>6-digit ID</strong> for moderation. Have fun and play fair.
-        </p>
-        <input type="text" id="signupUsername" class="auth-input" placeholder="Username">
-        <input type="email" id="signupEmail" class="auth-input" placeholder="Email">
-        <input type="password" id="signupPassword" class="auth-input" placeholder="Password">
-        <div class="form-group staff-only-signup-url" style="margin:10px 0 6px;display:none;">
-          <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:4px;">Profile picture — image URL (staff)</label>
-          <input type="url" id="signupAvatarUrl" class="auth-input" placeholder="Optional: image URL">
-        </div>
-        <label class="file-label"><i class="fas fa-upload"></i> Upload Profile Picture (optional)
-          <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
-        </label>
-        <img id="avatarPreview" style="display: none; max-width: 100px; border-radius: 50%; margin-top: 10px;">
-        <button id="signupBtn" class="auth-btn">Create Account</button>
-        <div class="switch-auth">Already have an account? <a id="showLogin">Login</a></div>
-        <button class="close-modal" id="closeSignupModal">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Password Migration Modal -->
-    <div id="passwordMigrationModal" class="auth-modal">
-      <div class="auth-modal-content">
-        <h3><i class="fas fa-shield-alt"></i> Security update for your account</h3>
-        <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;text-align:left;margin-bottom:12px;">
-          <strong>For everyone’s safety</strong>, Game Universe needs you to choose a <strong>new password</strong> you’ll use from now on when you visit this site. Please enter it twice to confirm. After you save, <strong>sign in with this new password</strong> next time — on this device or any other.
-        </p>
-        <input type="password" id="passwordMigrationNew" class="auth-input" placeholder="New password (at least 6 characters)">
-        <input type="password" id="passwordMigrationConfirm" class="auth-input" placeholder="Type the new password again">
-        <button id="passwordMigrationSaveBtn" class="auth-btn">Save new password</button>
-      </div>
-    </div>
-
-    <!-- Confirm Game Modal -->
-    <div id="confirmModal" class="confirm-modal">
-      <div class="confirm-modal-content">
-        <h3>Play this game?</h3>
-        <p id="confirmGameName"></p>
-        <div class="confirm-buttons">
-          <button id="confirmYes" class="confirm-yes">Yes</button>
-          <button id="confirmNo" class="confirm-no">No</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Send Gift Card Modal -->
-    <div id="sendCardModal" class="send-card-modal">
-      <div class="send-card-modal-content">
-        <h3>Send Gift Card</h3>
-        <div class="send-card-info">
-          <div class="send-card-icon" id="send-card-icon">🎁</div>
-          <div class="send-card-details">
-            <div class="send-card-name" id="send-card-name">Gift Card Name</div>
-            <div class="send-card-type" id="send-card-type">Type: Coins</div>
-          </div>
-        </div>
-        <div class="send-form-group">
-          <label for="recipient-email">Send to: </label>
-          <select id="recipient-email">
-            <option value="">Select a friend or send to yourself</option>
-            <!-- Friends will be added here -->
-          </select>
-        </div>
-        <div class="send-card-buttons">
-          <button class="send-card-btn send" id="send-card-btn">Send</button>
-          <button class="send-card-btn cancel" id="cancel-send-btn">Cancel</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Notification Popup -->
-    <div class="notification-popup" id="notification-popup">
-      <div class="notification-content">
-        <div class="notification-icon" id="notification-icon">✓</div>
-        <div class="notification-text" id="notification-text">Operation successful!</div>
-      </div>
-    </div>
-
-    <!-- Pack Opening Modal -->
-    <div class="modal" id="pack-opening-modal">
-      <div class="modal-content pack-opening-modal" id="pack-opening-modal-inner">
-        <div class="modal-background" id="opening-modal-bg"></div>
-        <div class="pack-rip-overlay" id="pack-rip-overlay" aria-hidden="true"></div>
-        <div class="pack-bg-fx" id="pack-bg-fx" aria-hidden="true">
-          <div class="pack-bg-aurora"></div>
-          <div class="pack-bg-mesh"></div>
-          <div class="pack-bg-rays"></div>
-          <div class="pack-bg-vignette"></div>
-        </div>
-        <div class="modal-body" id="pack-opening-modal-body">
-          <div class="pack-confetti-layer" id="pack-confetti-layer" aria-hidden="true" style="display:none;"></div>
-          <button type="button" class="pack-unbox-click-layer" id="pack-unbox-click-layer" style="display:none;" aria-label="Open pack"></button>
-          <button type="button" class="pack-unbox-dismiss-layer" id="pack-unbox-dismiss-layer" style="display:none;" aria-label="Collect and close"></button>
-          <div class="pack-unbox-boost" id="pack-unbox-boost" style="display:none;" aria-hidden="true"><i class="fas fa-hand-pointer"></i></div>
-          <div class="pack-unbox-pack-center" id="pack-unbox-pack-center">
-            <div class="gift-animation" id="gift-animation">
-              <!-- Pack stage -->
-            </div>
-          </div>
-          <div class="gift-details pack-unbox-details-wrap" id="pack-unbox-details-wrap">
-            <div class="pack-reveal-card" id="pack-reveal-card">
-              <div class="pack-reveal-card-inner">
-                <div class="pack-reveal-name" id="opened-gift-name">Gift Name</div>
-                <div class="pack-reveal-rarity gift-rarity" id="opened-gift-rarity">Rarity</div>
-                <div class="pack-reveal-blook-wrap" id="pack-reveal-blook-slot"></div>
-                <div class="pack-reveal-chance" id="opened-gift-chance">0%</div>
-                <div class="pack-reveal-stars-note" id="opened-gift-stars">Stars: 0</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Send Gift Modal -->
-    <div class="modal" id="send-gift-modal">
-      <div class="modal-content">
-        <div class="modal-body">
-          <h2>SEND GIFT</h2>
-          <div class="gift-animation" id="send-gift-preview">
-            <!-- Gift preview will be shown here -->
-          </div>
-          <div class="send-form">
-            <div class="form-group">
-              <label for="friend-email-send">Friend's Email</label>
-              <input type="email" id="friend-email-send" placeholder="Enter friend's email">
-            </div>
-            <div class="buttons-row">
-              <button class="confirm-btn" id="confirm-send-btn">CONFIRM</button>
-              <button class="cancel-btn" id="cancel-send-gift-btn">CANCEL</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sending Animation Modal -->
-    <div class="modal" id="sending-animation-modal">
-      <div class="modal-content pack-opening-modal">
-        <div class="modal-background" id="sending-modal-bg"></div>
-        <div class="modal-body">
-          <div class="gift-animation" id="sending-animation">
-            <!-- Animation will be shown here -->
-          </div>
-          <div class="gift-details">
-            <div class="gift-name" id="sending-message">Sending gift...</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Chance Modal -->
-    <div class="modal chance-modal" id="chance-modal">
-      <div class="modal-content">
-        <div class="modal-body">
-          <h2>Pack Drop Chances</h2>
-          <div class="chance-list" id="chance-list">
-            <!-- Chances will be added here -->
-          </div>
-          <button class="cancel-btn" id="close-chance-modal">CLOSE</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Profile modals removed - now uses full page navigation -->
-
-    <!-- Send Gift from Chat Modal -->
-    <div class="modal send-gift-modal" id="send-gift-chat-modal">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="send-gift-header">
-            <div class="send-gift-avatar">
-              <img id="send-gift-user-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="User Avatar">
-            </div>
-            <div class="send-gift-info">
-              <h3 id="send-gift-username">Username</h3>
-              <div>Send a gift</div>
-            </div>
-          </div>
-          
-          <h4>Select a gift to send: </h4>
-          <div class="gift-cards-list" id="gift-cards-list">
-            <!-- Gift cards will be added here -->
-          </div>
-          
-          <button class="cancel-btn" id="close-send-gift-chat-modal">CANCEL</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Send Gift from Inventory Modal -->
-    <div class="modal send-gift-inventory-modal" id="send-gift-inventory-modal">
-      <div class="modal-content">
-        <div class="modal-body">
-          <h2>Send Gift</h2>
-          <h3>Select a gift to send: </h3>
-          <div class="gift-cards-list" id="sender-gift-cards-list">
-            <!-- Sender's gift cards will be populated here -->
-          </div>
-          <div class="buttons-row">
-            <button class="cancel-btn" id="cancel-send-gift-inventory-btn">CANCEL</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="movieInfoModal" class="modal movie-info-modal">
-      <div class="movie-info-shell" id="movieInfoShell" role="dialog" aria-modal="true" aria-labelledby="movieInfoTitle">
-        <div class="movie-info-background" id="movieInfoBackground"></div>
-        <div class="movie-info-trailer-stage" id="movieInfoTrailerStage" aria-hidden="true">
-          <iframe class="movie-info-trailer-frame" id="movieInfoTrailerFrame" title="" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
-        </div>
-        <div class="movie-info-overlay"></div>
-        <button type="button" class="movie-info-close" id="movieInfoCloseBtn" aria-label="Close movie details">×</button>
-        <section class="movie-info-panel">
-          <div class="movie-info-main">
-            <div class="movie-info-kicker"><i class="fas fa-film" aria-hidden="true"></i> PRE-MOVIE VIEW</div>
-            <img id="movieInfoTitleImage" class="movie-info-title-image" src="" alt="Movie title logo" loading="lazy">
-            <h2 class="movie-info-title" id="movieInfoTitle">Movie title</h2>
-            <div class="movie-info-meta">
-              <span class="movie-info-chip"><i class="fas fa-tag" aria-hidden="true"></i><span id="movieInfoCategory">Category</span></span>
-              <span class="movie-info-chip"><i class="fas fa-calendar-alt" aria-hidden="true"></i><span id="movieInfoYear">Year</span></span>
-              <span class="movie-info-chip"><i class="fas fa-star" aria-hidden="true"></i><span id="movieInfoScore">Score</span></span>
-            </div>
-            <p class="movie-info-desc" id="movieInfoDescription">No description available yet.</p>
-            <div class="movie-info-actions" id="movieInfoActions">
-              <button type="button" class="movie-info-watch-btn" id="movieInfoWatchBtn">WATCH MOVIE</button>
-              <button type="button" class="movie-info-back-btn" id="movieInfoBackBtn">BACK</button>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
-    <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
-  </div>
-
-  <!-- Staff Panel Modals -->
-  <div class="staff-modal" id="staff-game-modal"><div class="staff-modal-content"><h3 id="staff-game-modal-title">Add Game</h3><form id="staff-game-form"><input type="hidden" id="staff-game-id"><div class="staff-form-group"><label>Title</label><input id="staff-game-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-game-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Image URL</label><input id="staff-game-image" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload cover image</label><input type="file" id="staff-game-image-file" accept="image/*"></div><div class="staff-form-group"><label>Game URL (iframe)</label><input id="staff-game-url" required></div><div class="staff-form-group"><label>Rating (0-5)</label><input id="staff-game-rating" type="number" step="0.1" value="3"></div><div class="staff-form-group"><label>Multiplayer</label><select id="staff-game-multi"><option value="false">Single Player</option><option value="true">Multiplayer</option></select></div><div class="staff-form-group"><label>Tags (comma separated)</label><input id="staff-game-tags" placeholder="action, arcade, puzzle"></div><div class="staff-flex-row"><button type="submit" class="staff-btn staff-btn-primary">Save Game</button><button type="button" class="staff-btn" id="staff-close-game-modal">Cancel</button></div></form></div></div>
-
-  <div class="staff-modal" id="staff-tag-modal"><div class="staff-modal-content"><h3>Create Tag</h3><div class="staff-form-group"><label>Tag Name</label><input id="staff-new-tag-name" placeholder="e.g. RPG"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-tag-btn">Create</button><button class="staff-btn" id="staff-close-tag-modal">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-pack-modal"><div class="staff-modal-content" style="max-width:800px;"><h3 id="staff-pack-modal-title">Pack Details</h3><form id="staff-pack-form"><input type="hidden" id="staff-pack-id"><div class="staff-form-group"><label>Pack Name</label><input id="staff-pack-name" required></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-pack-price" type="number" required></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-6px 0 10px;">Market look (Blooket-style): frame uses inner + outer colors; center shows pack art; optional pattern behind art.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-pack-color-inner" type="color" value="#c8c8c8"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-pack-color-outer" type="color" value="#6e6e6e"></div></div><div class="staff-form-group"><label>Pack art image URL (center)</label><input id="staff-pack-art-url" placeholder="https://... (PNG/SVG like Blooket pack)"></div><div class="staff-form-group"><label>Pattern / background URL (optional)</label><input id="staff-pack-pattern-url" placeholder="SVG or image behind the pack art"></div><div class="staff-form-group"><label>Reveal card background (URL)</label><input id="staff-pack-reveal-bg-url" placeholder="Optional image; if empty, pack inner/outer gradient is used"></div><div id="staff-pack-market-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-form-group"><label>Legacy: full card / modal backdrop URL</label><input id="staff-pack-bg" placeholder="Optional — used for unbox modal if set"></div><div class="staff-form-group"><label>Or upload for legacy backdrop</label><input type="file" id="staff-pack-bg-file" accept="image/*"></div><div class="staff-form-group"><label>Edit Mode</label><select id="staff-pack-edit-mode"><option value="builder">Builder (Visual)</option><option value="json">JSON</option></select></div><div id="staff-pack-builder-area"><div class="staff-flex-row" style="justify-content:flex-end;margin:12px 0 8px;"><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-pack-add-item-btn"><i class="fas fa-plus"></i> Add blook</button></div><div id="staff-pack-items-list" class="staff-blook-chip-row"></div></div><div id="staff-pack-json-area" style="display:none;"><div class="staff-form-group"><label>Items (JSON array)</label><textarea id="staff-pack-items-json" rows="8" placeholder='[{"name":"Golden Sword","rarity":"legendary","chance":5,"starsGained":150,"imageUrl":""}]'></textarea></div></div><div class="staff-flex-row" style="margin-top:16px;"><button type="submit" class="staff-btn staff-btn-primary">Save Pack</button><button type="button" class="staff-btn" id="staff-close-pack-modal">Cancel</button></div></form></div></div>
-
-  <div class="staff-modal" id="staff-blook-editor-modal"><div class="staff-modal-content" style="max-width:480px;"><h3 id="staff-blook-editor-title">Edit blook</h3><input type="hidden" id="staff-blook-editor-idx" value="-1"><div class="staff-form-group"><label>Blook name</label><input id="staff-blook-editor-name" placeholder="Name"></div><div class="staff-form-group"><label>Rarity</label><select id="staff-blook-editor-rarity"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Colors come from Staff → Rarity & site.</p></div><div class="staff-form-group"><label>Worth (stars value)</label><input id="staff-blook-editor-stars" type="number" value="0"></div><div class="staff-form-group"><label>Drop chance (%)</label><input id="staff-blook-editor-chance" type="number" step="0.01" value="0"></div><div class="staff-form-group"><label>Image URL (optional)</label><input id="staff-blook-editor-image" placeholder="https://..."></div><div class="staff-form-group"><label>Pack this blook is in</label><select id="staff-blook-editor-pack"></select><p style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;">Move blooks between packs when you apply (saved packs only).</p></div><div class="staff-flex-row" style="margin-top:16px;flex-wrap:wrap;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-blook-editor-save">Apply</button><button type="button" class="staff-btn staff-btn-danger" id="staff-blook-editor-delete">Remove blook</button><button type="button" class="staff-btn" id="staff-blook-editor-cancel">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-rarity-def-modal"><div class="staff-modal-content" style="max-width:440px;"><h3 id="staff-rarity-def-modal-title">Rarity style</h3><input type="hidden" id="staff-rarity-def-key"><div class="staff-form-group"><label>Rarity id (slug)</label><input id="staff-rarity-def-key-input" placeholder="e.g. legendary"></div><div class="staff-form-group"><label>Solid color</label><input id="staff-rarity-def-solid" type="color" value="#c0c0c0"></div><div class="staff-form-group"><label>Use gradient</label><select id="staff-rarity-def-gradient"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-form-group" id="staff-rarity-def-grad-wrap" style="display:none;"><label>Gradient colors (comma-separated hex)</label><input id="staff-rarity-def-grad-colors" placeholder="#aabbcc, #112233"></div><div class="staff-form-group" id="staff-rarity-def-run-wrap" style="display:none;"><label>Animated gradient</label><select id="staff-rarity-def-running"><option value="false">No</option><option value="true">Yes</option></select></div><div class="staff-flex-row" style="margin-top:16px;gap:8px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-def-save">Save</button><button type="button" class="staff-btn staff-btn-danger" id="staff-rarity-def-delete" style="display:none;">Delete</button><button type="button" class="staff-btn" id="staff-rarity-def-cancel">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-user-modal"><div class="staff-modal-content"><h3>Edit User</h3><input type="hidden" id="staff-edit-user-id"><div class="staff-form-group"><label>Public ID (6 digits)</label><input id="staff-edit-display-id" readonly style="opacity:0.85;"></div><h4 style="margin-top:14px;font-size:0.9rem;">IP addresses</h4><div id="staff-user-ip-summary" style="font-size:0.8rem;line-height:1.45;color:var(--text-secondary);background:rgba(0,0,0,0.28);padding:10px;border-radius:10px;margin-bottom:2px;">Loading…</div><div class="staff-form-group"><label>Username</label><input id="staff-edit-username"></div><div class="staff-form-group"><label>Coins</label><input id="staff-edit-coins" type="number"></div><div class="staff-form-group"><label>Stars</label><input id="staff-edit-stars" type="number"></div><div class="staff-form-group"><label>Title</label><select id="staff-edit-user-title"><option value="User">User</option></select></div><div class="staff-form-group"><label>Custom Avatar URL (optional)</label><input id="staff-edit-avatar" placeholder="Leave blank to keep current"></div><h4 style="margin-top:16px;font-size:0.9rem;">Profile banner</h4><div class="staff-form-group"><label>Banner image URL</label><input id="staff-edit-banner-url" placeholder="https://... or leave empty for default"></div><div class="staff-form-group"><label>Or upload banner</label><input type="file" id="staff-edit-banner-file" accept="image/*"></div><div class="staff-flex-row" style="gap:8px;flex-wrap:wrap;"><button type="button" class="staff-btn staff-btn-sm" id="staff-clear-banner-btn">Clear banner</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Moderation</h4><div class="staff-flex-row" style="gap:8px;margin:8px 0;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Mute Status</label><select id="staff-edit-mute"><option value="none">Not Muted</option><option value="temp">Temp Mute</option><option value="perm">Perm Mute</option></select></div><div class="staff-form-group" id="staff-mute-until-group" style="flex:1;min-width:140px;display:none;"><label>Mute Until</label><input type="datetime-local" id="staff-edit-mute-until"></div><div class="staff-form-group" style="flex:1;min-width:140px;"><label>Ban Status</label><select id="staff-edit-ban"><option value="none">Not Banned</option><option value="temp">Temp Ban</option><option value="perm">Perm Ban</option></select></div><div class="staff-form-group" id="staff-ban-until-group" style="flex:1;min-width:140px;display:none;"><label>Ban Until</label><input type="datetime-local" id="staff-edit-ban-until"></div></div><div class="staff-form-group"><label>Mute/Ban Reason</label><input id="staff-edit-mod-reason" placeholder="Reason for mute or ban"></div><h4 style="margin-top:16px;font-size:0.9rem;">Badges</h4><div id="staff-user-badges-list" style="margin:8px 0;"></div><div class="staff-form-group"><label>Add Badge</label><select id="staff-user-add-badge"><option value="">Select badge...</option></select><button type="button" class="staff-btn staff-btn-primary staff-btn-sm" id="staff-assign-badge-btn" style="margin-top:6px;">Assign Badge</button></div><h4 style="margin-top:16px;font-size:0.9rem;">Inventory</h4><div id="staff-user-inventory" style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:12px;margin:8px 0;"></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-update-user-btn">Update</button><button class="staff-btn" id="staff-close-user-modal">Close</button></div></div></div>
-
-  <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-toolbar"><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="all">All</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="none">None</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="moderation">Moderation</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="content">Content</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="economy">Economy</button></div><div class="title-perm-count" id="staff-title-perm-count">0 / 0 selected</div><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-4px 0 8px;">Market card uses the same frame as packs; set inner/outer colors to match rarity.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-banner-shop-inner" type="color" value="#5a7a9a"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-banner-shop-outer" type="color" value="#1a2a3a"></div></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div id="staff-banner-shop-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-rarity-order-modal"><div class="staff-modal-content" style="max-width:480px;"><h3>Blook rarity order</h3><p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px;">Comma-separated, lowest to highest (used for inventory sorting). Default: common,uncommon,rare,epic,legendary,mythical,chroma</p><textarea id="staff-rarity-order-input" rows="3" style="width:100%;padding:10px;border-radius:10px;background:rgba(0,0,0,0.4);color:#fff;border:1px solid rgba(42,255,158,0.2);"></textarea><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-rarity-order-save">Save</button><button type="button" class="staff-btn" id="staff-rarity-order-cancel">Cancel</button></div></div></div>
-
-  <div class="staff-modal" id="staff-mission-form-modal"><div class="staff-modal-content" style="max-width:520px;"><h3>Create / edit mission</h3><input type="hidden" id="staff-mission-form-id"><div class="staff-form-group"><label>Title</label><input id="staff-mission-title" required></div><div class="staff-form-group"><label>Description</label><textarea id="staff-mission-desc" rows="2"></textarea></div><div class="staff-form-group"><label>Type</label><select id="staff-mission-type"><option value="gametime">Gametime (seconds played)</option><option value="chatting">Chat messages</option><option value="spending">Coins spent</option></select></div><div class="staff-form-group"><label>Target</label><input id="staff-mission-target" type="number" value="10" required></div><div class="staff-form-group"><label>Reward coins</label><input id="staff-mission-rcoins" type="number" value="100"></div><div class="staff-form-group"><label>Reward stars</label><input id="staff-mission-rstars" type="number" value="50"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-mission-form-save">Save mission</button><button type="button" class="staff-btn" id="staff-mission-form-cancel">Cancel</button></div></div></div>
-
-  <div class="modal" id="banner-picker-modal" style="z-index:11000;">
-    <div class="modal-content" style="max-width:520px;">
-      <div class="modal-body" style="align-items:stretch;">
-        <h2 style="margin-bottom:8px;">Choose banner</h2>
-        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">Pick a banner you already own, or the default look.</p>
-        <div class="banner-picker-grid" id="banner-picker-grid"></div>
-        <button type="button" class="collect-btn" id="banner-picker-close" style="margin-top:16px;">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="badge-detail-modal" style="z-index:11001;display:none;">
-    <div class="modal-content" style="max-width:360px;">
-      <div class="modal-body" style="align-items:center;text-align:center;">
-        <div id="badge-detail-icon-wrap" style="width:64px;height:64px;margin:0 auto 12px;border-radius:14px;display:flex;align-items:center;justify-content:center;"></div>
-        <h2 id="badge-detail-name" style="font-size:1.1rem;margin-bottom:8px;">Badge</h2>
-        <p id="badge-detail-desc" style="font-size:0.88rem;color:var(--text-secondary);line-height:1.4;">—</p>
-        <button type="button" class="collect-btn" id="badge-detail-close" style="margin-top:18px;">Close</button>
-      </div>
-    </div>
-  </div>
-  <script type="module" src="/assets/js/games-universe/pages/movies.js"></script>
+    try {
+      data = await loadDb();
+      if (!data.categories.length) {
+        statusEl.textContent = "No categories loaded. Check Firestore rules and data.";
+        statusEl.classList.add("err");
+        return;
+      }
+      activeCat = data.categories[0].key;
+      statusEl.remove();
+      catsEl.hidden = false;
+      gridEl.hidden = false;
+      renderCats();
+      render();
+      qEl.addEventListener("input", () => {
+        q = qEl.value || "";
+        render();
+      });
+    } catch (e) {
+      statusEl.textContent = "Could not load movies: " + (e && e.message ? e.message : String(e));
+      statusEl.classList.add("err");
+    }
+  </script>
 </body>
 </html>
