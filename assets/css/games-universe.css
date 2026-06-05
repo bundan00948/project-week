@@ -625,6 +625,12 @@
       transform: translateY(-4px);
       border-color: var(--neon-green);
     }
+    .full-game-item,
+    .game-card,
+    .category-row {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 220px;
+    }
     .full-game-banner {
       position: relative;
       width: 100%;
