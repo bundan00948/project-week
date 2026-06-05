@@ -21,7 +21,21 @@ function slice(startMarker, endMarker) {
   return html.slice(from, end).trim();
 }
 
-const css = slice('<style>', '</style>').replace(/^<style>\s*/, '').replace(/\s*<\/style>$/, '');
+const css = (() => {
+  const blocks = [];
+  const re = /<style>([\s\S]*?)<\/style>/gi;
+  let m;
+  while ((m = re.exec(html))) blocks.push(m[1].trim());
+  if (!blocks.length) throw new Error('Could not extract CSS from games.html');
+  const merged = blocks.join('\n\n');
+  if (merged.split('\n').length < 500) {
+    throw new Error(
+      `Extracted CSS is too small (${merged.split('\n').length} lines). ` +
+        'Ensure games.html uses one <style> block or the build merges all blocks.'
+    );
+  }
+  return merged;
+})();
 const jsRaw = html.match(/<script type="module">([\s\S]*)<\/script>\s*<\/body>/);
 if (!jsRaw) throw new Error('Could not extract module script');
 let js = jsRaw[1];
@@ -260,25 +274,40 @@ function header(activeHeaderTab) {
   return h;
 }
 
-const HEAD = `<!DOCTYPE html>
+const LCP_IMAGE_PRELOAD = `<link rel="preload" as="image" href="https://wsrv.nl/?url=https://geodashgame.io/data/image/posts/geometry-dash-game-banner1.jpg&amp;output=webp&amp;w=1200" fetchpriority="high">`;
+
+const HEAD_BASE = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{TITLE}}</title>
+  {{LCP_PRELOAD}}<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://wsrv.nl" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <link rel="preconnect" href="https://wsrv.nl">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/games-universe.css">
 </head>
 <body>
 `;
 
+function buildHead(title, withLcpPreload = false) {
+  const lcp = withLcpPreload ? LCP_IMAGE_PRELOAD + '\n  ' : '';
+  return HEAD_BASE.replace('{{TITLE}}', title).replace('{{LCP_PRELOAD}}', lcp);
+}
+
 const FOOT = `
-  <script type="module" src="/assets/js/games-universe/pages/{{ROUTE}}.js"></script>
+  <script type="module">
+    const boot = () => import('/assets/js/games-universe/pages/{{ROUTE}}.js');
+    if (document.readyState === 'complete') boot();
+    else window.addEventListener('load', boot, { once: true });
+  </script>
 </body>
 </html>`;
 
@@ -357,7 +386,7 @@ for (const page of PAGES) {
     globalModals,
   ].join('\n');
 
-  const file = HEAD.replace('{{TITLE}}', page.title) + body + FOOT.replace('{{ROUTE}}', page.route);
+  const file = buildHead(page.title, page.pageId === 'main-page' || page.pageId === 'home') + body + FOOT.replace('{{ROUTE}}', page.route);
   fs.writeFileSync(outPath, file);
 
   const pageJs = `window.__GU_PAGE__ = '${page.pageId}';\nimport '../app.js';\n`;
