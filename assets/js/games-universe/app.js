@@ -1670,7 +1670,7 @@
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/games/dashboard') {
+      if (path !== '/games/dashboard' && path !== '/games/home') {
         url.pathname = '/games/dashboard';
       }
       url.searchParams.delete('page');
@@ -2266,9 +2266,10 @@
     const PAGE_ROUTE_IDS = new Set([
       'main-page', 'movies-page', 'profile-page', 'history-page', 'shop-page',
       'inventory-page', 'missions-page', 'chat-page', 'friends-page',
-      'settings-page', 'staff-page', 'view-profile-page', 'contact'
+      'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     const PAGE_PATH_MAP = {
+      'home': '/games/home',
       'contact': '/games/contact',
       'main-page': '/games/dashboard',
       'movies-page': '/games/movies',
@@ -2293,7 +2294,7 @@
     }
 
     function isAuthRequiredPage(pageId) {
-      const publicPages = new Set(['main-page', 'movies-page', 'contact', 'view-profile-page']);
+      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }
 
@@ -2486,7 +2487,9 @@
       searchInput.addEventListener('input', filterAndRender);
     }
 
-    // ========== Contact page layout (games list hidden on contact route) ==========
+    // ========== Tab switching (home/contact) ==========
+    const homeTab = document.getElementById('home-tab');
+    const contactTab = document.getElementById('contact-tab');
     const categorySection = document.getElementById('categoryBrowsingSection');
     const fullGamesListSec = document.getElementById('fullGamesList');
     const contactSectionEl = document.getElementById('contact-section');
@@ -2496,20 +2499,21 @@
       if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
       if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
       contactSectionEl?.classList.toggle('active', pageId === 'contact');
+      homeTab?.classList.toggle('active', pageId === 'home' || pageId === 'main-page');
+      contactTab?.classList.toggle('active', pageId === 'contact');
     }
 
     function activateInitialPage(pageId) {
       document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
       document.querySelectorAll('.sidebar-tabs .tab-button').forEach((btn) => btn.classList.remove('active'));
+      homeTab?.classList.remove('active');
+      contactTab?.classList.remove('active');
 
-      if (pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         document.getElementById('main-page')?.classList.add('active');
         applyMainShellLayout(pageId);
         if (pageId === 'main-page') {
           document.querySelector('.sidebar-tabs .tab-button[data-page="main-page"]')?.classList.add('active');
-        }
-        if (pageId === 'contact') {
-          document.querySelector('.sidebar-tabs .tab-button[data-page="contact"]')?.classList.add('active');
         }
         return;
       }
@@ -2526,6 +2530,7 @@
     async function loadActivePageContent(pageId) {
       switch (pageId) {
         case 'main-page':
+        case 'home':
           await mountMainPageGamesContent();
           break;
         case 'contact':
@@ -2573,14 +2578,10 @@
     }
 
     document.getElementById('suggest-tab')?.addEventListener('click', () => {
-      document.getElementById('suggest-tab')?.classList.add('active');
-      document.getElementById('report-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'block';
       document.getElementById('report-form-container').style.display = 'none';
     });
     document.getElementById('report-tab')?.addEventListener('click', () => {
-      document.getElementById('report-tab')?.classList.add('active');
-      document.getElementById('suggest-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'none';
       document.getElementById('report-form-container').style.display = 'block';
     });
@@ -7818,7 +7819,7 @@
     async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      if (pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
