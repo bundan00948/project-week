@@ -54,14 +54,10 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch (_) { /* analytics optional */ }
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
-    const scheduleAppIdle = (fn, timeoutMs = 1200) => {
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
-      else setTimeout(fn, 16);
-    };
-    scheduleAppIdle(() => { try { getAnalytics(app); } catch (_) { /* analytics optional */ } });
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -95,21 +91,6 @@
       } catch (e) {
         blookRarityDefs = {};
       }
-    }
-
-    let rarityConfigPromise = null;
-    async function ensureRarityConfigLoaded() {
-      if (!rarityConfigPromise) rarityConfigPromise = refreshRarityOrderFromServer();
-      return rarityConfigPromise;
-    }
-
-    function pageNeedsRarity(pageId) {
-      return new Set(['shop-page', 'inventory-page', 'staff-page', 'profile-page', 'missions-page', 'view-profile-page']).has(pageId);
-    }
-
-    function scheduleIdleWork(fn, timeoutMs = 900) {
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
-      else setTimeout(fn, 0);
     }
 
     function applyFixedSiteTheme() {
@@ -399,9 +380,6 @@
     let mainPageGamesMounted = false;
     let mainPageGamesMountPromise = null;
     let mainPageGamesScrollObserver = null;
-    let fullGamesListMounted = false;
-    let fullGamesListSectionObserver = null;
-    let activePageContentLoadedFor = null;
     let moviesPageMounted = false;
     let moviesPageMountPromise = null;
     let activeMovieCategory = null;
@@ -1045,7 +1023,7 @@
           }
         }
         await loadUserProfile(user);
-        scheduleIdleWork(() => { ensureDefaultTitlesExist().catch(() => {}); }, 2000);
+        await ensureDefaultTitlesExist();
         await checkStaffAccess(user);
         if (mergedUserData?.passwordMigrationRequired === true) {
           showPasswordMigrationModal(user.uid);
@@ -1954,17 +1932,18 @@
         const gamesSnapshot = await getDocs(collection(db, "games"));
         const games = gamesSnapshot.docs.map((d, i) => normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i));
         const playCounts = {};
+        let playsSnapshot;
         try {
-          const playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(200)));
-          playsSnapshot.forEach((d) => {
-            const data = d.data() || {};
-            const gid = String(data.gameId || '');
-            if (!gid) return;
-            playCounts[gid] = (playCounts[gid] || 0) + 1;
-          });
-        } catch (playErr) {
-          console.warn('Play counts skipped (index/limit):', playErr);
+          playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(500)));
+        } catch (_) {
+          playsSnapshot = await getDocs(collection(db, "plays"));
         }
+        playsSnapshot.forEach((d) => {
+          const data = d.data() || {};
+          const gid = String(data.gameId || '');
+          if (!gid) return;
+          playCounts[gid] = (playCounts[gid] || 0) + 1;
+        });
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
@@ -2354,10 +2333,6 @@
       if (cur && list.some(g => g.id === cur)) sel.value = cur;
     }
 
-    function shouldEagerLoadMainGames() {
-      return Boolean(getRequestedGameIdFromUrl()) || !document.getElementById('main-games-load-placeholder');
-    }
-
     async function mountMainPageGamesContent() {
       if (mainPageGamesMounted) return;
       if (mainPageGamesMountPromise) return mainPageGamesMountPromise;
@@ -2368,6 +2343,10 @@
           appGamesDataCache = data;
         }
         renderTopGamesCarousel(data.topGames);
+        renderCategoryBrowsing(data);
+        renderFullGamesList(data.allGames);
+        populateIssueGameSelect(data.allGames);
+        maybeOpenGameFromUrlParam();
         const mp = document.getElementById('main-page');
         if (mp) mp.classList.remove('main-page-games-deferred');
         const ph = document.getElementById('main-games-load-placeholder');
@@ -2376,10 +2355,6 @@
           mainPageGamesScrollObserver.disconnect();
           mainPageGamesScrollObserver = null;
         }
-        scheduleIdleWork(() => renderCategoryBrowsing(data));
-        ensureFullGamesListDeferred(data.allGames);
-        if (getCurrentPageId() === 'contact') populateIssueGameSelect(data.allGames);
-        maybeOpenGameFromUrlParam();
         mainPageGamesMounted = true;
         mainPageGamesMountPromise = null;
       })();
@@ -2389,21 +2364,13 @@
     function ensureMainPageGamesDeferredObserver() {
       const mp = document.getElementById('main-page');
       const ph = document.getElementById('main-games-load-placeholder');
-      if (!mp || !ph || mainPageGamesMounted) return;
-      if (shouldEagerLoadMainGames()) {
-        mountMainPageGamesContent();
-        return;
-      }
-      if (typeof IntersectionObserver === 'undefined') {
-        mountMainPageGamesContent();
-        return;
-      }
+      if (!mp || !ph || mainPageGamesMounted || typeof IntersectionObserver === 'undefined') return;
       if (mainPageGamesScrollObserver) return;
       mainPageGamesScrollObserver = new IntersectionObserver((entries) => {
         entries.forEach((en) => {
           if (en.isIntersecting) mountMainPageGamesContent();
         });
-      }, { root: mainContent, rootMargin: '160px 0px', threshold: 0.01 });
+      }, { root: mainContent, rootMargin: '120px 0px', threshold: 0.01 });
       mainPageGamesScrollObserver.observe(ph);
     }
 
@@ -2492,60 +2459,18 @@
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
       const tagGroups = {};
       gamesData.allGames.forEach(g => { if(g.tags) g.tags.forEach(t=>{ if(!tagGroups[t]) tagGroups[t]=[]; tagGroups[t].push(g); }); });
-      const tagKeys = Object.keys(tagGroups).sort();
-      const initialTags = tagKeys.slice(0, 6);
-      const deferredTags = tagKeys.slice(6);
-      initialTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
-      if (deferredTags.length) {
-        scheduleIdleWork(() => {
-          deferredTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
-        }, 1500);
-      }
-    }
-
-    const FULL_GAMES_BATCH_SIZE = 36;
-    let fullGamesSortedCache = null;
-    let fullGamesSearchBound = false;
-
-    function ensureFullGamesListDeferred(allGames) {
-      const section = document.getElementById('fullGamesList');
-      if (!section || fullGamesListMounted) {
-        if (fullGamesListMounted) return;
-        renderFullGamesList(allGames);
-        return;
-      }
-      fullGamesSortedCache = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
-      const mountList = () => {
-        if (fullGamesListMounted) return;
-        fullGamesListMounted = true;
-        renderFullGamesList(allGames);
-      };
-      if (typeof IntersectionObserver === 'undefined') {
-        mountList();
-        return;
-      }
-      if (fullGamesListSectionObserver) return;
-      fullGamesListSectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((en) => {
-          if (!en.isIntersecting) return;
-          fullGamesListSectionObserver?.disconnect();
-          fullGamesListSectionObserver = null;
-          mountList();
-        });
-      }, { root: mainContent, rootMargin: '240px 0px', threshold: 0.01 });
-      fullGamesListSectionObserver.observe(section);
+      Object.keys(tagGroups).sort().forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
     }
 
     function renderFullGamesList(allGames) {
       const grid = document.getElementById('fullGamesGrid');
       const searchInput = document.getElementById('gameSearchInput');
       if (!grid || !searchInput) return;
-      const sortedGames = fullGamesSortedCache || [...allGames].sort((a, b) => a.title.localeCompare(b.title));
-      fullGamesSortedCache = sortedGames;
-      const renderChunk = (filtered, startIndex) => {
-        const chunk = filtered.slice(startIndex, startIndex + FULL_GAMES_BATCH_SIZE);
-        if (!chunk.length) return startIndex;
-        const html = chunk.map(game => `
+      const sortedGames = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
+      const filterAndRender = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
+        grid.innerHTML = filtered.map(game => `
           <div class="full-game-item" data-id="${game.id}" data-url="${game.url}" data-title="${game.title}">
             <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(game.image || '')}"></div></div>
             <div class="full-game-info">
@@ -2554,33 +2479,11 @@
             </div>
           </div>
         `).join('');
-        grid.insertAdjacentHTML('beforeend', html);
-        grid.querySelectorAll('.full-game-item:not([data-click-bound])').forEach(el => {
-          el.dataset.clickBound = '1';
-          el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url));
-        });
-        grid.querySelectorAll('.full-game-banner-bg:not([data-lazy-bound])').forEach((bg) => {
-          bg.dataset.lazyBound = '1';
-          observeLazyGameBg(bg);
-        });
-        return startIndex + chunk.length;
-      };
-      const filterAndRender = () => {
-        const query = searchInput.value.toLowerCase().trim();
-        const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
-        grid.innerHTML = '';
-        let idx = 0;
-        const pump = () => {
-          idx = renderChunk(filtered, idx);
-          if (idx < filtered.length) requestAnimationFrame(pump);
-        };
-        pump();
+        document.querySelectorAll('.full-game-item').forEach(el => { el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url)); });
+        grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
       };
       filterAndRender();
-      if (!fullGamesSearchBound) {
-        fullGamesSearchBound = true;
-        searchInput.addEventListener('input', filterAndRender);
-      }
+      searchInput.addEventListener('input', filterAndRender);
     }
 
     // ========== Contact page layout (games list hidden on contact route) ==========
@@ -2621,13 +2524,9 @@
     }
 
     async function loadActivePageContent(pageId) {
-      if (activePageContentLoadedFor === pageId) return;
-      activePageContentLoadedFor = pageId;
-      if (pageNeedsRarity(pageId)) await ensureRarityConfigLoaded();
       switch (pageId) {
         case 'main-page':
-          if (shouldEagerLoadMainGames()) await mountMainPageGamesContent();
-          else ensureMainPageGamesDeferredObserver();
+          await mountMainPageGamesContent();
           break;
         case 'contact':
           break;
@@ -2665,7 +2564,6 @@
           if (currentUser?.uid) loadSettings(currentUser.uid);
           break;
         case 'staff-page':
-          ensureStaffEventListeners();
           loadStaffPanel();
           break;
         case 'view-profile-page':
@@ -6258,7 +6156,6 @@
 
     async function loadStaffPanel() {
       if (!hasPermission('staff_access')) return;
-      ensureStaffEventListeners();
       setupStaffSubTabs();
       refreshStaffTabPermissions('staff-dashboard');
     }
@@ -7915,12 +7812,7 @@
       // Close staff modals on backdrop click
       document.querySelectorAll('.staff-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m) m.style.display='none';}));
     }
-    let staffListenersReady = false;
-    function ensureStaffEventListeners() {
-      if (staffListenersReady) return;
-      staffListenersReady = true;
-      setupStaffEventListeners();
-    }
+    setupStaffEventListeners();
 
     // ========== Initialize the app ==========
     async function init() {
@@ -7930,6 +7822,12 @@
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
+      try {
+        await refreshRarityOrderFromServer();
+        await loadActivePageContent(pageId);
+      } catch (err) {
+        console.error('Game Universe init failed:', err);
+      }
     }
 
     init().catch(() => hidePageLoading());

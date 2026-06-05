@@ -42,6 +42,12 @@ js = js.replace(
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
+      try {
+        await refreshRarityOrderFromServer();
+        await loadActivePageContent(pageId);
+      } catch (err) {
+        console.error('Game Universe init failed:', err);
+      }
     }`
 );
 
@@ -118,8 +124,7 @@ js = js.replace(
 js = js.replace(
   /case 'main-page':[\s\S]*?case 'contact':[\s\S]*?break;/,
   `case 'main-page':
-          if (shouldEagerLoadMainGames()) await mountMainPageGamesContent();
-          else ensureMainPageGamesDeferredObserver();
+          await mountMainPageGamesContent();
           break;
         case 'contact':
           break;`
