@@ -21,7 +21,14 @@ function slice(startMarker, endMarker) {
   return html.slice(from, end).trim();
 }
 
-const css = slice('<style>', '</style>').replace(/^<style>\s*/, '').replace(/\s*<\/style>$/, '');
+const css = (() => {
+  const blocks = [];
+  const re = /<style>([\s\S]*?)<\/style>/gi;
+  let m;
+  while ((m = re.exec(html))) blocks.push(m[1].trim());
+  if (!blocks.length) throw new Error('Could not extract CSS from games.html');
+  return blocks.join('\n\n');
+})();
 const jsRaw = html.match(/<script type="module">([\s\S]*)<\/script>\s*<\/body>/);
 if (!jsRaw) throw new Error('Could not extract module script');
 let js = jsRaw[1];
@@ -259,23 +266,9 @@ const HEAD = `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Titan+One&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Titan+One&display=swap"></noscript>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"></noscript>
-  <style>
-    html, body { height: 100%; margin: 0; }
-    body { background: #0A0C10; color: #fff; font-family: 'Nunito', system-ui, sans-serif; }
-    .hero { min-height: 420px; height: 420px; }
-    .slide-background, .slide-background-img {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; background-color: #0a0d14; background-size: cover; background-position: center;
-    }
-    #categoryBrowsingSection:not(.is-mounted),
-    #fullGamesList:not(.is-mounted) { display: none !important; }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Titan+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/games-universe.css">
 </head>
 <body>
