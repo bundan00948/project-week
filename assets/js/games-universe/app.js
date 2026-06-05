@@ -613,7 +613,15 @@
         url: String(raw.url || ''),
         rating: Number.parseFloat(raw.rating ?? 3) || 3,
         multiplayer: Boolean(raw.multiplayer),
-        tags: Array.isArray(raw.tags) ? raw.tags : []
+        tags: (() => {
+          if (Array.isArray(raw.tags)) {
+            return raw.tags.map((t) => String(t).trim()).filter(Boolean);
+          }
+          if (typeof raw.tags === 'string') {
+            return raw.tags.split(',').map((t) => t.trim()).filter(Boolean);
+          }
+          return [];
+        })()
       };
     }
 
@@ -2340,26 +2348,35 @@
       if (mainPageGamesMounted) return;
       if (mainPageGamesMountPromise) return mainPageGamesMountPromise;
       mainPageGamesMountPromise = (async () => {
-        let data = appGamesDataCache;
-        if (!data) {
-          data = await getGames();
-          appGamesDataCache = data;
+        try {
+          let data = appGamesDataCache;
+          if (!data?.allGames?.length) {
+            data = await getGames();
+            if (data?.allGames?.length) appGamesDataCache = data;
+          }
+          if (!data?.allGames?.length) {
+            console.warn('Game catalog empty or failed to load');
+            return;
+          }
+          renderTopGamesCarousel(data.topGames);
+          await renderCategoryBrowsing(data);
+          renderFullGamesList(data.allGames);
+          populateIssueGameSelect(data.allGames);
+          maybeOpenGameFromUrlParam();
+          mainPageGamesMounted = true;
+        } catch (err) {
+          console.error('Failed to mount main page games:', err);
+        } finally {
+          const mp = document.getElementById('main-page');
+          if (mp) mp.classList.remove('main-page-games-deferred');
+          const ph = document.getElementById('main-games-load-placeholder');
+          if (ph) ph.hidden = true;
+          if (mainPageGamesScrollObserver) {
+            mainPageGamesScrollObserver.disconnect();
+            mainPageGamesScrollObserver = null;
+          }
+          mainPageGamesMountPromise = null;
         }
-        renderTopGamesCarousel(data.topGames);
-        renderCategoryBrowsing(data);
-        renderFullGamesList(data.allGames);
-        populateIssueGameSelect(data.allGames);
-        maybeOpenGameFromUrlParam();
-        const mp = document.getElementById('main-page');
-        if (mp) mp.classList.remove('main-page-games-deferred');
-        const ph = document.getElementById('main-games-load-placeholder');
-        if (ph) ph.hidden = true;
-        if (mainPageGamesScrollObserver) {
-          mainPageGamesScrollObserver.disconnect();
-          mainPageGamesScrollObserver = null;
-        }
-        mainPageGamesMounted = true;
-        mainPageGamesMountPromise = null;
       })();
       return mainPageGamesMountPromise;
     }
@@ -2435,13 +2452,12 @@
     }
 
     function createCategoryRow(title, games, container) {
-      if(!games.length) return;
-      const limited = games.slice(0, 7);
+      if (!games.length) return;
       const row = document.createElement('div');
       row.className = 'category-row';
       row.innerHTML = `<h2 class="category-title">${title}</h2><div class="carousel-track-container"><div class="carousel-track"></div><div class="track-nav prev"><i class="fas fa-chevron-left"></i></div><div class="track-nav next"><i class="fas fa-chevron-right"></i></div></div>`;
       const track = row.querySelector('.carousel-track');
-      limited.forEach(game => track.appendChild(createGameCard(game)));
+      games.forEach(game => track.appendChild(createGameCard(game)));
       track.querySelectorAll('.game-card-bg').forEach((bg) => observeLazyGameBg(bg, track));
       container.appendChild(row);
       const prev = row.querySelector('.prev'), next = row.querySelector('.next');
@@ -2457,15 +2473,42 @@
       track.addEventListener('touchmove', (e)=>{ if(!isDown) return; const x=e.touches[0].pageX-track.offsetLeft; const walk=(x-startX)*1.5; track.scrollLeft=scrollLeft-walk; });
     }
 
-    function renderCategoryBrowsing(gamesData) {
+    async function renderCategoryBrowsing(gamesData) {
       const container = document.getElementById('categoryBrowsingSection');
       if (!container) return;
       container.innerHTML = '';
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
-      const tagGroups = {};
-      gamesData.allGames.forEach(g => { if(g.tags) g.tags.forEach(t=>{ if(!tagGroups[t]) tagGroups[t]=[]; tagGroups[t].push(g); }); });
-      Object.keys(tagGroups).sort().forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
+      const tagGroups = new Map();
+      let catalogTags = [];
+      try {
+        const tagSnap = await getDocs(collection(db, 'tags'));
+        catalogTags = tagSnap.docs
+          .map((d) => String(d.data().name || '').trim())
+          .filter(Boolean);
+      } catch (e) {
+        console.warn('Could not load tag catalog:', e);
+      }
+      catalogTags.forEach((tag) => {
+        tagGroups.set(tag.toLowerCase(), { label: tag, games: [] });
+      });
+      gamesData.allGames.forEach((g) => {
+        (g.tags || []).forEach((t) => {
+          const key = String(t).trim().toLowerCase();
+          if (!key) return;
+          let group = tagGroups.get(key);
+          if (!group) {
+            group = { label: String(t).trim(), games: [] };
+            tagGroups.set(key, group);
+          }
+          if (!group.games.some((game) => game.id === g.id)) group.games.push(g);
+        });
+      });
+      [...tagGroups.values()]
+        .sort((a, b) => a.label.localeCompare(b.label))
+        .forEach(({ label, games }) => {
+          createCategoryRow(label.toUpperCase(), games, container);
+        });
     }
 
     function renderFullGamesList(allGames) {
@@ -2473,10 +2516,25 @@
       const searchInput = document.getElementById('gameSearchInput');
       if (!grid || !searchInput) return;
       const sortedGames = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
+      let renderToken = 0;
+      const bindGameItem = (el) => {
+        if (el.dataset.bound === '1') return;
+        el.dataset.bound = '1';
+        el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url));
+      };
       const filterAndRender = () => {
+        const token = ++renderToken;
         const query = searchInput.value.toLowerCase().trim();
         const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
-        grid.innerHTML = filtered.map(game => `
+        grid.innerHTML = '';
+        if (!filtered.length) return;
+        const CHUNK = 40;
+        let offset = 0;
+        const appendChunk = () => {
+          if (token !== renderToken) return;
+          const slice = filtered.slice(offset, offset + CHUNK);
+          if (!slice.length) return;
+          grid.insertAdjacentHTML('beforeend', slice.map(game => `
           <div class="full-game-item" data-id="${game.id}" data-url="${game.url}" data-title="${game.title}">
             <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(game.image || '')}"></div></div>
             <div class="full-game-info">
@@ -2484,12 +2542,19 @@
               <div class="full-game-meta"><span><i class="fas fa-star"></i> ${game.rating||'N/A'}</span><span><i class="${game.multiplayer?'fas fa-users': 'fas fa-user'}"></i> ${game.multiplayer?'Multiplayer': 'Single Player'}</span></div>
             </div>
           </div>
-        `).join('');
-        document.querySelectorAll('.full-game-item').forEach(el => { el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url)); });
-        grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
+        `).join(''));
+          grid.querySelectorAll('.full-game-item').forEach(bindGameItem);
+          grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
+          offset += CHUNK;
+          if (offset < filtered.length) requestAnimationFrame(appendChunk);
+        };
+        appendChunk();
       };
+      if (searchInput.dataset.fullGamesSearchBound !== '1') {
+        searchInput.dataset.fullGamesSearchBound = '1';
+        searchInput.addEventListener('input', filterAndRender);
+      }
       filterAndRender();
-      searchInput.addEventListener('input', filterAndRender);
     }
 
     // ========== Tab switching (home/contact) ==========
@@ -7831,11 +7896,15 @@
       const pageId = getCurrentPageId();
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
+      } else {
+        activateInitialPage(pageId);
       }
       hidePageLoading();
       try {
-        await refreshRarityOrderFromServer();
-        await loadActivePageContent(pageId);
+        await Promise.all([
+          refreshRarityOrderFromServer(),
+          loadActivePageContent(pageId)
+        ]);
       } catch (err) {
         console.error('Game Universe init failed:', err);
       }
