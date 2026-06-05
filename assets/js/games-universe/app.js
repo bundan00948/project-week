@@ -193,7 +193,6 @@
       if (el) {
         el.classList.add('hidden');
         el.style.display = 'none';
-        el.style.pointerEvents = 'none';
         el.setAttribute('aria-busy', 'false');
       }
     }
@@ -922,8 +921,8 @@
         if (profileAvatar) profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         if (profileUsername) profileUsername.textContent = data.username || user.email;
         if (profileTitle) applyTitleStyle(profileTitle, data.title || "User");
-        renderProfileBadges(data.badges || []);
-        refreshStarDisplayBadges(data.badges || []);
+        scheduleIdleWork(() => renderProfileBadges(data.badges || []), 1200);
+        scheduleIdleWork(() => refreshStarDisplayBadges(data.badges || []), 800);
       } else {
         hidePasswordMigrationModal();
         favoriteMovieIds = new Set();
@@ -932,7 +931,7 @@
         return;
       }
       if (userInfoDiv) userInfoDiv.style.display = 'flex';
-      updateStats(user.uid);
+      scheduleIdleWork(() => updateStats(user.uid), 2500);
     }
 
     async function renderProfileBadges(badgeNames, containerId) {
@@ -1001,7 +1000,11 @@
     }
 
     // ========== Auth state observer with owner enforcement ==========
-    onAuthStateChanged(auth, async (user) => {
+    let authListenerStarted = false;
+    function startAuthListener() {
+      if (authListenerStarted) return;
+      authListenerStarted = true;
+      onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
       currentUser = user;
       try {
@@ -1028,11 +1031,11 @@
             mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner" };
           }
         }
-        try {
-          await syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true });
-        } catch (syncError) {
-          console.warn('Auth bridge profile sync failed:', syncError);
-        }
+        scheduleIdleWork(() => {
+          syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true }).catch((syncError) => {
+            console.warn('Auth bridge profile sync failed:', syncError);
+          });
+        }, 600);
         const banCheck = await getDoc(doc(db, "users", user.uid));
         if (banCheck.exists()) {
           const bd = banCheck.data();
@@ -1111,6 +1114,8 @@
         hidePageLoading();
       }
     });
+    }
+    requestAnimationFrame(() => scheduleIdleWork(startAuthListener, 80));
 
     // ========== Sign up, login, logout (unchanged) ==========
     avatarUpload?.addEventListener('change', () => {

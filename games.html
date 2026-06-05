@@ -10,17 +10,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Titan+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Titan+One&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Titan+One&display=swap"></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"></noscript>
   <style>
-    /* Existing CSS styles remain unchanged */
+    /* Critical above-the-fold layout (avoids CLS + speeds first paint) */
+    html, body { height: 100%; margin: 0; }
+    body { background: #0A0C10; color: #fff; font-family: 'Nunito', system-ui, sans-serif; }
+    .hero { min-height: 420px; height: 420px; }
+    .slide-background, .slide-background-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; background-color: #0a0d14; background-size: cover; background-position: center;
+    }
     #categoryBrowsingSection:not(.is-mounted),
     #fullGamesList:not(.is-mounted) { display: none !important; }
-    .slide-background-img {
-      filter: brightness(0.3);
-      z-index: 0;
-    }
+  </style>
+  <style>
+    /* Existing CSS styles remain unchanged */
     :root {
       --bg-dark: #0A0C10;
       --card-bg: #1A1F2A;
@@ -399,6 +408,10 @@
     }
     .slide-background.lazy-bg-loaded {
       opacity: 1;
+    }
+    .slide-background-img {
+      filter: brightness(0.3);
+      z-index: 0;
     }
     .slide-content {
       position: relative;
@@ -7353,7 +7366,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (el) {
         el.classList.add('hidden');
         el.style.display = 'none';
-        el.style.pointerEvents = 'none';
         el.setAttribute('aria-busy', 'false');
       }
     }
@@ -8082,8 +8094,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         if (profileAvatar) profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         if (profileUsername) profileUsername.textContent = data.username || user.email;
         if (profileTitle) applyTitleStyle(profileTitle, data.title || "User");
-        renderProfileBadges(data.badges || []);
-        refreshStarDisplayBadges(data.badges || []);
+        scheduleIdleWork(() => renderProfileBadges(data.badges || []), 1200);
+        scheduleIdleWork(() => refreshStarDisplayBadges(data.badges || []), 800);
       } else {
         hidePasswordMigrationModal();
         favoriteMovieIds = new Set();
@@ -8092,7 +8104,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         return;
       }
       if (userInfoDiv) userInfoDiv.style.display = 'flex';
-      updateStats(user.uid);
+      scheduleIdleWork(() => updateStats(user.uid), 2500);
     }
 
     async function renderProfileBadges(badgeNames, containerId) {
@@ -8161,7 +8173,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     // ========== Auth state observer with owner enforcement ==========
-    onAuthStateChanged(auth, async (user) => {
+    let authListenerStarted = false;
+    function startAuthListener() {
+      if (authListenerStarted) return;
+      authListenerStarted = true;
+      onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
       currentUser = user;
       try {
@@ -8188,11 +8204,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
             mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner" };
           }
         }
-        try {
-          await syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true });
-        } catch (syncError) {
-          console.warn('Auth bridge profile sync failed:', syncError);
-        }
+        scheduleIdleWork(() => {
+          syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true }).catch((syncError) => {
+            console.warn('Auth bridge profile sync failed:', syncError);
+          });
+        }, 600);
         const banCheck = await getDoc(doc(db, "users", user.uid));
         if (banCheck.exists()) {
           const bd = banCheck.data();
@@ -8271,6 +8287,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         hidePageLoading();
       }
     });
+    }
+    requestAnimationFrame(() => scheduleIdleWork(startAuthListener, 80));
 
     // ========== Sign up, login, logout (unchanged) ==========
     avatarUpload?.addEventListener('change', () => {
