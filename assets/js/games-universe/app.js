@@ -1207,7 +1207,7 @@
       }
     });
 
-    document.getElementById('signupBtn').addEventListener('click', async () => {
+    document.getElementById('signupBtn')?.addEventListener('click', async () => {
       const username = document.getElementById('signupUsername').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
@@ -1259,26 +1259,26 @@
 
     logoutBtn?.addEventListener('click', async () => { await signOut(auth); showNotification("Logged out", "success"); });
 
-    document.getElementById('showSignup').addEventListener('click', () => {
-      loginModal.style.display = 'none';
+    document.getElementById('showSignup')?.addEventListener('click', () => {
+      if (loginModal) loginModal.style.display = 'none';
       resetLoginWizard();
-      signupModal.style.display = 'flex';
+      if (signupModal) signupModal.style.display = 'flex';
     });
-    document.getElementById('showLogin').addEventListener('click', () => {
-      signupModal.style.display = 'none';
+    document.getElementById('showLogin')?.addEventListener('click', () => {
+      if (signupModal) signupModal.style.display = 'none';
       openLoginModalFresh();
     });
-    document.getElementById('closeLoginModal').addEventListener('click', () => {
-      loginModal.style.display = 'none';
+    document.getElementById('closeLoginModal')?.addEventListener('click', () => {
+      if (loginModal) loginModal.style.display = 'none';
       resetLoginWizard();
     });
-    document.getElementById('closeSignupModal').addEventListener('click', () => { signupModal.style.display = 'none'; });
-    document.getElementById('noticeLoginBtn').addEventListener('click', () => {
-      noticeModal.style.display = 'none';
+    document.getElementById('closeSignupModal')?.addEventListener('click', () => { if (signupModal) signupModal.style.display = 'none'; });
+    document.getElementById('noticeLoginBtn')?.addEventListener('click', () => {
+      if (noticeModal) noticeModal.style.display = 'none';
       openLoginModalFresh();
     });
-    document.getElementById('noticeSignupBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; signupModal.style.display = 'flex'; });
-    document.getElementById('noticeCancelBtn').addEventListener('click', () => { noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; pendingMovieShouldPlay = false; });
+    document.getElementById('noticeSignupBtn')?.addEventListener('click', () => { if (noticeModal) noticeModal.style.display = 'none'; if (signupModal) signupModal.style.display = 'flex'; });
+    document.getElementById('noticeCancelBtn')?.addEventListener('click', () => { if (noticeModal) noticeModal.style.display = 'none'; pendingGame = null; pendingMovie = null; pendingMovieShouldPlay = false; });
     passwordMigrationSaveBtn?.addEventListener('click', async () => {
       if (!currentUser || !passwordMigrationPromptUid || String(currentUser.uid) !== String(passwordMigrationPromptUid)) {
         showNotification('Session changed. Please log in again.', 'error');
@@ -1593,7 +1593,7 @@
         }
         const movieDocId = String(entry?.movieId || entry?.itemId || '').trim();
         if (movieDocId) {
-          const previewHref = `/movies?movie=${encodeURIComponent(movieDocId)}`;
+          const previewHref = `/games/movies?movie=${encodeURIComponent(movieDocId)}`;
           return {
             href: makeAbsoluteUrl(previewHref),
             action: 'Open',
@@ -1604,7 +1604,7 @@
       }
       const gameId = String(entry?.gameId || entry?.itemId || '').trim();
       if (!gameId) return null;
-      const gameHref = `/dashboard?game=${encodeURIComponent(gameId)}`;
+      const gameHref = `/games/dashboard?game=${encodeURIComponent(gameId)}`;
       return {
         href: makeAbsoluteUrl(gameHref),
         action: 'Play',
@@ -1670,8 +1670,8 @@
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/dashboard' && path !== '/home') {
-        url.pathname = '/dashboard';
+      if (path !== '/games/dashboard' && path !== '/games/home') {
+        url.pathname = '/games/dashboard';
       }
       url.searchParams.delete('page');
       if (!value) url.searchParams.delete('game');
@@ -1689,8 +1689,8 @@
 
     function updateMoviesQueryParams(patch = {}, options = {}) {
       const url = new URL(window.location.href);
-      if (getCurrentRoutePath() !== '/movies') {
-        url.pathname = '/movies';
+      if (getCurrentRoutePath() !== '/games/movies') {
+        url.pathname = '/games/movies';
       }
       url.searchParams.delete('page');
       const keys = ['movie', 'play', 'cat', 'q'];
@@ -2269,25 +2269,25 @@
       'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     const PAGE_PATH_MAP = {
-      'home': '/home',
-      'contact': '/contact',
-      'main-page': '/dashboard',
-      'movies-page': '/movies',
-      'profile-page': '/profile',
-      'history-page': '/history',
-      'shop-page': '/shop',
-      'inventory-page': '/inventory',
-      'missions-page': '/missions',
-      'chat-page': '/chat',
-      'friends-page': '/friends',
-      'settings-page': '/settings',
-      'staff-page': '/staff',
-      'view-profile-page': '/user'
+      'home': '/games/home',
+      'contact': '/games/contact',
+      'main-page': '/games/dashboard',
+      'movies-page': '/games/movies',
+      'profile-page': '/games/profile',
+      'history-page': '/games/history',
+      'shop-page': '/games/shop',
+      'inventory-page': '/games/inventory',
+      'missions-page': '/games/missions',
+      'chat-page': '/games/chat',
+      'friends-page': '/games/friends',
+      'settings-page': '/games/settings',
+      'staff-page': '/games/staff',
+      'view-profile-page': '/games/user'
     };
     const PATH_TO_PAGE_ID = Object.fromEntries(
       Object.entries(PAGE_PATH_MAP).map(([pageId, path]) => [path, pageId])
     );
-    PATH_TO_PAGE_ID['/dashboard'] = 'main-page';
+    PATH_TO_PAGE_ID['/games'] = 'main-page';
 
     function getCurrentPageId() {
       return String(window.__GU_PAGE__ || 'main-page').trim() || 'main-page';
@@ -2377,6 +2377,7 @@
 
     function renderTopGamesCarousel(topGames) {
       const container = document.getElementById('topGamesCarousel');
+      if (!container) return;
       container.innerHTML = '';
       topGames.forEach((game, idx) => {
         const slide = document.createElement('div');
@@ -2453,6 +2454,7 @@
 
     function renderCategoryBrowsing(gamesData) {
       const container = document.getElementById('categoryBrowsingSection');
+      if (!container) return;
       container.innerHTML = '';
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
@@ -3016,7 +3018,7 @@
       } else { chanceList.innerHTML = '<div class="chance-item">No items in this pack</div>'; }
       chanceModal.style.display = 'flex';
     }
-    closeChanceModal.addEventListener('click', () => { chanceModal.style.display = 'none'; });
+    closeChanceModal?.addEventListener('click', () => { if (chanceModal) chanceModal.style.display = 'none'; });
 
     // ========== Purchase pack and award stars immediately ==========
     async function purchasePack(pack) {
@@ -5335,14 +5337,14 @@
         navigateToPage('profile-page');
         return;
       }
-      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/dashboard');
-      window.location.assign(`/user?uid=${encodeURIComponent(userId)}`);
+      sessionStorage.setItem('gamesViewProfileReturn', PAGE_PATH_MAP[getCurrentPageId()] || '/games/dashboard');
+      window.location.assign(`/games/user?uid=${encodeURIComponent(userId)}`);
     }
     function showUserProfileModal(userId, username) { navigateToUserProfile(userId); }
     window.showUserModal = showUserProfileModal;
 
     document.getElementById('vp-back-btn')?.addEventListener('click', () => {
-      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/dashboard';
+      const ret = sessionStorage.getItem('gamesViewProfileReturn') || '/games/dashboard';
       sessionStorage.removeItem('gamesViewProfileReturn');
       window.location.assign(ret);
     });
@@ -5411,7 +5413,7 @@
       } catch(e) { showNotification("Error loading items", "error"); console.error(e); }
     }
 
-    cancelSendGiftInventoryBtn.addEventListener('click', () => { sendGiftInventoryModal.style.display = 'none'; });
+    cancelSendGiftInventoryBtn?.addEventListener('click', () => { if (sendGiftInventoryModal) sendGiftInventoryModal.style.display = 'none'; });
 
     // ========== Load user balance (coins & stars) ==========
     async function loadUserBalance(userId) {
@@ -5466,7 +5468,7 @@
       applyNonStaffMediaUi();
     }
 
-    saveSettingsBtn.addEventListener('click', async () => {
+    saveSettingsBtn?.addEventListener('click', async () => {
       if (!currentUser) return;
       try {
         const updates = {};
@@ -7815,14 +7817,18 @@
 
     // ========== Initialize the app ==========
     async function init() {
-      await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      await loadActivePageContent(pageId);
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
+      try {
+        await refreshRarityOrderFromServer();
+        await loadActivePageContent(pageId);
+      } catch (err) {
+        console.error('Game Universe init failed:', err);
+      }
     }
 
     init().catch(() => hidePageLoading());

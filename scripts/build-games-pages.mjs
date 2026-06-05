@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * Splits games.html into real standalone page files at site root (e.g. /profile/index.html)
+ * Splits games.html into real standalone page files under games/<route>/index.html
  * plus shared assets/css/games-universe.css and assets/js/games-universe/
- * Legacy /games/<route>/ URLs get instant redirect stubs.
  */
 import fs from 'fs';
 import path from 'path';
@@ -37,14 +36,18 @@ js = js.replace(
 js = js.replace(
   /async function init\(\) \{[\s\S]*?hidePageLoading\(\);\s*\}/,
   `async function init() {
-      await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      await loadActivePageContent(pageId);
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
+      try {
+        await refreshRarityOrderFromServer();
+        await loadActivePageContent(pageId);
+      } catch (err) {
+        console.error('Game Universe init failed:', err);
+      }
     }`
 );
 
@@ -76,32 +79,47 @@ js = js.replace(
           await loadActivePageContent(loggedOutPageId);
         }`
 );
-// Legacy /games/* path strings → clean root URLs in extracted app.js
-const GU_PATH_REWRITES = [
-  ['/games/dashboard', '/dashboard'],
-  ['/games/home', '/home'],
-  ['/games/contact', '/contact'],
-  ['/games/movies', '/movies'],
-  ['/games/profile', '/profile'],
-  ['/games/history', '/history'],
-  ['/games/shop', '/shop'],
-  ['/games/inventory', '/inventory'],
-  ['/games/missions', '/missions'],
-  ['/games/chat', '/chat'],
-  ['/games/friends', '/friends'],
-  ['/games/settings', '/settings'],
-  ['/games/staff', '/staff'],
-  ['/games/user', '/user'],
-];
-for (const [from, to] of GU_PATH_REWRITES) {
-  js = js.split(from).join(to);
-}
 js = js.replace(
   /function isAuthRequiredPage\(pageId\) \{\s*return pageId !== 'main-page' && pageId !== 'movies-page' && pageId !== 'home' && pageId !== 'contact';\s*\}/,
   `function isAuthRequiredPage(pageId) {
       const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }`
+);
+js = js.replace(/\bcloseChanceModal\.addEventListener/g, 'closeChanceModal?.addEventListener');
+js = js.replace(/\bcancelSendGiftInventoryBtn\.addEventListener/g, 'cancelSendGiftInventoryBtn?.addEventListener');
+js = js.replace(/\bsaveSettingsBtn\.addEventListener/g, 'saveSettingsBtn?.addEventListener');
+js = js.replace(
+  /document\.getElementById\('signupBtn'\)\.addEventListener/g,
+  "document.getElementById('signupBtn')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('showSignup'\)\.addEventListener/g,
+  "document.getElementById('showSignup')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('showLogin'\)\.addEventListener/g,
+  "document.getElementById('showLogin')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('closeLoginModal'\)\.addEventListener/g,
+  "document.getElementById('closeLoginModal')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('closeSignupModal'\)\.addEventListener/g,
+  "document.getElementById('closeSignupModal')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('noticeLoginBtn'\)\.addEventListener/g,
+  "document.getElementById('noticeLoginBtn')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('noticeSignupBtn'\)\.addEventListener/g,
+  "document.getElementById('noticeSignupBtn')?.addEventListener"
+);
+js = js.replace(
+  /document\.getElementById\('noticeCancelBtn'\)\.addEventListener/g,
+  "document.getElementById('noticeCancelBtn')?.addEventListener"
 );
 js = js.replace(
   /case 'main-page':\s*case 'home':\s*case 'contact':\s*if \(getRequestedGameIdFromUrl\(\)\) await mountMainPageGamesContent\(\);\s*else ensureMainPageGamesDeferredObserver\(\);\s*break;/,
@@ -280,40 +298,20 @@ const PAGES = [
 ];
 
 function fixNavPaths(htmlChunk) {
-  let out = htmlChunk
-    .replace(/href="games-main\.html"/g, 'href="/dashboard"')
-    .replace(/href="games-home\.html"/g, 'href="/home"')
-    .replace(/href="games-contact\.html"/g, 'href="/contact"')
-    .replace(/href="games-movies\.html"/g, 'href="/movies"')
-    .replace(/href="games-profile\.html"/g, 'href="/profile"')
-    .replace(/href="games-history\.html"/g, 'href="/history"')
-    .replace(/href="games-shop\.html"/g, 'href="/shop"')
-    .replace(/href="games-inventory\.html"/g, 'href="/inventory"')
-    .replace(/href="games-missions\.html"/g, 'href="/missions"')
-    .replace(/href="games-chat\.html"/g, 'href="/chat"')
-    .replace(/href="games-friends\.html"/g, 'href="/friends"')
-    .replace(/href="games-settings\.html"/g, 'href="/settings"')
-    .replace(/href="games-staff\.html"/g, 'href="/staff"');
-  for (const [from, to] of GU_PATH_REWRITES) {
-    out = out.split(`href="${from}"`).join(`href="${to}"`);
-  }
-  return out;
-}
-
-function redirectHtml(title, targetPath) {
-  const target = targetPath.startsWith('/') ? targetPath : `/${targetPath}`;
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=${target}">
-  <script>location.replace('${target}' + location.search + location.hash);</script>
-  <title>${title}</title>
-</head>
-<body>
-  <p>Moved to <a href="${target}">${target}</a></p>
-</body>
-</html>`;
+  return htmlChunk
+    .replace(/href="games-main\.html"/g, 'href="/games/dashboard"')
+    .replace(/href="games-home\.html"/g, 'href="/games/home"')
+    .replace(/href="games-contact\.html"/g, 'href="/games/contact"')
+    .replace(/href="games-movies\.html"/g, 'href="/games/movies"')
+    .replace(/href="games-profile\.html"/g, 'href="/games/profile"')
+    .replace(/href="games-history\.html"/g, 'href="/games/history"')
+    .replace(/href="games-shop\.html"/g, 'href="/games/shop"')
+    .replace(/href="games-inventory\.html"/g, 'href="/games/inventory"')
+    .replace(/href="games-missions\.html"/g, 'href="/games/missions"')
+    .replace(/href="games-chat\.html"/g, 'href="/games/chat"')
+    .replace(/href="games-friends\.html"/g, 'href="/games/friends"')
+    .replace(/href="games-settings\.html"/g, 'href="/games/settings"')
+    .replace(/href="games-staff\.html"/g, 'href="/games/staff"');
 }
 
 function buildSidebar(activeTab) {
@@ -331,8 +329,8 @@ function buildSidebar(activeTab) {
 function buildHeader(activeHeaderTab) {
   let h = fixNavPaths(slice('<header>', '</header>') + '</header>');
   h = h.replace(/\sclass="active"/g, '');
-  if (activeHeaderTab === 'home') h = h.replace('<a href="/home"', '<a href="/home" class="active"');
-  if (activeHeaderTab === 'contact') h = h.replace('<a href="/contact"', '<a href="/contact" class="active"');
+  if (activeHeaderTab === 'home') h = h.replace('<a href="/games/home"', '<a href="/games/home" class="active"');
+  if (activeHeaderTab === 'contact') h = h.replace('<a href="/games/contact"', '<a href="/games/contact" class="active"');
   return h;
 }
 
@@ -342,7 +340,7 @@ fs.writeFileSync(path.join(ROOT, 'assets/css/games-universe.css'), css.trim() + 
 fs.writeFileSync(path.join(ROOT, 'assets/js/games-universe/app.js'), js.trim() + '\n');
 
 for (const page of PAGES) {
-  const dir = path.join(ROOT, page.route);
+  const dir = path.join(ROOT, 'games', page.route);
   fs.mkdirSync(dir, { recursive: true });
   const outPath = path.join(dir, 'index.html');
   const body = [
@@ -361,20 +359,12 @@ for (const page of PAGES) {
 
   const pageJs = `window.__GU_PAGE__ = '${page.pageId}';\nimport '../app.js';\n`;
   fs.writeFileSync(path.join(ROOT, 'assets/js/games-universe/pages', `${page.route}.js`), pageJs);
-
-  // Legacy /games/<route>/ redirect stub (preserves among-run etc. as siblings)
-  const legacyDir = path.join(ROOT, 'games', page.route);
-  fs.mkdirSync(legacyDir, { recursive: true });
-  fs.writeFileSync(
-    path.join(legacyDir, 'index.html'),
-    redirectHtml(`Redirecting to /${page.route}`, `/${page.route}`)
-  );
 }
 
-// /games → /dashboard
+// /games entry -> dashboard
 fs.writeFileSync(
   path.join(ROOT, 'games/index.html'),
-  redirectHtml('Redirecting to Game Universe', '/dashboard')
+  fs.readFileSync(path.join(ROOT, 'games/dashboard/index.html'), 'utf8')
 );
 
 console.log(`Built ${PAGES.length} Game Universe pages + shared assets.`);
