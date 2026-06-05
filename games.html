@@ -4,23 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Titan+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   <style>
     /* Existing CSS styles remain unchanged */
-    #categoryBrowsingSection:not(.is-mounted),
-    #fullGamesList:not(.is-mounted) { display: none !important; }
-    .slide-background-img {
-      filter: brightness(0.3);
-      z-index: 0;
-    }
     :root {
       --bg-dark: #0A0C10;
       --card-bg: #1A1F2A;
@@ -646,12 +637,6 @@
     .full-game-item:hover {
       transform: translateY(-4px);
       border-color: var(--neon-green);
-    }
-    .full-game-item,
-    .game-card,
-    .category-row {
-      content-visibility: auto;
-      contain-intrinsic-size: auto 220px;
     }
     .full-game-banner {
       position: relative;
@@ -4676,30 +4661,6 @@
       display: none;
     }
     .contact-section.active { display: block; }
-    .tab-navigation {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-    .contact-tab-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(42, 255, 158, 0.25);
-      color: var(--text-secondary);
-      padding: 10px 18px;
-      border-radius: 40px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
-    }
-    .contact-tab-btn:hover,
-    .contact-tab-btn.active {
-      background: rgba(42, 255, 158, 0.15);
-      border-color: var(--neon-green);
-      color: var(--neon-green);
-    }
     .contact-container { display: flex; gap: 30px; max-width: 1000px; margin: 0 auto; }
     .form-container {
       flex: 1;
@@ -4725,26 +4686,11 @@
       padding: 10px;
       width: 100%;
     }
-    .main-content > header {
-      flex-shrink: 0;
-    }
-    .main-content > .page {
-      flex: 1 1 auto;
-      min-height: 0;
-    }
-    .main-content > .contact-section.active {
-      flex: 1 1 auto;
-      min-height: 0;
-    }
-    footer,
-    .site-footer {
-      flex-shrink: 0;
-      margin-top: auto;
+    footer {
       text-align: center;
-      padding: 16px 20px;
+      padding: 20px;
       color: #6C7A8F;
-      font-size: 0.72rem;
-      line-height: 1.4;
+      font-size: 0.75rem;
       border-top: 1px solid rgba(42, 255, 158, 0.1);
     }
 
@@ -6190,9 +6136,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <a class="tab-button" data-page="settings-page" href="/games/settings">
         <i class="fas fa-cog"></i> Settings
       </a>
-      <a class="tab-button" data-page="contact" href="/games/contact">
-        <i class="fas fa-envelope"></i> Contact
-      </a>
       <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/games/staff" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
       </a>
@@ -6211,6 +6154,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
       <nav>
         <ul>
+          <li><a href="/games/home" class="active" id="home-tab">Home</a></li>
+          <li><a href="/games/contact" id="contact-tab">Contact Us</a></li>
           <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
         </ul>
       </nav>
@@ -6802,7 +6747,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     <section class="contact-section" id="contact-section">
       <div class="section-title"><h2>CONTACT US</h2><p>Have a suggestion or found an issue? Let us know!</p></div>
-      <div class="tab-navigation"><button type="button" class="contact-tab-btn active" id="suggest-tab">Suggest a Game</button><button type="button" class="contact-tab-btn" id="report-tab">Report an Issue</button></div>
+      <div class="tab-navigation"><button class="tab-button active" id="suggest-tab">Suggest a Game</button><button class="tab-button" id="report-tab">Report an Issue</button></div>
       <div class="contact-container">
         <div class="form-container" id="suggest-form-container">
           <h3>SUGGEST A GAME</h3>
@@ -7160,6 +7105,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
   <script type="module">
     // Import required Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
     import { 
       getAuth,     
       createUserWithEmailAndPassword,     
@@ -7213,18 +7159,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch (_) { /* analytics optional */ }
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
-    const scheduleAppIdle = (fn, timeoutMs = 1200) => {
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
-      else setTimeout(fn, 16);
-    };
-    scheduleAppIdle(() => {
-      import('https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js')
-        .then(({ getAnalytics }) => { try { getAnalytics(app); } catch (_) {} })
-        .catch(() => {});
-    }, 4000);
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -7258,21 +7196,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       } catch (e) {
         blookRarityDefs = {};
       }
-    }
-
-    let rarityConfigPromise = null;
-    async function ensureRarityConfigLoaded() {
-      if (!rarityConfigPromise) rarityConfigPromise = refreshRarityOrderFromServer();
-      return rarityConfigPromise;
-    }
-
-    function pageNeedsRarity(pageId) {
-      return new Set(['shop-page', 'inventory-page', 'staff-page', 'profile-page', 'missions-page', 'view-profile-page']).has(pageId);
-    }
-
-    function scheduleIdleWork(fn, timeoutMs = 900) {
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
-      else setTimeout(fn, 0);
     }
 
     function applyFixedSiteTheme() {
@@ -7353,7 +7276,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (el) {
         el.classList.add('hidden');
         el.style.display = 'none';
-        el.style.pointerEvents = 'none';
         el.setAttribute('aria-busy', 'false');
       }
     }
@@ -7563,9 +7485,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     let mainPageGamesMounted = false;
     let mainPageGamesMountPromise = null;
     let mainPageGamesScrollObserver = null;
-    let fullGamesListMounted = false;
-    let fullGamesListSectionObserver = null;
-    let activePageContentLoadedFor = null;
     let moviesPageMounted = false;
     let moviesPageMountPromise = null;
     let activeMovieCategory = null;
@@ -8209,7 +8128,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           }
         }
         await loadUserProfile(user);
-        scheduleIdleWork(() => { ensureDefaultTitlesExist().catch(() => {}); }, 2000);
+        await ensureDefaultTitlesExist();
         await checkStaffAccess(user);
         if (mergedUserData?.passwordMigrationRequired === true) {
           showPasswordMigrationModal(user.uid);
@@ -8856,7 +8775,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/games/dashboard') {
+      if (path !== '/games/dashboard' && path !== '/games/home') {
         url.pathname = '/games/dashboard';
       }
       url.searchParams.delete('page');
@@ -9118,17 +9037,18 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         const gamesSnapshot = await getDocs(collection(db, "games"));
         const games = gamesSnapshot.docs.map((d, i) => normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i));
         const playCounts = {};
+        let playsSnapshot;
         try {
-          const playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(200)));
-          playsSnapshot.forEach((d) => {
-            const data = d.data() || {};
-            const gid = String(data.gameId || '');
-            if (!gid) return;
-            playCounts[gid] = (playCounts[gid] || 0) + 1;
-          });
-        } catch (playErr) {
-          console.warn('Play counts skipped (index/limit):', playErr);
+          playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(500)));
+        } catch (_) {
+          playsSnapshot = await getDocs(collection(db, "plays"));
         }
+        playsSnapshot.forEach((d) => {
+          const data = d.data() || {};
+          const gid = String(data.gameId || '');
+          if (!gid) return;
+          playCounts[gid] = (playCounts[gid] || 0) + 1;
+        });
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
@@ -9451,9 +9371,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     const PAGE_ROUTE_IDS = new Set([
       'main-page', 'movies-page', 'profile-page', 'history-page', 'shop-page',
       'inventory-page', 'missions-page', 'chat-page', 'friends-page',
-      'settings-page', 'staff-page', 'view-profile-page', 'contact'
+      'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     const PAGE_PATH_MAP = {
+      'home': '/games/home',
       'contact': '/games/contact',
       'main-page': '/games/dashboard',
       'movies-page': '/games/movies',
@@ -9487,7 +9408,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     function isAuthRequiredPage(pageId) {
-      const publicPages = new Set(['main-page', 'movies-page', 'contact', 'view-profile-page']);
+      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }
 
@@ -9527,10 +9448,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (cur && list.some(g => g.id === cur)) sel.value = cur;
     }
 
-    function shouldEagerLoadMainGames() {
-      return Boolean(getRequestedGameIdFromUrl()) || !document.getElementById('main-games-load-placeholder');
-    }
-
     async function mountMainPageGamesContent() {
       if (mainPageGamesMounted) return;
       if (mainPageGamesMountPromise) return mainPageGamesMountPromise;
@@ -9541,6 +9458,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           appGamesDataCache = data;
         }
         renderTopGamesCarousel(data.topGames);
+        renderCategoryBrowsing(data);
+        renderFullGamesList(data.allGames);
+        populateIssueGameSelect(data.allGames);
+        maybeOpenGameFromUrlParam();
         const mp = document.getElementById('main-page');
         if (mp) mp.classList.remove('main-page-games-deferred');
         const ph = document.getElementById('main-games-load-placeholder');
@@ -9549,10 +9470,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           mainPageGamesScrollObserver.disconnect();
           mainPageGamesScrollObserver = null;
         }
-        scheduleIdleWork(() => renderCategoryBrowsing(data));
-        ensureFullGamesListDeferred(data.allGames);
-        if (getCurrentPageId() === 'contact') populateIssueGameSelect(data.allGames);
-        maybeOpenGameFromUrlParam();
         mainPageGamesMounted = true;
         mainPageGamesMountPromise = null;
       })();
@@ -9562,21 +9479,13 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     function ensureMainPageGamesDeferredObserver() {
       const mp = document.getElementById('main-page');
       const ph = document.getElementById('main-games-load-placeholder');
-      if (!mp || !ph || mainPageGamesMounted) return;
-      if (shouldEagerLoadMainGames()) {
-        mountMainPageGamesContent();
-        return;
-      }
-      if (typeof IntersectionObserver === 'undefined') {
-        mountMainPageGamesContent();
-        return;
-      }
+      if (!mp || !ph || mainPageGamesMounted || typeof IntersectionObserver === 'undefined') return;
       if (mainPageGamesScrollObserver) return;
       mainPageGamesScrollObserver = new IntersectionObserver((entries) => {
         entries.forEach((en) => {
           if (en.isIntersecting) mountMainPageGamesContent();
         });
-      }, { root: mainContent, rootMargin: '160px 0px', threshold: 0.01 });
+      }, { root: mainContent, rootMargin: '120px 0px', threshold: 0.01 });
       mainPageGamesScrollObserver.observe(ph);
     }
 
@@ -9588,11 +9497,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
-        const lcpBg = idx === 0 && game.image
-          ? `<img class="slide-background-img" src="${escapeHtml(mediaThumbUrl(game.image, 1200, 82))}" alt="" fetchpriority="high" decoding="async" width="1200" height="420">`
-          : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
         slide.innerHTML = `
-          ${lcpBg}
+          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -9664,67 +9570,22 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const container = document.getElementById('categoryBrowsingSection');
       if (!container) return;
       container.innerHTML = '';
-      container.classList.remove('is-mounted');
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
       const tagGroups = {};
       gamesData.allGames.forEach(g => { if(g.tags) g.tags.forEach(t=>{ if(!tagGroups[t]) tagGroups[t]=[]; tagGroups[t].push(g); }); });
-      const tagKeys = Object.keys(tagGroups).sort();
-      const initialTags = tagKeys.slice(0, 6);
-      const deferredTags = tagKeys.slice(6);
-      initialTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
-      container.classList.add('is-mounted');
-      if (deferredTags.length) {
-        scheduleIdleWork(() => {
-          deferredTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
-        }, 1500);
-      }
+      Object.keys(tagGroups).sort().forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
     }
 
-    const FULL_GAMES_BATCH_SIZE = 36;
-    let fullGamesSortedCache = null;
-    let fullGamesSearchBound = false;
-
-    function ensureFullGamesListDeferred(allGames) {
-      const section = document.getElementById('fullGamesList');
-      if (!section || fullGamesListMounted) {
-        if (fullGamesListMounted) return;
-        renderFullGamesList(allGames);
-        return;
-      }
-      fullGamesSortedCache = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
-      const mountList = () => {
-        if (fullGamesListMounted) return;
-        fullGamesListMounted = true;
-        renderFullGamesList(allGames, { sync: true });
-        section.classList.add('is-mounted');
-      };
-      if (typeof IntersectionObserver === 'undefined') {
-        mountList();
-        return;
-      }
-      if (fullGamesListSectionObserver) return;
-      fullGamesListSectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((en) => {
-          if (!en.isIntersecting) return;
-          fullGamesListSectionObserver?.disconnect();
-          fullGamesListSectionObserver = null;
-          mountList();
-        });
-      }, { root: mainContent, rootMargin: '240px 0px', threshold: 0.01 });
-      fullGamesListSectionObserver.observe(section);
-    }
-
-    function renderFullGamesList(allGames, options = {}) {
+    function renderFullGamesList(allGames) {
       const grid = document.getElementById('fullGamesGrid');
       const searchInput = document.getElementById('gameSearchInput');
       if (!grid || !searchInput) return;
-      const sortedGames = fullGamesSortedCache || [...allGames].sort((a, b) => a.title.localeCompare(b.title));
-      fullGamesSortedCache = sortedGames;
-      const renderChunk = (filtered, startIndex) => {
-        const chunk = filtered.slice(startIndex, startIndex + FULL_GAMES_BATCH_SIZE);
-        if (!chunk.length) return startIndex;
-        const html = chunk.map(game => `
+      const sortedGames = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
+      const filterAndRender = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
+        grid.innerHTML = filtered.map(game => `
           <div class="full-game-item" data-id="${game.id}" data-url="${game.url}" data-title="${game.title}">
             <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(game.image || '')}"></div></div>
             <div class="full-game-info">
@@ -9733,61 +9594,40 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
             </div>
           </div>
         `).join('');
-        grid.insertAdjacentHTML('beforeend', html);
-        grid.querySelectorAll('.full-game-item:not([data-click-bound])').forEach(el => {
-          el.dataset.clickBound = '1';
-          el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url));
-        });
-        grid.querySelectorAll('.full-game-banner-bg:not([data-lazy-bound])').forEach((bg) => {
-          bg.dataset.lazyBound = '1';
-          observeLazyGameBg(bg);
-        });
-        return startIndex + chunk.length;
+        document.querySelectorAll('.full-game-item').forEach(el => { el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url)); });
+        grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
       };
-      const filterAndRender = (sync = false) => {
-        const query = searchInput.value.toLowerCase().trim();
-        const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
-        grid.innerHTML = '';
-        if (sync) {
-          let idx = 0;
-          while (idx < filtered.length) idx = renderChunk(filtered, idx);
-          return;
-        }
-        let idx = 0;
-        const pump = () => {
-          idx = renderChunk(filtered, idx);
-          if (idx < filtered.length) requestAnimationFrame(pump);
-        };
-        pump();
-      };
-      filterAndRender(Boolean(options.sync));
-      if (!fullGamesSearchBound) {
-        fullGamesSearchBound = true;
-        searchInput.addEventListener('input', () => filterAndRender(false));
-      }
+      filterAndRender();
+      searchInput.addEventListener('input', filterAndRender);
     }
 
-    // ========== Contact page layout (games list hidden on contact route) ==========
+    // ========== Tab switching (home/contact) ==========
+    const homeTab = document.getElementById('home-tab');
+    const contactTab = document.getElementById('contact-tab');
     const categorySection = document.getElementById('categoryBrowsingSection');
     const fullGamesListSec = document.getElementById('fullGamesList');
     const contactSectionEl = document.getElementById('contact-section');
 
     function applyMainShellLayout(pageId) {
+      const showGames = pageId !== 'contact';
+      if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
+      if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
       contactSectionEl?.classList.toggle('active', pageId === 'contact');
+      homeTab?.classList.toggle('active', pageId === 'home' || pageId === 'main-page');
+      contactTab?.classList.toggle('active', pageId === 'contact');
     }
 
     function activateInitialPage(pageId) {
       document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
       document.querySelectorAll('.sidebar-tabs .tab-button').forEach((btn) => btn.classList.remove('active'));
+      homeTab?.classList.remove('active');
+      contactTab?.classList.remove('active');
 
-      if (pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         document.getElementById('main-page')?.classList.add('active');
         applyMainShellLayout(pageId);
         if (pageId === 'main-page') {
           document.querySelector('.sidebar-tabs .tab-button[data-page="main-page"]')?.classList.add('active');
-        }
-        if (pageId === 'contact') {
-          document.querySelector('.sidebar-tabs .tab-button[data-page="contact"]')?.classList.add('active');
         }
         return;
       }
@@ -9802,13 +9642,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     async function loadActivePageContent(pageId) {
-      if (activePageContentLoadedFor === pageId) return;
-      activePageContentLoadedFor = pageId;
-      if (pageNeedsRarity(pageId)) await ensureRarityConfigLoaded();
       switch (pageId) {
         case 'main-page':
-          if (shouldEagerLoadMainGames()) await mountMainPageGamesContent();
-          else ensureMainPageGamesDeferredObserver();
+        case 'home':
+          await mountMainPageGamesContent();
           break;
         case 'contact':
           break;
@@ -9846,7 +9683,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           if (currentUser?.uid) loadSettings(currentUser.uid);
           break;
         case 'staff-page':
-          ensureStaffEventListeners();
           loadStaffPanel();
           break;
         case 'view-profile-page':
@@ -9856,14 +9692,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     document.getElementById('suggest-tab')?.addEventListener('click', () => {
-      document.getElementById('suggest-tab')?.classList.add('active');
-      document.getElementById('report-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'block';
       document.getElementById('report-form-container').style.display = 'none';
     });
     document.getElementById('report-tab')?.addEventListener('click', () => {
-      document.getElementById('report-tab')?.classList.add('active');
-      document.getElementById('suggest-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'none';
       document.getElementById('report-form-container').style.display = 'block';
     });
@@ -13210,7 +13042,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         const url = bg.dataset.lazyBg;
         const loadUrl = mediaThumbUrl(url, 1200, 82);
         const img = new Image();
-        if (i === index && 'fetchPriority' in img) img.fetchPriority = 'high';
         img.onload = () => {
           bg.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
           bg.classList.add('lazy-bg-loaded');
@@ -13440,7 +13271,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     async function loadStaffPanel() {
       if (!hasPermission('staff_access')) return;
-      ensureStaffEventListeners();
       setupStaffSubTabs();
       refreshStaffTabPermissions('staff-dashboard');
     }
@@ -15097,21 +14927,15 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       // Close staff modals on backdrop click
       document.querySelectorAll('.staff-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m) m.style.display='none';}));
     }
-    let staffListenersReady = false;
-    function ensureStaffEventListeners() {
-      if (staffListenersReady) return;
-      staffListenersReady = true;
-      setupStaffEventListeners();
-    }
+    setupStaffEventListeners();
 
     // ========== Initialize the app ==========
     async function init() {
+      await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
       activateInitialPage(pageId);
-      if (pageId === 'contact' || pageId === 'main-page') {
-        applyMainShellLayout(pageId);
-      }
+      await loadActivePageContent(pageId);
       hidePageLoading();
     }
 

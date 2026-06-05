@@ -1,5 +1,6 @@
 // Import required Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
     import { 
       getAuth,     
       createUserWithEmailAndPassword,     
@@ -53,18 +54,10 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch (_) { /* analytics optional */ }
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
-    const scheduleAppIdle = (fn, timeoutMs = 1200) => {
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
-      else setTimeout(fn, 16);
-    };
-    scheduleAppIdle(() => {
-      import('https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js')
-        .then(({ getAnalytics }) => { try { getAnalytics(app); } catch (_) {} })
-        .catch(() => {});
-    }, 4000);
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -98,21 +91,6 @@
       } catch (e) {
         blookRarityDefs = {};
       }
-    }
-
-    let rarityConfigPromise = null;
-    async function ensureRarityConfigLoaded() {
-      if (!rarityConfigPromise) rarityConfigPromise = refreshRarityOrderFromServer();
-      return rarityConfigPromise;
-    }
-
-    function pageNeedsRarity(pageId) {
-      return new Set(['shop-page', 'inventory-page', 'staff-page', 'profile-page', 'missions-page', 'view-profile-page']).has(pageId);
-    }
-
-    function scheduleIdleWork(fn, timeoutMs = 900) {
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
-      else setTimeout(fn, 0);
     }
 
     function applyFixedSiteTheme() {
@@ -193,7 +171,6 @@
       if (el) {
         el.classList.add('hidden');
         el.style.display = 'none';
-        el.style.pointerEvents = 'none';
         el.setAttribute('aria-busy', 'false');
       }
     }
@@ -403,9 +380,6 @@
     let mainPageGamesMounted = false;
     let mainPageGamesMountPromise = null;
     let mainPageGamesScrollObserver = null;
-    let fullGamesListMounted = false;
-    let fullGamesListSectionObserver = null;
-    let activePageContentLoadedFor = null;
     let moviesPageMounted = false;
     let moviesPageMountPromise = null;
     let activeMovieCategory = null;
@@ -1049,7 +1023,7 @@
           }
         }
         await loadUserProfile(user);
-        scheduleIdleWork(() => { ensureDefaultTitlesExist().catch(() => {}); }, 2000);
+        await ensureDefaultTitlesExist();
         await checkStaffAccess(user);
         if (mergedUserData?.passwordMigrationRequired === true) {
           showPasswordMigrationModal(user.uid);
@@ -1696,7 +1670,7 @@
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/games/dashboard') {
+      if (path !== '/games/dashboard' && path !== '/games/home') {
         url.pathname = '/games/dashboard';
       }
       url.searchParams.delete('page');
@@ -1958,17 +1932,18 @@
         const gamesSnapshot = await getDocs(collection(db, "games"));
         const games = gamesSnapshot.docs.map((d, i) => normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i));
         const playCounts = {};
+        let playsSnapshot;
         try {
-          const playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(200)));
-          playsSnapshot.forEach((d) => {
-            const data = d.data() || {};
-            const gid = String(data.gameId || '');
-            if (!gid) return;
-            playCounts[gid] = (playCounts[gid] || 0) + 1;
-          });
-        } catch (playErr) {
-          console.warn('Play counts skipped (index/limit):', playErr);
+          playsSnapshot = await getDocs(query(collection(db, "plays"), orderBy("timestamp", "desc"), limit(500)));
+        } catch (_) {
+          playsSnapshot = await getDocs(collection(db, "plays"));
         }
+        playsSnapshot.forEach((d) => {
+          const data = d.data() || {};
+          const gid = String(data.gameId || '');
+          if (!gid) return;
+          playCounts[gid] = (playCounts[gid] || 0) + 1;
+        });
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
@@ -2291,9 +2266,10 @@
     const PAGE_ROUTE_IDS = new Set([
       'main-page', 'movies-page', 'profile-page', 'history-page', 'shop-page',
       'inventory-page', 'missions-page', 'chat-page', 'friends-page',
-      'settings-page', 'staff-page', 'view-profile-page', 'contact'
+      'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
     ]);
     const PAGE_PATH_MAP = {
+      'home': '/games/home',
       'contact': '/games/contact',
       'main-page': '/games/dashboard',
       'movies-page': '/games/movies',
@@ -2318,7 +2294,7 @@
     }
 
     function isAuthRequiredPage(pageId) {
-      const publicPages = new Set(['main-page', 'movies-page', 'contact', 'view-profile-page']);
+      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }
 
@@ -2358,10 +2334,6 @@
       if (cur && list.some(g => g.id === cur)) sel.value = cur;
     }
 
-    function shouldEagerLoadMainGames() {
-      return Boolean(getRequestedGameIdFromUrl()) || !document.getElementById('main-games-load-placeholder');
-    }
-
     async function mountMainPageGamesContent() {
       if (mainPageGamesMounted) return;
       if (mainPageGamesMountPromise) return mainPageGamesMountPromise;
@@ -2372,6 +2344,10 @@
           appGamesDataCache = data;
         }
         renderTopGamesCarousel(data.topGames);
+        renderCategoryBrowsing(data);
+        renderFullGamesList(data.allGames);
+        populateIssueGameSelect(data.allGames);
+        maybeOpenGameFromUrlParam();
         const mp = document.getElementById('main-page');
         if (mp) mp.classList.remove('main-page-games-deferred');
         const ph = document.getElementById('main-games-load-placeholder');
@@ -2380,10 +2356,6 @@
           mainPageGamesScrollObserver.disconnect();
           mainPageGamesScrollObserver = null;
         }
-        scheduleIdleWork(() => renderCategoryBrowsing(data));
-        ensureFullGamesListDeferred(data.allGames);
-        if (getCurrentPageId() === 'contact') populateIssueGameSelect(data.allGames);
-        maybeOpenGameFromUrlParam();
         mainPageGamesMounted = true;
         mainPageGamesMountPromise = null;
       })();
@@ -2393,21 +2365,13 @@
     function ensureMainPageGamesDeferredObserver() {
       const mp = document.getElementById('main-page');
       const ph = document.getElementById('main-games-load-placeholder');
-      if (!mp || !ph || mainPageGamesMounted) return;
-      if (shouldEagerLoadMainGames()) {
-        mountMainPageGamesContent();
-        return;
-      }
-      if (typeof IntersectionObserver === 'undefined') {
-        mountMainPageGamesContent();
-        return;
-      }
+      if (!mp || !ph || mainPageGamesMounted || typeof IntersectionObserver === 'undefined') return;
       if (mainPageGamesScrollObserver) return;
       mainPageGamesScrollObserver = new IntersectionObserver((entries) => {
         entries.forEach((en) => {
           if (en.isIntersecting) mountMainPageGamesContent();
         });
-      }, { root: mainContent, rootMargin: '160px 0px', threshold: 0.01 });
+      }, { root: mainContent, rootMargin: '120px 0px', threshold: 0.01 });
       mainPageGamesScrollObserver.observe(ph);
     }
 
@@ -2419,11 +2383,8 @@
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
-        const lcpBg = idx === 0 && game.image
-          ? `<img class="slide-background-img" src="${escapeHtml(mediaThumbUrl(game.image, 1200, 82))}" alt="" fetchpriority="high" decoding="async" width="1200" height="420">`
-          : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
         slide.innerHTML = `
-          ${lcpBg}
+          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -2495,67 +2456,22 @@
       const container = document.getElementById('categoryBrowsingSection');
       if (!container) return;
       container.innerHTML = '';
-      container.classList.remove('is-mounted');
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
       const tagGroups = {};
       gamesData.allGames.forEach(g => { if(g.tags) g.tags.forEach(t=>{ if(!tagGroups[t]) tagGroups[t]=[]; tagGroups[t].push(g); }); });
-      const tagKeys = Object.keys(tagGroups).sort();
-      const initialTags = tagKeys.slice(0, 6);
-      const deferredTags = tagKeys.slice(6);
-      initialTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
-      container.classList.add('is-mounted');
-      if (deferredTags.length) {
-        scheduleIdleWork(() => {
-          deferredTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
-        }, 1500);
-      }
+      Object.keys(tagGroups).sort().forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
     }
 
-    const FULL_GAMES_BATCH_SIZE = 36;
-    let fullGamesSortedCache = null;
-    let fullGamesSearchBound = false;
-
-    function ensureFullGamesListDeferred(allGames) {
-      const section = document.getElementById('fullGamesList');
-      if (!section || fullGamesListMounted) {
-        if (fullGamesListMounted) return;
-        renderFullGamesList(allGames);
-        return;
-      }
-      fullGamesSortedCache = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
-      const mountList = () => {
-        if (fullGamesListMounted) return;
-        fullGamesListMounted = true;
-        renderFullGamesList(allGames, { sync: true });
-        section.classList.add('is-mounted');
-      };
-      if (typeof IntersectionObserver === 'undefined') {
-        mountList();
-        return;
-      }
-      if (fullGamesListSectionObserver) return;
-      fullGamesListSectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((en) => {
-          if (!en.isIntersecting) return;
-          fullGamesListSectionObserver?.disconnect();
-          fullGamesListSectionObserver = null;
-          mountList();
-        });
-      }, { root: mainContent, rootMargin: '240px 0px', threshold: 0.01 });
-      fullGamesListSectionObserver.observe(section);
-    }
-
-    function renderFullGamesList(allGames, options = {}) {
+    function renderFullGamesList(allGames) {
       const grid = document.getElementById('fullGamesGrid');
       const searchInput = document.getElementById('gameSearchInput');
       if (!grid || !searchInput) return;
-      const sortedGames = fullGamesSortedCache || [...allGames].sort((a, b) => a.title.localeCompare(b.title));
-      fullGamesSortedCache = sortedGames;
-      const renderChunk = (filtered, startIndex) => {
-        const chunk = filtered.slice(startIndex, startIndex + FULL_GAMES_BATCH_SIZE);
-        if (!chunk.length) return startIndex;
-        const html = chunk.map(game => `
+      const sortedGames = [...allGames].sort((a, b) => a.title.localeCompare(b.title));
+      const filterAndRender = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
+        grid.innerHTML = filtered.map(game => `
           <div class="full-game-item" data-id="${game.id}" data-url="${game.url}" data-title="${game.title}">
             <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(game.image || '')}"></div></div>
             <div class="full-game-info">
@@ -2564,61 +2480,40 @@
             </div>
           </div>
         `).join('');
-        grid.insertAdjacentHTML('beforeend', html);
-        grid.querySelectorAll('.full-game-item:not([data-click-bound])').forEach(el => {
-          el.dataset.clickBound = '1';
-          el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url));
-        });
-        grid.querySelectorAll('.full-game-banner-bg:not([data-lazy-bound])').forEach((bg) => {
-          bg.dataset.lazyBound = '1';
-          observeLazyGameBg(bg);
-        });
-        return startIndex + chunk.length;
+        document.querySelectorAll('.full-game-item').forEach(el => { el.addEventListener('click', () => handleGameClick(el.dataset.id, el.dataset.title, el.dataset.url)); });
+        grid.querySelectorAll('.full-game-banner-bg').forEach((bg) => observeLazyGameBg(bg));
       };
-      const filterAndRender = (sync = false) => {
-        const query = searchInput.value.toLowerCase().trim();
-        const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
-        grid.innerHTML = '';
-        if (sync) {
-          let idx = 0;
-          while (idx < filtered.length) idx = renderChunk(filtered, idx);
-          return;
-        }
-        let idx = 0;
-        const pump = () => {
-          idx = renderChunk(filtered, idx);
-          if (idx < filtered.length) requestAnimationFrame(pump);
-        };
-        pump();
-      };
-      filterAndRender(Boolean(options.sync));
-      if (!fullGamesSearchBound) {
-        fullGamesSearchBound = true;
-        searchInput.addEventListener('input', () => filterAndRender(false));
-      }
+      filterAndRender();
+      searchInput.addEventListener('input', filterAndRender);
     }
 
-    // ========== Contact page layout (games list hidden on contact route) ==========
+    // ========== Tab switching (home/contact) ==========
+    const homeTab = document.getElementById('home-tab');
+    const contactTab = document.getElementById('contact-tab');
     const categorySection = document.getElementById('categoryBrowsingSection');
     const fullGamesListSec = document.getElementById('fullGamesList');
     const contactSectionEl = document.getElementById('contact-section');
 
     function applyMainShellLayout(pageId) {
+      const showGames = pageId !== 'contact';
+      if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
+      if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
       contactSectionEl?.classList.toggle('active', pageId === 'contact');
+      homeTab?.classList.toggle('active', pageId === 'home' || pageId === 'main-page');
+      contactTab?.classList.toggle('active', pageId === 'contact');
     }
 
     function activateInitialPage(pageId) {
       document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
       document.querySelectorAll('.sidebar-tabs .tab-button').forEach((btn) => btn.classList.remove('active'));
+      homeTab?.classList.remove('active');
+      contactTab?.classList.remove('active');
 
-      if (pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         document.getElementById('main-page')?.classList.add('active');
         applyMainShellLayout(pageId);
         if (pageId === 'main-page') {
           document.querySelector('.sidebar-tabs .tab-button[data-page="main-page"]')?.classList.add('active');
-        }
-        if (pageId === 'contact') {
-          document.querySelector('.sidebar-tabs .tab-button[data-page="contact"]')?.classList.add('active');
         }
         return;
       }
@@ -2633,13 +2528,10 @@
     }
 
     async function loadActivePageContent(pageId) {
-      if (activePageContentLoadedFor === pageId) return;
-      activePageContentLoadedFor = pageId;
-      if (pageNeedsRarity(pageId)) await ensureRarityConfigLoaded();
       switch (pageId) {
         case 'main-page':
-          if (shouldEagerLoadMainGames()) await mountMainPageGamesContent();
-          else ensureMainPageGamesDeferredObserver();
+        case 'home':
+          await mountMainPageGamesContent();
           break;
         case 'contact':
           break;
@@ -2677,7 +2569,6 @@
           if (currentUser?.uid) loadSettings(currentUser.uid);
           break;
         case 'staff-page':
-          ensureStaffEventListeners();
           loadStaffPanel();
           break;
         case 'view-profile-page':
@@ -2687,14 +2578,10 @@
     }
 
     document.getElementById('suggest-tab')?.addEventListener('click', () => {
-      document.getElementById('suggest-tab')?.classList.add('active');
-      document.getElementById('report-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'block';
       document.getElementById('report-form-container').style.display = 'none';
     });
     document.getElementById('report-tab')?.addEventListener('click', () => {
-      document.getElementById('report-tab')?.classList.add('active');
-      document.getElementById('suggest-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'none';
       document.getElementById('report-form-container').style.display = 'block';
     });
@@ -6041,7 +5928,6 @@
         const url = bg.dataset.lazyBg;
         const loadUrl = mediaThumbUrl(url, 1200, 82);
         const img = new Image();
-        if (i === index && 'fetchPriority' in img) img.fetchPriority = 'high';
         img.onload = () => {
           bg.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
           bg.classList.add('lazy-bg-loaded');
@@ -6271,7 +6157,6 @@
 
     async function loadStaffPanel() {
       if (!hasPermission('staff_access')) return;
-      ensureStaffEventListeners();
       setupStaffSubTabs();
       refreshStaffTabPermissions('staff-dashboard');
     }
@@ -7928,21 +7813,22 @@
       // Close staff modals on backdrop click
       document.querySelectorAll('.staff-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m) m.style.display='none';}));
     }
-    let staffListenersReady = false;
-    function ensureStaffEventListeners() {
-      if (staffListenersReady) return;
-      staffListenersReady = true;
-      setupStaffEventListeners();
-    }
+    setupStaffEventListeners();
 
     // ========== Initialize the app ==========
     async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      if (pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
+      try {
+        await refreshRarityOrderFromServer();
+        await loadActivePageContent(pageId);
+      } catch (err) {
+        console.error('Game Universe init failed:', err);
+      }
     }
 
     init().catch(() => hidePageLoading());
