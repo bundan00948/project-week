@@ -8942,11 +8942,25 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       document.body.style.overflow = 'hidden';
     }
 
+    /** Resolves the visitor's public IP for play logs (staff/admin History & IP). */
+    async function fetchClientIpAddressForPlayLog() {
+      try {
+        const response = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+        if (!response.ok) return null;
+        const body = await response.json();
+        const ip = body && typeof body.ip === "string" ? body.ip.trim() : "";
+        return ip || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
     async function logMovieWatch(movie) {
       if (!currentUser || !movie) return;
       try {
         const route = getMovieRouteParts(movie);
         const resolvedMovieUrl = resolveMovieUrl(movie.url);
+        const ipAddress = await fetchClientIpAddressForPlayLog();
         await addDoc(collection(db, "plays"), {
           entryType: 'movie',
           itemType: 'movie',
@@ -8961,6 +8975,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           gameImage: String(movie.banner || ''),
           userId: currentUser.uid,
           userEmail: currentUser.email,
+          ipAddress: ipAddress || null,
           duration: 0,
           timestamp: serverTimestamp()
         });
@@ -8988,6 +9003,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (!currentUser) return;
       try {
         const durationSec = 300;
+        const ipAddress = await fetchClientIpAddressForPlayLog();
         await addDoc(collection(db, "plays"), {
           entryType: 'game',
           itemType: 'game',
@@ -8998,6 +9014,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           gameUrl: String(game?.url || ''),
           userId: currentUser.uid,
           userEmail: currentUser.email,
+          ipAddress: ipAddress || null,
           duration: durationSec,
           timestamp: serverTimestamp()
         });
