@@ -37,18 +37,14 @@ js = js.replace(
 js = js.replace(
   /async function init\(\) \{[\s\S]*?hidePageLoading\(\);\s*\}/,
   `async function init() {
+      await refreshRarityOrderFromServer();
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
+      await loadActivePageContent(pageId);
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
-      try {
-        await refreshRarityOrderFromServer();
-        await loadActivePageContent(pageId);
-      } catch (err) {
-        console.error('Game Universe init failed:', err);
-      }
     }`
 );
 
@@ -106,41 +102,6 @@ js = js.replace(
       const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }`
-);
-js = js.replace(/\bcloseChanceModal\.addEventListener/g, 'closeChanceModal?.addEventListener');
-js = js.replace(/\bcancelSendGiftInventoryBtn\.addEventListener/g, 'cancelSendGiftInventoryBtn?.addEventListener');
-js = js.replace(/\bsaveSettingsBtn\.addEventListener/g, 'saveSettingsBtn?.addEventListener');
-js = js.replace(
-  /document\.getElementById\('signupBtn'\)\.addEventListener/g,
-  "document.getElementById('signupBtn')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('showSignup'\)\.addEventListener/g,
-  "document.getElementById('showSignup')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('showLogin'\)\.addEventListener/g,
-  "document.getElementById('showLogin')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('closeLoginModal'\)\.addEventListener/g,
-  "document.getElementById('closeLoginModal')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('closeSignupModal'\)\.addEventListener/g,
-  "document.getElementById('closeSignupModal')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('noticeLoginBtn'\)\.addEventListener/g,
-  "document.getElementById('noticeLoginBtn')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('noticeSignupBtn'\)\.addEventListener/g,
-  "document.getElementById('noticeSignupBtn')?.addEventListener"
-);
-js = js.replace(
-  /document\.getElementById\('noticeCancelBtn'\)\.addEventListener/g,
-  "document.getElementById('noticeCancelBtn')?.addEventListener"
 );
 js = js.replace(
   /case 'main-page':\s*case 'home':\s*case 'contact':\s*if \(getRequestedGameIdFromUrl\(\)\) await mountMainPageGamesContent\(\);\s*else ensureMainPageGamesDeferredObserver\(\);\s*break;/,
