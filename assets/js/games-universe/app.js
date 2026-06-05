@@ -54,10 +54,12 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch (_) { /* analytics optional */ }
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
+    window.addEventListener('load', () => {
+      try { getAnalytics(app); } catch (_) { /* analytics optional */ }
+    }, { once: true });
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -404,7 +406,7 @@
       const u = String(url || '').trim();
       if (!u || !/^https?:\/\//i.test(u)) return u;
       const q = Math.min(100, Math.max(40, Number(quality) || 80));
-      const w = Math.min(1600, Math.max(64, Math.round(Number(maxEdge) || 480)));
+      const w = Math.min(1200, Math.max(64, Math.round(Number(maxEdge) || 480)));
       try {
         return `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=${w}&output=webp&q=${q}`;
       } catch (_) {
@@ -2383,8 +2385,11 @@
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
+        const bgHtml = (idx === 0 && game.image)
+          ? `<div class="slide-background lazy-bg-loaded" style="background-image: url(${JSON.stringify(mediaThumbUrl(game.image, 1200, 82))});" data-bg-ready="1"></div>`
+          : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
         slide.innerHTML = `
-          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
+          ${bgHtml}
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -5924,7 +5929,12 @@
       const want = new Set([index, (index + 1) % n, (index - 1 + n) % n]);
       want.forEach((i) => {
         const bg = slides[i]?.querySelector('.slide-background');
-        if (!bg || !bg.dataset.lazyBg || bg.dataset.bgReady === '1') return;
+        if (!bg || bg.dataset.bgReady === '1') return;
+        if (i === 0 && bg.style.backgroundImage) {
+          bg.dataset.bgReady = '1';
+          return;
+        }
+        if (!bg.dataset.lazyBg) return;
         const url = bg.dataset.lazyBg;
         const loadUrl = mediaThumbUrl(url, 1200, 82);
         const img = new Image();

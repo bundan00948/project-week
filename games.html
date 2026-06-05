@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
+  <link rel="preload" as="image" href="https://wsrv.nl/?url=https://geodashgame.io/data/image/posts/geometry-dash-game-banner1.jpg&amp;output=webp&amp;w=1200" fetchpriority="high">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://wsrv.nl" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <link rel="preconnect" href="https://wsrv.nl">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&amp;display=swap" rel="stylesheet">
   <style>
     /* Existing CSS styles remain unchanged */
     :root {
@@ -328,10 +333,11 @@
     }
 
     /* Main Page */
-    .main-page {
+    .main-page,
+    #main-page {
       padding: 0;
+      min-height: 600px;
     }
-    .main-page-games-deferred .hero,
     .main-page-games-deferred #categoryBrowsingSection,
     .main-page-games-deferred #fullGamesList {
       display: none;
@@ -350,7 +356,7 @@
       line-height: 1.45;
     }
     .main-page-games-deferred .main-games-load-placeholder {
-      display: block;
+      display: none;
     }
 
     /* Hero carousel */
@@ -6166,7 +6172,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <div class="main-games-load-placeholder" id="main-games-load-placeholder" role="status">
         Games load when you open this page or scroll here — lighter first paint.
       </div>
-      <section class="hero"><div class="carousel-container" id="topGamesCarousel"></div></section>
+      <section class="hero"><div class="carousel-container" id="topGamesCarousel"><div class="carousel-slide active"><div class="slide-background lazy-bg-loaded" style="background-image: url('https://wsrv.nl/?url=https://geodashgame.io/data/image/posts/geometry-dash-game-banner1.jpg&amp;output=webp&amp;w=1200');"></div></div></div></section>
       <section class="category-browsing-section" id="categoryBrowsingSection"></section>
       <section class="full-games-list" id="fullGamesList">
         <h2>ALL GAMES</h2>
@@ -7159,10 +7165,12 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch (_) { /* analytics optional */ }
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
+    window.addEventListener('load', () => {
+      try { getAnalytics(app); } catch (_) { /* analytics optional */ }
+    }, { once: true });
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -7509,7 +7517,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const u = String(url || '').trim();
       if (!u || !/^https?:\/\//i.test(u)) return u;
       const q = Math.min(100, Math.max(40, Number(quality) || 80));
-      const w = Math.min(1600, Math.max(64, Math.round(Number(maxEdge) || 480)));
+      const w = Math.min(1200, Math.max(64, Math.round(Number(maxEdge) || 480)));
       try {
         return `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=${w}&output=webp&q=${q}`;
       } catch (_) {
@@ -9497,8 +9505,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
+        const bgHtml = (idx === 0 && game.image)
+          ? `<div class="slide-background lazy-bg-loaded" style="background-image: url(${JSON.stringify(mediaThumbUrl(game.image, 1200, 82))});" data-bg-ready="1"></div>`
+          : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
         slide.innerHTML = `
-          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
+          ${bgHtml}
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -13038,7 +13049,12 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const want = new Set([index, (index + 1) % n, (index - 1 + n) % n]);
       want.forEach((i) => {
         const bg = slides[i]?.querySelector('.slide-background');
-        if (!bg || !bg.dataset.lazyBg || bg.dataset.bgReady === '1') return;
+        if (!bg || bg.dataset.bgReady === '1') return;
+        if (i === 0 && bg.style.backgroundImage) {
+          bg.dataset.bgReady = '1';
+          return;
+        }
+        if (!bg.dataset.lazyBg) return;
         const url = bg.dataset.lazyBg;
         const loadUrl = mediaThumbUrl(url, 1200, 82);
         const img = new Image();
