@@ -4661,6 +4661,30 @@
       display: none;
     }
     .contact-section.active { display: block; }
+    .tab-navigation {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .contact-tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(42, 255, 158, 0.25);
+      color: var(--text-secondary);
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+    .contact-tab-btn:hover,
+    .contact-tab-btn.active {
+      background: rgba(42, 255, 158, 0.15);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
     .contact-container { display: flex; gap: 30px; max-width: 1000px; margin: 0 auto; }
     .form-container {
       flex: 1;
@@ -4686,11 +4710,26 @@
       padding: 10px;
       width: 100%;
     }
-    footer {
+    .main-content > header {
+      flex-shrink: 0;
+    }
+    .main-content > .page {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .main-content > .contact-section.active {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    footer,
+    .site-footer {
+      flex-shrink: 0;
+      margin-top: auto;
       text-align: center;
-      padding: 20px;
+      padding: 16px 20px;
       color: #6C7A8F;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      line-height: 1.4;
       border-top: 1px solid rgba(42, 255, 158, 0.1);
     }
 
@@ -6136,6 +6175,9 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <a class="tab-button" data-page="settings-page" href="/games/settings">
         <i class="fas fa-cog"></i> Settings
       </a>
+      <a class="tab-button" data-page="contact" href="/games/contact">
+        <i class="fas fa-envelope"></i> Contact
+      </a>
       <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/games/staff" style="display:none;">
         <i class="fas fa-shield-alt"></i> Staff Panel
       </a>
@@ -6154,8 +6196,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
       <nav>
         <ul>
-          <li><a href="/games/home" class="active" id="home-tab">Home</a></li>
-          <li><a href="/games/contact" id="contact-tab">Contact Us</a></li>
           <li><div id="user-info" style="display: none;"><img id="user-avatar" src="" alt="Avatar"><span id="user-name"></span><button id="logout-btn">Logout</button></div></li>
         </ul>
       </nav>
@@ -6747,7 +6787,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     <section class="contact-section" id="contact-section">
       <div class="section-title"><h2>CONTACT US</h2><p>Have a suggestion or found an issue? Let us know!</p></div>
-      <div class="tab-navigation"><button class="tab-button active" id="suggest-tab">Suggest a Game</button><button class="tab-button" id="report-tab">Report an Issue</button></div>
+      <div class="tab-navigation"><button type="button" class="contact-tab-btn active" id="suggest-tab">Suggest a Game</button><button type="button" class="contact-tab-btn" id="report-tab">Report an Issue</button></div>
       <div class="contact-container">
         <div class="form-container" id="suggest-form-container">
           <h3>SUGGEST A GAME</h3>
@@ -8775,7 +8815,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const url = new URL(window.location.href);
       const value = String(gameId || '').trim();
       const path = getCurrentRoutePath();
-      if (path !== '/games/dashboard' && path !== '/games/home') {
+      if (path !== '/games/dashboard') {
         url.pathname = '/games/dashboard';
       }
       url.searchParams.delete('page');
@@ -9371,10 +9411,9 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     const PAGE_ROUTE_IDS = new Set([
       'main-page', 'movies-page', 'profile-page', 'history-page', 'shop-page',
       'inventory-page', 'missions-page', 'chat-page', 'friends-page',
-      'settings-page', 'staff-page', 'view-profile-page', 'home', 'contact'
+      'settings-page', 'staff-page', 'view-profile-page', 'contact'
     ]);
     const PAGE_PATH_MAP = {
-      'home': '/games/home',
       'contact': '/games/contact',
       'main-page': '/games/dashboard',
       'movies-page': '/games/movies',
@@ -9408,7 +9447,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     function isAuthRequiredPage(pageId) {
-      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
+      const publicPages = new Set(['main-page', 'movies-page', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }
 
@@ -9601,9 +9640,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       searchInput.addEventListener('input', filterAndRender);
     }
 
-    // ========== Tab switching (home/contact) ==========
-    const homeTab = document.getElementById('home-tab');
-    const contactTab = document.getElementById('contact-tab');
+    // ========== Contact page layout (games list hidden on contact route) ==========
     const categorySection = document.getElementById('categoryBrowsingSection');
     const fullGamesListSec = document.getElementById('fullGamesList');
     const contactSectionEl = document.getElementById('contact-section');
@@ -9613,21 +9650,20 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
       if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
       contactSectionEl?.classList.toggle('active', pageId === 'contact');
-      homeTab?.classList.toggle('active', pageId === 'home' || pageId === 'main-page');
-      contactTab?.classList.toggle('active', pageId === 'contact');
     }
 
     function activateInitialPage(pageId) {
       document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
       document.querySelectorAll('.sidebar-tabs .tab-button').forEach((btn) => btn.classList.remove('active'));
-      homeTab?.classList.remove('active');
-      contactTab?.classList.remove('active');
 
-      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'contact' || pageId === 'main-page') {
         document.getElementById('main-page')?.classList.add('active');
         applyMainShellLayout(pageId);
         if (pageId === 'main-page') {
           document.querySelector('.sidebar-tabs .tab-button[data-page="main-page"]')?.classList.add('active');
+        }
+        if (pageId === 'contact') {
+          document.querySelector('.sidebar-tabs .tab-button[data-page="contact"]')?.classList.add('active');
         }
         return;
       }
@@ -9644,7 +9680,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     async function loadActivePageContent(pageId) {
       switch (pageId) {
         case 'main-page':
-        case 'home':
           await mountMainPageGamesContent();
           break;
         case 'contact':
@@ -9692,10 +9727,14 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     document.getElementById('suggest-tab')?.addEventListener('click', () => {
+      document.getElementById('suggest-tab')?.classList.add('active');
+      document.getElementById('report-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'block';
       document.getElementById('report-form-container').style.display = 'none';
     });
     document.getElementById('report-tab')?.addEventListener('click', () => {
+      document.getElementById('report-tab')?.classList.add('active');
+      document.getElementById('suggest-tab')?.classList.remove('active');
       document.getElementById('suggest-form-container').style.display = 'none';
       document.getElementById('report-form-container').style.display = 'block';
     });

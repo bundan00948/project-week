@@ -38,7 +38,7 @@ js = js.replace(
   `async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
+      if (pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
       }
       hidePageLoading();
@@ -80,9 +80,9 @@ js = js.replace(
         }`
 );
 js = js.replace(
-  /function isAuthRequiredPage\(pageId\) \{\s*return pageId !== 'main-page' && pageId !== 'movies-page' && pageId !== 'home' && pageId !== 'contact';\s*\}/,
+  /function isAuthRequiredPage\(pageId\) \{[\s\S]*?return !publicPages\.has\(pageId\);\s*\}/,
   `function isAuthRequiredPage(pageId) {
-      const publicPages = new Set(['main-page', 'movies-page', 'home', 'contact', 'view-profile-page']);
+      const publicPages = new Set(['main-page', 'movies-page', 'contact', 'view-profile-page']);
       return !publicPages.has(pageId);
     }`
 );
@@ -122,9 +122,8 @@ js = js.replace(
   "document.getElementById('noticeCancelBtn')?.addEventListener"
 );
 js = js.replace(
-  /case 'main-page':\s*case 'home':\s*case 'contact':\s*if \(getRequestedGameIdFromUrl\(\)\) await mountMainPageGamesContent\(\);\s*else ensureMainPageGamesDeferredObserver\(\);\s*break;/,
+  /case 'main-page':[\s\S]*?case 'contact':[\s\S]*?break;/,
   `case 'main-page':
-        case 'home':
           await mountMainPageGamesContent();
           break;
         case 'contact':
@@ -194,7 +193,9 @@ const friendsPage = slice('<!-- Friends Page (Friends list + Friend Chat) -->', 
 const staffPage = slice('<!-- Staff Panel Page -->', '<!-- Settings Page -->');
 const settingsPage = slice('<!-- Settings Page -->', '<section class="contact-section"');
 const contactSection = slice('<section class="contact-section"', '<!-- Notice Modal');
-const modalsAndRest = slice('<!-- Notice Modal', '<!-- Firebase SDK -->');
+const sharedMainContentExtras = slice('<!-- Notice Modal (unlogged users) -->', '<!-- Staff Panel Modals -->')
+  .replace(/\s*<\/div>\s*$/i, '');
+const globalModals = slice('<!-- Staff Panel Modals -->', '<!-- Firebase SDK -->');
 
 function makePageBlock(fragment, { active = true, extraClass = '' } = {}) {
   let block = fragment;
@@ -247,15 +248,8 @@ function sidebar(activePageId, activeHeader) {
   return s;
 }
 
-function header(activeHeaderTab) {
-  let h = slice('<header>', '</header>') + '</header>';
-  h = h.replace(/class="active"/g, '');
-  if (activeHeaderTab === 'home') {
-    h = h.replace('id="home-tab"', 'id="home-tab" class="active"');
-  } else if (activeHeaderTab === 'contact') {
-    h = h.replace('id="contact-tab"', 'id="contact-tab" class="active"');
-  }
-  return h;
+function buildHeader() {
+  return fixNavPaths(slice('<header>', '</header>') + '</header>');
 }
 
 const HEAD = `<!DOCTYPE html>
@@ -281,20 +275,19 @@ const FOOT = `
 </html>`;
 
 const PAGES = [
-  { route: 'dashboard', title: 'Game Universe - Dashboard', pageId: 'main-page', tab: 'main-page', header: 'home', content: makePageBlock(mainPage, { extraClass: 'main-page main-page-games-deferred' }) },
-  { route: 'home', title: 'Game Universe - Home', pageId: 'home', tab: 'main-page', header: 'home', content: makePageBlock(mainPage, { extraClass: 'main-page main-page-games-deferred' }) },
-  { route: 'contact', title: 'Game Universe - Contact', pageId: 'contact', tab: 'main-page', header: 'contact', content: makePageBlock(mainPage, { active: false, extraClass: 'main-page main-page-games-deferred' }).replace('class="page main-page', 'class="page main-page" style="display:none" aria-hidden="true"') + '\n' + contactSection.replace('class="contact-section"', 'class="contact-section active"') },
-  { route: 'movies', title: 'Game Universe - Movies', pageId: 'movies-page', tab: 'movies-page', header: null, content: makePageBlock(moviesPage) },
-  { route: 'profile', title: 'Game Universe - Profile', pageId: 'profile-page', tab: 'profile-page', header: null, content: makePageBlock(profilePage) },
-  { route: 'user', title: 'Game Universe - User Profile', pageId: 'view-profile-page', tab: null, header: null, content: makePageBlock(viewProfilePage) },
-  { route: 'history', title: 'Game Universe - History', pageId: 'history-page', tab: 'history-page', header: null, content: makePageBlock(historyPage) },
-  { route: 'shop', title: 'Game Universe - Shop', pageId: 'shop-page', tab: 'shop-page', header: null, content: makePageBlock(shopPage) },
-  { route: 'inventory', title: 'Game Universe - Inventory', pageId: 'inventory-page', tab: 'inventory-page', header: null, content: makePageBlock(inventoryPage) },
-  { route: 'missions', title: 'Game Universe - Missions', pageId: 'missions-page', tab: 'missions-page', header: null, content: makePageBlock(missionsPage) },
-  { route: 'chat', title: 'Game Universe - Chat', pageId: 'chat-page', tab: 'chat-page', header: null, content: makePageBlock(chatPage) },
-  { route: 'friends', title: 'Game Universe - Friends', pageId: 'friends-page', tab: 'friends-page', header: null, content: makePageBlock(friendsPage) },
-  { route: 'settings', title: 'Game Universe - Settings', pageId: 'settings-page', tab: 'settings-page', header: null, content: makePageBlock(settingsPage) },
-  { route: 'staff', title: 'Game Universe - Staff', pageId: 'staff-page', tab: 'staff-page', header: null, content: makePageBlock(staffPage) },
+  { route: 'dashboard', title: 'Game Universe - Dashboard', pageId: 'main-page', tab: 'main-page', content: makePageBlock(mainPage, { extraClass: 'main-page main-page-games-deferred' }) },
+  { route: 'contact', title: 'Game Universe - Contact', pageId: 'contact', tab: 'contact', content: makePageBlock(mainPage, { active: false, extraClass: 'main-page main-page-games-deferred' }).replace('class="page main-page', 'class="page main-page" style="display:none" aria-hidden="true"') + '\n' + contactSection.replace('class="contact-section"', 'class="contact-section active"') },
+  { route: 'movies', title: 'Game Universe - Movies', pageId: 'movies-page', tab: 'movies-page', content: makePageBlock(moviesPage) },
+  { route: 'profile', title: 'Game Universe - Profile', pageId: 'profile-page', tab: 'profile-page', content: makePageBlock(profilePage) },
+  { route: 'user', title: 'Game Universe - User Profile', pageId: 'view-profile-page', tab: null, content: makePageBlock(viewProfilePage) },
+  { route: 'history', title: 'Game Universe - History', pageId: 'history-page', tab: 'history-page', content: makePageBlock(historyPage) },
+  { route: 'shop', title: 'Game Universe - Shop', pageId: 'shop-page', tab: 'shop-page', content: makePageBlock(shopPage) },
+  { route: 'inventory', title: 'Game Universe - Inventory', pageId: 'inventory-page', tab: 'inventory-page', content: makePageBlock(inventoryPage) },
+  { route: 'missions', title: 'Game Universe - Missions', pageId: 'missions-page', tab: 'missions-page', content: makePageBlock(missionsPage) },
+  { route: 'chat', title: 'Game Universe - Chat', pageId: 'chat-page', tab: 'chat-page', content: makePageBlock(chatPage) },
+  { route: 'friends', title: 'Game Universe - Friends', pageId: 'friends-page', tab: 'friends-page', content: makePageBlock(friendsPage) },
+  { route: 'settings', title: 'Game Universe - Settings', pageId: 'settings-page', tab: 'settings-page', content: makePageBlock(settingsPage) },
+  { route: 'staff', title: 'Game Universe - Staff', pageId: 'staff-page', tab: 'staff-page', content: makePageBlock(staffPage) },
 ];
 
 function fixNavPaths(htmlChunk) {
@@ -326,14 +319,6 @@ function buildSidebar(activeTab) {
   return s;
 }
 
-function buildHeader(activeHeaderTab) {
-  let h = fixNavPaths(slice('<header>', '</header>') + '</header>');
-  h = h.replace(/\sclass="active"/g, '');
-  if (activeHeaderTab === 'home') h = h.replace('<a href="/games/home"', '<a href="/games/home" class="active"');
-  if (activeHeaderTab === 'contact') h = h.replace('<a href="/games/contact"', '<a href="/games/contact" class="active"');
-  return h;
-}
-
 fs.mkdirSync(path.join(ROOT, 'assets/css'), { recursive: true });
 fs.mkdirSync(path.join(ROOT, 'assets/js/games-universe/pages'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'assets/css/games-universe.css'), css.trim() + '\n\n/* Standalone page files */\n.page { display: block !important; }\n.page-loading-overlay.hidden { display: none !important; }\n');
@@ -348,10 +333,11 @@ for (const page of PAGES) {
     buildSidebar(page.tab),
     '  <!-- Main Content -->',
     '  <div class="main-content" id="main-content">',
-    '    ' + buildHeader(page.header).split('\n').join('\n    '),
+    '    ' + buildHeader().split('\n').join('\n    '),
     '    ' + page.content.split('\n').join('\n    '),
+    '    ' + sharedMainContentExtras.split('\n').join('\n    '),
     '  </div>',
-    modalsAndRest,
+    globalModals,
   ].join('\n');
 
   const file = HEAD.replace('{{TITLE}}', page.title) + body + FOOT.replace('{{ROUTE}}', page.route);
@@ -366,5 +352,20 @@ fs.writeFileSync(
   path.join(ROOT, 'games/index.html'),
   fs.readFileSync(path.join(ROOT, 'games/dashboard/index.html'), 'utf8')
 );
+
+// Legacy /games/home -> dashboard
+const homeRedirect = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0;url=/games/dashboard">
+  <script>location.replace('/games/dashboard' + location.search + location.hash);</script>
+  <title>Redirecting to Game Universe</title>
+</head>
+<body><p><a href="/games/dashboard">Continue to Game Universe</a></p></body>
+</html>
+`;
+fs.mkdirSync(path.join(ROOT, 'games/home'), { recursive: true });
+fs.writeFileSync(path.join(ROOT, 'games/home/index.html'), homeRedirect);
 
 console.log(`Built ${PAGES.length} Game Universe pages + shared assets.`);

@@ -4648,6 +4648,30 @@
       display: none;
     }
     .contact-section.active { display: block; }
+    .tab-navigation {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .contact-tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(42, 255, 158, 0.25);
+      color: var(--text-secondary);
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+    .contact-tab-btn:hover,
+    .contact-tab-btn.active {
+      background: rgba(42, 255, 158, 0.15);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
     .contact-container { display: flex; gap: 30px; max-width: 1000px; margin: 0 auto; }
     .form-container {
       flex: 1;
@@ -4673,11 +4697,26 @@
       padding: 10px;
       width: 100%;
     }
-    footer {
+    .main-content > header {
+      flex-shrink: 0;
+    }
+    .main-content > .page {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .main-content > .contact-section.active {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    footer,
+    .site-footer {
+      flex-shrink: 0;
+      margin-top: auto;
       text-align: center;
-      padding: 20px;
+      padding: 16px 20px;
       color: #6C7A8F;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      line-height: 1.4;
       border-top: 1px solid rgba(42, 255, 158, 0.1);
     }
 
