@@ -194,7 +194,9 @@ const friendsPage = slice('<!-- Friends Page (Friends list + Friend Chat) -->', 
 const staffPage = slice('<!-- Staff Panel Page -->', '<!-- Settings Page -->');
 const settingsPage = slice('<!-- Settings Page -->', '<section class="contact-section"');
 const contactSection = slice('<section class="contact-section"', '<!-- Notice Modal');
-const modalsAndRest = slice('<!-- Notice Modal', '<!-- Firebase SDK -->');
+const sharedMainContentExtras = slice('<!-- Notice Modal', '<!-- Staff Panel Modals -->')
+  .replace(/\s*<\/div>\s*$/i, '');
+const globalModals = slice('<!-- Staff Panel Modals -->', '<!-- Firebase SDK -->');
 
 function makePageBlock(fragment, { active = true, extraClass = '' } = {}) {
   let block = fragment;
@@ -350,8 +352,9 @@ for (const page of PAGES) {
     '  <div class="main-content" id="main-content">',
     '    ' + buildHeader(page.header).split('\n').join('\n    '),
     '    ' + page.content.split('\n').join('\n    '),
+    '    ' + sharedMainContentExtras.split('\n').join('\n    '),
     '  </div>',
-    modalsAndRest,
+    globalModals,
   ].join('\n');
 
   const file = HEAD.replace('{{TITLE}}', page.title) + body + FOOT.replace('{{ROUTE}}', page.route);
