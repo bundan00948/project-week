@@ -27,7 +27,15 @@ const css = (() => {
   let m;
   while ((m = re.exec(html))) blocks.push(m[1].trim());
   if (!blocks.length) throw new Error('Could not extract CSS from games.html');
-  return blocks.join('\n\n');
+  const merged = blocks.join('\n\n');
+  const lineCount = merged.split('\n').length;
+  if (lineCount < 500) {
+    throw new Error(
+      `Extracted CSS is too small (${lineCount} lines from ${blocks.length} <style> block(s)). ` +
+        'Multiple <style> tags require merging all blocks — a partial extract breaks the site.'
+    );
+  }
+  return merged;
 })();
 const jsRaw = html.match(/<script type="module">([\s\S]*)<\/script>\s*<\/body>/);
 if (!jsRaw) throw new Error('Could not extract module script');
