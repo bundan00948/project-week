@@ -85,10 +85,7 @@
             </ul>
           </nav></header>
     <!-- Main Page (Games) -->
-        <div class="page main-page active main-page-games-deferred" id="main-page">
-          <div class="main-games-load-placeholder" id="main-games-load-placeholder" role="status">
-            Games load when you open this page or scroll here — lighter first paint.
-          </div>
+        <div class="page main-page active" id="main-page">
           <section class="hero"><div class="carousel-container" id="topGamesCarousel"><div class="carousel-slide active"><div class="slide-background lazy-bg-loaded" style="background-image: url('https://wsrv.nl/?url=https://geodashgame.io/data/image/posts/geometry-dash-game-banner1.jpg&amp;output=webp&amp;w=1200');"></div></div></div></section>
           <section class="category-browsing-section" id="categoryBrowsingSection"></section>
           <section class="full-games-list" id="fullGamesList">
@@ -419,10 +416,6 @@
       </div>
     </div>
   </div>
-  <script type="module">
-    const boot = () => import('/assets/js/games-universe/pages/dashboard.js');
-    if (document.readyState === 'complete') boot();
-    else window.addEventListener('load', boot, { once: true });
-  </script>
+  <script type="module" src="/assets/js/games-universe/pages/dashboard.js"></script>
 </body>
 </html>

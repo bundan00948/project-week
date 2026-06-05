@@ -48,21 +48,29 @@ js = js.replace(
 );
 
 js = js.replace(
-  /async function init\(\) \{[\s\S]*?hidePageLoading\(\);\s*\}/,
+  /async function init\(\) \{[\s\S]*?\/\/ ========== Event Listeners ==========/,
   `async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         applyMainShellLayout(pageId);
+      } else {
+        activateInitialPage(pageId);
       }
       hidePageLoading();
       try {
-        await refreshRarityOrderFromServer();
-        await loadActivePageContent(pageId);
+        await Promise.all([
+          refreshRarityOrderFromServer(),
+          loadActivePageContent(pageId)
+        ]);
       } catch (err) {
         console.error('Game Universe init failed:', err);
       }
-    }`
+    }
+
+    init().catch(() => hidePageLoading());
+    setTimeout(hidePageLoading, 12000);
+    // ========== Event Listeners ==========`
 );
 
 js = js.replace(/\bglobalSendChatBtn\.addEventListener/g, 'globalSendChatBtn?.addEventListener');
@@ -303,18 +311,14 @@ function buildHead(title, withLcpPreload = false) {
 }
 
 const FOOT = `
-  <script type="module">
-    const boot = () => import('/assets/js/games-universe/pages/{{ROUTE}}.js');
-    if (document.readyState === 'complete') boot();
-    else window.addEventListener('load', boot, { once: true });
-  </script>
+  <script type="module" src="/assets/js/games-universe/pages/{{ROUTE}}.js"></script>
 </body>
 </html>`;
 
 const PAGES = [
-  { route: 'dashboard', title: 'Game Universe - Dashboard', pageId: 'main-page', tab: 'main-page', header: 'home', content: makePageBlock(mainPage, { extraClass: 'main-page main-page-games-deferred' }) },
-  { route: 'home', title: 'Game Universe - Home', pageId: 'home', tab: 'main-page', header: 'home', content: makePageBlock(mainPage, { extraClass: 'main-page main-page-games-deferred' }) },
-  { route: 'contact', title: 'Game Universe - Contact', pageId: 'contact', tab: 'main-page', header: 'contact', content: makePageBlock(mainPage, { active: false, extraClass: 'main-page main-page-games-deferred' }).replace('class="page main-page', 'class="page main-page" style="display:none" aria-hidden="true"') + '\n' + contactSection.replace('class="contact-section"', 'class="contact-section active"') },
+  { route: 'dashboard', title: 'Game Universe - Dashboard', pageId: 'main-page', tab: 'main-page', header: 'home', content: makePageBlock(mainPage, { extraClass: 'main-page' }) },
+  { route: 'home', title: 'Game Universe - Home', pageId: 'home', tab: 'main-page', header: 'home', content: makePageBlock(mainPage, { extraClass: 'main-page' }) },
+  { route: 'contact', title: 'Game Universe - Contact', pageId: 'contact', tab: 'main-page', header: 'contact', content: makePageBlock(mainPage, { active: false, extraClass: 'main-page' }).replace('class="page main-page', 'class="page main-page" style="display:none" aria-hidden="true"') + '\n' + contactSection.replace('class="contact-section"', 'class="contact-section active"') },
   { route: 'movies', title: 'Game Universe - Movies', pageId: 'movies-page', tab: 'movies-page', header: null, content: makePageBlock(moviesPage) },
   { route: 'profile', title: 'Game Universe - Profile', pageId: 'profile-page', tab: 'profile-page', header: null, content: makePageBlock(profilePage) },
   { route: 'user', title: 'Game Universe - User Profile', pageId: 'view-profile-page', tab: null, header: null, content: makePageBlock(viewProfilePage) },
