@@ -4,12 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Universe - All Games</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://wsrv.nl" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Titan+One&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Titan+One&display=swap"></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"></noscript>
+  <style>
+    /* Critical above-the-fold layout (avoids CLS + speeds first paint) */
+    html, body { height: 100%; margin: 0; }
+    body { background: #0A0C10; color: #fff; font-family: 'Nunito', system-ui, sans-serif; }
+    .hero { min-height: 420px; height: 420px; }
+    .slide-background, .slide-background-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; background-color: #0a0d14; background-size: cover; background-position: center;
+    }
+    #categoryBrowsingSection:not(.is-mounted),
+    #fullGamesList:not(.is-mounted) { display: none !important; }
+  </style>
   <style>
     /* Existing CSS styles remain unchanged */
     :root {
@@ -390,6 +408,10 @@
     }
     .slide-background.lazy-bg-loaded {
       opacity: 1;
+    }
+    .slide-background-img {
+      filter: brightness(0.3);
+      z-index: 0;
     }
     .slide-content {
       position: relative;
@@ -7151,7 +7173,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
   <script type="module">
     // Import required Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
     import { 
       getAuth,     
       createUserWithEmailAndPassword,     
@@ -7212,7 +7233,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (typeof requestIdleCallback === 'function') requestIdleCallback(() => fn(), { timeout: timeoutMs });
       else setTimeout(fn, 16);
     };
-    scheduleAppIdle(() => { try { getAnalytics(app); } catch (_) { /* analytics optional */ } });
+    scheduleAppIdle(() => {
+      import('https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js')
+        .then(({ getAnalytics }) => { try { getAnalytics(app); } catch (_) {} })
+        .catch(() => {});
+    }, 4000);
 
     const DEFAULT_NEON_GREEN = '#2AFF9E';
     const DEFAULT_NEON_PINK = '#FF3D6C';
@@ -8069,8 +8094,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         if (profileAvatar) profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
         if (profileUsername) profileUsername.textContent = data.username || user.email;
         if (profileTitle) applyTitleStyle(profileTitle, data.title || "User");
-        renderProfileBadges(data.badges || []);
-        refreshStarDisplayBadges(data.badges || []);
+        scheduleIdleWork(() => renderProfileBadges(data.badges || []), 1200);
+        scheduleIdleWork(() => refreshStarDisplayBadges(data.badges || []), 800);
       } else {
         hidePasswordMigrationModal();
         favoriteMovieIds = new Set();
@@ -8079,7 +8104,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         return;
       }
       if (userInfoDiv) userInfoDiv.style.display = 'flex';
-      updateStats(user.uid);
+      scheduleIdleWork(() => updateStats(user.uid), 2500);
     }
 
     async function renderProfileBadges(badgeNames, containerId) {
@@ -8148,7 +8173,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     }
 
     // ========== Auth state observer with owner enforcement ==========
-    onAuthStateChanged(auth, async (user) => {
+    let authListenerStarted = false;
+    function startAuthListener() {
+      if (authListenerStarted) return;
+      authListenerStarted = true;
+      onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
       currentUser = user;
       try {
@@ -8175,11 +8204,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
             mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner" };
           }
         }
-        try {
-          await syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true });
-        } catch (syncError) {
-          console.warn('Auth bridge profile sync failed:', syncError);
-        }
+        scheduleIdleWork(() => {
+          syncAuthIdentityToFirestore(user, { event: 'auth_state_ready', forceProfileMirror: true }).catch((syncError) => {
+            console.warn('Auth bridge profile sync failed:', syncError);
+          });
+        }, 600);
         const banCheck = await getDoc(doc(db, "users", user.uid));
         if (banCheck.exists()) {
           const bd = banCheck.data();
@@ -8258,6 +8287,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         hidePageLoading();
       }
     });
+    }
+    requestAnimationFrame(() => scheduleIdleWork(startAuthListener, 80));
 
     // ========== Sign up, login, logout (unchanged) ==========
     avatarUpload?.addEventListener('change', () => {
@@ -9575,8 +9606,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
+        const lcpBg = idx === 0 && game.image
+          ? `<img class="slide-background-img" src="${escapeHtml(mediaThumbUrl(game.image, 1200, 82))}" alt="" fetchpriority="high" decoding="async" width="1200" height="420">`
+          : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
         slide.innerHTML = `
-          <div class="slide-background" data-lazy-bg="${imgEsc}"></div>
+          ${lcpBg}
           <div class="slide-content">
             <div class="slide-info">
               <h2>${game.title}</h2>
@@ -9648,6 +9682,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const container = document.getElementById('categoryBrowsingSection');
       if (!container) return;
       container.innerHTML = '';
+      container.classList.remove('is-mounted');
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
       const tagGroups = {};
@@ -9656,6 +9691,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const initialTags = tagKeys.slice(0, 6);
       const deferredTags = tagKeys.slice(6);
       initialTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
+      container.classList.add('is-mounted');
       if (deferredTags.length) {
         scheduleIdleWork(() => {
           deferredTags.forEach(tag => { createCategoryRow(tag.toUpperCase(), tagGroups[tag], container); });
@@ -9678,7 +9714,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const mountList = () => {
         if (fullGamesListMounted) return;
         fullGamesListMounted = true;
-        renderFullGamesList(allGames);
+        renderFullGamesList(allGames, { sync: true });
+        section.classList.add('is-mounted');
       };
       if (typeof IntersectionObserver === 'undefined') {
         mountList();
@@ -9696,7 +9733,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       fullGamesListSectionObserver.observe(section);
     }
 
-    function renderFullGamesList(allGames) {
+    function renderFullGamesList(allGames, options = {}) {
       const grid = document.getElementById('fullGamesGrid');
       const searchInput = document.getElementById('gameSearchInput');
       if (!grid || !searchInput) return;
@@ -9725,10 +9762,15 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         });
         return startIndex + chunk.length;
       };
-      const filterAndRender = () => {
+      const filterAndRender = (sync = false) => {
         const query = searchInput.value.toLowerCase().trim();
         const filtered = sortedGames.filter(g => g.title.toLowerCase().includes(query));
         grid.innerHTML = '';
+        if (sync) {
+          let idx = 0;
+          while (idx < filtered.length) idx = renderChunk(filtered, idx);
+          return;
+        }
         let idx = 0;
         const pump = () => {
           idx = renderChunk(filtered, idx);
@@ -9736,10 +9778,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         };
         pump();
       };
-      filterAndRender();
+      filterAndRender(Boolean(options.sync));
       if (!fullGamesSearchBound) {
         fullGamesSearchBound = true;
-        searchInput.addEventListener('input', filterAndRender);
+        searchInput.addEventListener('input', () => filterAndRender(false));
       }
     }
 
@@ -9749,9 +9791,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     const contactSectionEl = document.getElementById('contact-section');
 
     function applyMainShellLayout(pageId) {
-      const showGames = pageId !== 'contact';
-      if (categorySection) categorySection.style.display = showGames ? 'block' : 'none';
-      if (fullGamesListSec) fullGamesListSec.style.display = showGames ? 'block' : 'none';
       contactSectionEl?.classList.toggle('active', pageId === 'contact');
     }
 
@@ -13189,6 +13228,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         const url = bg.dataset.lazyBg;
         const loadUrl = mediaThumbUrl(url, 1200, 82);
         const img = new Image();
+        if (i === index && 'fetchPriority' in img) img.fetchPriority = 'high';
         img.onload = () => {
           bg.style.backgroundImage = `url(${JSON.stringify(loadUrl)})`;
           bg.classList.add('lazy-bg-loaded');
