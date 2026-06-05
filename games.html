@@ -156,7 +156,6 @@
     }
     .page-content, .main-page {
       position: relative;
-      overflow-x: clip;
     }
     .page-content::before, .main-page::before {
       content: '';
@@ -460,7 +459,7 @@
     .category-row {
       margin-bottom: 32px;
       content-visibility: auto;
-      contain-intrinsic-size: auto 210px;
+      contain-intrinsic-size: 320px 280px;
     }
     .category-title {
       font-size: 1.4rem;
@@ -627,6 +626,8 @@
       gap: 20px;
     }
     .full-game-item {
+      content-visibility: auto;
+      contain-intrinsic-size: 200px 240px;
       background: #151A22;
       border-radius: 16px;
       overflow: hidden;
@@ -9467,8 +9468,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         maybeOpenGameFromUrlParam();
         const mp = document.getElementById('main-page');
         if (mp) mp.classList.remove('main-page-games-deferred');
-        const ph = document.getElementById('main-games-load-placeholder');
-        if (ph) ph.hidden = true;
         if (mainPageGamesScrollObserver) {
           mainPageGamesScrollObserver.disconnect();
           mainPageGamesScrollObserver = null;
