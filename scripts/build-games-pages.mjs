@@ -52,11 +52,7 @@ js = js.replace(
   `async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
-        applyMainShellLayout(pageId);
-      } else {
-        activateInitialPage(pageId);
-      }
+      activateInitialPage(pageId);
       hidePageLoading();
       try {
         await Promise.all([
