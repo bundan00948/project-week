@@ -333,6 +333,23 @@
       font-size: 0.92rem;
       line-height: 1.45;
     }
+    .games-catalog-loading,
+    .games-catalog-error {
+      margin: 24px 5%;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .games-catalog-loading {
+      color: var(--text-secondary);
+      border: 1px dashed rgba(42, 255, 158, 0.25);
+    }
+    .games-catalog-error {
+      color: #ff8fa8;
+      border: 1px solid rgba(255, 61, 108, 0.35);
+      background: rgba(255, 61, 108, 0.08);
+    }
 
     /* Hero carousel */
     .hero {

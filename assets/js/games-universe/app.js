@@ -173,6 +173,7 @@
       if (el) {
         el.classList.add('hidden');
         el.style.display = 'none';
+        el.style.pointerEvents = 'none';
         el.setAttribute('aria-busy', 'false');
       }
     }
@@ -1064,7 +1065,7 @@
         }
         sidebar?.classList.add('active');
         mainContent?.classList.add('sidebar-active');
-        await loadActivePageContent(getCurrentPageId());
+        await loadActivePageContent(getCurrentPageId(), { forceGames: !mainPageGamesMounted });
       } else {
         favoriteMovieIds = new Set();
         currentUserPermissions = [];
@@ -1087,7 +1088,7 @@
         if (isAuthRequiredPage(loggedOutPageId)) {
           if (noticeModal) noticeModal.style.display = 'flex';
         } else {
-          await loadActivePageContent(loggedOutPageId);
+          await loadActivePageContent(loggedOutPageId, { forceGames: !mainPageGamesMounted });
         }
       }
       } catch (authErr) {
@@ -1957,7 +1958,7 @@
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
-        const newGames = games.slice(5, 12);
+        const newGames = games.slice(5);
         const allGames = games;
         return { topGames, newGames, allGames };
       } catch(e) { console.error(e); return { topGames: [], newGames: [], allGames: [] }; }
@@ -2344,9 +2345,18 @@
       if (cur && list.some(g => g.id === cur)) sel.value = cur;
     }
 
-    async function mountMainPageGamesContent() {
-      if (mainPageGamesMounted) return;
-      if (mainPageGamesMountPromise) return mainPageGamesMountPromise;
+    async function mountMainPageGamesContent(options = {}) {
+      const force = Boolean(options.forceGames || options.force);
+      if (mainPageGamesMounted && !force) return;
+      if (mainPageGamesMountPromise && !force) return mainPageGamesMountPromise;
+      if (force) {
+        mainPageGamesMounted = false;
+        appGamesDataCache = null;
+      }
+      const categoryContainer = document.getElementById('categoryBrowsingSection');
+      if (categoryContainer && !mainPageGamesMounted) {
+        categoryContainer.innerHTML = '<p class="games-catalog-loading">Loading games…</p>';
+      }
       mainPageGamesMountPromise = (async () => {
         try {
           let data = appGamesDataCache;
@@ -2356,6 +2366,9 @@
           }
           if (!data?.allGames?.length) {
             console.warn('Game catalog empty or failed to load');
+            if (categoryContainer) {
+              categoryContainer.innerHTML = '<p class="games-catalog-error">Could not load the game catalog. Please refresh and try again.</p>';
+            }
             return;
           }
           renderTopGamesCarousel(data.topGames);
@@ -2366,6 +2379,9 @@
           mainPageGamesMounted = true;
         } catch (err) {
           console.error('Failed to mount main page games:', err);
+          if (categoryContainer) {
+            categoryContainer.innerHTML = '<p class="games-catalog-error">Could not load games. Please refresh and try again.</p>';
+          }
         } finally {
           const mp = document.getElementById('main-page');
           if (mp) mp.classList.remove('main-page-games-deferred');
@@ -2444,7 +2460,7 @@
       const starsHtml = [1, 2, 3, 4, 5].map(s => `<i class="fas fa-star star ${s <= Math.floor(rating) ? 'filled' : ''}"></i>`).join('');
       const overlay = document.createElement('div');
       overlay.className = 'card-overlay';
-      overlay.innerHTML = `<div class="game-name">${game.title}</div><div class="card-meta"><i class="${game.multiplayer ? 'fas fa-users mode-multi' : 'fas fa-user mode-single'}"></i><div class="card-rating"><div class="stars">${starsHtml}</div><span class="rating-value">${rating.toFixed(1)}</span></div></div>`;
+      overlay.innerHTML = `<div class="game-name">${escapeHtml(game.title)}</div><div class="card-meta"><i class="${game.multiplayer ? 'fas fa-users mode-multi' : 'fas fa-user mode-single'}"></i><div class="card-rating"><div class="stars">${starsHtml}</div><span class="rating-value">${rating.toFixed(1)}</span></div></div>`;
       card.appendChild(bg);
       card.appendChild(overlay);
       card.addEventListener('click', () => handleGameClick(game.id, game.title, game.url));
@@ -2480,25 +2496,35 @@
       createCategoryRow('🔥 TOP', gamesData.topGames, container);
       createCategoryRow('🆕 NEW', gamesData.newGames, container);
       const tagGroups = new Map();
-      let catalogTags = [];
+      const tagById = new Map();
+      const tagByNameLower = new Map();
       try {
         const tagSnap = await getDocs(collection(db, 'tags'));
-        catalogTags = tagSnap.docs
-          .map((d) => String(d.data().name || '').trim())
-          .filter(Boolean);
+        tagSnap.docs.forEach((d) => {
+          const name = String(d.data().name || '').trim();
+          if (!name) return;
+          tagById.set(d.id, name);
+          tagByNameLower.set(name.toLowerCase(), name);
+          tagGroups.set(name.toLowerCase(), { label: name, games: [] });
+        });
       } catch (e) {
         console.warn('Could not load tag catalog:', e);
       }
-      catalogTags.forEach((tag) => {
-        tagGroups.set(tag.toLowerCase(), { label: tag, games: [] });
-      });
+      const resolveTag = (raw) => {
+        const token = String(raw || '').trim();
+        if (!token) return null;
+        if (tagById.has(token)) return tagById.get(token);
+        const byName = tagByNameLower.get(token.toLowerCase());
+        return byName || token;
+      };
       gamesData.allGames.forEach((g) => {
         (g.tags || []).forEach((t) => {
-          const key = String(t).trim().toLowerCase();
-          if (!key) return;
+          const label = resolveTag(t);
+          if (!label) return;
+          const key = label.toLowerCase();
           let group = tagGroups.get(key);
           if (!group) {
-            group = { label: String(t).trim(), games: [] };
+            group = { label, games: [] };
             tagGroups.set(key, group);
           }
           if (!group.games.some((game) => game.id === g.id)) group.games.push(g);
@@ -2535,10 +2561,10 @@
           const slice = filtered.slice(offset, offset + CHUNK);
           if (!slice.length) return;
           grid.insertAdjacentHTML('beforeend', slice.map(game => `
-          <div class="full-game-item" data-id="${game.id}" data-url="${game.url}" data-title="${game.title}">
+          <div class="full-game-item" data-id="${escapeHtml(game.id)}" data-url="${escapeHtml(game.url)}" data-title="${escapeHtml(game.title)}">
             <div class="full-game-banner"><div class="full-game-banner-bg" data-lazy-bg="${escapeHtml(game.image || '')}"></div></div>
             <div class="full-game-info">
-              <div class="full-game-title">${game.title}</div>
+              <div class="full-game-title">${escapeHtml(game.title)}</div>
               <div class="full-game-meta"><span><i class="fas fa-star"></i> ${game.rating||'N/A'}</span><span><i class="${game.multiplayer?'fas fa-users': 'fas fa-user'}"></i> ${game.multiplayer?'Multiplayer': 'Single Player'}</span></div>
             </div>
           </div>
@@ -2582,7 +2608,7 @@
       if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
         document.getElementById('main-page')?.classList.add('active');
         applyMainShellLayout(pageId);
-        if (pageId === 'main-page') {
+        if (pageId === 'main-page' || pageId === 'home') {
           document.querySelector('.sidebar-tabs .tab-button[data-page="main-page"]')?.classList.add('active');
         }
         return;
@@ -2597,11 +2623,11 @@
       document.querySelector(`.sidebar-tabs .tab-button[data-page="${pageId}"]`)?.classList.add('active');
     }
 
-    async function loadActivePageContent(pageId) {
+    async function loadActivePageContent(pageId, options = {}) {
       switch (pageId) {
         case 'main-page':
         case 'home':
-          await mountMainPageGamesContent();
+          await mountMainPageGamesContent(options);
           break;
         case 'contact':
           break;
@@ -7894,11 +7920,7 @@
     async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
-      if (pageId === 'home' || pageId === 'contact' || pageId === 'main-page') {
-        applyMainShellLayout(pageId);
-      } else {
-        activateInitialPage(pageId);
-      }
+      activateInitialPage(pageId);
       hidePageLoading();
       try {
         await Promise.all([
