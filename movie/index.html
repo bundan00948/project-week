@@ -273,10 +273,31 @@
         return;
       }
 
+      const sanitizeReturnHref = (raw) => {
+        const value = String(raw || '').trim();
+        if (!value) return '';
+        try {
+          const parsed = new URL(value, window.location.origin);
+          if (parsed.origin !== window.location.origin) return '';
+          if (!parsed.pathname.startsWith('/dev/')) return '';
+          return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+        } catch (_) {
+          return '';
+        }
+      };
+
       const backMovieDocId = String(routeEntry?.movieDocId || "").trim();
-      backBtn.href = backMovieDocId
+      const returnHref = sanitizeReturnHref(params.get("return"));
+      backBtn.href = returnHref || (backMovieDocId
         ? `/games/movies?movie=${encodeURIComponent(backMovieDocId)}`
-        : "/games/movies";
+        : "/games/movies");
+      if (returnHref.startsWith("/dev/movies")) {
+        backBtn.textContent = "← Back to dev movies";
+        backBtn.setAttribute("aria-label", "Back to dev movies");
+      } else if (returnHref.startsWith("/dev/")) {
+        backBtn.textContent = "← Back to dev catalogue";
+        backBtn.setAttribute("aria-label", "Back to dev catalogue");
+      }
 
       const frame = document.createElement("iframe");
       frame.className = "movie-frame";

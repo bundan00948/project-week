@@ -140,10 +140,33 @@ function resolveMovieUrl(url) {
   }
 }
 
+const DEV_MOVIES_RETURN_PATH = '/dev/movies';
+
+function formatMovieRoutePart(value, width) {
+  const n = Number.parseInt(value, 10);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return String(n).padStart(width, '0');
+}
+
 function watchPlayerHref(movie) {
-  const u = resolveMovieUrl(movie.url);
-  if (!u) return null;
-  return new URL(`/movie/?u=${encodeURIComponent(u)}`, window.location.origin).toString();
+  const player = new URL('/movie/', window.location.origin);
+  player.searchParams.set('return', DEV_MOVIES_RETURN_PATH);
+
+  const streamUrl = resolveMovieUrl(movie.url);
+  if (streamUrl) {
+    player.searchParams.set('u', streamUrl);
+    return player.toString();
+  }
+
+  const year = Number.parseInt(movie.releaseYear, 10);
+  const categoryPart = formatMovieRoutePart(movie.categoryId, 3);
+  const moviePart = formatMovieRoutePart(movie.movieKey, 6);
+  if (Number.isFinite(year) && year >= 1900 && categoryPart && moviePart) {
+    player.pathname = `/movie/${year}/${categoryPart}/${moviePart}`;
+    return player.toString();
+  }
+
+  return null;
 }
 
 export async function loadMoviesCatalog() {
