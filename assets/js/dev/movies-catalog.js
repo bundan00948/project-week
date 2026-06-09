@@ -190,6 +190,7 @@ async function addMovieToFirestore(formData, catalog) {
   const scoreRaw = Number.parseFloat(formData.get('score'));
   const score = Number.isFinite(scoreRaw) ? Math.max(0, Math.min(10, Number(scoreRaw.toFixed(1)))) : 0;
   const banner = String(formData.get('banner') || '').trim();
+  const titleImage = String(formData.get('titleImage') || '').trim();
   const url = String(formData.get('url') || '').trim();
   const description = String(formData.get('description') || '').trim();
 
@@ -209,7 +210,7 @@ async function addMovieToFirestore(formData, catalog) {
     releaseYear,
     score,
     banner,
-    titleImage: '',
+    titleImage,
     description,
     url,
     trailerUrl: '',
@@ -239,6 +240,7 @@ export function mountMoviesCatalog(root) {
   const detailModal = root.querySelector('#cinemaDetailModal');
   const detailBackdrop = root.querySelector('#cinemaDetailBackdrop');
   const detailTitle = root.querySelector('#cinemaDetailTitle');
+  const detailTitleImage = root.querySelector('#cinemaDetailTitleImage');
   const detailDesc = root.querySelector('#cinemaDetailDesc');
   const detailMeta = root.querySelector('#cinemaDetailMeta');
   const detailWatch = root.querySelector('#cinemaDetailWatch');
@@ -273,6 +275,19 @@ export function mountMoviesCatalog(root) {
     activeDetailMovie = movie;
     const href = watchPlayerHref(movie);
     if (detailTitle) detailTitle.textContent = movie.title || 'Movie';
+    if (detailTitleImage) {
+      if (movie.titleImage) {
+        detailTitleImage.src = movie.titleImage;
+        detailTitleImage.alt = movie.title || '';
+        detailTitleImage.hidden = false;
+        detailTitle?.classList.add('has-image-fallback');
+      } else {
+        detailTitleImage.hidden = true;
+        detailTitleImage.removeAttribute('src');
+        detailTitleImage.alt = '';
+        detailTitle?.classList.remove('has-image-fallback');
+      }
+    }
     if (detailDesc) {
       detailDesc.textContent = movie.description || 'No synopsis available yet.';
     }
@@ -353,11 +368,16 @@ export function mountMoviesCatalog(root) {
       return;
     }
     carouselEl.innerHTML = topMovies.map((movie, idx) => {
-      const bg = movie.banner ? `style="background-image:url(${JSON.stringify(movie.banner)})"` : '';
+      const bgImage = movie.banner
+        ? `<img src="${escapeHtml(movie.banner)}" alt="" loading="${idx === 0 ? 'eager' : 'lazy'}">`
+        : '';
+      const titleBlock = movie.titleImage
+        ? `<img class="cinema-slide-title-image" src="${escapeHtml(movie.titleImage)}" alt="${escapeHtml(movie.title)}" loading="${idx === 0 ? 'eager' : 'lazy'}"><h2 class="cinema-slide-title has-image-fallback">${escapeHtml(movie.title)}</h2>`
+        : `<h2 class="cinema-slide-title">${escapeHtml(movie.title)}</h2>`;
       const preview = truncateText(movie.description) || 'Open details to read the synopsis and start watching.';
       return `
         <article class="cinema-slide ${idx === 0 ? 'active' : ''}">
-          <div class="cinema-slide-bg" ${bg}></div>
+          <div class="cinema-slide-bg">${bgImage}</div>
           <div class="cinema-slide-scrim"></div>
           <div class="cinema-slide-body">
             <p class="cinema-slide-kicker">Featured · ${escapeHtml(movie.rankCategory || movie.category)}</p>
@@ -366,7 +386,7 @@ export function mountMoviesCatalog(root) {
               <span>${movie.releaseYear || 'N/A'}</span>
               <span>★ ${movie.score || 'N/A'}</span>
             </div>
-            <h2 class="cinema-slide-title">${escapeHtml(movie.title)}</h2>
+            ${titleBlock}
             <p class="cinema-slide-desc">${escapeHtml(preview)}</p>
             <div class="cinema-slide-actions">
               <button type="button" class="cinema-watch-btn" data-spotlight-watch="${escapeHtml(movie.id)}">Watch now</button>
@@ -495,7 +515,7 @@ export function mountMoviesCatalog(root) {
   addForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (formMsg) {
-      formMsg.textContent = 'Saving…';
+      formMsg.textContent = 'Submitting…';
       formMsg.classList.remove('err');
     }
     const submitBtn = addForm.querySelector('[type="submit"]');
@@ -510,9 +530,9 @@ export function mountMoviesCatalog(root) {
       await refreshCatalog();
       formToggle?.close?.();
       if (formMsg) formMsg.textContent = '';
-      showDevToast('Movie added to catalogue', 'success');
+      showDevToast('Title suggestion submitted', 'success');
     } catch (err) {
-      const message = err?.message || 'Could not save movie.';
+      const message = err?.message || 'Could not submit suggestion.';
       if (formMsg) {
         formMsg.textContent = message;
         formMsg.classList.add('err');

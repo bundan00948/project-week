@@ -161,8 +161,14 @@
   position: absolute;
   inset: 0;
   background-color: #0a0d14;
-  background-size: cover;
-  background-position: center top;
+  overflow: hidden;
+}
+
+.cinema-slide-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
   filter: brightness(0.38) saturate(1.05);
 }
 
@@ -216,6 +222,17 @@
   color: #dfedff;
 }
 
+.cinema-slide-title-image {
+  display: block;
+  max-width: min(420px, 88%);
+  max-height: clamp(72px, 12vw, 120px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.44));
+}
+
 .cinema-slide-title {
   margin: 0;
   font-family: "Bebas Neue", "Oswald", Nunito, sans-serif;
@@ -225,6 +242,18 @@
   letter-spacing: 0.02em;
   color: #fff;
   text-wrap: balance;
+}
+
+.cinema-slide-title.has-image-fallback {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .cinema-slide-desc {
@@ -573,6 +602,21 @@
   color: #8fd6ff;
 }
 
+.cinema-detail-title-image {
+  display: block;
+  max-width: min(360px, 100%);
+  max-height: 88px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.44));
+}
+
+.cinema-detail-title-image[hidden] {
+  display: none;
+}
+
 .cinema-detail-title {
   margin: 0;
   font-family: "Bebas Neue", "Oswald", Nunito, sans-serif;
@@ -580,6 +624,18 @@
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: 0.02em;
+}
+
+.cinema-detail-title.has-image-fallback {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .cinema-detail-meta {
