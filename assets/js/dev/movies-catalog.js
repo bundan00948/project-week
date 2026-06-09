@@ -1,5 +1,6 @@
 import { getFirestoreDb } from './firebase-config.js';
 import { escapeHtml } from './games-catalog.js';
+import { bindFormToggle, nextNumericKey, showDevToast } from './catalog-utils.js';
 
 const MAX_MOVIE_KEY_ID = 999999;
 const MAX_MOVIE_CATEGORY_ID = 999;
@@ -95,7 +96,8 @@ function buildMoviesData(movieItems, categoryConfig) {
     order: Number.isFinite(Number(c.order)) ? Number(c.order) : idx,
     count: (moviesByCategory[c.key] || []).length
   }));
-  return { categories: normalizedCategories, moviesByCategory };
+  const movies = Object.values(moviesByCategory).flat();
+  return { categories: normalizedCategories, moviesByCategory, movies, categoryRows: cfg };
 }
 
 function resolveMovieUrl(url) {
@@ -116,7 +118,7 @@ function watchPlayerHref(movie) {
   return new URL(`/movie/?u=${encodeURIComponent(u)}`, window.location.origin).toString();
 }
 
-async function loadMoviesCatalog() {
+export async function loadMoviesCatalog() {
   const { db, fs } = await getFirestoreDb();
   let categoryRows = [];
   try {
@@ -148,15 +150,71 @@ async function loadMoviesCatalog() {
   return buildMoviesData(movies, categoryRows);
 }
 
+async function addMovieToFirestore(formData, catalog) {
+  const { db, fs } = await getFirestoreDb();
+  const title = String(formData.get('title') || '').trim();
+  const category = String(formData.get('category') || '').trim();
+  const releaseYear = Number.parseInt(formData.get('releaseYear'), 10) || new Date().getFullYear();
+  const scoreRaw = Number.parseFloat(formData.get('score'));
+  const score = Number.isFinite(scoreRaw) ? Math.max(0, Math.min(10, Number(scoreRaw.toFixed(1)))) : 0;
+  const banner = String(formData.get('banner') || '').trim();
+  const url = String(formData.get('url') || '').trim();
+  const description = String(formData.get('description') || '').trim();
+
+  if (!title) throw new Error('Title is required.');
+  if (!category) throw new Error('Category is required.');
+
+  const categoryCfg = (catalog?.categoryRows || []).find((cat) => String(cat.key) === category);
+  const categoryId = toBoundedPositiveInt(categoryCfg?.categoryId, MAX_MOVIE_CATEGORY_ID) ?? 0;
+  const nextMovieKey = nextNumericKey(catalog?.movies || [], (movie) => movie.movieKey, MAX_MOVIE_KEY_ID, 1);
+  const movieKey = nextMovieKey !== null ? nextMovieKey : stableNumericKey(title, MAX_MOVIE_KEY_ID);
+
+  await fs.addDoc(fs.collection(db, 'movies'), {
+    title,
+    category,
+    categoryId,
+    movieKey,
+    releaseYear,
+    score,
+    banner,
+    titleImage: '',
+    description,
+    url,
+    trailerUrl: '',
+    createdAt: fs.serverTimestamp(),
+    updatedAt: fs.serverTimestamp()
+  });
+}
+
+function updateHeroStats(root, data) {
+  const totalEl = root.querySelector('#devTotalCount');
+  const catEl = root.querySelector('#devCategoryCount');
+  const totalMovies = (data.movies || []).length;
+  if (totalEl) totalEl.textContent = String(totalMovies);
+  if (catEl) catEl.textContent = String(data.categories.length);
+}
+
+function populateCategorySelect(root, categories) {
+  const select = root.querySelector('#devMovieCategory');
+  if (!select) return;
+  select.innerHTML = categories.map((cat) =>
+    `<option value="${escapeHtml(cat.key)}">${escapeHtml(cat.key)}</option>`
+  ).join('');
+}
+
 export function mountMoviesCatalog(root) {
   const statusEl = root.querySelector('#devStatus');
   const catsEl = root.querySelector('#devCats');
   const gridEl = root.querySelector('#devGrid');
   const qEl = root.querySelector('#devSearch');
+  const addForm = root.querySelector('#devAddMovieForm');
+  const formMsg = root.querySelector('#devFormMsg');
 
   let data = null;
   let activeCat = '';
   let query = '';
+
+  const formToggle = bindFormToggle(root);
 
   function visibleMovies() {
     const list = [...(data?.moviesByCategory?.[activeCat] || [])];
@@ -172,17 +230,23 @@ export function mountMoviesCatalog(root) {
           const href = watchPlayerHref(movie);
           const banner = movie.banner
             ? `<img class="dev-card-banner" src="${escapeHtml(movie.banner)}" alt="" loading="lazy">`
-            : '<div class="dev-card-banner" aria-hidden="true"></div>';
-          const action = href
-            ? `<a class="dev-action dev-action-alt" href="${escapeHtml(href)}">Watch</a>`
-            : '<button type="button" class="dev-action dev-action-alt" disabled>No URL</button>';
+            : '<div class="dev-card-media-fallback" aria-hidden="true"></div>';
+          const watchChip = href
+            ? `<a class="dev-card-play-chip" href="${escapeHtml(href)}">Watch</a>`
+            : '';
           return `<article class="dev-card">
-            ${banner}
+            <div class="dev-card-media">
+              ${banner}
+              <div class="dev-card-play-overlay">${watchChip}</div>
+            </div>
             <div class="dev-card-body">
               <h2 class="dev-card-title">${escapeHtml(movie.title)}</h2>
-              <div class="dev-card-meta">${escapeHtml(movie.category)} · ${movie.releaseYear || '—'} · ★ ${movie.score || '—'}</div>
-              <p class="dev-card-desc">${escapeHtml(movie.description || '')}</p>
-              ${action}
+              <div class="dev-card-meta">
+                <span class="dev-chip">${escapeHtml(movie.category)}</span>
+                <span class="dev-chip">${movie.releaseYear || '—'}</span>
+                <span class="dev-chip">★ ${movie.score || '—'}</span>
+              </div>
+              ${movie.description ? `<p class="dev-card-desc">${escapeHtml(movie.description)}</p>` : ''}
             </div>
           </article>`;
         }).join('')
@@ -206,9 +270,49 @@ export function mountMoviesCatalog(root) {
     });
   }
 
+  async function refreshCatalog() {
+    data = await loadMoviesCatalog();
+    if (!activeCat && data.categories.length) activeCat = data.categories[0].key;
+    updateHeroStats(root, data);
+    populateCategorySelect(root, data.categories);
+    renderCats();
+    renderGrid();
+  }
+
   qEl?.addEventListener('input', () => {
     query = qEl.value || '';
     renderGrid();
+  });
+
+  addForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (formMsg) {
+      formMsg.textContent = 'Saving…';
+      formMsg.classList.remove('err');
+    }
+    const submitBtn = addForm.querySelector('[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    try {
+      await addMovieToFirestore(new FormData(addForm), data);
+      addForm.reset();
+      if (data?.categories?.length) {
+        const select = root.querySelector('#devMovieCategory');
+        if (select) select.value = data.categories[0].key;
+      }
+      await refreshCatalog();
+      formToggle?.close?.();
+      if (formMsg) formMsg.textContent = '';
+      showDevToast('Movie added to catalogue', 'success');
+    } catch (err) {
+      const message = err?.message || 'Could not save movie.';
+      if (formMsg) {
+        formMsg.textContent = message;
+        formMsg.classList.add('err');
+      }
+      showDevToast(message, 'error');
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
   });
 
   loadMoviesCatalog()
@@ -219,6 +323,8 @@ export function mountMoviesCatalog(root) {
       statusEl?.remove();
       catsEl.hidden = false;
       gridEl.hidden = false;
+      updateHeroStats(root, data);
+      populateCategorySelect(root, data.categories);
       renderCats();
       renderGrid();
     })
