@@ -393,7 +393,7 @@ for (const page of PAGES) {
   const file = buildHead(page.title, page.pageId === 'main-page' || page.pageId === 'home') + body + FOOT.replace('{{ROUTE}}', page.route);
   fs.writeFileSync(outPath, file);
 
-  const pageJs = `window.__GU_PAGE__ = '${page.pageId}';\nimport '../app.js';\n`;
+  const pageJs = `window.__GU_PAGE__ = '${page.pageId}';\nimport('../app.js');\n`;
   fs.writeFileSync(path.join(ROOT, 'assets/js/games-universe/pages', `${page.route}.js`), pageJs);
 }
 
