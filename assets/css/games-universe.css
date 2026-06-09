@@ -290,6 +290,14 @@
       margin-left: var(--sidebar-width);
     }
 
+    .main-content > header {
+      flex: 0 0 auto;
+    }
+
+    .main-content > footer {
+      flex: 0 0 auto;
+    }
+
     /* Pages */
     .page {
       display: none !important;
@@ -319,6 +327,9 @@
     #main-page {
       padding: 0;
       min-height: 600px;
+      flex: 0 0 auto;
+      width: 100%;
+      overflow: visible;
     }
     .main-games-load-placeholder {
       display: none;
@@ -804,7 +815,7 @@
     .movie-carousel-slide.active {
       opacity: 1;
       transform: scale(1);
-      pointer-events: auto;
+      pointer-events: none;
     }
     .movie-slide-background {
       position: absolute;
