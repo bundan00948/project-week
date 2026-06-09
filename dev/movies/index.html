@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Dev Movies Catalogue</title>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/dev-catalog.css">
+</head>
+<body>
+  <div class="dev-shell" id="devShell" hidden>
+    <header class="dev-header">
+      <h1>Dev Movies</h1>
+      <p>Unlisted movies catalogue. No Game Universe login required after access code. Browse by category and watch in the movie player.</p>
+    </header>
+    <div class="dev-toolbar">
+      <label>Search titles
+        <input type="search" id="devSearch" placeholder="Type to filter…" autocomplete="off">
+      </label>
+    </div>
+    <div class="dev-cats" id="devCats" hidden></div>
+    <div class="dev-status" id="devStatus">Loading catalogue…</div>
+    <main class="dev-grid" id="devGrid" hidden></main>
+    <p class="dev-foot">Dev-only page — not linked from the main site. <a href="/games/movies">Game Universe movies</a></p>
+  </div>
+
+  <script type="module">
+    import { mountDevAccessGate } from '/assets/js/dev/access-gate.js';
+    import { mountMoviesCatalog } from '/assets/js/dev/movies-catalog.js';
+
+    mountDevAccessGate('movies', {
+      label: 'Dev movies',
+      hint: 'Enter the dev movies access code to browse and watch without signing in.',
+      onUnlock() {
+        const shell = document.getElementById('devShell');
+        if (shell) shell.hidden = false;
+        mountMoviesCatalog(document);
+      }
+    });
+  </script>
+</body>
+</html>
