@@ -1,6 +1,5 @@
 /**
  * Simple session gate for unlisted /dev/* catalog pages.
- * Access codes are obscurity gates for dev/staging — not server-side security.
  */
 export const DEV_ACCESS_CODES = {
   games: 'GU-DEV-GAMES-X7K9',
@@ -87,4 +86,39 @@ export function mountDevAccessGate(pageId, options = {}) {
   });
 
   input.focus();
+}
+
+export function bindFormToggle(root, options = {}) {
+  const toggle = root.querySelector('[data-dev-form-toggle]');
+  const panel = root.querySelector('[data-dev-form-panel]');
+  const closeBtn = root.querySelector('[data-dev-form-close]');
+  const backdrop = root.querySelector(options.backdropSelector || '[data-dev-form-backdrop]');
+  if (!toggle || !panel) return {};
+
+  const open = () => {
+    panel.hidden = false;
+    panel.classList.add('open');
+    backdrop?.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const close = () => {
+    panel.classList.remove('open');
+    backdrop?.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (!panel.classList.contains('open')) panel.hidden = true;
+    }, 280);
+  };
+
+  toggle.addEventListener('click', () => {
+    if (panel.hidden || !panel.classList.contains('open')) open();
+    else close();
+  });
+  closeBtn?.addEventListener('click', close);
+  backdrop?.addEventListener('click', close);
+
+  return { open, close };
 }

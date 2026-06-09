@@ -4,91 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex,nofollow">
-  <title>Dev Games Catalogue</title>
+  <title>Arcade — Dev Games</title>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/assets/css/dev-catalog.css">
+  <link rel="stylesheet" href="/assets/css/dev-games.css">
 </head>
 <body>
-  <div class="dev-shell" id="devShell" hidden>
-    <div class="dev-shell-inner">
-      <header class="dev-hero">
-        <div class="dev-hero-content">
-          <div class="dev-hero-top">
-            <div>
-              <span class="dev-hero-badge">Dev catalogue</span>
-              <h1>Games</h1>
-              <p>Browse by category and play instantly — no Game Universe login after the access code.</p>
-            </div>
-          </div>
-          <div class="dev-hero-stats">
-            <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games</span>
-            <span class="dev-stat-pill"><strong id="devCategoryCount">0</strong> categories</span>
-          </div>
-        </div>
-      </header>
-
-      <div class="dev-toolbar">
-        <div class="dev-search-wrap">
-          <label for="devSearch">Search</label>
-          <input type="search" id="devSearch" placeholder="Filter by title…" autocomplete="off">
-        </div>
-        <div class="dev-toolbar-actions">
-          <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add game</button>
+  <div class="dev-shell games-shell" id="devShell" hidden>
+    <nav class="games-nav">
+      <div class="games-brand">
+        <div class="games-brand-mark" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
+        <div>
+          <div class="games-brand-name">Arcade</div>
+          <div class="games-brand-tag">Dev catalogue</div>
         </div>
       </div>
-
-      <div class="dev-form-panel" data-dev-form-panel hidden>
-        <div class="dev-form-card">
-          <div class="dev-form-head">
-            <h2>Add a new game</h2>
-            <button type="button" class="dev-btn" data-dev-form-close>Close</button>
-          </div>
-          <form id="devAddGameForm">
-            <div class="dev-form-grid">
-              <label class="dev-field dev-field-full">
-                <span>Title</span>
-                <input type="text" name="title" required placeholder="Game title">
-              </label>
-              <label class="dev-field dev-field-full">
-                <span>Cover image URL</span>
-                <input type="url" name="image" required placeholder="https://…">
-              </label>
-              <label class="dev-field dev-field-full">
-                <span>Game URL (iframe / play link)</span>
-                <input type="url" name="url" required placeholder="https://…">
-              </label>
-              <label class="dev-field">
-                <span>Rating (0–5)</span>
-                <input type="number" name="rating" min="0" max="5" step="0.1" value="3">
-              </label>
-              <label class="dev-field">
-                <span>Mode</span>
-                <select name="multiplayer">
-                  <option value="false">Single player</option>
-                  <option value="true">Multiplayer</option>
-                </select>
-              </label>
-              <label class="dev-field dev-field-full">
-                <span>Tags (comma-separated)</span>
-                <input type="text" name="tags" list="devTagSuggestions" placeholder="action, arcade, puzzle">
-              </label>
-            </div>
-            <datalist id="devTagSuggestions"></datalist>
-            <div class="dev-form-actions">
-              <button type="submit" class="dev-btn dev-btn-primary">Save game</button>
-              <button type="reset" class="dev-btn">Reset</button>
-            </div>
-            <p class="dev-form-msg" id="devFormMsg"></p>
-          </form>
-        </div>
+      <div class="games-nav-search">
+        <input type="search" id="devSearch" placeholder="Search games…" autocomplete="off" aria-label="Search games">
       </div>
+      <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add game</button>
+    </nav>
 
-      <div class="dev-cats" id="devCats" hidden></div>
-      <div class="dev-status" id="devStatus">Loading catalogue…</div>
-      <main class="dev-grid" id="devGrid" hidden></main>
-      <p class="dev-foot">Dev-only page — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
+    <section class="games-featured" aria-label="Featured games">
+      <div class="games-featured-head">
+        <h2>Featured picks</h2>
+        <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games · <strong id="devCategoryCount">0</strong> tags</span>
+      </div>
+      <div class="games-featured-track" id="gamesFeaturedTrack"></div>
+    </section>
+
+    <div class="dev-cats" id="devCats" hidden></div>
+    <div class="dev-status" id="devStatus">Loading catalogue…</div>
+    <main class="dev-grid" id="devGrid" hidden></main>
+    <p class="dev-foot">Dev-only — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
+
+    <div class="games-drawer-backdrop" data-dev-form-backdrop hidden></div>
+    <div class="dev-form-panel" data-dev-form-panel hidden>
+      <div class="dev-form-card">
+        <div class="dev-form-head">
+          <h2>Add a new game</h2>
+          <button type="button" class="dev-btn" data-dev-form-close>Close</button>
+        </div>
+        <form id="devAddGameForm">
+          <div class="dev-form-grid">
+            <label class="dev-field dev-field-full">
+              <span>Title</span>
+              <input type="text" name="title" required placeholder="Game title">
+            </label>
+            <label class="dev-field dev-field-full">
+              <span>Cover image URL</span>
+              <input type="url" name="image" required placeholder="https://…">
+            </label>
+            <label class="dev-field dev-field-full">
+              <span>Game URL (iframe / play link)</span>
+              <input type="url" name="url" required placeholder="https://…">
+            </label>
+            <label class="dev-field">
+              <span>Rating (0–5)</span>
+              <input type="number" name="rating" min="0" max="5" step="0.1" value="3">
+            </label>
+            <label class="dev-field">
+              <span>Mode</span>
+              <select name="multiplayer">
+                <option value="false">Single player</option>
+                <option value="true">Multiplayer</option>
+              </select>
+            </label>
+            <label class="dev-field dev-field-full">
+              <span>Tags (comma-separated)</span>
+              <input type="text" name="tags" list="devTagSuggestions" placeholder="action, arcade, puzzle">
+            </label>
+          </div>
+          <datalist id="devTagSuggestions"></datalist>
+          <div class="dev-form-actions">
+            <button type="submit" class="dev-btn dev-btn-primary">Save game</button>
+            <button type="reset" class="dev-btn">Reset</button>
+          </div>
+          <p class="dev-form-msg" id="devFormMsg"></p>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -109,7 +106,9 @@
       hint: 'Enter the dev games access code to browse and play without signing in.',
       onUnlock() {
         const shell = document.getElementById('devShell');
+        const backdrop = document.querySelector('[data-dev-form-backdrop]');
         if (shell) shell.hidden = false;
+        if (backdrop) backdrop.hidden = false;
         mountGamesCatalog(document);
       }
     });
