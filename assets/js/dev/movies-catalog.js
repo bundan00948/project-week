@@ -4,6 +4,7 @@ import { bindFormToggle, nextNumericKey, showDevToast } from './catalog-utils.js
 
 const MAX_MOVIE_KEY_ID = 999999;
 const MAX_MOVIE_CATEGORY_ID = 999;
+const DEFAULT_GRADIENT = 'linear-gradient(135deg, #2f5ca3 0%, #1a2e58 100%)';
 
 function toBoundedPositiveInt(raw, max) {
   const n = Number.parseInt(raw, 10);
@@ -61,6 +62,7 @@ function normalizeMovieDoc(raw, fallbackId, categories, indexHint = 0) {
     releaseYear,
     score: Number(score.toFixed(1)),
     banner: String(raw.banner || raw.image || raw.poster || ''),
+    titleImage: String(raw.titleImage || raw.titleLogo || raw.titleArt || ''),
     description: String(raw.description || raw.desc || raw.synopsis || raw.overview || ''),
     url: String(raw.url || raw.movieUrl || raw.fullMovieUrl || '')
   };
@@ -70,6 +72,18 @@ function movieNewestComparator(a, b) {
   return (b.releaseYear || 0) - (a.releaseYear || 0)
     || (b.score || 0) - (a.score || 0)
     || String(a.title || '').localeCompare(String(b.title || ''));
+}
+
+function movieTopComparator(a, b) {
+  return (b.score || 0) - (a.score || 0)
+    || (b.releaseYear || 0) - (a.releaseYear || 0)
+    || String(a.title || '').localeCompare(String(b.title || ''));
+}
+
+function truncateText(text, max = 220) {
+  const s = String(text || '').trim();
+  if (!s) return '';
+  return s.length > max ? `${s.slice(0, max - 3)}...` : s;
 }
 
 function buildMoviesData(movieItems, categoryConfig) {
@@ -82,22 +96,36 @@ function buildMoviesData(movieItems, categoryConfig) {
     moviesByCategory[fixed.category].push(fixed);
   });
   Object.keys(moviesByCategory).forEach((cat) => moviesByCategory[cat].sort(movieNewestComparator));
+
   const inferredCategories = cfg.length
     ? cfg
     : Object.keys(moviesByCategory).map((key, idx) => ({
         key,
         categoryId: (idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(key, MAX_MOVIE_CATEGORY_ID),
+        gradient: DEFAULT_GRADIENT,
+        art: '',
+        artPosition: 'bottom',
+        artScale: 100,
         order: idx
       }));
-  const normalizedCategories = inferredCategories.map((c, idx) => ({
-    ...c,
-    categoryId: toBoundedPositiveInt(c.categoryId, MAX_MOVIE_CATEGORY_ID)
-      ?? ((idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(c.key || idx, MAX_MOVIE_CATEGORY_ID)),
-    order: Number.isFinite(Number(c.order)) ? Number(c.order) : idx,
-    count: (moviesByCategory[c.key] || []).length
+
+  const topMovies = inferredCategories
+    .map((catCfg) => {
+      const pick = [...(moviesByCategory[catCfg.key] || [])].sort(movieTopComparator)[0];
+      return pick ? { ...pick, rankCategory: catCfg.key } : null;
+    })
+    .filter(Boolean);
+
+  const normalizedCategories = inferredCategories.map((cfg, idx) => ({
+    ...cfg,
+    categoryId: toBoundedPositiveInt(cfg.categoryId, MAX_MOVIE_CATEGORY_ID)
+      ?? ((idx + 1) <= MAX_MOVIE_CATEGORY_ID ? (idx + 1) : stableNumericKey(cfg.key || idx, MAX_MOVIE_CATEGORY_ID)),
+    order: Number.isFinite(Number(cfg.order)) ? Number(cfg.order) : idx,
+    count: (moviesByCategory[cfg.key] || []).length
   }));
+
   const movies = Object.values(moviesByCategory).flat();
-  return { categories: normalizedCategories, moviesByCategory, movies, categoryRows: cfg };
+  return { categories: normalizedCategories, moviesByCategory, movies, categoryRows: cfg, topMovies };
 }
 
 function resolveMovieUrl(url) {
@@ -138,6 +166,10 @@ export async function loadMoviesCatalog() {
         id: d.id,
         key,
         categoryId: categoryId !== null ? categoryId : fallbackCategoryId,
+        gradient: String(x.gradient || DEFAULT_GRADIENT),
+        art: String(x.art || ''),
+        artPosition: String(x.artPosition || 'bottom').toLowerCase() === 'middle' ? 'middle' : 'bottom',
+        artScale: [50, 75, 100, 125, 150].includes(Number(x.artScale)) ? Number(x.artScale) : 100,
         order: Number.isFinite(Number(x.order)) ? Number(x.order) : i
       };
     }).filter(Boolean).sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -186,14 +218,6 @@ async function addMovieToFirestore(formData, catalog) {
   });
 }
 
-function updateHeroStats(root, data) {
-  const totalEl = root.querySelector('#devTotalCount');
-  const catEl = root.querySelector('#devCategoryCount');
-  const totalMovies = (data.movies || []).length;
-  if (totalEl) totalEl.textContent = String(totalMovies);
-  if (catEl) catEl.textContent = String(data.categories.length);
-}
-
 function populateCategorySelect(root, categories) {
   const select = root.querySelector('#devMovieCategory');
   if (!select) return;
@@ -204,17 +228,34 @@ function populateCategorySelect(root, categories) {
 
 export function mountMoviesCatalog(root) {
   const statusEl = root.querySelector('#devStatus');
-  const catsEl = root.querySelector('#devCats');
+  const carouselEl = root.querySelector('#cinemaCarousel');
+  const genresEl = root.querySelector('#cinemaCategories');
   const gridEl = root.querySelector('#devGrid');
   const qEl = root.querySelector('#devSearch');
+  const activeLabelEl = root.querySelector('#cinemaActiveCategory');
+  const resultEl = root.querySelector('#cinemaResultCount');
   const addForm = root.querySelector('#devAddMovieForm');
   const formMsg = root.querySelector('#devFormMsg');
+  const detailModal = root.querySelector('#cinemaDetailModal');
+  const detailBackdrop = root.querySelector('#cinemaDetailBackdrop');
+  const detailTitle = root.querySelector('#cinemaDetailTitle');
+  const detailDesc = root.querySelector('#cinemaDetailDesc');
+  const detailMeta = root.querySelector('#cinemaDetailMeta');
+  const detailWatch = root.querySelector('#cinemaDetailWatch');
+  const detailClose = root.querySelector('#cinemaDetailClose');
 
   let data = null;
   let activeCat = '';
   let query = '';
+  let carouselIndex = 0;
+  let carouselTimer = null;
+  let activeDetailMovie = null;
 
   const formToggle = bindFormToggle(root);
+
+  function allMoviesList() {
+    return data?.movies || [];
+  }
 
   function visibleMovies() {
     const list = [...(data?.moviesByCategory?.[activeCat] || [])];
@@ -223,59 +264,226 @@ export function mountMoviesCatalog(root) {
     return list.filter((m) => String(m.title || '').toLowerCase().includes(needle));
   }
 
-  function renderGrid() {
-    const list = visibleMovies();
-    gridEl.innerHTML = list.length
-      ? list.map((movie) => {
-          const href = watchPlayerHref(movie);
-          const banner = movie.banner
-            ? `<img class="dev-card-banner" src="${escapeHtml(movie.banner)}" alt="" loading="lazy">`
-            : '<div class="dev-card-media-fallback" aria-hidden="true"></div>';
-          const watchChip = href
-            ? `<a class="dev-card-play-chip" href="${escapeHtml(href)}">Watch</a>`
-            : '';
-          return `<article class="dev-card">
-            <div class="dev-card-media">
-              ${banner}
-              <div class="dev-card-play-overlay">${watchChip}</div>
-            </div>
-            <div class="dev-card-body">
-              <h2 class="dev-card-title">${escapeHtml(movie.title)}</h2>
-              <div class="dev-card-meta">
-                <span class="dev-chip">${escapeHtml(movie.category)}</span>
-                <span class="dev-chip">${movie.releaseYear || '—'}</span>
-                <span class="dev-chip">★ ${movie.score || '—'}</span>
-              </div>
-              ${movie.description ? `<p class="dev-card-desc">${escapeHtml(movie.description)}</p>` : ''}
-            </div>
-          </article>`;
-        }).join('')
-      : '<div class="dev-status" style="grid-column:1/-1;">No titles in this view.</div>';
+  function findMovieById(id) {
+    return allMoviesList().find((m) => String(m.id) === String(id)) || null;
   }
 
-  function renderCats() {
-    catsEl.innerHTML = '';
-    data.categories.forEach((cat) => {
+  function openDetailModal(movie) {
+    if (!movie || !detailModal) return;
+    activeDetailMovie = movie;
+    const href = watchPlayerHref(movie);
+    if (detailTitle) detailTitle.textContent = movie.title || 'Movie';
+    if (detailDesc) {
+      detailDesc.textContent = movie.description || 'No synopsis available yet.';
+    }
+    if (detailMeta) {
+      detailMeta.innerHTML = `
+        <span>${escapeHtml(movie.category)}</span>
+        <span>${movie.releaseYear || 'N/A'}</span>
+        <span>★ ${movie.score || 'N/A'}</span>
+      `;
+    }
+    if (detailBackdrop) {
+      detailBackdrop.style.backgroundImage = movie.banner
+        ? `url("${String(movie.banner).replace(/"/g, '\\"')}")`
+        : 'none';
+    }
+    if (detailWatch) {
+      if (href) {
+        detailWatch.href = href;
+        detailWatch.style.display = '';
+        detailWatch.textContent = 'Watch now';
+        detailWatch.removeAttribute('aria-disabled');
+      } else {
+        detailWatch.removeAttribute('href');
+        detailWatch.style.display = '';
+        detailWatch.textContent = 'No stream link';
+        detailWatch.setAttribute('aria-disabled', 'true');
+      }
+    }
+    detailModal.classList.add('open');
+    detailModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDetailModal() {
+    detailModal?.classList.remove('open');
+    detailModal?.setAttribute('aria-hidden', 'true');
+    activeDetailMovie = null;
+    if (!root.querySelector('.dev-form-panel.open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  detailClose?.addEventListener('click', closeDetailModal);
+  detailModal?.addEventListener('click', (e) => {
+    if (e.target === detailModal) closeDetailModal();
+  });
+  detailWatch?.addEventListener('click', (e) => {
+    if (!detailWatch.getAttribute('href')) e.preventDefault();
+  });
+
+  function showSlide(index) {
+    if (!carouselEl) return;
+    const slides = carouselEl.querySelectorAll('.cinema-slide');
+    const dots = carouselEl.querySelectorAll('.cinema-dot');
+    if (!slides.length) return;
+    let i = index;
+    if (i >= slides.length) i = 0;
+    if (i < 0) i = slides.length - 1;
+    slides.forEach((s) => s.classList.remove('active'));
+    dots.forEach((d) => d.classList.remove('active'));
+    slides[i]?.classList.add('active');
+    dots[i]?.classList.add('active');
+    carouselIndex = i;
+  }
+
+  function startCarousel() {
+    clearInterval(carouselTimer);
+    const count = carouselEl?.querySelectorAll('.cinema-slide').length || 0;
+    if (count < 2) return;
+    carouselTimer = setInterval(() => showSlide(carouselIndex + 1), 5600);
+  }
+
+  function renderCarousel() {
+    if (!carouselEl) return;
+    const topMovies = data?.topMovies || [];
+    if (!topMovies.length) {
+      carouselEl.innerHTML = '<div class="cinema-spotlight-empty">No featured titles yet.</div>';
+      return;
+    }
+    carouselEl.innerHTML = topMovies.map((movie, idx) => {
+      const bg = movie.banner ? `style="background-image:url(${JSON.stringify(movie.banner)})"` : '';
+      const preview = truncateText(movie.description) || 'Open details to read the synopsis and start watching.';
+      return `
+        <article class="cinema-slide ${idx === 0 ? 'active' : ''}">
+          <div class="cinema-slide-bg" ${bg}></div>
+          <div class="cinema-slide-scrim"></div>
+          <div class="cinema-slide-body">
+            <p class="cinema-slide-kicker">Featured · ${escapeHtml(movie.rankCategory || movie.category)}</p>
+            <div class="cinema-slide-meta">
+              <span>${escapeHtml(movie.category)}</span>
+              <span>${movie.releaseYear || 'N/A'}</span>
+              <span>★ ${movie.score || 'N/A'}</span>
+            </div>
+            <h2 class="cinema-slide-title">${escapeHtml(movie.title)}</h2>
+            <p class="cinema-slide-desc">${escapeHtml(preview)}</p>
+            <div class="cinema-slide-actions">
+              <button type="button" class="cinema-watch-btn" data-spotlight-watch="${escapeHtml(movie.id)}">Watch now</button>
+              <button type="button" class="cinema-info-btn" data-spotlight-info="${escapeHtml(movie.id)}">More info</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('') + `
+      <div class="cinema-carousel-dots">
+        ${topMovies.map((_, i) => `<button type="button" class="cinema-dot ${i === 0 ? 'active' : ''}" data-slide="${i}" aria-label="Slide ${i + 1}"></button>`).join('')}
+      </div>
+    `;
+
+    carouselEl.querySelectorAll('[data-slide]').forEach((dot) => {
+      dot.addEventListener('click', () => showSlide(Number(dot.dataset.slide)));
+    });
+    carouselEl.querySelectorAll('[data-spotlight-info]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const movie = findMovieById(btn.dataset.spotlightInfo);
+        if (movie) openDetailModal(movie);
+      });
+    });
+    carouselEl.querySelectorAll('[data-spotlight-watch]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const movie = findMovieById(btn.dataset.spotlightWatch);
+        const href = movie && watchPlayerHref(movie);
+        if (href) window.location.assign(href);
+        else if (movie) openDetailModal(movie);
+      });
+    });
+
+    carouselIndex = 0;
+    startCarousel();
+  }
+
+  function renderGenres() {
+    if (!genresEl) return;
+    genresEl.innerHTML = '';
+    (data?.categories || []).forEach((cat) => {
+      const artScale = cat.artScale || 100;
+      const artSizePx = Math.round(64 * (artScale / 100));
+      const artPos = cat.artPosition === 'middle' ? 'middle' : 'bottom';
+      const artHtml = cat.art
+        ? `<img class="cinema-genre-art ${artPos}" src="${escapeHtml(cat.art)}" alt="" loading="lazy" style="width:${artSizePx}px;height:${artSizePx}px;">`
+        : '';
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'dev-cat-btn' + (cat.key === activeCat ? ' active' : '');
-      btn.textContent = `${cat.key} (${cat.count})`;
+      btn.className = 'cinema-genre-card' + (cat.key === activeCat ? ' active' : '');
+      btn.style.setProperty('--genre-gradient', cat.gradient || DEFAULT_GRADIENT);
+      btn.innerHTML = `
+        <div class="cinema-genre-title">${escapeHtml(cat.key)}</div>
+        <span class="cinema-genre-count">${cat.count} title${cat.count === 1 ? '' : 's'}</span>
+        ${artHtml}
+      `;
       btn.addEventListener('click', () => {
         activeCat = cat.key;
-        catsEl.querySelectorAll('.dev-cat-btn').forEach((el) => el.classList.remove('active'));
+        genresEl.querySelectorAll('.cinema-genre-card').forEach((el) => el.classList.remove('active'));
         btn.classList.add('active');
         renderGrid();
+        document.getElementById('cinemaCatalogue')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
-      catsEl.appendChild(btn);
+      genresEl.appendChild(btn);
+    });
+  }
+
+  function renderGrid() {
+    const list = visibleMovies();
+    if (activeLabelEl) activeLabelEl.textContent = activeCat || 'Catalogue';
+    if (resultEl) {
+      const qText = query.trim() ? ` · "${query.trim()}"` : '';
+      resultEl.textContent = `${list.length} title${list.length === 1 ? '' : 's'}${qText}`;
+    }
+    genresEl?.querySelectorAll('.cinema-genre-card').forEach((btn) => {
+      btn.classList.toggle('active', btn.querySelector('.cinema-genre-title')?.textContent === activeCat);
+    });
+
+    gridEl.innerHTML = list.length
+      ? list.map((movie) => {
+          const banner = movie.banner
+            ? `<img src="${escapeHtml(movie.banner)}" alt="" loading="lazy">`
+            : '<div class="cinema-poster-banner-fallback"></div>';
+          return `
+            <article class="cinema-poster" data-movie-id="${escapeHtml(movie.id)}" tabindex="0" role="button">
+              <div class="cinema-poster-banner">${banner}</div>
+              <span class="cinema-poster-year">${movie.releaseYear || 'N/A'}</span>
+              <span class="cinema-poster-score">★ ${movie.score || '—'}</span>
+              <div class="cinema-poster-body">
+                <h3 class="cinema-poster-title">${escapeHtml(movie.title)}</h3>
+                <div class="cinema-poster-meta">${escapeHtml(movie.category)}</div>
+              </div>
+            </article>
+          `;
+        }).join('')
+      : '<div class="cinema-empty">No titles match this genre or search.</div>';
+
+    gridEl.querySelectorAll('[data-movie-id]').forEach((card) => {
+      const open = () => {
+        const movie = findMovieById(card.dataset.movieId);
+        if (movie) openDetailModal(movie);
+      };
+      card.addEventListener('click', open);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open();
+        }
+      });
     });
   }
 
   async function refreshCatalog() {
     data = await loadMoviesCatalog();
     if (!activeCat && data.categories.length) activeCat = data.categories[0].key;
-    updateHeroStats(root, data);
     populateCategorySelect(root, data.categories);
-    renderCats();
+    renderCarousel();
+    renderGenres();
     renderGrid();
   }
 
@@ -321,11 +529,11 @@ export function mountMoviesCatalog(root) {
       if (!data.categories.length) throw new Error('No categories loaded.');
       activeCat = data.categories[0].key;
       statusEl?.remove();
-      catsEl.hidden = false;
-      gridEl.hidden = false;
-      updateHeroStats(root, data);
+      genresEl && (genresEl.hidden = false);
+      gridEl && (gridEl.hidden = false);
       populateCategorySelect(root, data.categories);
-      renderCats();
+      renderCarousel();
+      renderGenres();
       renderGrid();
     })
     .catch((err) => {
