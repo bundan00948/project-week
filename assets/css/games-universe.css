@@ -371,8 +371,9 @@
       display: flex;
       align-items: center;
       padding: 0 5%;
+      pointer-events: none;
     }
-    .carousel-slide.active { opacity: 1; transform: scale(1); }
+    .carousel-slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
     .slide-background {
       position: absolute;
       top: 0;
@@ -784,10 +785,12 @@
       opacity: 0;
       transform: scale(1.02);
       transition: opacity 0.72s ease, transform 0.72s ease;
+      pointer-events: none;
     }
     .movie-carousel-slide.active {
       opacity: 1;
       transform: scale(1);
+      pointer-events: auto;
     }
     .movie-slide-background {
       position: absolute;

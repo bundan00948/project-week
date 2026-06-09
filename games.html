@@ -389,8 +389,9 @@
       display: flex;
       align-items: center;
       padding: 0 5%;
+      pointer-events: none;
     }
-    .carousel-slide.active { opacity: 1; transform: scale(1); }
+    .carousel-slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
     .slide-background {
       position: absolute;
       top: 0;
@@ -802,10 +803,12 @@
       opacity: 0;
       transform: scale(1.02);
       transition: opacity 0.72s ease, transform 0.72s ease;
+      pointer-events: none;
     }
     .movie-carousel-slide.active {
       opacity: 1;
       transform: scale(1);
+      pointer-events: auto;
     }
     .movie-slide-background {
       position: absolute;
@@ -8477,17 +8480,21 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     // ========== Game confirmation and play logging ==========
     function showConfirmModal(game) {
-      document.getElementById('confirmGameName').textContent = `"${game.title}"?`;
+      if (!confirmModal) return;
+      const nameEl = document.getElementById('confirmGameName');
+      if (nameEl) nameEl.textContent = `"${game.title}"?`;
       confirmModal.style.display = 'flex';
       const confirmYes = document.getElementById('confirmYes');
       const confirmNo = document.getElementById('confirmNo');
-      confirmYes.onclick = async () => {
-        confirmModal.style.display = 'none';
-        const opened = openGameModal(game.title, game.url, { systemOrdered: true });
-        if (!opened) return;
-        await logGamePlay(game);
-      };
-      confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
+      if (confirmYes) {
+        confirmYes.onclick = async () => {
+          confirmModal.style.display = 'none';
+          const opened = openGameModal(game.title, game.url, { systemOrdered: true });
+          if (!opened) return;
+          await logGamePlay(game);
+        };
+      }
+      if (confirmNo) confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
     }
 
     function normalizeHost(host) {
@@ -9051,7 +9058,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     async function handleGameClick(gameId, gameTitle, gameUrl) {
       const game = (gameLookupById && gameLookupById.get(String(gameId))) || { id: gameId, title: gameTitle, url: gameUrl };
-      if (!currentUser) { pendingGame = game; noticeModal.style.display = 'flex'; return; }
+      if (!currentUser) {
+        pendingGame = game;
+        if (noticeModal) noticeModal.style.display = 'flex';
+        return;
+      }
       showConfirmModal(game);
     }
 

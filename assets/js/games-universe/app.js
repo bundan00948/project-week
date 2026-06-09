@@ -1359,17 +1359,21 @@
 
     // ========== Game confirmation and play logging ==========
     function showConfirmModal(game) {
-      document.getElementById('confirmGameName').textContent = `"${game.title}"?`;
+      if (!confirmModal) return;
+      const nameEl = document.getElementById('confirmGameName');
+      if (nameEl) nameEl.textContent = `"${game.title}"?`;
       confirmModal.style.display = 'flex';
       const confirmYes = document.getElementById('confirmYes');
       const confirmNo = document.getElementById('confirmNo');
-      confirmYes.onclick = async () => {
-        confirmModal.style.display = 'none';
-        const opened = openGameModal(game.title, game.url, { systemOrdered: true });
-        if (!opened) return;
-        await logGamePlay(game);
-      };
-      confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
+      if (confirmYes) {
+        confirmYes.onclick = async () => {
+          confirmModal.style.display = 'none';
+          const opened = openGameModal(game.title, game.url, { systemOrdered: true });
+          if (!opened) return;
+          await logGamePlay(game);
+        };
+      }
+      if (confirmNo) confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
     }
 
     function normalizeHost(host) {
@@ -1933,7 +1937,11 @@
 
     async function handleGameClick(gameId, gameTitle, gameUrl) {
       const game = (gameLookupById && gameLookupById.get(String(gameId))) || { id: gameId, title: gameTitle, url: gameUrl };
-      if (!currentUser) { pendingGame = game; noticeModal.style.display = 'flex'; return; }
+      if (!currentUser) {
+        pendingGame = game;
+        if (noticeModal) noticeModal.style.display = 'flex';
+        return;
+      }
       showConfirmModal(game);
     }
 
@@ -2299,6 +2307,14 @@
       Object.entries(PAGE_PATH_MAP).map(([pageId, path]) => [path, pageId])
     );
     PATH_TO_PAGE_ID['/games'] = 'main-page';
+
+    function getCurrentRoutePath() {
+      let path = window.location.pathname.replace(/\/index\.html$/i, '');
+      if (path.length > 1) path = path.replace(/\/+$/, '');
+      if (path === '/games') return '/games/dashboard';
+      if (path.startsWith('/games/')) return path;
+      return '/games/dashboard';
+    }
 
     function getCurrentPageId() {
       return String(window.__GU_PAGE__ || 'main-page').trim() || 'main-page';
