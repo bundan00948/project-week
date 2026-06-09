@@ -1,0 +1,333 @@
+:root {
+  color-scheme: dark;
+  --dev-bg: #06080d;
+  --dev-panel: rgba(9, 13, 20, 0.92);
+  --dev-border: rgba(171, 207, 255, 0.14);
+  --dev-muted: #b8c8de;
+  --dev-accent: #2aff9e;
+  --dev-accent-alt: #55beff;
+  --dev-text: #eef3fb;
+  --dev-danger: #ff8b9d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--dev-bg);
+  color: var(--dev-text);
+  font-family: Nunito, Inter, "Segoe UI", system-ui, sans-serif;
+  line-height: 1.45;
+}
+
+body.dev-gate-open {
+  overflow: hidden;
+}
+
+.dev-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(4, 6, 10, 0.94);
+  backdrop-filter: blur(8px);
+}
+
+.dev-gate-card {
+  width: min(100%, 420px);
+  border: 1px solid var(--dev-border);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(12, 18, 28, 0.98), rgba(8, 11, 18, 0.98));
+  padding: 28px 24px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.dev-gate-kicker {
+  margin: 0 0 8px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dev-accent);
+}
+
+.dev-gate-card h1 {
+  margin: 0 0 8px;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.dev-gate-desc {
+  margin: 0 0 18px;
+  color: var(--dev-muted);
+  font-size: 0.86rem;
+}
+
+.dev-gate-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--dev-muted);
+}
+
+.dev-gate-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--dev-border);
+  background: #0f131b;
+  color: var(--dev-text);
+  font: inherit;
+}
+
+.dev-gate-error {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--dev-danger);
+}
+
+.dev-gate-submit {
+  margin-top: 16px;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  color: #04120c;
+  background: linear-gradient(135deg, var(--dev-accent), #1fd88a);
+}
+
+.dev-shell[hidden] {
+  display: none !important;
+}
+
+.dev-header {
+  padding: 16px 18px 10px;
+  border-bottom: 1px solid var(--dev-border);
+  background: rgba(6, 8, 13, 0.96);
+}
+
+.dev-header h1 {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.dev-header p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--dev-muted);
+  max-width: 52rem;
+}
+
+.dev-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--dev-border);
+  background: rgba(8, 11, 18, 0.9);
+}
+
+.dev-toolbar label {
+  font-size: 0.75rem;
+  color: var(--dev-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.dev-toolbar input[type="search"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--dev-border);
+  background: #0f131b;
+  color: var(--dev-text);
+  font: inherit;
+}
+
+.dev-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 18px 4px;
+}
+
+.dev-cat-btn {
+  border: 1px solid var(--dev-border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(130deg, #324f91 0%, #17284b 100%);
+}
+
+.dev-cat-btn.active {
+  outline: 2px solid var(--dev-accent-alt);
+  outline-offset: 1px;
+}
+
+.dev-cat-btn.dev-cat-all {
+  background: linear-gradient(130deg, #1a6b52 0%, #0f3d30 100%);
+}
+
+.dev-status {
+  padding: 28px 18px;
+  text-align: center;
+  color: var(--dev-muted);
+}
+
+.dev-status.err { color: var(--dev-danger); }
+
+.dev-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 14px 18px 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dev-card {
+  border: 1px solid var(--dev-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--dev-panel);
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+}
+
+.dev-card-banner {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  display: block;
+  background: #111822 center/cover no-repeat #0a0e14;
+  object-fit: cover;
+}
+
+.dev-card-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.dev-card-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.dev-card-meta {
+  font-size: 0.72rem;
+  color: var(--dev-muted);
+}
+
+.dev-card-desc {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--dev-muted);
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dev-action {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 0;
+  font-weight: 800;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-decoration: none;
+  background: linear-gradient(135deg, #1fd88a, #2aff9e);
+  color: #04120c;
+}
+
+.dev-action.dev-action-alt {
+  background: linear-gradient(135deg, #3a8fd6, #6b4dff);
+  color: #fff;
+}
+
+.dev-action[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dev-foot {
+  padding: 16px 18px 28px;
+  font-size: 0.72rem;
+  color: var(--dev-muted);
+  text-align: center;
+}
+
+.dev-foot a { color: var(--dev-accent-alt); }
+
+.dev-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 25000;
+  display: none;
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.dev-modal.open {
+  display: flex;
+  flex-direction: column;
+}
+
+.dev-modal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(8, 11, 18, 0.96);
+  border-bottom: 1px solid var(--dev-border);
+}
+
+.dev-modal-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.dev-modal-close {
+  border: 1px solid var(--dev-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dev-text);
+  font: inherit;
+  font-weight: 700;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.dev-modal-frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #000;
+}
