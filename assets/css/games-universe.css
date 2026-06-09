@@ -314,6 +314,11 @@
       flex: 1 1 auto;
       min-height: 0;
     }
+    .main-content > .page.active:not(#chat-page) {
+      flex: 0 0 auto;
+      width: 100%;
+      overflow: visible;
+    }
     .page.active {
       animation: sitePageFade 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
@@ -5197,11 +5202,9 @@
     }
     .staff-section {
       display: none;
-      content-visibility: hidden;
     }
     .staff-section.active {
       display: block;
-      content-visibility: visible;
     }
     .staff-card {
       background: linear-gradient(165deg, rgba(22,28,38,0.95) 0%, rgba(14,18,26,0.92) 100%);
