@@ -371,7 +371,7 @@ function buildHeader(activeHeaderTab) {
 
 fs.mkdirSync(path.join(ROOT, 'assets/css'), { recursive: true });
 fs.mkdirSync(path.join(ROOT, 'assets/js/games-universe/pages'), { recursive: true });
-fs.writeFileSync(path.join(ROOT, 'assets/css/games-universe.css'), css.trim() + '\n\n/* Standalone page files */\n.page { display: block !important; }\n.page-loading-overlay.hidden { display: none !important; }\n');
+fs.writeFileSync(path.join(ROOT, 'assets/css/games-universe.css'), css.trim() + '\n\n/* Standalone page files */\n.page.active { display: block !important; }\n.page-loading-overlay.hidden { display: none !important; }\n');
 fs.writeFileSync(path.join(ROOT, 'assets/js/games-universe/app.js'), js.trim() + '\n');
 
 for (const page of PAGES) {

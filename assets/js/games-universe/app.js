@@ -2454,13 +2454,30 @@
       const nav = document.createElement('div'); nav.className='carousel-nav';
       topGames.forEach((_, i)=>{ const dot=document.createElement('div'); dot.className=`carousel-dot ${i===0?'active': ''}`; dot.addEventListener('click', ()=>showSlide(i)); nav.appendChild(dot); });
       container.appendChild(nav);
-      document.querySelectorAll('.slide-play-button').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); handleGameClick(btn.dataset.id, btn.dataset.title, btn.dataset.url); }));
+      container.querySelectorAll('.slide-play-button').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); handleGameClick(btn.dataset.id, btn.dataset.title, btn.dataset.url); }));
       preloadCarouselSlideBgs(0);
       startCarousel();
     }
 
     let currentSlide=0, interval;
-    function showSlide(i){ const slides=document.querySelectorAll('.carousel-slide'), dots=document.querySelectorAll('.carousel-dot'); if(i>=slides.length)i=0; if(i<0)i=slides.length-1; slides.forEach(s=>s.classList.remove('active')); dots.forEach(d=>d.classList.remove('active')); slides[i].classList.add('active'); dots[i].classList.add('active'); currentSlide=i; preloadCarouselSlideBgs(i); }
+    function getHeroCarouselRoot() {
+      return document.getElementById('topGamesCarousel');
+    }
+    function showSlide(i){
+      const root = getHeroCarouselRoot();
+      if (!root) return;
+      const slides = root.querySelectorAll('.carousel-slide');
+      const dots = root.querySelectorAll('.carousel-dot');
+      if (!slides.length) return;
+      if (i >= slides.length) i = 0;
+      if (i < 0) i = slides.length - 1;
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      slides[i].classList.add('active');
+      if (dots[i]) dots[i].classList.add('active');
+      currentSlide = i;
+      preloadCarouselSlideBgs(i);
+    }
     function nextSlide(){ showSlide(currentSlide+1); }
     function startCarousel(){ clearInterval(interval); interval=setInterval(nextSlide, 5000); }
 
@@ -2496,14 +2513,55 @@
       const prev = row.querySelector('.prev'), next = row.querySelector('.next');
       prev.addEventListener('click', () => track.scrollBy({ left: -260, behavior: 'smooth' }));
       next.addEventListener('click', () => track.scrollBy({ left: 260, behavior: 'smooth' }));
-      let isDown=false, startX, scrollLeft;
-      track.addEventListener('mousedown', (e)=>{ isDown=true; track.style.cursor='grabbing'; startX=e.pageX-track.offsetLeft; scrollLeft=track.scrollLeft; });
-      track.addEventListener('mouseleave', ()=>{ isDown=false; track.style.cursor='grab'; });
-      track.addEventListener('mouseup', ()=>{ isDown=false; track.style.cursor='grab'; });
-      track.addEventListener('mousemove', (e)=>{ if(!isDown) return; e.preventDefault(); const x=e.pageX-track.offsetLeft; const walk=(x-startX)*1.5; track.scrollLeft=scrollLeft-walk; });
-      track.addEventListener('touchstart', (e)=>{ isDown=true; startX=e.touches[0].pageX-track.offsetLeft; scrollLeft=track.scrollLeft; });
-      track.addEventListener('touchend', ()=>{ isDown=false; });
-      track.addEventListener('touchmove', (e)=>{ if(!isDown) return; const x=e.touches[0].pageX-track.offsetLeft; const walk=(x-startX)*1.5; track.scrollLeft=scrollLeft-walk; });
+      let isDown = false;
+      let suppressClick = false;
+      let startX = 0;
+      let scrollLeft = 0;
+      track.addEventListener('mousedown', (e) => {
+        isDown = true;
+        suppressClick = false;
+        track.style.cursor = 'grabbing';
+        startX = e.pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      });
+      track.addEventListener('mouseleave', () => {
+        isDown = false;
+        track.style.cursor = 'grab';
+      });
+      track.addEventListener('mouseup', () => {
+        isDown = false;
+        track.style.cursor = 'grab';
+      });
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const x = e.pageX - track.offsetLeft;
+        const walk = x - startX;
+        if (Math.abs(walk) > 5) suppressClick = true;
+        if (!suppressClick) return;
+        e.preventDefault();
+        track.scrollLeft = scrollLeft - walk * 1.5;
+      });
+      track.addEventListener('click', (e) => {
+        if (!suppressClick) return;
+        suppressClick = false;
+        e.preventDefault();
+        e.stopPropagation();
+      }, true);
+      track.addEventListener('touchstart', (e) => {
+        isDown = true;
+        suppressClick = false;
+        startX = e.touches[0].pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      }, { passive: true });
+      track.addEventListener('touchend', () => { isDown = false; });
+      track.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - track.offsetLeft;
+        const walk = x - startX;
+        if (Math.abs(walk) > 5) suppressClick = true;
+        if (!suppressClick) return;
+        track.scrollLeft = scrollLeft - walk * 1.5;
+      }, { passive: true });
     }
 
     async function renderCategoryBrowsing(gamesData) {
@@ -6041,7 +6099,9 @@
       obs.observe(el);
     }
     function preloadCarouselSlideBgs(index) {
-      const slides = document.querySelectorAll('.carousel-slide');
+      const root = getHeroCarouselRoot();
+      if (!root) return;
+      const slides = root.querySelectorAll('.carousel-slide');
       if (!slides.length) return;
       const n = slides.length;
       const want = new Set([index, (index + 1) % n, (index - 1 + n) % n]);
