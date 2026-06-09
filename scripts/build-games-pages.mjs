@@ -41,11 +41,15 @@ if (!jsRaw) throw new Error('Could not extract module script');
 let js = jsRaw[1];
 
 js = js.replace(
-  /function getCurrentRoutePath\(\)[\s\S]*?function getCurrentPageId\(\)[\s\S]*?return PATH_TO_PAGE_ID\[path\] \|\| 'main-page';\s*\}/,
+  /function getCurrentPageId\(\) \{[\s\S]*?return PATH_TO_PAGE_ID\[path\] \|\| 'main-page';\s*\}/,
   `function getCurrentPageId() {
       return String(window.__GU_PAGE__ || 'main-page').trim() || 'main-page';
     }`
 );
+
+if (!/function getCurrentRoutePath\(\)/.test(js)) {
+  throw new Error('Build output is missing getCurrentRoutePath(); URL sync for games/movies will break.');
+}
 
 js = js.replace(
   /async function init\(\) \{[\s\S]*?\/\/ ========== Event Listeners ==========/,
