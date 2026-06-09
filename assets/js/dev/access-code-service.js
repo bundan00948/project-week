@@ -5,8 +5,12 @@ export const LEGACY_DEV_ACCESS_CODES = {
   movies: 'GU-DEV-MOVIES-R4M2'
 };
 
+export function normalizeCodeKey(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ').toUpperCase();
+}
+
 export function normalizeCode(value) {
-  return String(value || '').trim().toUpperCase();
+  return normalizeCodeKey(value);
 }
 
 export function storageKey(pageId) {
@@ -60,25 +64,43 @@ export function devAccessErrorMessage(error) {
   }
 }
 
-function legacyMatch(pageId, code) {
+function legacyMatch(pageId, codeKey) {
   const legacy = LEGACY_DEV_ACCESS_CODES[pageId];
-  return legacy && code === normalizeCode(legacy);
+  return legacy && codeKey === normalizeCodeKey(legacy);
+}
+
+async function findDevAccessCodeInTransaction(db, fs, codeKey, tx) {
+  const legacyRef = fs.doc(db, 'devAccessCodes', codeKey);
+  const legacySnap = await tx.get(legacyRef);
+  if (legacySnap.exists()) {
+    return { ref: legacyRef, snap: legacySnap };
+  }
+
+  const lookupQuery = fs.query(
+    fs.collection(db, 'devAccessCodes'),
+    fs.where('codeKey', '==', codeKey),
+    fs.limit(1)
+  );
+  const querySnap = await tx.get(lookupQuery);
+  if (querySnap.empty) return null;
+  const match = querySnap.docs[0];
+  return { ref: match.ref, snap: match };
 }
 
 export async function redeemDevAccessCode(pageId, candidate) {
-  const code = normalizeCode(candidate);
-  if (!code) return { ok: false, error: 'invalid' };
+  const codeKey = normalizeCodeKey(candidate);
+  if (!codeKey) return { ok: false, error: 'invalid' };
 
-  if (legacyMatch(pageId, code)) {
+  if (legacyMatch(pageId, codeKey)) {
     return { ok: true, catalog: pageId, legacy: true };
   }
 
   try {
     const { db, fs } = await getFirestoreDb();
-    const ref = fs.doc(db, 'devAccessCodes', code);
     return await fs.runTransaction(db, async (tx) => {
-      const snap = await tx.get(ref);
-      if (!snap.exists()) return { ok: false, error: 'invalid' };
+      const found = await findDevAccessCodeInTransaction(db, fs, codeKey, tx);
+      if (!found) return { ok: false, error: 'invalid' };
+      const { ref, snap } = found;
       const data = snap.data() || {};
       if (data.active === false) return { ok: false, error: 'inactive' };
 
@@ -107,14 +129,4 @@ export async function redeemDevAccessCode(pageId, candidate) {
     console.warn('redeemDevAccessCode:', err);
     return { ok: false, error: 'network' };
   }
-}
-
-export function generateDevAccessCode(catalog = 'games') {
-  const prefix = catalog === 'movies' ? 'MOV' : catalog === 'both' ? 'ALL' : 'GAM';
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let suffix = '';
-  for (let i = 0; i < 6; i += 1) {
-    suffix += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return `DEV-${prefix}-${suffix}`;
 }

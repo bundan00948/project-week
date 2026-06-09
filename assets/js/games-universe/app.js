@@ -7255,16 +7255,19 @@
       } catch(e) { container.innerHTML = '<p style="color:var(--neon-pink);">Error loading missions.</p>'; }
     }
 
-    function generateStaffDevAccessCode(catalog = 'games') {
-      const prefix = catalog === 'movies' ? 'MOV' : catalog === 'both' ? 'ALL' : 'GAM';
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let suffix = '';
-      for (let i = 0; i < 6; i += 1) suffix += chars[Math.floor(Math.random() * chars.length)];
-      return `DEV-${prefix}-${suffix}`;
+    function normalizeStaffDevAccessCodeKey(value) {
+      return String(value || '').trim().replace(/\s+/g, ' ').toUpperCase();
     }
 
-    function normalizeStaffDevAccessCode(value) {
-      return String(value || '').trim().toUpperCase();
+    function trimStaffDevAccessCode(value) {
+      return String(value || '').trim().replace(/\s+/g, ' ');
+    }
+
+    async function staffDevAccessCodeExists(codeKey) {
+      const legacy = await getDoc(doc(db, 'devAccessCodes', codeKey));
+      if (legacy.exists()) return true;
+      const matches = await getDocs(query(collection(db, 'devAccessCodes'), where('codeKey', '==', codeKey), limit(1)));
+      return !matches.empty;
     }
 
     function formatStaffDevAccessCatalog(catalog) {
@@ -7365,7 +7368,8 @@
                 const expiresText = row.expiresAt?.toDate
                   ? row.expiresAt.toDate().toLocaleString()
                   : 'Never';
-                const links = buildStaffDevAccessShareLinks(row.id, row.catalog).map((link) =>
+                const displayCode = row.code || row.id;
+                const links = buildStaffDevAccessShareLinks(displayCode, row.catalog).map((link) =>
                   `<button type="button" class="staff-btn staff-btn-sm staff-access-copy" data-copy="${escapeHtml(link.href)}" title="${escapeHtml(link.href)}">Copy ${escapeHtml(link.label)}</button>`
                 ).join(' ');
                 const manageBtns = canManage ? `
@@ -7375,7 +7379,7 @@
                 ` : '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>';
                 return `
                   <tr>
-                    <td><code>${escapeHtml(row.id)}</code></td>
+                    <td><code>${escapeHtml(displayCode)}</code></td>
                     <td>${escapeHtml(formatStaffDevAccessCatalog(row.catalog))}</td>
                     <td>${escapeHtml(row.label || '—')}</td>
                     <td>${escapeHtml(usesText)}</td>
@@ -7408,7 +7412,7 @@
             document.getElementById('staff-access-code-edit').value = btn.dataset.id;
             document.getElementById('staff-access-code-catalog').value = String(row.catalog || 'games').toLowerCase();
             document.getElementById('staff-access-code-label').value = row.label || '';
-            document.getElementById('staff-access-code-code').value = btn.dataset.id;
+            document.getElementById('staff-access-code-code').value = row.code || btn.dataset.id;
             document.getElementById('staff-access-code-code').readOnly = true;
             document.getElementById('staff-access-code-expires').value = row.expiresAt?.toDate
               ? new Date(row.expiresAt.toDate().getTime() - row.expiresAt.toDate().getTimezoneOffset() * 60000).toISOString().slice(0, 16)
@@ -8019,10 +8023,10 @@
         const label = String(document.getElementById('staff-access-code-label')?.value || '').trim();
         const expiresRaw = String(document.getElementById('staff-access-code-expires')?.value || '').trim();
         const maxUsesRaw = String(document.getElementById('staff-access-code-max-uses')?.value || '').trim();
-        let code = normalizeStaffDevAccessCode(document.getElementById('staff-access-code-code')?.value);
-        if (!editId && !code) code = generateStaffDevAccessCode(catalog);
-        if (!editId && !/^[A-Z0-9-]{6,64}$/.test(code)) {
-          showNotification('Code must be 6–64 letters, numbers, or dashes', 'error');
+        const codeText = trimStaffDevAccessCode(document.getElementById('staff-access-code-code')?.value);
+        const codeKey = normalizeStaffDevAccessCodeKey(codeText);
+        if (!editId && !codeText) {
+          showNotification('Enter an access code', 'error');
           return;
         }
         const maxUses = maxUsesRaw ? Number.parseInt(maxUsesRaw, 10) : null;
@@ -8046,13 +8050,14 @@
             showNotification('Access code updated', 'success');
             return;
           }
-          const existing = await getDoc(doc(db, 'devAccessCodes', code));
-          if (existing.exists()) {
-            showNotification('That code already exists — choose another', 'error');
+          if (await staffDevAccessCodeExists(codeKey)) {
+            showNotification('That access code already exists — choose another', 'error');
             return;
           }
-          await setDoc(doc(db, 'devAccessCodes', code), {
+          await addDoc(collection(db, 'devAccessCodes'), {
             ...payload,
+            code: codeText,
+            codeKey,
             active: true,
             useCount: 0,
             createdAt: serverTimestamp(),
@@ -8062,10 +8067,10 @@
           });
           const created = document.getElementById('staff-access-code-created');
           if (created) {
-            const links = buildStaffDevAccessShareLinks(code, catalog).map((link) =>
+            const links = buildStaffDevAccessShareLinks(codeText, catalog).map((link) =>
               `<div><strong>${escapeHtml(link.label)}:</strong> <code>${escapeHtml(link.href)}</code></div>`
             ).join('');
-            created.innerHTML = `<strong>Code created:</strong> <code>${escapeHtml(code)}</code>${links ? `<div style="margin-top:8px;">${links}</div>` : ''}`;
+            created.innerHTML = `<strong>Code created:</strong> <code>${escapeHtml(codeText)}</code>${links ? `<div style="margin-top:8px;">${links}</div>` : ''}`;
             created.hidden = false;
           }
           resetStaffAccessCodeForm();

@@ -53,7 +53,7 @@ export async function mountDevAccessGate(pageId, options = {}) {
       <p class="dev-gate-desc">${hint}</p>
       <form class="dev-gate-form" id="devGateForm">
         <label class="dev-gate-label" for="devGateCode">Access code</label>
-        <input id="devGateCode" class="dev-gate-input" type="password" autocomplete="off" spellcheck="false" placeholder="Enter code…" required>
+        <input id="devGateCode" class="dev-gate-input" type="text" autocomplete="off" spellcheck="false" placeholder="Enter code…" required>
         <p class="dev-gate-error" id="devGateError" hidden>Incorrect access code.</p>
         <button type="submit" class="dev-gate-submit" id="devGateSubmit">Unlock catalogue</button>
       </form>
