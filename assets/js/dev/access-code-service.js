@@ -65,6 +65,37 @@ function legacyMatch(pageId, code) {
   return legacy && code === normalizeCode(legacy);
 }
 
+function validateDevAccessDoc(data, pageId) {
+  if (data.active === false) return { ok: false, error: 'inactive' };
+
+  const catalog = String(data.catalog || 'games').toLowerCase();
+  if (!catalogMatches(catalog, pageId)) return { ok: false, error: 'wrong_catalog' };
+
+  const expiresAt = data.expiresAt;
+  if (expiresAt && typeof expiresAt.toMillis === 'function' && expiresAt.toMillis() <= Date.now()) {
+    return { ok: false, error: 'expired' };
+  }
+
+  const maxUses = data.maxUses;
+  const useCount = Number(data.useCount) || 0;
+  if (maxUses != null && Number.isFinite(Number(maxUses)) && useCount >= Number(maxUses)) {
+    return { ok: false, error: 'exhausted' };
+  }
+
+  return { ok: true, catalog, label: String(data.label || '') };
+}
+
+async function recordDevAccessUse(ref, fs, useCount) {
+  try {
+    await fs.updateDoc(ref, {
+      useCount: useCount + 1,
+      lastUsedAt: fs.serverTimestamp()
+    });
+  } catch (err) {
+    console.warn('recordDevAccessUse:', err);
+  }
+}
+
 export async function redeemDevAccessCode(pageId, candidate) {
   const code = normalizeCode(candidate);
   if (!code) return { ok: false, error: 'invalid' };
@@ -76,33 +107,15 @@ export async function redeemDevAccessCode(pageId, candidate) {
   try {
     const { db, fs } = await getFirestoreDb();
     const ref = fs.doc(db, 'devAccessCodes', code);
-    return await fs.runTransaction(db, async (tx) => {
-      const snap = await tx.get(ref);
-      if (!snap.exists()) return { ok: false, error: 'invalid' };
-      const data = snap.data() || {};
-      if (data.active === false) return { ok: false, error: 'inactive' };
+    const snap = await fs.getDoc(ref);
+    if (!snap.exists()) return { ok: false, error: 'invalid' };
 
-      const catalog = String(data.catalog || 'games').toLowerCase();
-      if (!catalogMatches(catalog, pageId)) return { ok: false, error: 'wrong_catalog' };
+    const data = snap.data() || {};
+    const result = validateDevAccessDoc(data, pageId);
+    if (!result.ok) return result;
 
-      const expiresAt = data.expiresAt;
-      if (expiresAt && typeof expiresAt.toMillis === 'function' && expiresAt.toMillis() <= Date.now()) {
-        return { ok: false, error: 'expired' };
-      }
-
-      const maxUses = data.maxUses;
-      const useCount = Number(data.useCount) || 0;
-      if (maxUses != null && Number.isFinite(Number(maxUses)) && useCount >= Number(maxUses)) {
-        return { ok: false, error: 'exhausted' };
-      }
-
-      tx.update(ref, {
-        useCount: useCount + 1,
-        lastUsedAt: fs.serverTimestamp()
-      });
-
-      return { ok: true, catalog, label: String(data.label || '') };
-    });
+    await recordDevAccessUse(ref, fs, Number(data.useCount) || 0);
+    return result;
   } catch (err) {
     console.warn('redeemDevAccessCode:', err);
     return { ok: false, error: 'network' };

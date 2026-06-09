@@ -1,5 +1,6 @@
 import { getFirestoreDb } from './firebase-config.js';
-import { bindFormToggle, nextNumericKey, showDevToast } from './catalog-utils.js';
+import { bindFormToggle } from './access-gate.js';
+import { nextNumericKey, showDevToast } from './catalog-utils.js';
 
 const MAX_GAME_KEY_ID = 999999;
 
@@ -204,6 +205,9 @@ function renderFeaturedRow(root, games, openGame) {
 }
 
 export function mountGamesCatalog(root) {
+  if (root.__devGamesCatalogMounted) return;
+  root.__devGamesCatalogMounted = true;
+
   const statusEl = root.querySelector('#devStatus');
   const catsEl = root.querySelector('#devCats');
   const gridEl = root.querySelector('#devGrid');
@@ -219,7 +223,7 @@ export function mountGamesCatalog(root) {
   let activeCat = '__all__';
   let query = '';
 
-  const formToggle = bindFormToggle(root);
+  const formToggle = bindFormToggle(root, { backdropSelector: '[data-dev-form-backdrop]' });
 
   function visibleGames() {
     const list = [...(data?.gamesByCategory?.[activeCat] || [])];
