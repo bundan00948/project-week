@@ -134,9 +134,7 @@
       hint: 'Enter the dev movies access code to browse and watch without signing in.',
       onUnlock() {
         const shell = document.getElementById('devShell');
-        const backdrop = document.querySelector('[data-dev-form-backdrop]');
         if (shell) shell.hidden = false;
-        if (backdrop) backdrop.hidden = false;
         mountMoviesCatalog(document);
       }
     });

@@ -1,6 +1,7 @@
 import { getFirestoreDb } from './firebase-config.js';
 import { escapeHtml } from './games-catalog.js';
-import { bindFormToggle, nextNumericKey, showDevToast } from './catalog-utils.js';
+import { bindFormToggle } from './access-gate.js';
+import { nextNumericKey, showDevToast } from './catalog-utils.js';
 
 const MAX_MOVIE_KEY_ID = 999999;
 const MAX_MOVIE_CATEGORY_ID = 999;
@@ -251,6 +252,9 @@ function populateCategorySelect(root, categories) {
 }
 
 export function mountMoviesCatalog(root) {
+  if (root.__devMoviesCatalogMounted) return;
+  root.__devMoviesCatalogMounted = true;
+
   const statusEl = root.querySelector('#devStatus');
   const carouselEl = root.querySelector('#cinemaCarousel');
   const genresEl = root.querySelector('#cinemaCategories');
@@ -276,7 +280,7 @@ export function mountMoviesCatalog(root) {
   let carouselTimer = null;
   let activeDetailMovie = null;
 
-  const formToggle = bindFormToggle(root);
+  const formToggle = bindFormToggle(root, { backdropSelector: '[data-dev-form-backdrop]' });
 
   function allMoviesList() {
     return data?.movies || [];

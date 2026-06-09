@@ -103,6 +103,7 @@ export function bindFormToggle(root, options = {}) {
   const open = () => {
     panel.hidden = false;
     panel.classList.add('open');
+    if (backdrop) backdrop.hidden = false;
     backdrop?.classList.add('open');
     toggle.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
@@ -115,6 +116,7 @@ export function bindFormToggle(root, options = {}) {
     document.body.style.overflow = '';
     setTimeout(() => {
       if (!panel.classList.contains('open')) panel.hidden = true;
+      if (backdrop && !panel.classList.contains('open')) backdrop.hidden = true;
     }, 280);
   };
 
