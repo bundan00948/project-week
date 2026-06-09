@@ -175,10 +175,12 @@ function renderFeaturedRow(root, games, openGame) {
     return;
   }
   track.innerHTML = featured.map((game) => {
-    const bg = game.image ? `style="background-image:url(${JSON.stringify(game.image)})"` : '';
+    const bannerImage = game.image
+      ? `<img src="${escapeHtml(game.image)}" alt="" loading="lazy">`
+      : '';
     return `
       <article class="games-featured-card" data-featured-id="${escapeHtml(game.id)}" tabindex="0">
-        <div class="games-featured-banner" ${bg}></div>
+        <div class="games-featured-banner">${bannerImage}</div>
         <div class="games-featured-body">
           <h3 class="games-featured-title">${escapeHtml(game.title)}</h3>
           <div class="games-featured-meta">★ ${Number(game.rating || 0).toFixed(1)} · ${game.multiplayer ? 'Multiplayer' : 'Single player'}</div>

@@ -28,7 +28,7 @@
         <input type="search" id="devSearch" placeholder="Search movies…" autocomplete="off" aria-label="Search movies">
       </div>
       <div class="cinema-nav-actions">
-        <button type="button" class="cinema-btn cinema-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add title</button>
+        <button type="button" class="cinema-btn cinema-btn-primary" data-dev-form-toggle aria-expanded="false">Suggest a title</button>
       </div>
     </nav>
 
@@ -60,7 +60,7 @@
     <div class="dev-form-panel" data-dev-form-panel hidden>
       <div class="dev-form-card">
         <div class="dev-form-head">
-          <h2>Add a new movie</h2>
+          <h2>Suggest a title</h2>
           <button type="button" class="cinema-btn" data-dev-form-close>Close</button>
         </div>
         <form id="devAddMovieForm">
@@ -83,7 +83,11 @@
             </label>
             <label class="dev-field dev-field-full">
               <span>Banner image URL</span>
-              <input type="url" name="banner" placeholder="https://…">
+              <input type="url" name="banner" placeholder="https://… (wide backdrop for carousel)">
+            </label>
+            <label class="dev-field dev-field-full">
+              <span>Title image URL (optional)</span>
+              <input type="url" name="titleImage" placeholder="https://… (logo / title art)">
             </label>
             <label class="dev-field dev-field-full">
               <span>Stream / watch URL</span>
@@ -95,7 +99,7 @@
             </label>
           </div>
           <div class="dev-form-actions">
-            <button type="submit" class="cinema-btn cinema-btn-primary">Save movie</button>
+            <button type="submit" class="cinema-btn cinema-btn-primary">Submit suggestion</button>
             <button type="reset" class="cinema-btn">Reset</button>
           </div>
           <p class="dev-form-msg" id="devFormMsg"></p>
@@ -110,6 +114,7 @@
       <div class="cinema-detail-content">
         <button type="button" class="cinema-detail-close" id="cinemaDetailClose" aria-label="Close">×</button>
         <p class="cinema-detail-kicker">Now streaming</p>
+        <img class="cinema-detail-title-image" id="cinemaDetailTitleImage" alt="" hidden>
         <h2 class="cinema-detail-title" id="cinemaDetailTitle">Movie title</h2>
         <div class="cinema-detail-meta" id="cinemaDetailMeta"></div>
         <p class="cinema-detail-desc" id="cinemaDetailDesc"></p>

@@ -117,7 +117,15 @@
 
 .games-featured-banner {
   aspect-ratio: 16 / 9;
-  background: #0d121a center/cover no-repeat;
+  background: #0d121a;
+  overflow: hidden;
+}
+
+.games-featured-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .games-featured-body {
