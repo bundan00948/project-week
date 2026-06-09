@@ -10,21 +10,86 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/dev-catalog.css">
 </head>
-<body>
+<body class="dev-theme-movies">
   <div class="dev-shell" id="devShell" hidden>
-    <header class="dev-header">
-      <h1>Dev Movies</h1>
-      <p>Unlisted movies catalogue. No Game Universe login required after access code. Browse by category and watch in the movie player.</p>
-    </header>
-    <div class="dev-toolbar">
-      <label>Search titles
-        <input type="search" id="devSearch" placeholder="Type to filter…" autocomplete="off">
-      </label>
+    <div class="dev-shell-inner">
+      <header class="dev-hero">
+        <div class="dev-hero-content">
+          <div class="dev-hero-top">
+            <div>
+              <span class="dev-hero-badge">Dev catalogue</span>
+              <h1>Movies</h1>
+              <p>Browse by category and watch in the player — no Game Universe login after the access code.</p>
+            </div>
+          </div>
+          <div class="dev-hero-stats">
+            <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> titles</span>
+            <span class="dev-stat-pill"><strong id="devCategoryCount">0</strong> categories</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="dev-toolbar">
+        <div class="dev-search-wrap">
+          <label for="devSearch">Search</label>
+          <input type="search" id="devSearch" placeholder="Filter by title…" autocomplete="off">
+        </div>
+        <div class="dev-toolbar-actions">
+          <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add movie</button>
+        </div>
+      </div>
+
+      <div class="dev-form-panel" data-dev-form-panel hidden>
+        <div class="dev-form-card">
+          <div class="dev-form-head">
+            <h2>Add a new movie</h2>
+            <button type="button" class="dev-btn" data-dev-form-close>Close</button>
+          </div>
+          <form id="devAddMovieForm">
+            <div class="dev-form-grid">
+              <label class="dev-field dev-field-full">
+                <span>Title</span>
+                <input type="text" name="title" required placeholder="Movie title">
+              </label>
+              <label class="dev-field">
+                <span>Category</span>
+                <select name="category" id="devMovieCategory" required></select>
+              </label>
+              <label class="dev-field">
+                <span>Release year</span>
+                <input type="number" name="releaseYear" min="1900" max="2100" value="2026">
+              </label>
+              <label class="dev-field">
+                <span>Score (0–10)</span>
+                <input type="number" name="score" min="0" max="10" step="0.1" value="7">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Banner image URL</span>
+                <input type="url" name="banner" placeholder="https://…">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Movie URL (watch link)</span>
+                <input type="url" name="url" placeholder="https://…">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Description (optional)</span>
+                <textarea name="description" placeholder="Short synopsis…"></textarea>
+              </label>
+            </div>
+            <div class="dev-form-actions">
+              <button type="submit" class="dev-btn dev-btn-primary">Save movie</button>
+              <button type="reset" class="dev-btn">Reset</button>
+            </div>
+            <p class="dev-form-msg" id="devFormMsg"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="dev-cats" id="devCats" hidden></div>
+      <div class="dev-status" id="devStatus">Loading catalogue…</div>
+      <main class="dev-grid" id="devGrid" hidden></main>
+      <p class="dev-foot">Dev-only page — not linked from the main site. <a href="/games/movies">Game Universe movies</a></p>
     </div>
-    <div class="dev-cats" id="devCats" hidden></div>
-    <div class="dev-status" id="devStatus">Loading catalogue…</div>
-    <main class="dev-grid" id="devGrid" hidden></main>
-    <p class="dev-foot">Dev-only page — not linked from the main site. <a href="/games/movies">Game Universe movies</a></p>
   </div>
 
   <script type="module">

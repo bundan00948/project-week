@@ -1,4 +1,5 @@
 import { getFirestoreDb } from './firebase-config.js';
+import { bindFormToggle, nextNumericKey, showDevToast } from './catalog-utils.js';
 
 const MAX_GAME_KEY_ID = 999999;
 
@@ -61,6 +62,7 @@ export async function loadGamesCatalog() {
   const tagById = new Map();
   const tagByNameLower = new Map();
   const tagGroups = new Map();
+  const tagOptions = [];
 
   try {
     const tagSnap = await fs.getDocs(fs.collection(db, 'tags'));
@@ -70,6 +72,7 @@ export async function loadGamesCatalog() {
       tagById.set(d.id, name);
       tagByNameLower.set(name.toLowerCase(), name);
       tagGroups.set(name.toLowerCase(), { key: name, games: [] });
+      tagOptions.push(name);
     });
   } catch (e) {
     console.warn('Could not load tags:', e);
@@ -110,7 +113,55 @@ export async function loadGamesCatalog() {
     gamesByCategory[key] = group.games.sort((a, b) => a.title.localeCompare(b.title));
   });
 
-  return { categories, gamesByCategory };
+  return { categories, gamesByCategory, games, tagOptions: tagOptions.sort((a, b) => a.localeCompare(b)) };
+}
+
+async function addGameToFirestore(formData, existingGames) {
+  const { db, fs } = await getFirestoreDb();
+  const title = String(formData.get('title') || '').trim();
+  const image = String(formData.get('image') || '').trim();
+  const url = String(formData.get('url') || '').trim();
+  const rating = Number.parseFloat(formData.get('rating'));
+  const multiplayer = formData.get('multiplayer') === 'true';
+  const tags = String(formData.get('tags') || '')
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  if (!title) throw new Error('Title is required.');
+  if (!image) throw new Error('Cover image URL is required.');
+  if (!url) throw new Error('Game URL is required.');
+
+  const fallbackGameKey = nextNumericKey(existingGames, (g) => g.gameKey, MAX_GAME_KEY_ID, 1);
+  const gameKey = fallbackGameKey !== null
+    ? fallbackGameKey
+    : stableNumericKey(title, MAX_GAME_KEY_ID);
+
+  await fs.addDoc(fs.collection(db, 'games'), {
+    title,
+    description: '',
+    image,
+    url,
+    rating: Number.isFinite(rating) ? rating : 3,
+    multiplayer,
+    tags,
+    gameKey,
+    createdAt: fs.serverTimestamp(),
+    updatedAt: fs.serverTimestamp()
+  });
+}
+
+function updateHeroStats(root, data) {
+  const totalEl = root.querySelector('#devTotalCount');
+  const catEl = root.querySelector('#devCategoryCount');
+  if (totalEl) totalEl.textContent = String(data.games.length);
+  if (catEl) catEl.textContent = String(Math.max(0, data.categories.length - 1));
+}
+
+function populateTagDatalist(root, tagOptions) {
+  const list = root.querySelector('#devTagSuggestions');
+  if (!list) return;
+  list.innerHTML = tagOptions.map((tag) => `<option value="${escapeHtml(tag)}"></option>`).join('');
 }
 
 export function mountGamesCatalog(root) {
@@ -122,10 +173,14 @@ export function mountGamesCatalog(root) {
   const modalTitleEl = root.querySelector('#devGameModalTitle');
   const modalFrameEl = root.querySelector('#devGameModalFrame');
   const modalCloseEl = root.querySelector('#devGameModalClose');
+  const addForm = root.querySelector('#devAddGameForm');
+  const formMsg = root.querySelector('#devFormMsg');
 
   let data = null;
   let activeCat = '__all__';
   let query = '';
+
+  const formToggle = bindFormToggle(root);
 
   function visibleGames() {
     const list = [...(data?.gamesByCategory?.[activeCat] || [])];
@@ -160,28 +215,40 @@ export function mountGamesCatalog(root) {
       ? list.map((game) => {
           const banner = game.image
             ? `<img class="dev-card-banner" src="${escapeHtml(game.image)}" alt="" loading="lazy">`
-            : '<div class="dev-card-banner" aria-hidden="true"></div>';
+            : '<div class="dev-card-media-fallback" aria-hidden="true"></div>';
           const canPlay = Boolean(String(game.url || '').trim());
-          const action = canPlay
-            ? `<button type="button" class="dev-action" data-game-id="${escapeHtml(game.id)}">Play</button>`
-            : '<button type="button" class="dev-action" disabled>No URL</button>';
+          const playBtn = canPlay
+            ? `<button type="button" class="dev-card-play-chip" data-game-id="${escapeHtml(game.id)}">Play</button>`
+            : '';
           return `<article class="dev-card">
-            ${banner}
+            <div class="dev-card-media">
+              ${banner}
+              <div class="dev-card-play-overlay">${playBtn}</div>
+            </div>
             <div class="dev-card-body">
               <h2 class="dev-card-title">${escapeHtml(game.title)}</h2>
-              <div class="dev-card-meta">★ ${Number(game.rating || 0).toFixed(1)} · ${game.multiplayer ? 'Multiplayer' : 'Single player'}</div>
-              <p class="dev-card-desc">${escapeHtml(game.description || '')}</p>
-              ${action}
+              <div class="dev-card-meta">
+                <span class="dev-chip">★ ${Number(game.rating || 0).toFixed(1)}</span>
+                <span class="dev-chip">${game.multiplayer ? 'Multiplayer' : 'Single'}</span>
+              </div>
             </div>
           </article>`;
         }).join('')
       : '<div class="dev-status" style="grid-column:1/-1;">No games in this view.</div>';
 
     gridEl.querySelectorAll('[data-game-id]').forEach((btn) => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const game = list.find((g) => String(g.id) === String(btn.dataset.gameId));
         if (game) openGame(game);
       });
+    });
+
+    gridEl.querySelectorAll('.dev-card').forEach((card, index) => {
+      const game = list[index];
+      if (!game || !String(game.url || '').trim()) return;
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => openGame(game));
     });
   }
 
@@ -202,9 +269,44 @@ export function mountGamesCatalog(root) {
     });
   }
 
+  async function refreshCatalog() {
+    data = await loadGamesCatalog();
+    updateHeroStats(root, data);
+    populateTagDatalist(root, data.tagOptions);
+    renderCats();
+    renderGrid();
+  }
+
   qEl?.addEventListener('input', () => {
     query = qEl.value || '';
     renderGrid();
+  });
+
+  addForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (formMsg) {
+      formMsg.textContent = 'Saving…';
+      formMsg.classList.remove('err');
+    }
+    const submitBtn = addForm.querySelector('[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    try {
+      await addGameToFirestore(new FormData(addForm), data?.games || []);
+      addForm.reset();
+      await refreshCatalog();
+      formToggle?.close?.();
+      if (formMsg) formMsg.textContent = '';
+      showDevToast('Game added to catalogue', 'success');
+    } catch (err) {
+      const message = err?.message || 'Could not save game.';
+      if (formMsg) {
+        formMsg.textContent = message;
+        formMsg.classList.add('err');
+      }
+      showDevToast(message, 'error');
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
   });
 
   loadGamesCatalog()
@@ -214,6 +316,8 @@ export function mountGamesCatalog(root) {
       statusEl?.remove();
       catsEl.hidden = false;
       gridEl.hidden = false;
+      updateHeroStats(root, data);
+      populateTagDatalist(root, data.tagOptions);
       renderCats();
       renderGrid();
     })

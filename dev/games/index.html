@@ -12,19 +12,84 @@
 </head>
 <body>
   <div class="dev-shell" id="devShell" hidden>
-    <header class="dev-header">
-      <h1>Dev Games</h1>
-      <p>Unlisted games catalogue. No Game Universe login required after access code. Browse by category and play directly.</p>
-    </header>
-    <div class="dev-toolbar">
-      <label>Search games
-        <input type="search" id="devSearch" placeholder="Type to filter…" autocomplete="off">
-      </label>
+    <div class="dev-shell-inner">
+      <header class="dev-hero">
+        <div class="dev-hero-content">
+          <div class="dev-hero-top">
+            <div>
+              <span class="dev-hero-badge">Dev catalogue</span>
+              <h1>Games</h1>
+              <p>Browse by category and play instantly — no Game Universe login after the access code.</p>
+            </div>
+          </div>
+          <div class="dev-hero-stats">
+            <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games</span>
+            <span class="dev-stat-pill"><strong id="devCategoryCount">0</strong> categories</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="dev-toolbar">
+        <div class="dev-search-wrap">
+          <label for="devSearch">Search</label>
+          <input type="search" id="devSearch" placeholder="Filter by title…" autocomplete="off">
+        </div>
+        <div class="dev-toolbar-actions">
+          <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add game</button>
+        </div>
+      </div>
+
+      <div class="dev-form-panel" data-dev-form-panel hidden>
+        <div class="dev-form-card">
+          <div class="dev-form-head">
+            <h2>Add a new game</h2>
+            <button type="button" class="dev-btn" data-dev-form-close>Close</button>
+          </div>
+          <form id="devAddGameForm">
+            <div class="dev-form-grid">
+              <label class="dev-field dev-field-full">
+                <span>Title</span>
+                <input type="text" name="title" required placeholder="Game title">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Cover image URL</span>
+                <input type="url" name="image" required placeholder="https://…">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Game URL (iframe / play link)</span>
+                <input type="url" name="url" required placeholder="https://…">
+              </label>
+              <label class="dev-field">
+                <span>Rating (0–5)</span>
+                <input type="number" name="rating" min="0" max="5" step="0.1" value="3">
+              </label>
+              <label class="dev-field">
+                <span>Mode</span>
+                <select name="multiplayer">
+                  <option value="false">Single player</option>
+                  <option value="true">Multiplayer</option>
+                </select>
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Tags (comma-separated)</span>
+                <input type="text" name="tags" list="devTagSuggestions" placeholder="action, arcade, puzzle">
+              </label>
+            </div>
+            <datalist id="devTagSuggestions"></datalist>
+            <div class="dev-form-actions">
+              <button type="submit" class="dev-btn dev-btn-primary">Save game</button>
+              <button type="reset" class="dev-btn">Reset</button>
+            </div>
+            <p class="dev-form-msg" id="devFormMsg"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="dev-cats" id="devCats" hidden></div>
+      <div class="dev-status" id="devStatus">Loading catalogue…</div>
+      <main class="dev-grid" id="devGrid" hidden></main>
+      <p class="dev-foot">Dev-only page — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
     </div>
-    <div class="dev-cats" id="devCats" hidden></div>
-    <div class="dev-status" id="devStatus">Loading catalogue…</div>
-    <main class="dev-grid" id="devGrid" hidden></main>
-    <p class="dev-foot">Dev-only page — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
   </div>
 
   <div class="dev-modal" id="devGameModal" aria-hidden="true">
