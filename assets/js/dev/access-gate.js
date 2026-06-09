@@ -1,51 +1,45 @@
 /**
- * Simple session gate for unlisted /dev/* catalog pages.
+ * Session gate for unlisted /dev/* catalog pages.
+ * Codes are managed in Firestore via the Staff Panel (devAccessCodes collection).
  */
-export const DEV_ACCESS_CODES = {
-  games: 'GU-DEV-GAMES-X7K9',
-  movies: 'GU-DEV-MOVIES-R4M2'
-};
+import {
+  devAccessErrorMessage,
+  grantDevAccessForCatalog,
+  hasDevAccess,
+  LEGACY_DEV_ACCESS_CODES,
+  redeemDevAccessCode
+} from './access-code-service.js';
 
-function storageKey(pageId) {
-  return `guDevAccess:${pageId}`;
-}
+export { LEGACY_DEV_ACCESS_CODES as DEV_ACCESS_CODES };
 
-function normalizeCode(value) {
-  return String(value || '').trim().toUpperCase();
-}
-
-function isValidCode(pageId, candidate) {
-  const expected = DEV_ACCESS_CODES[pageId];
-  if (!expected) return false;
-  return normalizeCode(candidate) === normalizeCode(expected);
-}
-
-export function hasDevAccess(pageId) {
-  try {
-    return sessionStorage.getItem(storageKey(pageId)) === '1';
-  } catch (_) {
-    return false;
-  }
+async function tryUnlock(pageId, code) {
+  const result = await redeemDevAccessCode(pageId, code);
+  if (!result.ok) return result;
+  grantDevAccessForCatalog(result.catalog || pageId);
+  return result;
 }
 
 export function grantDevAccess(pageId) {
-  try {
-    sessionStorage.setItem(storageKey(pageId), '1');
-  } catch (_) {}
+  grantDevAccessForCatalog(pageId);
 }
 
-export function tryGrantFromUrl(pageId) {
+export async function tryGrantFromUrl(pageId) {
   const fromUrl = new URLSearchParams(window.location.search).get('code');
-  if (!fromUrl || !isValidCode(pageId, fromUrl)) return false;
-  grantDevAccess(pageId);
-  return true;
+  if (!fromUrl) return false;
+  const result = await tryUnlock(pageId, fromUrl);
+  return !!result.ok;
 }
 
-export function mountDevAccessGate(pageId, options = {}) {
+export async function mountDevAccessGate(pageId, options = {}) {
   const label = options.label || 'Dev access';
   const hint = options.hint || 'Enter the access code for this catalogue.';
 
-  if (hasDevAccess(pageId) || tryGrantFromUrl(pageId)) {
+  if (hasDevAccess(pageId)) {
+    options.onUnlock?.();
+    return;
+  }
+
+  if (await tryGrantFromUrl(pageId)) {
     options.onUnlock?.();
     return;
   }
@@ -61,7 +55,7 @@ export function mountDevAccessGate(pageId, options = {}) {
         <label class="dev-gate-label" for="devGateCode">Access code</label>
         <input id="devGateCode" class="dev-gate-input" type="password" autocomplete="off" spellcheck="false" placeholder="Enter code…" required>
         <p class="dev-gate-error" id="devGateError" hidden>Incorrect access code.</p>
-        <button type="submit" class="dev-gate-submit">Unlock catalogue</button>
+        <button type="submit" class="dev-gate-submit" id="devGateSubmit">Unlock catalogue</button>
       </form>
     </div>
   `;
@@ -71,18 +65,29 @@ export function mountDevAccessGate(pageId, options = {}) {
   const form = gate.querySelector('#devGateForm');
   const input = gate.querySelector('#devGateCode');
   const errorEl = gate.querySelector('#devGateError');
+  const submitBtn = gate.querySelector('#devGateSubmit');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!isValidCode(pageId, input.value)) {
-      errorEl.hidden = false;
-      input.focus();
-      return;
+    errorEl.hidden = true;
+    submitBtn.disabled = true;
+    const previousLabel = submitBtn.textContent;
+    submitBtn.textContent = 'Checking…';
+    try {
+      const result = await tryUnlock(pageId, input.value);
+      if (!result.ok) {
+        errorEl.textContent = devAccessErrorMessage(result.error);
+        errorEl.hidden = false;
+        input.focus();
+        return;
+      }
+      gate.remove();
+      document.body.classList.remove('dev-gate-open');
+      options.onUnlock?.();
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = previousLabel;
     }
-    grantDevAccess(pageId);
-    gate.remove();
-    document.body.classList.remove('dev-gate-open');
-    options.onUnlock?.();
   });
 
   input.focus();
