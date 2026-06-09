@@ -31,7 +31,8 @@
       deleteDoc,    
       increment,
       runTransaction,
-      deleteField
+      deleteField,
+      Timestamp
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { 
       getStorage,     
@@ -5717,6 +5718,8 @@
       { key: 'edit_daily_reward', label: 'Edit Daily Reward', desc: 'Change daily reward stars/coins', group: 'System' },
       { key: 'edit_rarity_order', label: 'Edit Rarity Order', desc: 'Change rarity sort order', group: 'System' },
       { key: 'edit_rarity_styles', label: 'Edit Rarity Styles', desc: 'Create/update rarity appearance rules', group: 'System' },
+      { key: 'view_dev_access_codes', label: 'View Dev Access Codes', desc: 'View dev catalogue access codes', group: 'System' },
+      { key: 'manage_dev_access_codes', label: 'Manage Dev Access Codes', desc: 'Create and manage dev access codes', group: 'System' },
     ];
 
     let currentUserPermissions = [];
@@ -5830,6 +5833,14 @@
 
     function canDeleteMission() {
       return hasAnyPermission(['delete_missions', 'manage_missions', 'manage_games']);
+    }
+
+    function canViewDevAccessCodesAdmin() {
+      return hasAnyPermission(['view_dev_access_codes', 'manage_dev_access_codes']);
+    }
+
+    function canManageDevAccessCodes() {
+      return hasPermission('manage_dev_access_codes');
     }
 
     function canViewUsersAdmin() {
@@ -6195,6 +6206,7 @@
       'staff-badges': () => hasPermission('manage_badges'),
       'staff-rarity': () => canManageSiteConfig(),
       'staff-missions': () => canManageMissions(),
+      'staff-access-codes': () => canViewDevAccessCodesAdmin(),
       'staff-stars': () => canViewStarsPanel(),
       'staff-star-badges': () => canManageStarBadges(),
       'staff-chatview': () => hasPermission('view_chats'),
@@ -6218,6 +6230,7 @@
         case 'staff-titles': loadStaffTitles(); break;
         case 'staff-badges': loadStaffBadges(); break;
         case 'staff-missions': loadStaffMissions(); break;
+        case 'staff-access-codes': loadStaffAccessCodes(); break;
         case 'staff-star-badges': loadStaffStarBadgesPanel(); break;
         case 'staff-chatview': loadStaffChatViewer(); break;
         case 'staff-rarity': loadStaffRaritySitePanel(); break;
@@ -7242,6 +7255,195 @@
       } catch(e) { container.innerHTML = '<p style="color:var(--neon-pink);">Error loading missions.</p>'; }
     }
 
+    function generateStaffDevAccessCode(catalog = 'games') {
+      const prefix = catalog === 'movies' ? 'MOV' : catalog === 'both' ? 'ALL' : 'GAM';
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let suffix = '';
+      for (let i = 0; i < 6; i += 1) suffix += chars[Math.floor(Math.random() * chars.length)];
+      return `DEV-${prefix}-${suffix}`;
+    }
+
+    function normalizeStaffDevAccessCode(value) {
+      return String(value || '').trim().toUpperCase();
+    }
+
+    function formatStaffDevAccessCatalog(catalog) {
+      const value = String(catalog || 'games').toLowerCase();
+      if (value === 'movies') return 'Dev movies';
+      if (value === 'both') return 'Both catalogues';
+      return 'Dev games';
+    }
+
+    function getStaffDevAccessCodeStatus(row) {
+      if (row.active === false) return { label: 'Inactive', tone: 'muted' };
+      const expiresAt = row.expiresAt?.toDate ? row.expiresAt.toDate() : null;
+      if (expiresAt && expiresAt.getTime() <= Date.now()) return { label: 'Expired', tone: 'danger' };
+      const maxUses = row.maxUses;
+      const useCount = Number(row.useCount) || 0;
+      if (maxUses != null && Number.isFinite(Number(maxUses)) && useCount >= Number(maxUses)) {
+        return { label: 'Exhausted', tone: 'danger' };
+      }
+      return { label: 'Active', tone: 'ok' };
+    }
+
+    function buildStaffDevAccessShareLinks(code, catalog) {
+      const value = String(catalog || 'games').toLowerCase();
+      const origin = window.location.origin;
+      const links = [];
+      if (value === 'games' || value === 'both') {
+        links.push({ label: 'Games link', href: `${origin}/dev/games/?code=${encodeURIComponent(code)}` });
+      }
+      if (value === 'movies' || value === 'both') {
+        links.push({ label: 'Movies link', href: `${origin}/dev/movies/?code=${encodeURIComponent(code)}` });
+      }
+      return links;
+    }
+
+    function resetStaffAccessCodeForm() {
+      document.getElementById('staff-access-code-edit').value = '';
+      document.getElementById('staff-access-code-catalog').value = 'games';
+      document.getElementById('staff-access-code-label').value = '';
+      document.getElementById('staff-access-code-code').value = '';
+      document.getElementById('staff-access-code-code').readOnly = false;
+      document.getElementById('staff-access-code-expires').value = '';
+      document.getElementById('staff-access-code-max-uses').value = '';
+      const saveBtn = document.getElementById('staff-access-code-save');
+      if (saveBtn) saveBtn.textContent = 'Create code';
+      const created = document.getElementById('staff-access-code-created');
+      if (created) created.hidden = true;
+    }
+
+    async function loadStaffAccessCodes() {
+      const container = document.getElementById('staff-access-codes-list');
+      if (!container) return;
+      if (!canViewDevAccessCodesAdmin()) {
+        container.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
+        return;
+      }
+      const canManage = canManageDevAccessCodes();
+      try {
+        let snap;
+        try {
+          snap = await getDocs(query(collection(db, 'devAccessCodes'), orderBy('createdAt', 'desc')));
+        } catch (_) {
+          snap = await getDocs(collection(db, 'devAccessCodes'));
+        }
+        const rows = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        rows.sort((a, b) => {
+          const aTime = a.createdAt?.toMillis?.() || 0;
+          const bTime = b.createdAt?.toMillis?.() || 0;
+          return bTime - aTime;
+        });
+        if (!rows.length) {
+          container.innerHTML = '<p style="color:var(--text-secondary);">No dev access codes yet.</p>';
+          return;
+        }
+        container.innerHTML = `
+          <table class="staff-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Catalogue</th>
+                <th>Label</th>
+                <th>Uses</th>
+                <th>Expires</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((row) => {
+                const status = getStaffDevAccessCodeStatus(row);
+                const statusColor = status.tone === 'ok'
+                  ? 'var(--neon-green)'
+                  : status.tone === 'danger'
+                    ? 'var(--neon-pink)'
+                    : 'var(--text-secondary)';
+                const usesText = row.maxUses != null && Number.isFinite(Number(row.maxUses))
+                  ? `${Number(row.useCount) || 0} / ${Number(row.maxUses)}`
+                  : `${Number(row.useCount) || 0} / ∞`;
+                const expiresText = row.expiresAt?.toDate
+                  ? row.expiresAt.toDate().toLocaleString()
+                  : 'Never';
+                const links = buildStaffDevAccessShareLinks(row.id, row.catalog).map((link) =>
+                  `<button type="button" class="staff-btn staff-btn-sm staff-access-copy" data-copy="${escapeHtml(link.href)}" title="${escapeHtml(link.href)}">Copy ${escapeHtml(link.label)}</button>`
+                ).join(' ');
+                const manageBtns = canManage ? `
+                  <button type="button" class="staff-btn staff-btn-sm staff-access-edit" data-id="${escapeHtml(row.id)}">Edit</button>
+                  <button type="button" class="staff-btn staff-btn-sm staff-access-toggle" data-id="${escapeHtml(row.id)}" data-active="${row.active === false ? '0' : '1'}">${row.active === false ? 'Activate' : 'Deactivate'}</button>
+                  <button type="button" class="staff-btn staff-btn-danger staff-btn-sm staff-access-del" data-id="${escapeHtml(row.id)}">Delete</button>
+                ` : '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>';
+                return `
+                  <tr>
+                    <td><code>${escapeHtml(row.id)}</code></td>
+                    <td>${escapeHtml(formatStaffDevAccessCatalog(row.catalog))}</td>
+                    <td>${escapeHtml(row.label || '—')}</td>
+                    <td>${escapeHtml(usesText)}</td>
+                    <td>${escapeHtml(expiresText)}</td>
+                    <td style="color:${statusColor};font-weight:800;">${escapeHtml(status.label)}</td>
+                    <td><div class="staff-flex-row" style="gap:6px;flex-wrap:wrap;">${links}${manageBtns}</div></td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+        container.querySelectorAll('.staff-access-copy').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const text = btn.dataset.copy || '';
+            try {
+              await navigator.clipboard.writeText(text);
+              showNotification('Link copied', 'success');
+            } catch (_) {
+              showNotification('Could not copy link', 'error');
+            }
+          });
+        });
+        container.querySelectorAll('.staff-access-edit').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            if (!canManageDevAccessCodes()) { showNotification('No permission', 'error'); return; }
+            const snapDoc = await getDoc(doc(db, 'devAccessCodes', btn.dataset.id));
+            if (!snapDoc.exists()) return;
+            const row = snapDoc.data() || {};
+            document.getElementById('staff-access-code-edit').value = btn.dataset.id;
+            document.getElementById('staff-access-code-catalog').value = String(row.catalog || 'games').toLowerCase();
+            document.getElementById('staff-access-code-label').value = row.label || '';
+            document.getElementById('staff-access-code-code').value = btn.dataset.id;
+            document.getElementById('staff-access-code-code').readOnly = true;
+            document.getElementById('staff-access-code-expires').value = row.expiresAt?.toDate
+              ? new Date(row.expiresAt.toDate().getTime() - row.expiresAt.toDate().getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+              : '';
+            document.getElementById('staff-access-code-max-uses').value = row.maxUses != null ? String(row.maxUses) : '';
+            document.getElementById('staff-access-code-save').textContent = 'Save changes';
+            document.getElementById('staff-access-codes')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+        container.querySelectorAll('.staff-access-toggle').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            if (!canManageDevAccessCodes()) { showNotification('No permission', 'error'); return; }
+            const nextActive = btn.dataset.active !== '1';
+            await updateDoc(doc(db, 'devAccessCodes', btn.dataset.id), {
+              active: nextActive,
+              updatedAt: serverTimestamp()
+            });
+            loadStaffAccessCodes();
+            showNotification(nextActive ? 'Code activated' : 'Code deactivated', 'success');
+          });
+        });
+        container.querySelectorAll('.staff-access-del').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            if (!canManageDevAccessCodes()) { showNotification('No permission', 'error'); return; }
+            if (!confirm('Delete this access code?')) return;
+            await deleteDoc(doc(db, 'devAccessCodes', btn.dataset.id));
+            loadStaffAccessCodes();
+            showNotification('Access code deleted', 'success');
+          });
+        });
+      } catch (e) {
+        container.innerHTML = '<p style="color:var(--neon-pink);">Error loading dev access codes.</p>';
+      }
+    }
+
     /**
      * Resolve a user uid from an email for staff tools — matches Firebase-style
      * normalization (case-insensitive) and falls back to authUsers bridge doc id (= uid).
@@ -7801,6 +8003,77 @@
         document.getElementById('staff-mission-form-modal').style.display = 'none';
         loadStaffMissions();
         showNotification('Mission saved','success');
+      });
+
+      document.getElementById('staff-access-code-reset')?.addEventListener('click', () => {
+        resetStaffAccessCodeForm();
+      });
+
+      document.getElementById('staff-access-code-save')?.addEventListener('click', async () => {
+        if (!canManageDevAccessCodes()) {
+          showNotification('No permission to manage dev access codes', 'error');
+          return;
+        }
+        const editId = String(document.getElementById('staff-access-code-edit')?.value || '').trim();
+        const catalog = String(document.getElementById('staff-access-code-catalog')?.value || 'games').toLowerCase();
+        const label = String(document.getElementById('staff-access-code-label')?.value || '').trim();
+        const expiresRaw = String(document.getElementById('staff-access-code-expires')?.value || '').trim();
+        const maxUsesRaw = String(document.getElementById('staff-access-code-max-uses')?.value || '').trim();
+        let code = normalizeStaffDevAccessCode(document.getElementById('staff-access-code-code')?.value);
+        if (!editId && !code) code = generateStaffDevAccessCode(catalog);
+        if (!editId && !/^[A-Z0-9-]{6,64}$/.test(code)) {
+          showNotification('Code must be 6–64 letters, numbers, or dashes', 'error');
+          return;
+        }
+        const maxUses = maxUsesRaw ? Number.parseInt(maxUsesRaw, 10) : null;
+        if (maxUsesRaw && (!Number.isFinite(maxUses) || maxUses < 1)) {
+          showNotification('Max uses must be at least 1', 'error');
+          return;
+        }
+        const expiresAt = expiresRaw ? Timestamp.fromDate(new Date(expiresRaw)) : null;
+        const payload = {
+          catalog,
+          label,
+          expiresAt,
+          maxUses,
+          updatedAt: serverTimestamp()
+        };
+        try {
+          if (editId) {
+            await updateDoc(doc(db, 'devAccessCodes', editId), payload);
+            resetStaffAccessCodeForm();
+            loadStaffAccessCodes();
+            showNotification('Access code updated', 'success');
+            return;
+          }
+          const existing = await getDoc(doc(db, 'devAccessCodes', code));
+          if (existing.exists()) {
+            showNotification('That code already exists — choose another', 'error');
+            return;
+          }
+          await setDoc(doc(db, 'devAccessCodes', code), {
+            ...payload,
+            active: true,
+            useCount: 0,
+            createdAt: serverTimestamp(),
+            createdBy: currentUser?.uid || '',
+            createdByEmail: currentUser?.email || '',
+            lastUsedAt: null
+          });
+          const created = document.getElementById('staff-access-code-created');
+          if (created) {
+            const links = buildStaffDevAccessShareLinks(code, catalog).map((link) =>
+              `<div><strong>${escapeHtml(link.label)}:</strong> <code>${escapeHtml(link.href)}</code></div>`
+            ).join('');
+            created.innerHTML = `<strong>Code created:</strong> <code>${escapeHtml(code)}</code>${links ? `<div style="margin-top:8px;">${links}</div>` : ''}`;
+            created.hidden = false;
+          }
+          resetStaffAccessCodeForm();
+          loadStaffAccessCodes();
+          showNotification('Access code created', 'success');
+        } catch (err) {
+          showNotification('Could not save access code: ' + (err?.message || String(err)), 'error');
+        }
       });
 
       document.getElementById('staff-mod-apply-btn')?.addEventListener('click', async () => {
