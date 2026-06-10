@@ -28,18 +28,72 @@
       <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add game</button>
     </nav>
 
-    <section class="games-featured" aria-label="Featured games">
-      <div class="games-featured-head">
-        <h2>Featured picks</h2>
-        <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games · <strong id="devCategoryCount">0</strong> tags</span>
-      </div>
-      <div class="games-featured-track" id="gamesFeaturedTrack"></div>
-    </section>
+    <main class="games-home">
+      <section class="games-hero" aria-label="Dev games spotlight">
+        <div class="games-hero-copy">
+          <span class="games-kicker">Dev games</span>
+          <h1>Discover web games with a Poki-style browsing layout.</h1>
+          <p>
+            Browse trending picks, jump into fast playtests, and explore the full dev catalogue
+            with big visual tiles, quick filters, and spotlighted games up front.
+          </p>
+          <div class="games-hero-stats">
+            <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games online</span>
+            <span class="dev-stat-pill"><strong id="devCategoryCount">0</strong> tags to explore</span>
+            <span class="dev-stat-pill">No install · click and play</span>
+          </div>
+        </div>
+        <article class="games-spotlight-card" id="gamesSpotlightCard" aria-live="polite"></article>
+      </section>
 
-    <div class="dev-cats" id="devCats" hidden></div>
-    <div class="dev-status" id="devStatus">Loading catalogue…</div>
-    <main class="dev-grid" id="devGrid" hidden></main>
-    <p class="dev-foot">Dev-only — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
+      <div class="games-discovery-layout">
+        <div class="games-main-column">
+          <section class="games-featured" aria-label="Popular this week">
+            <div class="games-featured-head">
+              <div>
+                <span class="games-section-eyebrow">Popular this week</span>
+                <h2>Jump back into the hottest picks</h2>
+              </div>
+              <span class="games-section-meta">Fast-launch tiles styled for browsing</span>
+            </div>
+            <div class="games-featured-track" id="gamesFeaturedTrack"></div>
+          </section>
+
+          <section class="games-browse-shell">
+            <div class="games-browse-head">
+              <div>
+                <span class="games-section-eyebrow">Browse all games</span>
+                <h2 id="gamesResultsTitle">Every game in the dev catalogue</h2>
+              </div>
+              <span class="games-results-meta" id="gamesResultsMeta">Loading catalogue…</span>
+            </div>
+            <div class="dev-cats" id="devCats" hidden></div>
+            <div class="dev-status" id="devStatus">Loading catalogue…</div>
+            <div class="dev-grid" id="devGrid" hidden></div>
+          </section>
+        </div>
+
+        <aside class="games-side-column">
+          <section class="games-sidebar-card">
+            <div class="games-sidebar-head">
+              <span class="games-section-eyebrow">Top free games</span>
+              <h2>Trending right now</h2>
+            </div>
+            <div class="games-top-list" id="gamesTopList"></div>
+          </section>
+
+          <section class="games-sidebar-card games-sidebar-note">
+            <span class="games-section-eyebrow">About this page</span>
+            <h2>Built for fast discovery</h2>
+            <p>
+              This dev surface is intentionally more playful than the admin tools: colorful,
+              browseable, and optimized for quickly launching games like a public arcade homepage.
+            </p>
+            <p class="dev-foot">Dev-only — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
+          </section>
+        </aside>
+      </div>
+    </main>
 
     <div class="games-drawer-backdrop" data-dev-form-backdrop hidden></div>
     <div class="dev-form-panel" data-dev-form-panel hidden>

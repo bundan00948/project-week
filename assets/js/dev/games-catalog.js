@@ -184,14 +184,62 @@ function populateTagDatalist(root, tagOptions) {
   list.innerHTML = tagOptions.map((tag) => `<option value="${escapeHtml(tag)}"></option>`).join('');
 }
 
+function getFeaturedGames(games, limit = 10) {
+  return [...(games || [])]
+    .sort((a, b) =>
+      Number(Boolean(b.image)) - Number(Boolean(a.image))
+      || (b.rating || 0) - (a.rating || 0)
+      || a.title.localeCompare(b.title)
+    )
+    .slice(0, limit);
+}
+
+function gameSummary(game) {
+  const description = String(game?.description || '').trim();
+  if (description) return description;
+  const tags = Array.isArray(game?.tags) ? game.tags.filter(Boolean) : [];
+  if (tags.length) return `${tags.slice(0, 3).join(' · ')}.`;
+  return game?.multiplayer
+    ? 'Multiplayer playtest ready.'
+    : 'Instant browser game.';
+}
+
+function renderSpotlight(root, games, openGame) {
+  const spotlight = root.querySelector('#gamesSpotlightCard');
+  if (!spotlight) return;
+  const game = getFeaturedGames(games, 1)[0];
+  if (!game) {
+    spotlight.innerHTML = '<div class="games-empty-card">No spotlight game available yet.</div>';
+    return;
+  }
+  const art = game.image
+    ? `<img class="games-spotlight-art" src="${escapeHtml(game.image)}" alt="" loading="eager">`
+    : '<div class="games-spotlight-fallback" aria-hidden="true"></div>';
+  spotlight.innerHTML = `
+    ${art}
+    <div class="games-spotlight-body">
+      <div class="games-spotlight-badges">
+        <span>Top pick</span>
+        <span>★ ${Number(game.rating || 0).toFixed(1)}</span>
+        <span>${game.multiplayer ? 'Multiplayer' : 'Single player'}</span>
+      </div>
+      <h2 class="games-spotlight-title">${escapeHtml(game.title)}</h2>
+      <p class="games-spotlight-desc">${escapeHtml(gameSummary(game))}</p>
+      <button type="button" class="games-play-btn" data-spotlight-id="${escapeHtml(game.id)}">
+        <i class="fas fa-play" aria-hidden="true"></i>
+        <span>Play now</span>
+      </button>
+    </div>
+  `;
+  spotlight.querySelector('[data-spotlight-id]')?.addEventListener('click', () => openGame(game));
+}
+
 function renderFeaturedRow(root, games, openGame) {
   const track = root.querySelector('#gamesFeaturedTrack');
   if (!track) return;
-  const featured = [...games]
-    .sort((a, b) => (b.rating || 0) - (a.rating || 0) || a.title.localeCompare(b.title))
-    .slice(0, 10);
+  const featured = getFeaturedGames(games, 10);
   if (!featured.length) {
-    track.innerHTML = '<p class="dev-status" style="padding:12px 0;">No featured games yet.</p>';
+    track.innerHTML = '<div class="games-empty-card">No featured games yet.</div>';
     return;
   }
   track.innerHTML = featured.map((game) => {
@@ -223,6 +271,37 @@ function renderFeaturedRow(root, games, openGame) {
   });
 }
 
+function renderTopList(root, games, openGame) {
+  const listEl = root.querySelector('#gamesTopList');
+  if (!listEl) return;
+  const featured = getFeaturedGames(games, 5);
+  if (!featured.length) {
+    listEl.innerHTML = '<div class="games-empty-card">No trending games yet.</div>';
+    return;
+  }
+  listEl.innerHTML = featured.map((game, index) => `
+    <button type="button" class="games-top-item" data-top-id="${escapeHtml(game.id)}">
+      <span class="games-top-rank">#${index + 1}</span>
+      ${game.image
+        ? `<img class="games-top-thumb" src="${escapeHtml(game.image)}" alt="" loading="lazy">`
+        : '<div class="games-top-thumb" aria-hidden="true"></div>'}
+      <span class="games-top-copy">
+        <span class="games-top-title">${escapeHtml(game.title)}</span>
+        <span class="games-top-meta">
+          <span>★ ${Number(game.rating || 0).toFixed(1)}</span>
+          <span>${game.multiplayer ? 'Multi' : 'Solo'}</span>
+        </span>
+      </span>
+    </button>
+  `).join('');
+  listEl.querySelectorAll('[data-top-id]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const game = featured.find((entry) => String(entry.id) === String(btn.dataset.topId));
+      if (game) openGame(game);
+    });
+  });
+}
+
 export function mountGamesCatalog(root) {
   if (root.__devGamesCatalogMounted) return;
   root.__devGamesCatalogMounted = true;
@@ -231,6 +310,8 @@ export function mountGamesCatalog(root) {
   const catsEl = root.querySelector('#devCats');
   const gridEl = root.querySelector('#devGrid');
   const qEl = root.querySelector('#devSearch');
+  const resultsMetaEl = root.querySelector('#gamesResultsMeta');
+  const resultsTitleEl = root.querySelector('#gamesResultsTitle');
   const modalEl = root.querySelector('#devGameModal');
   const modalTitleEl = root.querySelector('#devGameModalTitle');
   const modalFrameEl = root.querySelector('#devGameModalFrame');
@@ -273,6 +354,16 @@ export function mountGamesCatalog(root) {
 
   function renderGrid() {
     const list = visibleGames();
+    const category = data?.categories?.find((cat) => cat.key === activeCat);
+    if (resultsTitleEl) {
+      resultsTitleEl.textContent = category?.key && category.key !== '__all__'
+        ? `${category.label} games`
+        : 'Every game in the dev catalogue';
+    }
+    if (resultsMetaEl) {
+      const queryLabel = query.trim() ? ` for "${query.trim()}"` : '';
+      resultsMetaEl.textContent = `${list.length} result${list.length === 1 ? '' : 's'}${queryLabel}`;
+    }
     gridEl.innerHTML = list.length
       ? list.map((game) => {
           const banner = game.image
@@ -280,8 +371,14 @@ export function mountGamesCatalog(root) {
             : '<div class="dev-card-media-fallback" aria-hidden="true"></div>';
           const canPlay = Boolean(String(game.url || '').trim());
           const playBtn = canPlay
-            ? `<button type="button" class="dev-card-play-chip" data-game-id="${escapeHtml(game.id)}">Play</button>`
+            ? `<button type="button" class="dev-card-play-chip games-grid-play" data-game-id="${escapeHtml(game.id)}">Play</button>`
             : '';
+          const tags = Array.isArray(game.tags) ? game.tags.slice(0, 2) : [];
+          const metaChips = [
+            `★ ${Number(game.rating || 0).toFixed(1)}`,
+            game.multiplayer ? 'Multiplayer' : 'Single player',
+            ...tags
+          ].slice(0, 3);
           return `<article class="dev-card">
             <div class="dev-card-media">
               ${banner}
@@ -289,14 +386,14 @@ export function mountGamesCatalog(root) {
             </div>
             <div class="dev-card-body">
               <h2 class="dev-card-title">${escapeHtml(game.title)}</h2>
-              <div class="dev-card-meta">
-                <span class="dev-chip">★ ${Number(game.rating || 0).toFixed(1)}</span>
-                <span class="dev-chip">${game.multiplayer ? 'Multiplayer' : 'Single'}</span>
+              <p class="games-grid-tagline">${escapeHtml(gameSummary(game))}</p>
+              <div class="dev-card-meta games-grid-meta">
+                ${metaChips.map((chip) => `<span>${escapeHtml(chip)}</span>`).join('')}
               </div>
             </div>
           </article>`;
         }).join('')
-      : '<div class="dev-status" style="grid-column:1/-1;">No games in this view.</div>';
+      : '<div class="games-empty-card" style="grid-column:1/-1;">No games match this view yet.</div>';
 
     gridEl.querySelectorAll('[data-game-id]').forEach((btn) => {
       btn.addEventListener('click', (e) => {
@@ -311,6 +408,13 @@ export function mountGamesCatalog(root) {
       if (!game || !String(game.url || '').trim()) return;
       card.style.cursor = 'pointer';
       card.addEventListener('click', () => openGame(game));
+      card.tabIndex = 0;
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openGame(game);
+        }
+      });
     });
   }
 
@@ -335,7 +439,9 @@ export function mountGamesCatalog(root) {
     data = await loadGamesCatalog();
     updateHeroStats(root, data);
     populateTagDatalist(root, data.tagOptions);
+    renderSpotlight(root, data.games, openGame);
     renderFeaturedRow(root, data.games, openGame);
+    renderTopList(root, data.games, openGame);
     renderCats();
     renderGrid();
   }
@@ -381,7 +487,9 @@ export function mountGamesCatalog(root) {
       gridEl.hidden = false;
       updateHeroStats(root, data);
       populateTagDatalist(root, data.tagOptions);
+      renderSpotlight(root, data.games, openGame);
       renderFeaturedRow(root, data.games, openGame);
+      renderTopList(root, data.games, openGame);
       renderCats();
       renderGrid();
     })
