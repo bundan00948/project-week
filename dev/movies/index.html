@@ -126,18 +126,11 @@
   </div>
 
   <script type="module">
-    import { mountDevAccessGate } from '/assets/js/dev/access-gate.js';
     import { mountMoviesCatalog } from '/assets/js/dev/movies-catalog.js';
 
-    mountDevAccessGate('movies', {
-      label: 'Dev movies',
-      hint: 'Enter the dev movies access code to browse and watch without signing in.',
-      onUnlock() {
-        const shell = document.getElementById('devShell');
-        if (shell) shell.hidden = false;
-        mountMoviesCatalog(document);
-      }
-    });
+    const shell = document.getElementById('devShell');
+    if (shell) shell.hidden = false;
+    mountMoviesCatalog(document);
   </script>
 </body>
 </html>

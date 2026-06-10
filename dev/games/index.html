@@ -13,78 +13,127 @@
   <link rel="stylesheet" href="/assets/css/dev-games.css">
 </head>
 <body>
-  <div class="dev-shell games-shell" id="devShell" hidden>
-    <nav class="games-nav">
-      <div class="games-brand">
-        <div class="games-brand-mark" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
-        <div>
-          <div class="games-brand-name">Arcade</div>
-          <div class="games-brand-tag">Dev catalogue</div>
-        </div>
-      </div>
-      <div class="games-nav-search">
-        <input type="search" id="devSearch" placeholder="Search games…" autocomplete="off" aria-label="Search games">
-      </div>
-      <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add game</button>
-    </nav>
+  <div class="dev-shell games-shell" id="devShell">
+    <aside class="poki-sidebar" aria-label="Games navigation">
+      <a class="poki-logo" href="/dev/games" aria-label="Dev games home">
+        <span class="poki-logo-mark" aria-hidden="true"><i class="fas fa-gamepad"></i></span>
+        <span>Arcade</span>
+      </a>
+      <nav class="poki-side-links" aria-label="Browse shortcuts">
+        <a class="active" href="/dev/games"><i class="fas fa-house" aria-hidden="true"></i><span>Home</span></a>
+        <a href="#featuredGames"><i class="fas fa-fire-flame-curved" aria-hidden="true"></i><span>Popular</span></a>
+        <a href="#gameCategories"><i class="fas fa-shapes" aria-hidden="true"></i><span>Categories</span></a>
+        <a href="#allGames"><i class="fas fa-border-all" aria-hidden="true"></i><span>All games</span></a>
+        <a href="/dev/movies"><i class="fas fa-film" aria-hidden="true"></i><span>Movies</span></a>
+      </nav>
+      <p class="poki-side-note">Dev catalogue · no access code required</p>
+    </aside>
 
-    <section class="games-featured" aria-label="Featured games">
-      <div class="games-featured-head">
-        <h2>Featured picks</h2>
-        <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games · <strong id="devCategoryCount">0</strong> tags</span>
-      </div>
-      <div class="games-featured-track" id="gamesFeaturedTrack"></div>
-    </section>
-
-    <div class="dev-cats" id="devCats" hidden></div>
-    <div class="dev-status" id="devStatus">Loading catalogue…</div>
-    <main class="dev-grid" id="devGrid" hidden></main>
-    <p class="dev-foot">Dev-only — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
-
-    <div class="games-drawer-backdrop" data-dev-form-backdrop hidden></div>
-    <div class="dev-form-panel" data-dev-form-panel hidden>
-      <div class="dev-form-card">
-        <div class="dev-form-head">
-          <h2>Add a new game</h2>
-          <button type="button" class="dev-btn" data-dev-form-close>Close</button>
-        </div>
-        <form id="devAddGameForm">
-          <div class="dev-form-grid">
-            <label class="dev-field dev-field-full">
-              <span>Title</span>
-              <input type="text" name="title" required placeholder="Game title">
-            </label>
-            <label class="dev-field dev-field-full">
-              <span>Cover image URL</span>
-              <input type="url" name="image" required placeholder="https://…">
-            </label>
-            <label class="dev-field dev-field-full">
-              <span>Game URL (iframe / play link)</span>
-              <input type="url" name="url" required placeholder="https://…">
-            </label>
-            <label class="dev-field">
-              <span>Rating (0–5)</span>
-              <input type="number" name="rating" min="0" max="5" step="0.1" value="3">
-            </label>
-            <label class="dev-field">
-              <span>Mode</span>
-              <select name="multiplayer">
-                <option value="false">Single player</option>
-                <option value="true">Multiplayer</option>
-              </select>
-            </label>
-            <label class="dev-field dev-field-full">
-              <span>Tags (comma-separated)</span>
-              <input type="text" name="tags" list="devTagSuggestions" placeholder="action, arcade, puzzle">
-            </label>
+    <div class="poki-page">
+      <nav class="games-nav">
+        <div class="games-brand">
+          <div class="games-brand-mark" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
+          <div>
+            <div class="games-brand-name">Arcade</div>
+            <div class="games-brand-tag">Dev catalogue</div>
           </div>
-          <datalist id="devTagSuggestions"></datalist>
-          <div class="dev-form-actions">
-            <button type="submit" class="dev-btn dev-btn-primary">Save game</button>
-            <button type="reset" class="dev-btn">Reset</button>
+        </div>
+        <div class="games-nav-search">
+          <input type="search" id="devSearch" placeholder="Search games…" autocomplete="off" aria-label="Search games">
+        </div>
+        <button type="button" class="dev-btn dev-btn-primary" data-dev-form-toggle aria-expanded="false">+ Add game</button>
+      </nav>
+
+      <main class="poki-content">
+        <section class="poki-hero" id="featuredGames" aria-labelledby="pokiHeroTitle">
+          <div class="poki-hero-copy">
+            <span class="poki-kicker">Play instantly</span>
+            <h1 id="pokiHeroTitle">Free dev games, ready in one click.</h1>
+            <p>Browse the test arcade with a Poki-inspired layout, fast search, playful categories, and big rounded game tiles.</p>
+            <div class="poki-hero-stats">
+              <span class="dev-stat-pill"><strong id="devTotalCount">0</strong> games</span>
+              <span class="dev-stat-pill"><strong id="devCategoryCount">0</strong> tags</span>
+            </div>
           </div>
-          <p class="dev-form-msg" id="devFormMsg"></p>
-        </form>
+          <div class="games-featured">
+            <div class="games-featured-head">
+              <h2>Popular this week</h2>
+              <span>Tap a tile to play</span>
+            </div>
+            <div class="games-featured-track" id="gamesFeaturedTrack"></div>
+          </div>
+        </section>
+
+        <section class="poki-section poki-categories" id="gameCategories" aria-labelledby="gameCategoriesTitle">
+          <div class="poki-section-head">
+            <div>
+              <span class="poki-kicker">Find your fun</span>
+              <h2 id="gameCategoriesTitle">Categories</h2>
+            </div>
+          </div>
+          <div class="dev-cats" id="devCats" hidden></div>
+        </section>
+
+        <section class="poki-section" id="allGames" aria-labelledby="allGamesTitle">
+          <div class="poki-section-head">
+            <div>
+              <span class="poki-kicker">Explore</span>
+              <h2 id="allGamesTitle">All games</h2>
+            </div>
+            <p>Click any card to launch in the player.</p>
+          </div>
+          <div class="dev-status" id="devStatus">Loading catalogue…</div>
+          <div class="dev-grid" id="devGrid" hidden></div>
+        </section>
+
+        <p class="dev-foot">Dev-only — not linked from the main site. <a href="/games/dashboard">Game Universe home</a></p>
+      </main>
+
+      <div class="games-drawer-backdrop" data-dev-form-backdrop hidden></div>
+      <div class="dev-form-panel" data-dev-form-panel hidden>
+        <div class="dev-form-card">
+          <div class="dev-form-head">
+            <h2>Add a new game</h2>
+            <button type="button" class="dev-btn" data-dev-form-close>Close</button>
+          </div>
+          <form id="devAddGameForm">
+            <div class="dev-form-grid">
+              <label class="dev-field dev-field-full">
+                <span>Title</span>
+                <input type="text" name="title" required placeholder="Game title">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Cover image URL</span>
+                <input type="url" name="image" required placeholder="https://…">
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Game URL (iframe / play link)</span>
+                <input type="url" name="url" required placeholder="https://…">
+              </label>
+              <label class="dev-field">
+                <span>Rating (0–5)</span>
+                <input type="number" name="rating" min="0" max="5" step="0.1" value="3">
+              </label>
+              <label class="dev-field">
+                <span>Mode</span>
+                <select name="multiplayer">
+                  <option value="false">Single player</option>
+                  <option value="true">Multiplayer</option>
+                </select>
+              </label>
+              <label class="dev-field dev-field-full">
+                <span>Tags (comma-separated)</span>
+                <input type="text" name="tags" list="devTagSuggestions" placeholder="action, arcade, puzzle">
+              </label>
+            </div>
+            <datalist id="devTagSuggestions"></datalist>
+            <div class="dev-form-actions">
+              <button type="submit" class="dev-btn dev-btn-primary">Save game</button>
+              <button type="reset" class="dev-btn">Reset</button>
+            </div>
+            <p class="dev-form-msg" id="devFormMsg"></p>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -98,18 +147,9 @@
   </div>
 
   <script type="module">
-    import { mountDevAccessGate } from '/assets/js/dev/access-gate.js';
     import { mountGamesCatalog } from '/assets/js/dev/games-catalog.js';
 
-    mountDevAccessGate('games', {
-      label: 'Dev games',
-      hint: 'Enter the dev games access code to browse and play without signing in.',
-      onUnlock() {
-        const shell = document.getElementById('devShell');
-        if (shell) shell.hidden = false;
-        mountGamesCatalog(document);
-      }
-    });
+    mountGamesCatalog(document);
   </script>
 </body>
 </html>
