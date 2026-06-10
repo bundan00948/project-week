@@ -603,6 +603,18 @@
       return next;
     }
 
+    function firstNonEmptyString(...values) {
+      for (const value of values) {
+        const text = String(value ?? '').trim();
+        if (text) return text;
+      }
+      return '';
+    }
+
+    function hasGameHeroArt(game) {
+      return Boolean(firstNonEmptyString(game?.image));
+    }
+
     function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
       const fallbackKey = (indexHint + 1) <= MAX_GAME_KEY_ID ? (indexHint + 1) : stableNumericKey(fallbackId || raw?.title || '', MAX_GAME_KEY_ID);
       const gameKey = toBoundedPositiveInt(raw.gameKey ?? raw.gameIdKey ?? raw.key, MAX_GAME_KEY_ID);
@@ -611,8 +623,19 @@
         gameKey: gameKey !== null ? gameKey : fallbackKey,
         title: String(raw.title || raw.name || 'Untitled Game'),
         description: String(raw.description || raw.desc || ''),
-        image: String(raw.image || raw.banner || ''),
-        url: String(raw.url || ''),
+        image: firstNonEmptyString(
+          raw.image,
+          raw.banner,
+          raw.gameBanner,
+          raw.imageUrl,
+          raw.bannerUrl,
+          raw.coverImage,
+          raw.cover,
+          raw.thumbnail,
+          raw.thumb,
+          raw.poster
+        ),
+        url: String(raw.url || raw.gameUrl || ''),
         rating: Number.parseFloat(raw.rating ?? 3) || 3,
         multiplayer: Boolean(raw.multiplayer),
         tags: (() => {
@@ -1967,9 +1990,10 @@
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
+        const heroGames = (games.filter(hasGameHeroArt).slice(0, 5).map((g, i) => ({ ...g, rank: i + 1 })));
         const newGames = games.slice(5);
         const allGames = games;
-        return { topGames, newGames, allGames };
+        return { heroGames, topGames, newGames, allGames };
       } catch(e) { console.error(e); return { topGames: [], newGames: [], allGames: [] }; }
     }
 
@@ -2388,7 +2412,7 @@
             }
             return;
           }
-          renderTopGamesCarousel(data.topGames);
+          renderTopGamesCarousel(data.heroGames || data.topGames);
           await renderCategoryBrowsing(data);
           renderFullGamesList(data.allGames);
           populateIssueGameSelect(data.allGames);
@@ -2430,8 +2454,14 @@
     function renderTopGamesCarousel(topGames) {
       const container = document.getElementById('topGamesCarousel');
       if (!container) return;
+      const heroGames = Array.isArray(topGames) ? topGames.filter(hasGameHeroArt) : [];
+      if (!heroGames.length) {
+        clearInterval(interval);
+        return;
+      }
+      currentSlide = 0;
       container.innerHTML = '';
-      topGames.forEach((game, idx) => {
+      heroGames.forEach((game, idx) => {
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
@@ -2452,11 +2482,12 @@
         container.appendChild(slide);
       });
       const nav = document.createElement('div'); nav.className='carousel-nav';
-      topGames.forEach((_, i)=>{ const dot=document.createElement('div'); dot.className=`carousel-dot ${i===0?'active': ''}`; dot.addEventListener('click', ()=>showSlide(i)); nav.appendChild(dot); });
+      heroGames.forEach((_, i)=>{ const dot=document.createElement('div'); dot.className=`carousel-dot ${i===0?'active': ''}`; dot.addEventListener('click', ()=>showSlide(i)); nav.appendChild(dot); });
       container.appendChild(nav);
       container.querySelectorAll('.slide-play-button').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); handleGameClick(btn.dataset.id, btn.dataset.title, btn.dataset.url); }));
       preloadCarouselSlideBgs(0);
-      startCarousel();
+      if (heroGames.length > 1) startCarousel();
+      else clearInterval(interval);
     }
 
     let currentSlide=0, interval;

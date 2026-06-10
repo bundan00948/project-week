@@ -29,6 +29,14 @@ function stableNumericKey(seed, max) {
   return Math.abs(hash) % (max + 1);
 }
 
+function firstNonEmptyString(...values) {
+  for (const value of values) {
+    const text = String(value ?? '').trim();
+    if (text) return text;
+  }
+  return '';
+}
+
 export function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
   const fallbackKey = (indexHint + 1) <= MAX_GAME_KEY_ID
     ? (indexHint + 1)
@@ -39,8 +47,19 @@ export function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
     gameKey: gameKey !== null ? gameKey : fallbackKey,
     title: String(raw.title || raw.name || 'Untitled Game'),
     description: String(raw.description || raw.desc || ''),
-    image: String(raw.image || raw.banner || ''),
-    url: String(raw.url || ''),
+    image: firstNonEmptyString(
+      raw.image,
+      raw.banner,
+      raw.gameBanner,
+      raw.imageUrl,
+      raw.bannerUrl,
+      raw.coverImage,
+      raw.cover,
+      raw.thumbnail,
+      raw.thumb,
+      raw.poster
+    ),
+    url: String(raw.url || raw.gameUrl || ''),
     rating: Number.parseFloat(raw.rating ?? 3) || 3,
     multiplayer: Boolean(raw.multiplayer),
     tags: (() => {
