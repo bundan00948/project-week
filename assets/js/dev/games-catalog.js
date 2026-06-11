@@ -183,6 +183,24 @@ function domIdFromCategoryKey(key) {
   return String(key || 'category').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'category';
 }
 
+function largeTileIndexForCategory(catKey, gameCount) {
+  if (gameCount <= 1) return 0;
+  if (gameCount === 2) return 1;
+  const hash = stableNumericKey(catKey, MAX_GAME_KEY_ID);
+  const index = hash % gameCount;
+  return index === 0 ? Math.min(gameCount - 1, Math.max(1, Math.floor(gameCount / 2))) : index;
+}
+
+function arrangeCategoryGames(catKey, games) {
+  const sorted = [...games].sort(popularGameComparator);
+  if (sorted.length <= 1) return sorted.map((game) => ({ game, large: true }));
+
+  const topGame = sorted.shift();
+  const insertAt = largeTileIndexForCategory(catKey, sorted.length + 1);
+  sorted.splice(insertAt, 0, topGame);
+  return sorted.map((game) => ({ game, large: game.id === topGame.id }));
+}
+
 async function addGameToFirestore(formData, existingGames) {
   const { db, fs } = await getFirestoreDb();
   const title = String(formData.get('title') || '').trim();
@@ -362,13 +380,19 @@ export function mountGamesCatalog(root) {
   function renderCategorySection(cat, games) {
     if (!games.length) return '';
     const domId = domIdFromCategoryKey(cat.key);
-    return `<section class="dev-category-section" id="dev-category-${escapeHtml(domId)}" aria-labelledby="dev-category-title-${escapeHtml(domId)}">
+    const sizeClass = games.length <= 4
+      ? ' dev-category-section-small'
+      : games.length >= 10
+        ? ' dev-category-section-large'
+        : ' dev-category-section-medium';
+    const arrangedGames = arrangeCategoryGames(cat.key, games);
+    return `<section class="dev-category-section${sizeClass}" id="dev-category-${escapeHtml(domId)}" aria-labelledby="dev-category-title-${escapeHtml(domId)}">
       <div class="dev-category-head">
         <h3 id="dev-category-title-${escapeHtml(domId)}">${escapeHtml(cat.label)}</h3>
         <span>${games.length} ${games.length === 1 ? 'game' : 'games'}</span>
       </div>
       <div class="dev-category-grid">
-        ${games.map((game, index) => renderGameCard(game, { large: index === 0 })).join('')}
+        ${arrangedGames.map(({ game, large }) => renderGameCard(game, { large })).join('')}
       </div>
     </section>`;
   }
