@@ -42,11 +42,6 @@ function toNonNegativeNumber(value) {
   return Number.isFinite(number) && number > 0 ? number : 0;
 }
 
-function formatPlayCount(count) {
-  const plays = Math.max(0, Number(count) || 0);
-  return `${plays.toLocaleString()} ${plays === 1 ? 'play' : 'plays'}`;
-}
-
 export function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
   const fallbackKey = (indexHint + 1) <= MAX_GAME_KEY_ID
     ? (indexHint + 1)
@@ -174,10 +169,18 @@ export async function loadGamesCatalog() {
 
   const gamesByCategory = { __all__: games };
   tagGroups.forEach((group, key) => {
-    gamesByCategory[key] = group.games.sort((a, b) => a.title.localeCompare(b.title));
+    gamesByCategory[key] = group.games.sort(popularGameComparator);
   });
 
   return { categories, gamesByCategory, games, tagOptions: tagOptions.sort((a, b) => a.localeCompare(b)) };
+}
+
+function popularGameComparator(a, b) {
+  return (b.playCount || 0) - (a.playCount || 0) || a.title.localeCompare(b.title);
+}
+
+function domIdFromCategoryKey(key) {
+  return String(key || 'category').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'category';
 }
 
 async function addGameToFirestore(formData, existingGames) {
@@ -232,7 +235,7 @@ function renderFeaturedRow(root, games, openGame) {
   const track = root.querySelector('#gamesFeaturedTrack');
   if (!track) return;
   const featured = [...games]
-    .sort((a, b) => (b.playCount || 0) - (a.playCount || 0) || a.title.localeCompare(b.title))
+    .sort(popularGameComparator)
     .slice(0, 10);
   if (!featured.length) {
     track.innerHTML = '<p class="dev-status" style="padding:12px 0;">No featured games yet.</p>';
@@ -247,7 +250,6 @@ function renderFeaturedRow(root, games, openGame) {
         <div class="games-featured-banner">${bannerImage}</div>
         <div class="games-featured-body">
           <h3 class="games-featured-title">${escapeHtml(game.title)}</h3>
-          <div class="games-featured-meta">${escapeHtml(formatPlayCount(game.playCount))} all time</div>
         </div>
       </article>
     `;
@@ -281,6 +283,7 @@ export function mountGamesCatalog(root) {
   const modalCloseEl = root.querySelector('#devGameModalClose');
   const addForm = root.querySelector('#devAddGameForm');
   const formMsg = root.querySelector('#devFormMsg');
+  const catalogueTitleEl = root.querySelector('#allGamesTitle');
 
   let data = null;
   let activeCat = '__all__';
@@ -290,6 +293,28 @@ export function mountGamesCatalog(root) {
 
   function visibleGames() {
     const list = [...(data?.gamesByCategory?.[activeCat] || [])];
+    const needle = query.trim().toLowerCase();
+    if (!needle) return list;
+    return list.filter((g) => String(g.title || '').toLowerCase().includes(needle));
+  }
+
+  function categoryGames(catKey) {
+    if (catKey === '__uncategorized__') {
+      const categorizedIds = new Set();
+      data.categories
+        .filter((cat) => cat.key !== '__all__')
+        .forEach((cat) => {
+          (data.gamesByCategory?.[cat.key] || []).forEach((game) => categorizedIds.add(String(game.id)));
+        });
+      const untaggedGames = data.games.filter((game) => !categorizedIds.has(String(game.id)));
+      const needle = query.trim().toLowerCase();
+      const filtered = needle
+        ? untaggedGames.filter((g) => String(g.title || '').toLowerCase().includes(needle))
+        : untaggedGames;
+      return filtered.sort(popularGameComparator);
+    }
+
+    const list = [...(data?.gamesByCategory?.[catKey] || [])].sort(popularGameComparator);
     const needle = query.trim().toLowerCase();
     if (!needle) return list;
     return list.filter((g) => String(g.title || '').toLowerCase().includes(needle));
@@ -315,47 +340,92 @@ export function mountGamesCatalog(root) {
     if (e.target === modalEl) closeGameModal();
   });
 
-  function renderGrid() {
-    const list = visibleGames();
-    gridEl.innerHTML = list.length
-      ? list.map((game) => {
-          const banner = game.image
-            ? `<img class="dev-card-banner" src="${escapeHtml(game.image)}" alt="" loading="lazy">`
-            : '<div class="dev-card-media-fallback" aria-hidden="true"></div>';
-          const canPlay = Boolean(String(game.url || '').trim());
-          const playBtn = canPlay
-            ? `<button type="button" class="dev-card-play-chip" data-game-id="${escapeHtml(game.id)}">Play</button>`
-            : '';
-          return `<article class="dev-card">
-            <div class="dev-card-media">
-              ${banner}
-              <div class="dev-card-play-overlay">${playBtn}</div>
-            </div>
-            <div class="dev-card-body">
-              <h2 class="dev-card-title">${escapeHtml(game.title)}</h2>
-              <div class="dev-card-meta">
-                <span class="dev-chip">${escapeHtml(formatPlayCount(game.playCount))}</span>
-                <span class="dev-chip">${game.multiplayer ? 'Multiplayer' : 'Single'}</span>
-              </div>
-            </div>
-          </article>`;
-        }).join('')
-      : '<div class="dev-status" style="grid-column:1/-1;">No games in this view.</div>';
+  function renderGameCard(game, options = {}) {
+    const banner = game.image
+      ? `<img class="dev-card-banner" src="${escapeHtml(game.image)}" alt="" loading="lazy">`
+      : '<div class="dev-card-media-fallback" aria-hidden="true"></div>';
+    const canPlay = Boolean(String(game.url || '').trim());
+    const classes = ['dev-card'];
+    if (options.large) classes.push('dev-card-large');
+    if (!canPlay) classes.push('dev-card-disabled');
+    return `<article class="${classes.join(' ')}" data-game-id="${escapeHtml(game.id)}" tabindex="${canPlay ? '0' : '-1'}" aria-label="${escapeHtml(game.title)}">
+      <div class="dev-card-media">
+        ${banner}
+        <div class="dev-card-play-overlay" aria-hidden="true"></div>
+      </div>
+      <div class="dev-card-body">
+        <h2 class="dev-card-title">${escapeHtml(game.title)}</h2>
+      </div>
+    </article>`;
+  }
 
-    gridEl.querySelectorAll('[data-game-id]').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const game = list.find((g) => String(g.id) === String(btn.dataset.gameId));
-        if (game) openGame(game);
-      });
+  function renderCategorySection(cat, games) {
+    if (!games.length) return '';
+    const domId = domIdFromCategoryKey(cat.key);
+    return `<section class="dev-category-section" id="dev-category-${escapeHtml(domId)}" aria-labelledby="dev-category-title-${escapeHtml(domId)}">
+      <div class="dev-category-head">
+        <h3 id="dev-category-title-${escapeHtml(domId)}">${escapeHtml(cat.label)}</h3>
+        <span>${games.length} ${games.length === 1 ? 'game' : 'games'}</span>
+      </div>
+      <div class="dev-category-grid">
+        ${games.map((game, index) => renderGameCard(game, { large: index === 0 })).join('')}
+      </div>
+    </section>`;
+  }
+
+  function categoriesToRender() {
+    if (!data) return [];
+    if (activeCat !== '__all__') {
+      const category = data.categories.find((cat) => cat.key === activeCat);
+      return category ? [category] : [];
+    }
+
+    const taggedCategories = data.categories.filter((cat) => cat.key !== '__all__' && cat.count > 0);
+    const categorizedIds = new Set();
+    taggedCategories.forEach((cat) => {
+      (data.gamesByCategory?.[cat.key] || []).forEach((game) => categorizedIds.add(String(game.id)));
     });
+    const hasUncategorizedGames = data.games.some((game) => !categorizedIds.has(String(game.id)));
+    const categorySections = hasUncategorizedGames
+      ? taggedCategories.concat({ key: '__uncategorized__', label: 'More games', count: data.games.length - categorizedIds.size })
+      : taggedCategories;
 
-    gridEl.querySelectorAll('.dev-card').forEach((card, index) => {
-      const game = list[index];
+    return categorySections.length
+      ? categorySections
+      : [{ key: '__all__', label: 'All games', count: data.games.length }];
+  }
+
+  function bindGameCards() {
+    gridEl.querySelectorAll('[data-game-id]').forEach((card) => {
+      const game = data.games.find((g) => String(g.id) === String(card.dataset.gameId));
       if (!game || !String(game.url || '').trim()) return;
       card.style.cursor = 'pointer';
       card.addEventListener('click', () => openGame(game));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openGame(game);
+        }
+      });
     });
+  }
+
+  function renderGrid() {
+    const sections = categoriesToRender()
+      .map((cat) => ({ cat, games: categoryGames(cat.key) }))
+      .filter(({ games }) => games.length);
+
+    if (catalogueTitleEl) {
+      catalogueTitleEl.textContent = activeCat === '__all__'
+        ? 'Game categories'
+        : (data.categories.find((cat) => cat.key === activeCat)?.label || 'Games');
+    }
+
+    gridEl.innerHTML = sections.length
+      ? sections.map(({ cat, games }) => renderCategorySection(cat, games)).join('')
+      : '<div class="dev-status" style="grid-column:1/-1;">No games in this view.</div>';
+
+    bindGameCards();
   }
 
   function renderCats() {
@@ -370,6 +440,7 @@ export function mountGamesCatalog(root) {
         catsEl.querySelectorAll('.dev-cat-btn').forEach((el) => el.classList.remove('active'));
         btn.classList.add('active');
         renderGrid();
+        root.querySelector('#allGames')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
       catsEl.appendChild(btn);
     });
