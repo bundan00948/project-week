@@ -471,51 +471,40 @@ body {
 
 .games-shell .dev-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  align-items: start;
-  gap: 22px;
+  --mosaic-cell: clamp(86px, 8vw, 126px);
+  grid-template-columns: repeat(auto-fill, minmax(var(--mosaic-cell), 1fr));
+  grid-auto-rows: var(--mosaic-cell);
+  grid-auto-flow: dense;
+  align-items: stretch;
+  gap: 12px;
   padding: 0;
 }
 
-.dev-category-section {
-  min-width: 0;
-  padding: 14px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.36);
-  box-shadow: 0 12px 24px rgba(22, 71, 98, 0.08);
-}
-
-.dev-category-section-large {
-  grid-column: span 2;
-}
-
-.dev-category-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.dev-category-head h3 {
-  margin: 0;
-  color: var(--poki-ink);
-  font-size: clamp(1.22rem, 2.3vw, 1.72rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-}
-
-.dev-category-head span {
-  color: var(--poki-muted);
-  font-size: 0.74rem;
-  font-weight: 900;
-}
-
-.dev-category-grid {
+.dev-mosaic-block {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
-  grid-auto-flow: dense;
-  gap: 10px;
+  min-width: 0;
+  gap: 12px;
+}
+
+.dev-mosaic-block-9 {
+  grid-column: span 3;
+  grid-row: span 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
+.dev-mosaic-block-4 {
+  grid-column: span 2;
+  grid-row: span 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.dev-mosaic-block-1 {
+  grid-column: span 1;
+  grid-row: span 1;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .games-shell .dev-card {
@@ -527,6 +516,11 @@ body {
   box-shadow: none;
   min-height: 0;
   transition: transform 0.2s ease;
+}
+
+.dev-mosaic-block .dev-card {
+  width: 100%;
+  height: 100%;
 }
 
 .games-shell .dev-card:hover {
@@ -552,6 +546,11 @@ body {
     linear-gradient(135deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0)),
     linear-gradient(135deg, #ffdc70, #ff8f3d);
   box-shadow: 0 11px 20px rgba(24, 50, 74, 0.16);
+}
+
+.dev-mosaic-block .dev-card-media {
+  height: 100%;
+  aspect-ratio: auto;
 }
 
 .games-shell .dev-card:nth-child(4n + 2) .dev-card-media {
@@ -763,8 +762,9 @@ body {
     min-width: 100%;
   }
 
-  .dev-category-section-large {
-    grid-column: span 1;
+  .games-shell .dev-grid {
+    --mosaic-cell: clamp(78px, 11vw, 104px);
+    gap: 10px;
   }
 }
 
@@ -782,14 +782,10 @@ body {
     padding: 16px;
   }
 
-  .dev-category-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .games-shell .dev-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: clamp(84px, 28vw, 118px);
     gap: 10px;
-  }
-
-  .games-shell .dev-card-large {
-    grid-column: span 2;
-    grid-row: span 2;
   }
 
   .games-featured-track {

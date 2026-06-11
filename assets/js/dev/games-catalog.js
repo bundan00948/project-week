@@ -183,22 +183,22 @@ function domIdFromCategoryKey(key) {
   return String(key || 'category').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'category';
 }
 
-function largeTileIndexForCategory(catKey, gameCount) {
-  if (gameCount <= 1) return 0;
-  if (gameCount === 2) return 1;
-  const hash = stableNumericKey(catKey, MAX_GAME_KEY_ID);
-  const index = hash % gameCount;
-  return index === 0 ? Math.min(gameCount - 1, Math.max(1, Math.floor(gameCount / 2))) : index;
-}
+function chunkCategoryGames(games) {
+  const chunks = [];
+  let remaining = [...games].sort(popularGameComparator);
 
-function arrangeCategoryGames(catKey, games) {
-  const sorted = [...games].sort(popularGameComparator);
-  if (sorted.length <= 1) return sorted.map((game) => ({ game, large: true }));
+  while (remaining.length) {
+    const size = remaining.length >= 9
+      ? 9
+      : remaining.length >= 8
+        ? 4
+        : remaining.length >= 4
+          ? 4
+          : 1;
+    chunks.push(remaining.splice(0, size));
+  }
 
-  const topGame = sorted.shift();
-  const insertAt = largeTileIndexForCategory(catKey, sorted.length + 1);
-  sorted.splice(insertAt, 0, topGame);
-  return sorted.map((game) => ({ game, large: game.id === topGame.id }));
+  return chunks;
 }
 
 async function addGameToFirestore(formData, existingGames) {
@@ -377,23 +377,11 @@ export function mountGamesCatalog(root) {
     </article>`;
   }
 
-  function renderCategorySection(cat, games) {
-    if (!games.length) return '';
-    const domId = domIdFromCategoryKey(cat.key);
-    const sizeClass = games.length <= 4
-      ? ' dev-category-section-small'
-      : games.length >= 10
-        ? ' dev-category-section-large'
-        : ' dev-category-section-medium';
-    const arrangedGames = arrangeCategoryGames(cat.key, games);
-    return `<section class="dev-category-section${sizeClass}" id="dev-category-${escapeHtml(domId)}" aria-labelledby="dev-category-title-${escapeHtml(domId)}">
-      <div class="dev-category-head">
-        <h3 id="dev-category-title-${escapeHtml(domId)}">${escapeHtml(cat.label)}</h3>
-        <span>${games.length} ${games.length === 1 ? 'game' : 'games'}</span>
-      </div>
-      <div class="dev-category-grid">
-        ${arrangedGames.map(({ game, large }) => renderGameCard(game, { large })).join('')}
-      </div>
+  function renderMosaicBlock(cat, games, index) {
+    const size = games.length === 9 ? 9 : games.length === 4 ? 4 : 1;
+    const domId = `${domIdFromCategoryKey(cat.key)}-${index + 1}`;
+    return `<section class="dev-mosaic-block dev-mosaic-block-${size}" id="dev-category-${escapeHtml(domId)}" aria-label="${escapeHtml(cat.label)}">
+      ${games.map((game) => renderGameCard(game)).join('')}
     </section>`;
   }
 
@@ -435,18 +423,19 @@ export function mountGamesCatalog(root) {
   }
 
   function renderGrid() {
-    const sections = categoriesToRender()
-      .map((cat) => ({ cat, games: categoryGames(cat.key) }))
+    const blocks = categoriesToRender()
+      .flatMap((cat) => chunkCategoryGames(categoryGames(cat.key))
+        .map((games, index) => ({ cat, games, index })))
       .filter(({ games }) => games.length);
 
     if (catalogueTitleEl) {
       catalogueTitleEl.textContent = activeCat === '__all__'
-        ? 'Game categories'
+        ? 'Games'
         : (data.categories.find((cat) => cat.key === activeCat)?.label || 'Games');
     }
 
-    gridEl.innerHTML = sections.length
-      ? sections.map(({ cat, games }) => renderCategorySection(cat, games)).join('')
+    gridEl.innerHTML = blocks.length
+      ? blocks.map(({ cat, games, index }) => renderMosaicBlock(cat, games, index)).join('')
       : '<div class="dev-status" style="grid-column:1/-1;">No games in this view.</div>';
 
     bindGameCards();
@@ -516,7 +505,7 @@ export function mountGamesCatalog(root) {
       data = catalog;
       if (!data.categories.length) throw new Error('No categories loaded.');
       statusEl?.remove();
-      catsEl.hidden = false;
+      catsEl.hidden = true;
       gridEl.hidden = false;
       updateHeroStats(root, data);
       populateTagDatalist(root, data.tagOptions);
