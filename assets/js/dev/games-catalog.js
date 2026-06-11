@@ -231,22 +231,42 @@ function populateTagDatalist(root, tagOptions) {
   list.innerHTML = tagOptions.map((tag) => `<option value="${escapeHtml(tag)}"></option>`).join('');
 }
 
+function topGames(games, count = 5) {
+  return [...games].sort(popularGameComparator).slice(0, count);
+}
+
+function renderHeroFillCard(game) {
+  const bannerImage = game.image
+    ? `<img src="${escapeHtml(game.image)}" alt="" loading="lazy">`
+    : '';
+  return `
+    <article class="games-hero-fill-card" data-hero-fill-id="${escapeHtml(game.id)}" tabindex="0" aria-label="${escapeHtml(game.title)}">
+      <div class="games-hero-fill-banner">${bannerImage}</div>
+      <div class="games-hero-fill-body">
+        <h3>${escapeHtml(game.title)}</h3>
+      </div>
+    </article>
+  `;
+}
+
 function renderFeaturedRow(root, games, openGame) {
   const track = root.querySelector('#gamesFeaturedTrack');
+  const fillGrid = root.querySelector('#gamesHeroFillGrid');
   if (!track) return;
-  const featured = [...games]
-    .sort(popularGameComparator)
-    .slice(0, 10);
+  const featured = topGames(games, 5);
   if (!featured.length) {
     track.innerHTML = '<p class="dev-status" style="padding:12px 0;">No featured games yet.</p>';
+    if (fillGrid) fillGrid.innerHTML = '';
     return;
   }
-  track.innerHTML = featured.map((game) => {
+  track.innerHTML = featured.map((game, index) => {
+    const rank = index + 1;
     const bannerImage = game.image
       ? `<img src="${escapeHtml(game.image)}" alt="" loading="lazy">`
       : '';
     return `
-      <article class="games-featured-card" data-featured-id="${escapeHtml(game.id)}" tabindex="0">
+      <article class="games-featured-card games-featured-rank-${rank}" data-featured-id="${escapeHtml(game.id)}" tabindex="0" aria-label="#${rank} ${escapeHtml(game.title)}">
+        <span class="games-rank-medal games-rank-medal-${rank}" aria-hidden="true">${rank}</span>
         <div class="games-featured-banner">${bannerImage}</div>
         <div class="games-featured-body">
           <h3 class="games-featured-title">${escapeHtml(game.title)}</h3>
@@ -254,6 +274,31 @@ function renderFeaturedRow(root, games, openGame) {
       </article>
     `;
   }).join('');
+
+  if (fillGrid) {
+    const featuredIds = new Set(featured.map((game) => String(game.id)));
+    const fillGames = [...games]
+      .sort(popularGameComparator)
+      .filter((game) => !featuredIds.has(String(game.id)))
+      .slice(0, 8);
+    fillGrid.innerHTML = fillGames.length
+      ? fillGames.map(renderHeroFillCard).join('')
+      : '';
+    fillGrid.querySelectorAll('[data-hero-fill-id]').forEach((card) => {
+      const play = () => {
+        const game = fillGames.find((g) => String(g.id) === String(card.dataset.heroFillId));
+        if (game) openGame(game);
+      };
+      card.addEventListener('click', play);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          play();
+        }
+      });
+    });
+  }
+
   track.querySelectorAll('[data-featured-id]').forEach((card) => {
     const play = () => {
       const game = featured.find((g) => String(g.id) === String(card.dataset.featuredId));
@@ -384,24 +429,25 @@ export function mountGamesCatalog(root) {
     return map;
   }
 
-  function topThirtyHighlightIndex(catKey, games) {
-    if (games.length >= 3) return stableNumericKey(catKey, 1) === 0 ? 1 : 2;
-    if (games.length >= 2) return 1;
-    return -1;
+  function categoryHighlightGameIndex(games, topIds) {
+    if (!games.length) return -1;
+    if (!topIds.has(String(games[0].id))) return 0;
+    return games.length >= 2 ? 1 : 0;
   }
 
   function renderMosaicCategory(cat, games, highlight) {
     const domId = domIdFromCategoryKey(cat.key);
     const sortedGames = [...games].sort(popularGameComparator);
-    const topThirtyIndex = highlight?.topThirty && !highlight?.topTen
-      ? topThirtyHighlightIndex(cat.key, sortedGames)
+    const topIds = new Set(topGames(data.games, 5).map((game) => String(game.id)));
+    const highlightIndex = (highlight?.topTen || highlight?.topThirty)
+      ? categoryHighlightGameIndex(sortedGames, topIds)
       : -1;
 
     return `<section class="dev-mosaic-category" id="dev-category-${escapeHtml(domId)}" aria-label="${escapeHtml(cat.label)}">
       ${sortedGames.map((game, index) => {
-        const span = highlight?.topTen && index === 2
+        const span = highlight?.topTen && index === highlightIndex
           ? 3
-          : index === topThirtyIndex
+          : highlight?.topThirty && index === highlightIndex
             ? 2
             : 1;
         return renderGameCard(game, { span });
