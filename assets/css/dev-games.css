@@ -279,28 +279,23 @@ body {
 
 .games-featured-track {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-auto-rows: clamp(96px, 9vw, 145px);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: clamp(116px, 11vw, 170px);
   grid-auto-flow: dense;
-  gap: 12px;
+  gap: 14px;
 }
 
 .games-featured-card {
   position: relative;
-  min-height: 96px;
+  min-height: 116px;
   border: 0;
-  border-radius: 22px;
+  border-radius: 26px;
   overflow: hidden;
   background: linear-gradient(135deg, #fff1a8, #ffbd6c);
   cursor: pointer;
   box-shadow: 0 14px 26px rgba(24, 50, 74, 0.16);
   isolation: isolate;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.games-featured-card:nth-child(1) {
-  grid-column: span 2;
-  grid-row: span 2;
 }
 
 .games-featured-card:nth-child(4n + 2) {
@@ -476,22 +471,18 @@ body {
 
 .games-shell .dev-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
   align-items: start;
-  gap: 18px;
+  gap: 22px;
   padding: 0;
 }
 
 .dev-category-section {
   min-width: 0;
-  padding: 12px;
-  border-radius: 22px;
+  padding: 14px;
+  border-radius: 24px;
   background: rgba(255, 255, 255, 0.36);
   box-shadow: 0 12px 24px rgba(22, 71, 98, 0.08);
-}
-
-.dev-category-section-small {
-  max-width: 420px;
 }
 
 .dev-category-section-large {
@@ -503,13 +494,13 @@ body {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .dev-category-head h3 {
   margin: 0;
   color: var(--poki-ink);
-  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-size: clamp(1.22rem, 2.3vw, 1.72rem);
   font-weight: 900;
   letter-spacing: -0.04em;
 }
@@ -522,19 +513,15 @@ body {
 
 .dev-category-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
   grid-auto-flow: dense;
-  gap: 8px;
-}
-
-.dev-category-section-small .dev-category-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .games-shell .dev-card {
   position: relative;
   border: 0;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: visible;
   background: transparent;
   box-shadow: none;
@@ -559,12 +546,12 @@ body {
 
 .games-shell .dev-card-media {
   aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0)),
     linear-gradient(135deg, #ffdc70, #ff8f3d);
-  box-shadow: 0 8px 16px rgba(24, 50, 74, 0.15);
+  box-shadow: 0 11px 20px rgba(24, 50, 74, 0.16);
 }
 
 .games-shell .dev-card:nth-child(4n + 2) .dev-card-media {
@@ -603,9 +590,9 @@ body {
 
 .games-shell .dev-card-body {
   position: absolute;
-  left: 7px;
-  right: 7px;
-  bottom: 7px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
   z-index: 3;
   padding: 0;
   background: transparent;
@@ -625,14 +612,14 @@ body {
 
 .games-shell .dev-card-title {
   color: #fff;
-  font-size: clamp(0.68rem, 0.9vw, 0.84rem);
+  font-size: clamp(0.76rem, 1.05vw, 0.92rem);
   font-weight: 900;
   line-height: 1.12;
   text-shadow: 0 3px 16px rgba(0, 0, 0, 0.72);
 }
 
 .games-shell .dev-card-large .dev-card-title {
-  font-size: clamp(0.9rem, 1.55vw, 1.18rem);
+  font-size: clamp(0.98rem, 1.8vw, 1.35rem);
 }
 
 .games-shell .dev-card-meta {
@@ -776,15 +763,6 @@ body {
     min-width: 100%;
   }
 
-  .games-featured-track {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 138px;
-  }
-
-  .games-featured-card:nth-child(1) {
-    grid-column: span 2;
-  }
-
   .dev-category-section-large {
     grid-column: span 1;
   }
@@ -821,8 +799,7 @@ body {
     padding-bottom: 4px;
   }
 
-  .games-featured-card,
-  .games-featured-card:nth-child(1) {
+  .games-featured-card {
     flex: 0 0 78%;
     min-height: 190px;
     scroll-snap-align: start;

@@ -187,8 +187,8 @@ function largeTileIndexForCategory(catKey, gameCount) {
   if (gameCount <= 1) return 0;
   if (gameCount === 2) return 1;
   const hash = stableNumericKey(catKey, MAX_GAME_KEY_ID);
-  const preferredSlots = [Math.floor(gameCount / 2), gameCount - 1, 1, Math.max(1, gameCount - 2)];
-  return preferredSlots[hash % preferredSlots.length];
+  const index = hash % gameCount;
+  return index === 0 ? Math.min(gameCount - 1, Math.max(1, Math.floor(gameCount / 2))) : index;
 }
 
 function arrangeCategoryGames(catKey, games) {
@@ -415,14 +415,7 @@ export function mountGamesCatalog(root) {
       : taggedCategories;
 
     return categorySections.length
-      ? categorySections.sort((a, b) => {
-          const bucket = (cat) => cat.count <= 5 ? 0 : cat.count >= 12 ? 2 : 1;
-          const topPlayCount = (cat) => (categoryGames(cat.key)[0]?.playCount || 0);
-          return bucket(a) - bucket(b)
-            || topPlayCount(b) - topPlayCount(a)
-            || b.count - a.count
-            || a.label.localeCompare(b.label);
-        })
+      ? categorySections
       : [{ key: '__all__', label: 'All games', count: data.games.length }];
   }
 
