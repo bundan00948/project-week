@@ -403,6 +403,8 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 32%, rgba(4, 26, 42, 0.68));
+  opacity: 0;
+  transition: opacity 0.22s ease;
 }
 
 .games-featured-banner img {
@@ -417,6 +419,11 @@ body {
   transform: scale(1.07);
 }
 
+.games-featured-card:hover .games-featured-banner::after,
+.games-featured-card:focus-visible .games-featured-banner::after {
+  opacity: 1;
+}
+
 .games-featured-body {
   position: absolute;
   left: 14px;
@@ -425,6 +432,15 @@ body {
   z-index: 1;
   color: #fff;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.games-featured-card:hover .games-featured-body,
+.games-featured-card:focus-visible .games-featured-body {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .games-featured-title {
@@ -536,8 +552,9 @@ body {
 }
 
 .games-shell .dev-card {
+  position: relative;
   border: 0;
-  border-radius: 0;
+  border-radius: 28px;
   overflow: visible;
   background: transparent;
   box-shadow: none;
@@ -602,20 +619,38 @@ body {
 }
 
 .games-shell .dev-card-body {
-  padding: 10px 4px 0;
-  gap: 6px;
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 3;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(11, 35, 54, 0.78);
+  box-shadow: 0 10px 22px rgba(4, 26, 42, 0.24);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.games-shell .dev-card:hover .dev-card-body,
+.games-shell .dev-card:focus-within .dev-card-body {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .games-shell .dev-card-title {
-  color: var(--poki-ink);
+  color: #fff;
   font-size: 0.95rem;
   font-weight: 900;
   line-height: 1.12;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.34);
 }
 
 .games-shell .dev-card-meta {
-  gap: 5px;
-  color: var(--poki-muted);
+  display: none;
 }
 
 .games-shell .dev-chip {

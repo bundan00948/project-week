@@ -37,6 +37,16 @@ function firstNonEmptyString(...values) {
   return '';
 }
 
+function toNonNegativeNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : 0;
+}
+
+function formatPlayCount(count) {
+  const plays = Math.max(0, Number(count) || 0);
+  return `${plays.toLocaleString()} ${plays === 1 ? 'play' : 'plays'}`;
+}
+
 export function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
   const fallbackKey = (indexHint + 1) <= MAX_GAME_KEY_ID
     ? (indexHint + 1)
@@ -61,6 +71,7 @@ export function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
     ),
     url: String(raw.url || raw.gameUrl || ''),
     rating: Number.parseFloat(raw.rating ?? 3) || 3,
+    playCount: toNonNegativeNumber(raw.playCount ?? raw.totalPlays ?? raw.plays ?? raw.timesPlayed ?? raw.launchCount),
     multiplayer: Boolean(raw.multiplayer),
     tags: (() => {
       if (Array.isArray(raw.tags)) return raw.tags.map((t) => String(t).trim()).filter(Boolean);
@@ -68,6 +79,30 @@ export function normalizeGameDoc(raw, fallbackId, indexHint = 0) {
       return [];
     })()
   };
+}
+
+async function loadAllTimePlayCounts(fs, db) {
+  const countsById = new Map();
+  const countsByKey = new Map();
+
+  try {
+    const playsSnap = await fs.getDocs(fs.collection(db, 'plays'));
+    playsSnap.forEach((d) => {
+      const data = d.data() || {};
+      const entryType = String(data.entryType || data.itemType || 'game').toLowerCase();
+      if (entryType && entryType !== 'game') return;
+
+      const gameId = String(data.gameId || '').trim();
+      if (gameId) countsById.set(gameId, (countsById.get(gameId) || 0) + 1);
+
+      const gameKey = toBoundedPositiveInt(data.gameKey, MAX_GAME_KEY_ID);
+      if (gameKey !== null) countsByKey.set(gameKey, (countsByKey.get(gameKey) || 0) + 1);
+    });
+  } catch (e) {
+    console.warn('Could not load play counts:', e);
+  }
+
+  return { countsById, countsByKey };
 }
 
 function resolveTagLabel(raw, tagById, tagByNameLower) {
@@ -99,8 +134,17 @@ export async function loadGamesCatalog() {
   }
 
   const gamesSnap = await fs.getDocs(fs.collection(db, 'games'));
+  const playCounts = await loadAllTimePlayCounts(fs, db);
   const games = gamesSnap.docs
-    .map((d, i) => normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i))
+    .map((d, i) => {
+      const game = normalizeGameDoc({ id: d.id, ...d.data() }, d.id, i);
+      game.playCount = Math.max(
+        game.playCount,
+        playCounts.countsById.get(String(game.id)) || 0,
+        playCounts.countsByKey.get(game.gameKey) || 0
+      );
+      return game;
+    })
     .sort((a, b) => a.title.localeCompare(b.title));
 
   games.forEach((game) => {
@@ -188,7 +232,7 @@ function renderFeaturedRow(root, games, openGame) {
   const track = root.querySelector('#gamesFeaturedTrack');
   if (!track) return;
   const featured = [...games]
-    .sort((a, b) => (b.rating || 0) - (a.rating || 0) || a.title.localeCompare(b.title))
+    .sort((a, b) => (b.playCount || 0) - (a.playCount || 0) || a.title.localeCompare(b.title))
     .slice(0, 10);
   if (!featured.length) {
     track.innerHTML = '<p class="dev-status" style="padding:12px 0;">No featured games yet.</p>';
@@ -203,7 +247,7 @@ function renderFeaturedRow(root, games, openGame) {
         <div class="games-featured-banner">${bannerImage}</div>
         <div class="games-featured-body">
           <h3 class="games-featured-title">${escapeHtml(game.title)}</h3>
-          <div class="games-featured-meta">★ ${Number(game.rating || 0).toFixed(1)} · ${game.multiplayer ? 'Multiplayer' : 'Single player'}</div>
+          <div class="games-featured-meta">${escapeHtml(formatPlayCount(game.playCount))} all time</div>
         </div>
       </article>
     `;
@@ -290,7 +334,7 @@ export function mountGamesCatalog(root) {
             <div class="dev-card-body">
               <h2 class="dev-card-title">${escapeHtml(game.title)}</h2>
               <div class="dev-card-meta">
-                <span class="dev-chip">★ ${Number(game.rating || 0).toFixed(1)}</span>
+                <span class="dev-chip">${escapeHtml(formatPlayCount(game.playCount))}</span>
                 <span class="dev-chip">${game.multiplayer ? 'Multiplayer' : 'Single'}</span>
               </div>
             </div>
