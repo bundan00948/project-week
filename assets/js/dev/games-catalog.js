@@ -183,24 +183,6 @@ function domIdFromCategoryKey(key) {
   return String(key || 'category').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'category';
 }
 
-function chunkCategoryGames(games) {
-  const chunks = [];
-  let remaining = [...games].sort(popularGameComparator);
-
-  while (remaining.length) {
-    const size = remaining.length >= 9
-      ? 9
-      : remaining.length >= 8
-        ? 4
-        : remaining.length >= 4
-          ? 4
-          : 1;
-    chunks.push(remaining.splice(0, size));
-  }
-
-  return chunks;
-}
-
 async function addGameToFirestore(formData, existingGames) {
   const { db, fs } = await getFirestoreDb();
   const title = String(formData.get('title') || '').trim();
@@ -365,6 +347,8 @@ export function mountGamesCatalog(root) {
     const canPlay = Boolean(String(game.url || '').trim());
     const classes = ['dev-card'];
     if (options.large) classes.push('dev-card-large');
+    if (options.span === 2) classes.push('dev-card-span-2');
+    if (options.span === 3) classes.push('dev-card-span-3');
     if (!canPlay) classes.push('dev-card-disabled');
     return `<article class="${classes.join(' ')}" data-game-id="${escapeHtml(game.id)}" tabindex="${canPlay ? '0' : '-1'}" aria-label="${escapeHtml(game.title)}">
       <div class="dev-card-media">
@@ -377,11 +361,51 @@ export function mountGamesCatalog(root) {
     </article>`;
   }
 
-  function renderMosaicBlock(cat, games, index) {
-    const size = games.length === 9 ? 9 : games.length === 4 ? 4 : 1;
-    const domId = `${domIdFromCategoryKey(cat.key)}-${index + 1}`;
-    return `<section class="dev-mosaic-block dev-mosaic-block-${size}" id="dev-category-${escapeHtml(domId)}" aria-label="${escapeHtml(cat.label)}">
-      ${games.map((game) => renderGameCard(game)).join('')}
+  function categoryTotalPlays(cat) {
+    return categoryGames(cat.key).reduce((sum, game) => sum + (Number(game.playCount) || 0), 0);
+  }
+
+  function categoryHighlightMap(categories) {
+    const ranked = categories
+      .map((cat) => ({ cat, totalPlays: categoryTotalPlays(cat) }))
+      .sort((a, b) => b.totalPlays - a.totalPlays || b.cat.count - a.cat.count || a.cat.label.localeCompare(b.cat.label));
+
+    const topTenCount = Math.max(1, Math.ceil(ranked.length * 0.1));
+    const topThirtyCount = Math.max(topTenCount, Math.ceil(ranked.length * 0.3));
+    const map = new Map();
+
+    ranked.forEach(({ cat }, index) => {
+      map.set(cat.key, {
+        topTen: index < topTenCount,
+        topThirty: index < topThirtyCount
+      });
+    });
+
+    return map;
+  }
+
+  function topThirtyHighlightIndex(catKey, games) {
+    if (games.length >= 3) return stableNumericKey(catKey, 1) === 0 ? 1 : 2;
+    if (games.length >= 2) return 1;
+    return -1;
+  }
+
+  function renderMosaicCategory(cat, games, highlight) {
+    const domId = domIdFromCategoryKey(cat.key);
+    const sortedGames = [...games].sort(popularGameComparator);
+    const topThirtyIndex = highlight?.topThirty && !highlight?.topTen
+      ? topThirtyHighlightIndex(cat.key, sortedGames)
+      : -1;
+
+    return `<section class="dev-mosaic-category" id="dev-category-${escapeHtml(domId)}" aria-label="${escapeHtml(cat.label)}">
+      ${sortedGames.map((game, index) => {
+        const span = highlight?.topTen && index === 2
+          ? 3
+          : index === topThirtyIndex
+            ? 2
+            : 1;
+        return renderGameCard(game, { span });
+      }).join('')}
     </section>`;
   }
 
@@ -423,9 +447,10 @@ export function mountGamesCatalog(root) {
   }
 
   function renderGrid() {
-    const blocks = categoriesToRender()
-      .flatMap((cat) => chunkCategoryGames(categoryGames(cat.key))
-        .map((games, index) => ({ cat, games, index })))
+    const categories = categoriesToRender();
+    const highlightMap = categoryHighlightMap(categories);
+    const groups = categories
+      .map((cat) => ({ cat, games: categoryGames(cat.key), highlight: highlightMap.get(cat.key) }))
       .filter(({ games }) => games.length);
 
     if (catalogueTitleEl) {
@@ -434,8 +459,8 @@ export function mountGamesCatalog(root) {
         : (data.categories.find((cat) => cat.key === activeCat)?.label || 'Games');
     }
 
-    gridEl.innerHTML = blocks.length
-      ? blocks.map(({ cat, games, index }) => renderMosaicBlock(cat, games, index)).join('')
+    gridEl.innerHTML = groups.length
+      ? groups.map(({ cat, games, highlight }) => renderMosaicCategory(cat, games, highlight)).join('')
       : '<div class="dev-status" style="grid-column:1/-1;">No games in this view.</div>';
 
     bindGameCards();

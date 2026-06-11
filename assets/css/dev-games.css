@@ -480,31 +480,8 @@ body {
   padding: 0;
 }
 
-.dev-mosaic-block {
-  display: grid;
-  min-width: 0;
-  gap: 12px;
-}
-
-.dev-mosaic-block-9 {
-  grid-column: span 3;
-  grid-row: span 3;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-}
-
-.dev-mosaic-block-4 {
-  grid-column: span 2;
-  grid-row: span 2;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-}
-
-.dev-mosaic-block-1 {
-  grid-column: span 1;
-  grid-row: span 1;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr);
+.dev-mosaic-category {
+  display: contents;
 }
 
 .games-shell .dev-card {
@@ -518,9 +495,19 @@ body {
   transition: transform 0.2s ease;
 }
 
-.dev-mosaic-block .dev-card {
+.dev-mosaic-category .dev-card {
   width: 100%;
   height: 100%;
+}
+
+.games-shell .dev-card-span-2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.games-shell .dev-card-span-3 {
+  grid-column: span 3;
+  grid-row: span 3;
 }
 
 .games-shell .dev-card:hover {
@@ -548,7 +535,7 @@ body {
   box-shadow: 0 11px 20px rgba(24, 50, 74, 0.16);
 }
 
-.dev-mosaic-block .dev-card-media {
+.dev-mosaic-category .dev-card-media {
   height: 100%;
   aspect-ratio: auto;
 }
@@ -619,6 +606,14 @@ body {
 
 .games-shell .dev-card-large .dev-card-title {
   font-size: clamp(0.98rem, 1.8vw, 1.35rem);
+}
+
+.games-shell .dev-card-span-2 .dev-card-title {
+  font-size: clamp(0.98rem, 1.8vw, 1.35rem);
+}
+
+.games-shell .dev-card-span-3 .dev-card-title {
+  font-size: clamp(1.1rem, 2.2vw, 1.65rem);
 }
 
 .games-shell .dev-card-meta {
