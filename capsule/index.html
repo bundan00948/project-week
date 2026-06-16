@@ -15,69 +15,17 @@
   <link rel="stylesheet" href="/assets/css/games-universe.css">
   <link rel="stylesheet" href="/assets/css/capsule.css">
 </head>
-<body>
+<body class="capsule-standalone">
   <div class="site-bg-atlas" aria-hidden="true"></div>
 
-  <div class="sidebar active" id="sidebar">
-    <div class="sidebar-header">
-      <i class="fas fa-user"></i>
-      <h2>USER PANEL</h2>
-    </div>
-    <div class="sidebar-scroll">
-      <div class="sidebar-tabs">
-        <a class="tab-button" data-page="main-page" href="/games/dashboard">
-          <i class="fas fa-home"></i> Main Page
-        </a>
-        <a class="tab-button" data-page="movies-page" href="/games/movies">
-          <i class="fas fa-film"></i> Movies
-        </a>
-        <a class="tab-button" data-page="profile-page" href="/games/profile">
-          <i class="fas fa-user"></i> Profile
-        </a>
-        <a class="tab-button active" data-page="capsule-page" href="/capsule">
-          <i class="fas fa-capsules"></i> Capsule
-        </a>
-        <a class="tab-button" data-page="shop-page" href="/games/shop">
-          <i class="fas fa-shopping-bag"></i> Shop
-        </a>
-        <a class="tab-button" data-page="inventory-page" href="/games/inventory">
-          <i class="fas fa-box-open"></i> Inventory
-        </a>
-        <a class="tab-button" data-page="missions-page" href="/games/missions">
-          <i class="fas fa-tasks"></i> Missions
-        </a>
-        <a class="tab-button" data-page="chat-page" href="/games/chat">
-          <i class="fas fa-comments"></i> Chat
-        </a>
-        <a class="tab-button" data-page="friends-page" href="/games/friends">
-          <i class="fas fa-user-friends"></i> Friends
-        </a>
-        <a class="tab-button" data-page="settings-page" href="/games/settings">
-          <i class="fas fa-cog"></i> Settings
-        </a>
-        <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/games/staff" style="display:none;">
-          <i class="fas fa-shield-alt"></i> Staff Panel
-        </a>
+  <div class="capsule-standalone-main" id="main-content">
+    <header class="capsule-topbar">
+      <div class="logo"><i class="fas fa-capsules"></i><h1>CAPSULE MACHINE</h1></div>
+      <div id="user-info" style="display:none;">
+        <img id="user-avatar" src="" alt="Avatar">
+        <span id="user-name"></span>
+        <button id="capsule-logout-btn">Logout</button>
       </div>
-    </div>
-  </div>
-
-  <div class="main-content sidebar-active" id="main-content">
-    <header>
-      <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
-      <nav>
-        <ul>
-          <li><a href="/games/home" id="home-tab">Home</a></li>
-          <li><a href="/games/contact" id="contact-tab">Contact Us</a></li>
-          <li>
-            <div id="user-info" style="display:none;">
-              <img id="user-avatar" src="" alt="Avatar">
-              <span id="user-name"></span>
-              <button id="capsule-logout-btn">Logout</button>
-            </div>
-          </li>
-        </ul>
-      </nav>
     </header>
 
     <main class="page active" id="capsule-page">
@@ -132,7 +80,6 @@
                 </div>
                 <div class="capsule-btn-row wide">
                   <button class="capsule-btn capsule-btn-primary" type="submit">Sign In</button>
-                  <a class="capsule-btn" href="/games/home">Create an Account</a>
                 </div>
               </form>
             </div>
@@ -146,8 +93,6 @@
                 </div>
                 <div class="capsule-btn-row wide">
                   <button class="capsule-btn capsule-btn-primary" type="submit"><i class="fas fa-qrcode"></i> Redeem Capsule</button>
-                  <a class="capsule-btn" href="/games/shop"><i class="fas fa-shopping-bag"></i> Open Store</a>
-                  <a class="capsule-btn" href="/games/inventory"><i class="fas fa-box-open"></i> Inventory</a>
                 </div>
               </form>
             </div>
@@ -201,7 +146,6 @@
               <div class="capsule-btn-row wide">
                 <button class="capsule-btn capsule-btn-primary" type="submit"><i class="fas fa-wand-magic-sparkles"></i> Generate Codes</button>
                 <button class="capsule-btn" type="button" id="capsule-download-pdf" disabled><i class="fas fa-file-pdf"></i> Download QR PDF</button>
-                <a class="capsule-btn" href="/games/staff"><i class="fas fa-store"></i> Open Store Editor</a>
               </div>
             </form>
             <div class="capsule-status" id="capsule-admin-status">Admin tools load after sign-in.</div>

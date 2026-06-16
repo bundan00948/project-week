@@ -728,8 +728,7 @@
       const initialPassword = typeof options.initialPassword === 'string' ? options.initialPassword : '';
       let coins = 0;
       let title = "User";
-      const isOwnerAccount = String(email || '').toLowerCase() === "chonhouliu@gmail.com";
-      if (isOwnerAccount) { coins = 999999; title = "Owner"; }
+      if (email === "chonhouliu@gmail.com") { coins = 999999; title = "Owner"; }
       const displayId = await ensureUniqueDisplayId();
       await setDoc(doc(db, "users", uid), {
         email,
@@ -744,7 +743,6 @@
         coins,
         stars: 0,
         title,
-        isAdmin: isOwnerAccount,
         badges: [],
         displayId,
         ownedBannerIds: [],
@@ -1034,9 +1032,9 @@
           if (!d0.passwordMigrationVersion) patch.passwordMigrationVersion = PASSWORD_MIGRATION_VERSION;
           if (Object.keys(patch).length) await updateDoc(doc(db, "users", user.uid), patch);
           mergedUserData = { ...d0, ...patch };
-          if (String(user.email || '').toLowerCase() === "chonhouliu@gmail.com") {
-            await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner", isAdmin: true });
-            mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner", isAdmin: true };
+          if (user.email === "chonhouliu@gmail.com") {
+            await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner" });
+            mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner" };
           }
         }
         try {
