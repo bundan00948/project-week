@@ -29,6 +29,12 @@ const CAPSULE_CONFIG_COLLECTION = 'capsuleConfigs';
 const CAPSULE_CODE_COLLECTION = 'capsuleCodes';
 const CAPSULE_ITEM_COLLECTION = 'capsuleItems';
 const PDF_BATCH_SIZE = 100;
+const PAGE_IDS = ['home', 'account', 'redeem', 'items', 'staff', 'admin'];
+const CODE_LENGTH = 8;
+const CODE_UPPER = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+const CODE_LOWER = 'abcdefghijkmnopqrstuvwxyz';
+const CODE_NUMBER = '23456789';
+const CODE_ALPHABET = `${CODE_UPPER}${CODE_LOWER}${CODE_NUMBER}`;
 
 const firebaseConfig = {
   apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
@@ -60,6 +66,8 @@ const elements = {
   accountPill: $('capsule-account-pill'),
   staffNav: $('staff-nav-link'),
   adminNav: $('admin-nav-link'),
+  sideStaffNav: $('side-staff-nav-link'),
+  sideAdminNav: $('side-admin-nav-link'),
   authStatus: $('capsule-auth-status'),
   loginForm: $('capsule-login-form'),
   loginEmail: $('capsule-login-email'),
@@ -71,6 +79,7 @@ const elements = {
   startScan: $('capsule-start-scan'),
   stopScan: $('capsule-stop-scan'),
   capsuleScanner: $('capsule-scanner'),
+  capsuleCameraPermission: $('capsule-camera-permission'),
   redeemForm: $('capsule-redeem-form'),
   redeemCode: $('capsule-redeem-code'),
   redeemStatus: $('capsule-redeem-status'),
@@ -90,6 +99,7 @@ const elements = {
   staffSection: $('staff'),
   itemStartScan: $('item-start-scan'),
   itemStopScan: $('item-stop-scan'),
+  itemCameraPermission: $('item-camera-permission'),
   itemLookupForm: $('item-lookup-form'),
   itemLookupCode: $('item-lookup-code'),
   itemLookupResult: $('item-lookup-result'),
@@ -155,23 +165,57 @@ function randomFloat() {
   return bytes[0] / 0x100000000;
 }
 
-function randomEightDigitCode() {
+function randomIndex(max) {
   const cryptoApi = window.crypto || window.msCrypto;
   if (cryptoApi?.getRandomValues) {
     const bytes = new Uint32Array(1);
     cryptoApi.getRandomValues(bytes);
-    return String(10000000 + (bytes[0] % 90000000));
+    return bytes[0] % max;
   }
-  return String(Math.floor(10000000 + Math.random() * 90000000));
+  return Math.floor(Math.random() * max);
+}
+
+function randomFromAlphabet(alphabet) {
+  return alphabet[randomIndex(alphabet.length)];
+}
+
+function shuffleCode(chars) {
+  const next = [...chars];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = randomIndex(i + 1);
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next.join('');
+}
+
+function randomMixedCode() {
+  const chars = [
+    randomFromAlphabet(CODE_UPPER),
+    randomFromAlphabet(CODE_LOWER),
+    randomFromAlphabet(CODE_NUMBER)
+  ];
+  while (chars.length < CODE_LENGTH) {
+    chars.push(randomFromAlphabet(CODE_ALPHABET));
+  }
+  return shuffleCode(chars);
+}
+
+function randomNumericCode(length) {
+  let code = '';
+  for (let i = 0; i < length; i += 1) {
+    code += String(randomIndex(10));
+  }
+  if (code[0] === '0') code = `${1 + randomIndex(9)}${code.slice(1)}`;
+  return code;
 }
 
 async function ensureUniqueDisplayId() {
   for (let attempt = 0; attempt < 80; attempt += 1) {
-    const displayId = randomEightDigitCode().slice(0, 6);
+    const displayId = randomNumericCode(6);
     const snap = await getDocs(query(collection(db, 'users'), where('displayId', '==', displayId)));
     if (snap.empty) return displayId;
   }
-  return randomEightDigitCode().slice(0, 6);
+  return randomNumericCode(6);
 }
 
 function capsuleUrlForCode(code) {
@@ -186,18 +230,18 @@ function itemUrlForCode(code) {
   return url.toString();
 }
 
-function parseEightDigitCode(value, queryKey) {
+function parseMixedCode(value, queryKey) {
   const raw = String(value || '').trim();
   if (!raw) return '';
   try {
     const url = new URL(raw, window.location.origin);
     const fromQuery = url.searchParams.get(queryKey);
     if (fromQuery) {
-      const match = String(fromQuery).match(/\d{8}/);
+      const match = String(fromQuery).match(/[A-Za-z0-9]{8}/);
       if (match) return match[0];
     }
   } catch (_) {}
-  const match = raw.match(/\d{8}/);
+  const match = raw.match(/[A-Za-z0-9]{8}/);
   return match ? match[0] : '';
 }
 
@@ -575,7 +619,7 @@ async function getCapsuleCode(code) {
 
 async function handleRedeem(event) {
   event.preventDefault();
-  const code = parseEightDigitCode(elements.redeemCode?.value, 'code');
+  const code = parseMixedCode(elements.redeemCode?.value, 'code');
   if (!currentUser) {
     pendingCapsuleCode = code || pendingCapsuleCode;
     setStatus(elements.redeemStatus, 'Sign in or create an account before opening a capsule.', 'error');
@@ -583,7 +627,7 @@ async function handleRedeem(event) {
     return;
   }
   if (!code) {
-    setStatus(elements.redeemStatus, 'Enter or scan an 8 digit capsule code.', 'error');
+    setStatus(elements.redeemStatus, 'Enter or scan an 8 character capsule code.', 'error');
     return;
   }
   await openCapsuleByCode(code);
@@ -620,7 +664,7 @@ async function openCapsuleByCode(code) {
 
 async function redeemCapsuleCode(code, codeData, prize) {
   for (let attempt = 0; attempt < 4; attempt += 1) {
-    const itemCode = randomEightDigitCode();
+    const itemCode = randomMixedCode();
     try {
       return await runTransaction(db, async (tx) => {
         const codeRef = doc(db, CAPSULE_CODE_COLLECTION, code);
@@ -742,9 +786,9 @@ async function renderUserItems() {
 
 async function handleLookupItem(event) {
   event.preventDefault();
-  const code = parseEightDigitCode(elements.itemLookupCode?.value, 'item');
+  const code = parseMixedCode(elements.itemLookupCode?.value, 'item');
   if (!code) {
-    renderItemLookupError('Enter or scan an 8 digit item code.');
+    renderItemLookupError('Enter or scan an 8 character item code.');
     return;
   }
   await lookupItemCode(code);
@@ -831,16 +875,16 @@ async function handleGenerateCodes(event) {
     return;
   }
   const batchLabel = elements.batchLabel?.value.trim() || `${config.name} batch`;
-  const batchId = `batch-${Date.now()}-${randomEightDigitCode()}`;
+  const batchId = `batch-${Date.now()}-${randomMixedCode()}`;
   setStatus(elements.adminStatus, `Generating ${PDF_BATCH_SIZE} capsule QR codes...`);
   try {
     const batch = writeBatch(db);
     const generated = [];
     const used = new Set();
     for (let i = 0; i < PDF_BATCH_SIZE; i += 1) {
-      let code = randomEightDigitCode();
+      let code = randomMixedCode();
       while (used.has(code) || (await getDoc(doc(db, CAPSULE_CODE_COLLECTION, code))).exists()) {
-        code = randomEightDigitCode();
+        code = randomMixedCode();
       }
       used.add(code);
       const payload = {
@@ -903,7 +947,7 @@ function renderCodeTable(codes) {
   return `
     <div class="capsule-table-wrap">
       <table class="capsule-table">
-        <thead><tr><th>8 digit code</th><th>Type of Capsule</th><th>Top possible prizes</th><th>Status</th></tr></thead>
+        <thead><tr><th>8 character code</th><th>Type of Capsule</th><th>Top possible prizes</th><th>Status</th></tr></thead>
         <tbody>${codes.map((code) => `
           <tr>
             <td class="eight-code inline">${escapeHtml(code.code || code.id)}</td>
@@ -1019,7 +1063,7 @@ async function downloadGeneratedPdf() {
 
       pdf.setTextColor(120, 135, 158);
       pdf.setFontSize(6.5);
-      pdf.text('QR code on left. Scan to reveal and add item.', x + 12, y + cardHeight - 20, { maxWidth: cardWidth - 24 });
+      pdf.text('QR code on left. 8 character code beside title. Scan to reveal and add item.', x + 12, y + cardHeight - 20, { maxWidth: cardWidth - 24 });
     }
 
     const label = lastGeneratedCodes[0]?.batchId || `capsule-${Date.now()}`;
@@ -1027,6 +1071,43 @@ async function downloadGeneratedPdf() {
     setStatus(elements.adminStatus, 'PDF downloaded.', 'success');
   } catch (err) {
     setStatus(elements.adminStatus, `PDF failed: ${err.message || 'unknown error'}`, 'error');
+  }
+}
+
+function setCameraPermissionStatus(kind, message, type = '') {
+  const el = kind === 'item' ? elements.itemCameraPermission : elements.capsuleCameraPermission;
+  if (!el) return;
+  el.classList.remove('success', 'error');
+  if (type) el.classList.add(type);
+  const text = el.querySelector('span');
+  if (text) text.textContent = message;
+}
+
+async function requestCameraPermission(kind) {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    setCameraPermissionStatus(kind, 'This browser cannot request camera access here. Enter the 8 character code manually.', 'error');
+    return false;
+  }
+
+  setCameraPermissionStatus(kind, 'Camera permission requested. Choose Allow to open the QR scanner.');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' } },
+      audio: false
+    });
+    stream.getTracks().forEach((track) => track.stop());
+    setCameraPermissionStatus(kind, 'Camera allowed. Opening scanner now.', 'success');
+    return true;
+  } catch (err) {
+    const denied = err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError';
+    setCameraPermissionStatus(
+      kind,
+      denied
+        ? 'Camera permission was denied. Allow camera access in your browser or enter the code manually.'
+        : `Camera unavailable: ${err.message || 'enter the code manually.'}`,
+      'error'
+    );
+    return false;
   }
 }
 
@@ -1041,13 +1122,19 @@ async function startScanner(kind) {
     return;
   }
   await stopScanner(kind);
+  startButton.disabled = true;
+  const allowed = await requestCameraPermission(kind);
+  if (!allowed) {
+    startButton.disabled = false;
+    stopButton.disabled = true;
+    return;
+  }
   const scanner = new window.Html5Qrcode(holderId);
   if (isItem) itemScanner = scanner;
   else capsuleScanner = scanner;
-  startButton.disabled = true;
   stopButton.disabled = false;
   const onSuccess = async (decodedText) => {
-    const code = parseEightDigitCode(decodedText, isItem ? 'item' : 'code');
+    const code = parseMixedCode(decodedText, isItem ? 'item' : 'code');
     if (!code) return;
     await stopScanner(kind);
     if (isItem) {
@@ -1089,6 +1176,54 @@ async function stopScanner(kind) {
   if (stopButton) stopButton.disabled = true;
 }
 
+function pageFromHash() {
+  const hash = window.location.hash.replace(/^#/, '').trim();
+  return PAGE_IDS.includes(hash) ? hash : 'home';
+}
+
+function canAccessPage(page) {
+  if (page === 'staff') return currentUser && isStoreStaff(currentUser, currentUserData);
+  if (page === 'admin') return currentUser && isCapsuleAdmin(currentUser, currentUserData);
+  return PAGE_IDS.includes(page);
+}
+
+function resolvePage(page) {
+  const wanted = PAGE_IDS.includes(page) ? page : 'home';
+  if (canAccessPage(wanted)) return wanted;
+  return currentUser ? 'items' : 'account';
+}
+
+function setActivePage(page) {
+  const requestedPage = PAGE_IDS.includes(page) ? page : 'home';
+  const activePage = resolvePage(page);
+  if (activePage !== requestedPage && window.location.hash !== `#${activePage}`) {
+    history.replaceState(null, '', `#${activePage}`);
+  }
+  document.querySelectorAll('.capsule-page').forEach((section) => {
+    const active = section.dataset.page === activePage;
+    section.classList.toggle('active', active);
+    section.setAttribute('aria-hidden', active ? 'false' : 'true');
+  });
+  document.querySelectorAll('[data-page-target]').forEach((link) => {
+    link.classList.toggle('active', link.dataset.pageTarget === activePage);
+    if (link.dataset.pageTarget === activePage) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
+  document.body.dataset.activePage = activePage;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navigateToPage(page) {
+  const target = resolvePage(page);
+  if (window.location.hash !== `#${target}`) {
+    history.pushState(null, '', `#${target}`);
+  }
+  setActivePage(target);
+}
+
 function setupEvents() {
   elements.loginForm?.addEventListener('submit', handleLogin);
   elements.signupForm?.addEventListener('submit', handleSignup);
@@ -1103,10 +1238,17 @@ function setupEvents() {
   elements.configClear?.addEventListener('click', clearCapsuleConfigForm);
   elements.generateForm?.addEventListener('submit', handleGenerateCodes);
   elements.downloadPdf?.addEventListener('click', downloadGeneratedPdf);
+  document.querySelectorAll('[data-page-target]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      navigateToPage(link.dataset.pageTarget);
+    });
+  });
+  window.addEventListener('hashchange', () => setActivePage(pageFromHash()));
 
   const params = new URLSearchParams(window.location.search);
-  const code = parseEightDigitCode(params.get('code'), 'code');
-  const item = parseEightDigitCode(params.get('item'), 'item');
+  const code = parseMixedCode(params.get('code'), 'code');
+  const item = parseMixedCode(params.get('item'), 'item');
   if (code) {
     pendingCapsuleCode = code;
     if (elements.redeemCode) elements.redeemCode.value = code;
@@ -1119,6 +1261,7 @@ function setupEvents() {
     location.hash = '#staff';
   }
   clearCapsuleConfigForm();
+  setActivePage(pageFromHash());
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -1131,6 +1274,9 @@ onAuthStateChanged(auth, async (user) => {
     elements.adminSection.hidden = true;
     if (elements.staffNav) elements.staffNav.hidden = true;
     if (elements.adminNav) elements.adminNav.hidden = true;
+    if (elements.sideStaffNav) elements.sideStaffNav.hidden = true;
+    if (elements.sideAdminNav) elements.sideAdminNav.hidden = true;
+    setActivePage(pageFromHash());
     await renderUserItems();
     return;
   }
@@ -1145,6 +1291,9 @@ onAuthStateChanged(auth, async (user) => {
     elements.adminSection.hidden = !admin;
     if (elements.staffNav) elements.staffNav.hidden = !staff;
     if (elements.adminNav) elements.adminNav.hidden = !admin;
+    if (elements.sideStaffNav) elements.sideStaffNav.hidden = !staff;
+    if (elements.sideAdminNav) elements.sideAdminNav.hidden = !admin;
+    setActivePage(pageFromHash());
     if (admin) {
       setStatus(elements.adminStatus, 'Admin tools ready. Set capsules, generate 100-code PDFs, and review recent codes.', 'success');
       await loadCapsuleConfigs();
