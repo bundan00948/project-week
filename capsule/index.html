@@ -17,6 +17,27 @@
 <body>
   <div class="capsule-bg" aria-hidden="true"></div>
 
+  <nav class="capsule-side-nav" aria-label="Capsule pages">
+    <a class="side-nav-link active" href="#home" data-page-target="home" title="Home" aria-label="Home">
+      <i class="fas fa-house"></i><span>Home</span>
+    </a>
+    <a class="side-nav-link" href="#account" data-page-target="account" title="Account" aria-label="Account">
+      <i class="fas fa-user"></i><span>Account</span>
+    </a>
+    <a class="side-nav-link" href="#redeem" data-page-target="redeem" title="Redeem" aria-label="Redeem">
+      <i class="fas fa-qrcode"></i><span>Redeem</span>
+    </a>
+    <a class="side-nav-link" href="#items" data-page-target="items" title="Items" aria-label="Items">
+      <i class="fas fa-ticket"></i><span>Items</span>
+    </a>
+    <a class="side-nav-link" href="#staff" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff" hidden>
+      <i class="fas fa-store"></i><span>Staff</span>
+    </a>
+    <a class="side-nav-link" href="#admin" data-page-target="admin" id="side-admin-nav-link" title="Admin" aria-label="Admin" hidden>
+      <i class="fas fa-screwdriver-wrench"></i><span>Admin</span>
+    </a>
+  </nav>
+
   <header class="capsule-topbar">
     <a class="capsule-brand" href="/capsule/">
       <span class="capsule-brand-icon"><i class="fas fa-capsules"></i></span>
@@ -26,10 +47,12 @@
       </span>
     </a>
     <nav class="capsule-nav" aria-label="Capsule sections">
-      <a href="#redeem">Redeem</a>
-      <a href="#items">Items</a>
-      <a href="#staff" id="staff-nav-link" hidden>Staff</a>
-      <a href="#admin" id="admin-nav-link" hidden>Admin</a>
+      <a href="#home" data-page-target="home"><i class="fas fa-house"></i> Home</a>
+      <a href="#account" data-page-target="account"><i class="fas fa-user"></i> Account</a>
+      <a href="#redeem" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem</a>
+      <a href="#items" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
+      <a href="#staff" data-page-target="staff" id="staff-nav-link" hidden><i class="fas fa-store"></i> Staff</a>
+      <a href="#admin" data-page-target="admin" id="admin-nav-link" hidden><i class="fas fa-screwdriver-wrench"></i> Admin</a>
     </nav>
     <div class="capsule-account-pill" id="capsule-account-pill">
       <i class="fas fa-circle-notch fa-spin"></i>
@@ -38,7 +61,7 @@
   </header>
 
   <main class="capsule-shell">
-    <section class="capsule-hero">
+    <section class="capsule-hero capsule-page active" id="home" data-page="home">
       <div class="hero-copy">
         <p class="capsule-kicker">A new standalone capsule website</p>
         <h1>Scan a capsule QR, open it, and keep the prize as a redeemable item.</h1>
@@ -48,8 +71,14 @@
           to scan and redeem in store.
         </p>
         <div class="hero-actions">
-          <a class="capsule-btn capsule-btn-primary" href="#redeem"><i class="fas fa-qrcode"></i> Redeem a Capsule</a>
-          <a class="capsule-btn" href="#items"><i class="fas fa-ticket"></i> View Items</a>
+          <a class="capsule-btn capsule-btn-primary" href="#redeem" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem a Capsule</a>
+          <a class="capsule-btn" href="#items" data-page-target="items"><i class="fas fa-ticket"></i> View Items</a>
+        </div>
+        <div class="journey-steps" aria-label="Capsule journey">
+          <div><i class="fas fa-user-plus"></i><span>Sign up</span></div>
+          <div><i class="fas fa-camera"></i><span>Scan</span></div>
+          <div><i class="fas fa-gift"></i><span>Reveal</span></div>
+          <div><i class="fas fa-store"></i><span>Redeem in store</span></div>
         </div>
       </div>
       <div class="hero-display" aria-label="Capsule opening preview">
@@ -66,7 +95,7 @@
       </div>
     </section>
 
-    <section class="capsule-card auth-card" id="account">
+    <section class="capsule-card auth-card capsule-page" id="account" data-page="account">
       <div>
         <p class="capsule-kicker">Account</p>
         <h2>Sign up like normal</h2>
@@ -95,7 +124,7 @@
       <div class="capsule-status" id="capsule-auth-status">Checking sign-in...</div>
     </section>
 
-    <section class="capsule-card" id="redeem">
+    <section class="capsule-card capsule-page" id="redeem" data-page="redeem">
       <div class="section-header">
         <div>
           <p class="capsule-kicker">Redeem page</p>
@@ -116,14 +145,18 @@
               <span>Camera scanner opens here</span>
             </div>
           </div>
+          <div class="camera-permission-card" id="capsule-camera-permission">
+            <i class="fas fa-camera"></i>
+            <span>Tap Scan QR and your browser will ask for camera permission before the scanner opens.</span>
+          </div>
           <form id="capsule-redeem-form" class="inline-code-form">
-            <label for="capsule-redeem-code">Or enter 8 digit code</label>
+            <label for="capsule-redeem-code">Or enter 8 character code</label>
             <div>
-              <input id="capsule-redeem-code" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="12345678" autocomplete="off">
+              <input id="capsule-redeem-code" inputmode="text" pattern="[A-Za-z0-9]{8}" maxlength="8" placeholder="aB7kQ2Z9" autocomplete="off" autocapitalize="off" spellcheck="false">
               <button class="capsule-btn capsule-btn-primary" type="submit">Open Capsule</button>
             </div>
           </form>
-          <div class="capsule-status" id="capsule-redeem-status">Scan a QR code or enter the 8 digit capsule code.</div>
+          <div class="capsule-status" id="capsule-redeem-status">Scan a QR code or enter the 8 character capsule code.</div>
         </div>
 
         <div class="reveal-panel" id="capsule-reveal-panel">
@@ -155,7 +188,7 @@
       </div>
     </section>
 
-    <section class="capsule-card" id="items">
+    <section class="capsule-card capsule-page" id="items" data-page="items">
       <div class="section-header">
         <div>
           <p class="capsule-kicker">Items</p>
@@ -169,7 +202,7 @@
       </div>
     </section>
 
-    <section class="capsule-card staff-card" id="staff" hidden>
+    <section class="capsule-card staff-card capsule-page" id="staff" data-page="staff" hidden>
       <div class="section-header">
         <div>
           <p class="capsule-kicker">Store staff</p>
@@ -189,10 +222,14 @@
               <span>Item scanner opens here</span>
             </div>
           </div>
+          <div class="camera-permission-card" id="item-camera-permission">
+            <i class="fas fa-camera"></i>
+            <span>Tap Scan Item QR and allow camera access so staff can verify the item.</span>
+          </div>
           <form id="item-lookup-form" class="inline-code-form">
             <label for="item-lookup-code">Or enter item code</label>
             <div>
-              <input id="item-lookup-code" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="87654321" autocomplete="off">
+              <input id="item-lookup-code" inputmode="text" pattern="[A-Za-z0-9]{8}" maxlength="8" placeholder="xT8mN4pQ" autocomplete="off" autocapitalize="off" spellcheck="false">
               <button class="capsule-btn capsule-btn-primary" type="submit">Lookup Item</button>
             </div>
           </form>
@@ -203,7 +240,7 @@
       </div>
     </section>
 
-    <section class="capsule-card admin-card" id="admin" hidden>
+    <section class="capsule-card admin-card capsule-page" id="admin" data-page="admin" hidden>
       <div class="section-header">
         <div>
           <p class="capsule-kicker">Admin panel</p>
