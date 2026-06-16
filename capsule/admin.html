@@ -37,7 +37,7 @@
     <div class="capsule-account-pill" id="capsule-account-pill"><i class="fas fa-circle-notch fa-spin"></i><span>Checking account...</span></div>
   </header>
   <main class="capsule-shell">
-    <section class="capsule-card admin-card capsule-page active" id="admin" data-page="admin">
+    <section class="capsule-card admin-card capsule-page active" id="admin" data-page="admin" hidden>
       <div class="section-header">
         <div>
           <p class="capsule-kicker">Admin panel</p>
@@ -53,8 +53,20 @@
           <input id="capsule-config-name" placeholder="Example: Ocean Capsule" required>
           <label for="capsule-config-image">Capsule Image URL</label>
           <input type="url" id="capsule-config-image" placeholder="https://example.com/capsule.png">
-          <label for="capsule-prizes-input">Prizes (one per line)</label>
-          <textarea id="capsule-prizes-input" rows="8" placeholder="Prize name | percentage | image URL&#10;Common Plush | 45 | https://...&#10;Sticker Pack | 25 | https://..."></textarea>
+          <label for="capsule-config-image-file">Or upload capsule image</label>
+          <div class="upload-row">
+            <input type="file" id="capsule-config-image-file" accept="image/*">
+            <button class="capsule-btn" type="button" id="capsule-upload-capsule-image"><i class="fas fa-upload"></i> Upload</button>
+          </div>
+          <div class="block-editor-header">
+            <div>
+              <h4>Prize blocks</h4>
+              <p class="capsule-muted">Edit each prize title, percentage, image URL, or upload an image file.</p>
+            </div>
+            <button class="capsule-btn" type="button" id="capsule-add-prize-block"><i class="fas fa-plus"></i> Add Prize</button>
+          </div>
+          <div id="capsule-prize-blocks" class="prize-block-list"></div>
+          <textarea id="capsule-prizes-input" rows="8" hidden aria-hidden="true"></textarea>
           <div class="capsule-btn-row">
             <button class="capsule-btn capsule-btn-primary" type="submit">Save Capsule Type</button>
             <button class="capsule-btn" type="button" id="capsule-config-clear">Clear</button>
