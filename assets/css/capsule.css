@@ -853,6 +853,73 @@ textarea {
   margin-top: 20px;
 }
 
+.token-balance-card {
+  display: grid;
+  min-width: 180px;
+  place-items: center;
+  gap: 6px;
+  padding: 18px;
+  border: 1px solid rgba(255, 216, 74, 0.34);
+  border-radius: 22px;
+  background: rgba(255, 216, 74, 0.1);
+  color: var(--capsule-yellow);
+  text-align: center;
+}
+
+.token-balance-card i {
+  font-size: 2rem;
+}
+
+.token-balance-card span {
+  color: var(--capsule-muted);
+  font-size: 0.78rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.token-balance-card strong {
+  color: #fff;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.store-card {
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.store-card i {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 12px;
+  place-items: center;
+  border-radius: 16px;
+  color: #06110c;
+  background: var(--capsule-yellow);
+}
+
+.store-card h3 {
+  margin: 0 0 8px;
+}
+
+.store-card p {
+  margin: 0;
+  color: var(--capsule-muted);
+  line-height: 1.5;
+  font-weight: 800;
+}
+
 .item-card {
   display: grid;
   grid-template-columns: 104px 1fr;

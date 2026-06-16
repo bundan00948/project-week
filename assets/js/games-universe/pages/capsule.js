@@ -20,6 +20,7 @@ import {
   getDocs,
   writeBatch,
   serverTimestamp,
+  increment,
   runTransaction
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import {
@@ -41,6 +42,7 @@ const PAGE_PATHS = {
   account: '/capsule/account.html',
   redeem: '/capsule/redeem.html',
   items: '/capsule/items.html',
+  store: '/capsule/store.html',
   staff: '/capsule/staff.html',
   admin: '/capsule/admin.html'
 };
@@ -111,6 +113,8 @@ const elements = {
   oddsList: $('capsule-odds-list'),
   refreshItems: $('capsule-refresh-items'),
   itemsList: $('capsule-items-list'),
+  tokenBalance: $('capsule-token-balance'),
+  storeStatus: $('capsule-store-status'),
   staffSection: $('staff'),
   itemStartScan: $('item-start-scan'),
   itemStopScan: $('item-stop-scan'),
@@ -122,6 +126,7 @@ const elements = {
   configForm: $('capsule-config-form'),
   configId: $('capsule-config-id'),
   configName: $('capsule-config-name'),
+  configChance: $('capsule-config-chance'),
   configImage: $('capsule-config-image'),
   configImageFile: $('capsule-config-image-file'),
   uploadCapsuleImage: $('capsule-upload-capsule-image'),
@@ -280,6 +285,12 @@ function defaultPrizeImage(name) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
+function defaultTokenImage(name = 'Tokens') {
+  const safeName = escapeSvgText(String(name || 'Tokens').slice(0, 24));
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd84a"/><stop offset="1" stop-color="#ff8c2a"/></linearGradient></defs><rect width="360" height="360" rx="58" fill="#111827"/><circle cx="180" cy="156" r="86" fill="url(#g)"/><circle cx="180" cy="156" r="62" fill="none" stroke="#fff" stroke-width="14" opacity=".55"/><text x="180" y="174" text-anchor="middle" fill="#111827" font-size="58" font-family="Arial" font-weight="900">T</text><text x="180" y="320" text-anchor="middle" fill="#fff" font-size="26" font-family="Arial" font-weight="700">${safeName}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 function defaultCapsuleImage(name) {
   const label = escapeSvgText(String(name || 'Capsule').slice(0, 22));
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="0 0 420 420"><defs><radialGradient id="shine" cx=".32" cy=".23" r=".85"><stop stop-color="#fff"/><stop offset=".2" stop-color="#ffd6e0"/><stop offset=".55" stop-color="#ff3d6c"/><stop offset="1" stop-color="#7b1734"/></radialGradient><linearGradient id="band" x1="0" x2="1"><stop stop-color="#2aff9e"/><stop offset="1" stop-color="#00b8ff"/></linearGradient></defs><rect width="420" height="420" rx="72" fill="#080b12"/><circle cx="210" cy="184" r="132" fill="url(#shine)"/><rect x="83" y="171" width="254" height="36" rx="18" fill="url(#band)"/><circle cx="160" cy="120" r="34" fill="#fff" opacity=".42"/><circle cx="210" cy="184" r="132" fill="none" stroke="#fff" stroke-width="10" opacity=".25"/><text x="210" y="352" text-anchor="middle" fill="#fff" font-size="30" font-family="Arial" font-weight="800">${label}</text></svg>`;
@@ -289,12 +300,16 @@ function defaultCapsuleImage(name) {
 function cleanPrize(raw, index) {
   const name = String(raw?.name || raw?.prizeName || `Prize ${index + 1}`).trim();
   const percentage = Math.max(0, numberValue(raw?.percentage ?? raw?.chance ?? raw?.chancePercent, 0));
+  const rewardType = String(raw?.rewardType || raw?.type || '').toLowerCase() === 'tokens' ? 'tokens' : 'prize';
+  const tokenAmount = Math.max(0, Math.floor(numberValue(raw?.tokenAmount ?? raw?.tokens, 0)));
   const imageUrl = String(raw?.imageUrl || raw?.prizeImageUrl || '').trim();
   if (!name || percentage <= 0) return null;
   return {
     name,
     percentage: Math.round(percentage * 100) / 100,
-    imageUrl: imageUrl || defaultPrizeImage(name)
+    rewardType,
+    tokenAmount: rewardType === 'tokens' ? Math.max(1, tokenAmount || 10) : 0,
+    imageUrl: imageUrl || (rewardType === 'tokens' ? defaultTokenImage(name) : defaultPrizeImage(name))
   };
 }
 
@@ -303,7 +318,7 @@ function parsePrizeTextarea(value) {
     .split(/\r?\n/)
     .map((line, index) => {
       const parts = line.split('|').map((part) => part.trim());
-      return cleanPrize({ name: parts[0], percentage: parts[1], imageUrl: parts.slice(2).join('|') }, index);
+      return cleanPrize({ name: parts[0], percentage: parts[1], imageUrl: parts[2], rewardType: parts[3], tokenAmount: parts[4] }, index);
     })
     .filter(Boolean);
 }
@@ -339,7 +354,9 @@ function syncPrizeTextareaFromBlocks() {
     const name = block.querySelector('[data-prize-field="name"]')?.value.trim() || '';
     const percentage = block.querySelector('[data-prize-field="percentage"]')?.value.trim() || '';
     const imageUrl = block.querySelector('[data-prize-field="imageUrl"]')?.value.trim() || '';
-    return `${name} | ${percentage} | ${imageUrl}`;
+    const rewardType = block.querySelector('[data-prize-field="rewardType"]')?.value || 'prize';
+    const tokenAmount = block.querySelector('[data-prize-field="tokenAmount"]')?.value.trim() || '';
+    return `${name} | ${percentage} | ${imageUrl} | ${rewardType} | ${tokenAmount}`;
   });
   elements.prizesInput.value = lines.join('\n');
 }
@@ -360,6 +377,13 @@ function prizeBlockTemplate(prize = {}, index = 0) {
       <input data-prize-field="name" value="${escapeHtml(safePrize.name)}" placeholder="Prize title">
       <label>Drop percentage</label>
       <input data-prize-field="percentage" type="number" min="0.01" step="0.01" value="${escapeHtml(safePrize.percentage)}" placeholder="25">
+      <label>Reward type</label>
+      <select data-prize-field="rewardType">
+        <option value="prize" ${safePrize.rewardType === 'tokens' ? '' : 'selected'}>Physical prize / Item QR</option>
+        <option value="tokens" ${safePrize.rewardType === 'tokens' ? 'selected' : ''}>Store Tokens</option>
+      </select>
+      <label>Token amount (only for Store Tokens)</label>
+      <input data-prize-field="tokenAmount" type="number" min="1" step="1" value="${escapeHtml(safePrize.tokenAmount || '')}" placeholder="25">
       <label>Prize image URL</label>
       <input data-prize-field="imageUrl" type="url" value="${escapeHtml(safePrize.imageUrl && !safePrize.imageUrl.startsWith('data:') ? safePrize.imageUrl : '')}" placeholder="https://...">
       <label>Or upload prize image</label>
@@ -403,6 +427,8 @@ async function collectPrizesFromBlocks() {
     const block = blocks[index];
     const name = block.querySelector('[data-prize-field="name"]')?.value.trim();
     const percentage = block.querySelector('[data-prize-field="percentage"]')?.value;
+    const rewardType = block.querySelector('[data-prize-field="rewardType"]')?.value || 'prize';
+    const tokenAmount = block.querySelector('[data-prize-field="tokenAmount"]')?.value;
     const imageInput = block.querySelector('[data-prize-field="imageUrl"]');
     const fileInput = block.querySelector('[data-prize-field="file"]');
     let imageUrl = imageInput?.value.trim() || '';
@@ -412,7 +438,7 @@ async function collectPrizesFromBlocks() {
       if (imageInput) imageInput.value = imageUrl;
       fileInput.value = '';
     }
-    const cleaned = cleanPrize({ name, percentage, imageUrl }, index);
+    const cleaned = cleanPrize({ name, percentage, imageUrl, rewardType, tokenAmount }, index);
     if (cleaned) prizes.push(cleaned);
   }
   syncPrizeTextareaFromBlocks();
@@ -486,9 +512,11 @@ function cleanPrizes(prizes) {
 
 function cleanCapsuleConfig(id, data = {}) {
   const name = String(data.name || data.capsuleName || 'Lucky Capsule').trim();
+  const capsuleChance = Math.max(0.01, numberValue(data.capsuleChance ?? data.obtainPercentage ?? data.machineChance, 1));
   return {
     id: id || slugify(name),
     name,
+    capsuleChance: Math.round(capsuleChance * 100) / 100,
     imageUrl: String(data.imageUrl || data.capsuleImageUrl || '').trim() || defaultCapsuleImage(name),
     prizes: cleanPrizes(data.prizes)
   };
@@ -498,24 +526,27 @@ function defaultMachineCapsuleConfigs() {
   return [
     cleanCapsuleConfig('starter-capsule', {
       name: 'Starter Capsule',
+      capsuleChance: 25,
       prizes: [
         { name: 'Common Plush', percentage: 45 },
         { name: 'Sticker Pack', percentage: 25 },
-        { name: 'Mini Figure', percentage: 20 },
+        { name: '10 Store Tokens', percentage: 20, rewardType: 'tokens', tokenAmount: 10 },
         { name: 'Golden Ticket', percentage: 10 }
       ]
     }),
     cleanCapsuleConfig('ocean-capsule', {
       name: 'Ocean Capsule',
+      capsuleChance: 16,
       prizes: [
         { name: 'Shell Keychain', percentage: 40 },
-        { name: 'Blue Sticker Pack', percentage: 30 },
+        { name: 'Blue Sticker Pack', percentage: 25 },
+        { name: '15 Store Tokens', percentage: 15, rewardType: 'tokens', tokenAmount: 15 },
         { name: 'Mini Dolphin', percentage: 20 },
-        { name: 'Pearl Prize', percentage: 10 }
       ]
     }),
     cleanCapsuleConfig('neon-capsule', {
       name: 'Neon Capsule',
+      capsuleChance: 14,
       prizes: [
         { name: 'Glow Bracelet', percentage: 42 },
         { name: 'Neon Pin', percentage: 28 },
@@ -525,6 +556,7 @@ function defaultMachineCapsuleConfigs() {
     }),
     cleanCapsuleConfig('sweet-capsule', {
       name: 'Sweet Capsule',
+      capsuleChance: 14,
       prizes: [
         { name: 'Candy Charm', percentage: 43 },
         { name: 'Dessert Sticker', percentage: 27 },
@@ -534,6 +566,7 @@ function defaultMachineCapsuleConfigs() {
     }),
     cleanCapsuleConfig('animal-capsule', {
       name: 'Animal Capsule',
+      capsuleChance: 12,
       prizes: [
         { name: 'Paw Sticker', percentage: 44 },
         { name: 'Mini Pet', percentage: 26 },
@@ -543,6 +576,7 @@ function defaultMachineCapsuleConfigs() {
     }),
     cleanCapsuleConfig('space-capsule', {
       name: 'Space Capsule',
+      capsuleChance: 11,
       prizes: [
         { name: 'Star Sticker', percentage: 41 },
         { name: 'Rocket Charm', percentage: 29 },
@@ -552,11 +586,12 @@ function defaultMachineCapsuleConfigs() {
     }),
     cleanCapsuleConfig('gold-capsule', {
       name: 'Gold Capsule',
+      capsuleChance: 8,
       prizes: [
-        { name: 'Gold Sticker', percentage: 50 },
+        { name: 'Gold Sticker', percentage: 45 },
+        { name: '50 Store Tokens', percentage: 25, rewardType: 'tokens', tokenAmount: 50 },
         { name: 'Gold Coin Charm', percentage: 25 },
-        { name: 'Premium Mini', percentage: 15 },
-        { name: 'Grand Prize', percentage: 10 }
+        { name: 'Grand Prize', percentage: 5 }
       ]
     })
   ];
@@ -663,6 +698,7 @@ async function ensureUserProfile(user, preferredName = '') {
       authSource: 'firebase-auth',
       authProviders: ['password'],
       coins: owner ? 999999 : 0,
+      capsuleTokens: 0,
       stars: 0,
       title: owner ? 'Owner' : 'User',
       isAdmin: owner,
@@ -681,6 +717,7 @@ async function ensureUserProfile(user, preferredName = '') {
   if (!data.email) patch.email = user.email || '';
   if (!data.emailLower) patch.emailLower = normalizeEmail(user.email);
   if (!data.displayId || String(data.displayId).length !== 6) patch.displayId = await ensureUniqueDisplayId();
+  if (!Object.prototype.hasOwnProperty.call(data, 'capsuleTokens')) patch.capsuleTokens = 0;
   if (owner && (data.isAdmin !== true || data.title !== 'Owner')) {
     patch.isAdmin = true;
     patch.title = 'Owner';
@@ -752,7 +789,7 @@ function renderCapsuleConfigs() {
       <img src="${escapeHtml(config.imageUrl)}" alt="">
       <div>
         <strong>Type ${index + 1}: ${escapeHtml(config.name)}</strong>
-        <small>${topFourPrizes(config.prizes).map((prize) => `${escapeHtml(prize.name)} ${formatPercent(prize.percentage)}`).join(' - ')}</small>
+        <small>Capsule chance ${formatPercent(config.capsuleChance)} - ${topFourPrizes(config.prizes).map((prize) => `${escapeHtml(prize.name)} ${formatPercent(prize.percentage)}${prize.rewardType === 'tokens' ? ` (${escapeHtml(prize.tokenAmount)} Tokens)` : ''}`).join(' - ')}</small>
       </div>
       <button type="button" class="capsule-btn config-edit-btn" data-config-id="${escapeHtml(config.id)}">Edit</button>
     </div>
@@ -767,6 +804,7 @@ function editCapsuleConfig(configId) {
   if (!config) return;
   if (elements.configId) elements.configId.value = config.id;
   if (elements.configName) elements.configName.value = config.name;
+  if (elements.configChance) elements.configChance.value = String(config.capsuleChance || '');
   if (elements.configImage) elements.configImage.value = config.imageUrl.startsWith('data:') ? '' : config.imageUrl;
   if (elements.prizesInput) elements.prizesInput.value = prizeLinesForTextarea(config.prizes);
   renderPrizeBlocks(config.prizes);
@@ -776,6 +814,7 @@ function editCapsuleConfig(configId) {
 function clearCapsuleConfigForm() {
   if (elements.configId) elements.configId.value = '';
   if (elements.configName) elements.configName.value = '';
+  if (elements.configChance) elements.configChance.value = '14.29';
   if (elements.configImage) elements.configImage.value = '';
   if (elements.configImageFile) elements.configImageFile.value = '';
   const defaultPrizes = cleanPrizes([
@@ -813,9 +852,11 @@ async function handleSaveCapsuleConfig(event) {
   }
   const id = elements.configId?.value || slugify(name);
   let imageUrl = elements.configImage?.value.trim() || '';
+  const capsuleChance = Math.max(0.01, numberValue(elements.configChance?.value, 1));
   const total = totalChance(prizes);
   const payload = {
     name,
+    capsuleChance: Math.round(capsuleChance * 100) / 100,
     imageUrl: imageUrl || defaultCapsuleImage(name),
     prizes,
     topPrizePreview: topFourPrizes(prizes).map((prize) => ({ name: prize.name, percentage: prize.percentage })),
@@ -860,7 +901,7 @@ function renderCapsulePreview(code, codeData) {
       <strong>Most common possible prizes</strong>
       ${topFourPrizes(config.prizes).map((prize) => `
         <div class="odds-row">
-          <span>${escapeHtml(prize.name)}</span>
+          <span>${escapeHtml(prize.name)}${prize.rewardType === 'tokens' ? ` (${escapeHtml(prize.tokenAmount)} Tokens)` : ''}</span>
           <b>${formatPercent(prize.percentage)}</b>
         </div>
       `).join('')}
@@ -907,15 +948,25 @@ async function openCapsuleByCode(code) {
     await wait(450);
     elements.revealStage?.classList.add('opening');
     const prize = pickPrize(codeData.prizes);
-    const item = await redeemCapsuleCode(code, codeData, prize);
+    const reward = await redeemCapsuleCode(code, codeData, prize);
     await wait(650);
-    renderImage(elements.prizeImage, elements.prizeFallback, item.prizeImageUrl, item.prizeName);
-    if (elements.prizeName) elements.prizeName.textContent = item.prizeName;
-    if (elements.prizePercent) elements.prizePercent.textContent = `${formatPercent(item.chancePercent)} chance in this capsule`;
+    renderImage(elements.prizeImage, elements.prizeFallback, reward.prizeImageUrl, reward.prizeName);
+    if (elements.prizeName) elements.prizeName.textContent = reward.prizeName;
+    if (elements.prizePercent) {
+      elements.prizePercent.textContent = reward.rewardType === 'tokens'
+        ? `${formatPercent(reward.chancePercent)} chance - ${reward.tokenAmount} Store Tokens`
+        : `${formatPercent(reward.chancePercent)} chance in this capsule`;
+    }
     elements.revealStage?.classList.add('opened');
-    setStatus(elements.redeemStatus, `${item.prizeName} added to your Items with item code ${item.itemCode}.`, 'success');
+    if (reward.rewardType === 'tokens') {
+      if (currentUserData) currentUserData.capsuleTokens = Math.max(0, numberValue(currentUserData.capsuleTokens, 0)) + reward.tokenAmount;
+      setStatus(elements.redeemStatus, `${reward.tokenAmount} Store Tokens added to your Token Store balance.`, 'success');
+      await renderTokenStore();
+    } else {
+      setStatus(elements.redeemStatus, `${reward.prizeName} added to your Items with item code ${reward.itemCode}.`, 'success');
+      await renderUserItems();
+    }
     if (elements.redeemCode) elements.redeemCode.value = '';
-    await renderUserItems();
   } catch (err) {
     setStatus(elements.redeemStatus, err.message || 'Could not open this capsule.', 'error');
   }
@@ -923,30 +974,52 @@ async function openCapsuleByCode(code) {
 
 async function redeemCapsuleCode(code, codeData, prize) {
   for (let attempt = 0; attempt < 4; attempt += 1) {
-    const itemCode = randomMixedCode();
+    let itemCode = randomMixedCode();
     try {
       return await runTransaction(db, async (tx) => {
         const codeRef = doc(db, CAPSULE_CODE_COLLECTION, code);
         const userRef = doc(db, 'users', currentUser.uid);
-        const itemRef = doc(db, CAPSULE_ITEM_COLLECTION, itemCode);
         const codeSnap = await tx.get(codeRef);
         const userSnap = await tx.get(userRef);
-        const itemSnap = await tx.get(itemRef);
-        if (itemSnap.exists()) {
-          const collision = new Error('ITEM_CODE_COLLISION');
-          collision.code = 'ITEM_CODE_COLLISION';
-          throw collision;
-        }
         if (!codeSnap.exists()) throw new Error('That capsule code was not found.');
         const liveCodeData = codeSnap.data() || {};
         if (liveCodeData.redeemed === true) throw new Error('That capsule code has already been opened.');
         const livePrizes = cleanPrizes(liveCodeData.prizes || codeData.prizes);
         const safePrize = cleanPrize(prize, 0) || pickPrize(livePrizes);
+        const isTokenReward = safePrize.rewardType === 'tokens';
         const capsuleName = String(liveCodeData.capsuleName || codeData.capsuleName || 'Capsule');
         const capsuleImageUrl = String(liveCodeData.capsuleImageUrl || codeData.capsuleImageUrl || defaultCapsuleImage(capsuleName));
-        const itemPayload = {
-          itemCode,
-          itemQrUrl: itemUrlForCode(itemCode),
+        let itemPayload = null;
+        if (!isTokenReward) {
+          const itemRef = doc(db, CAPSULE_ITEM_COLLECTION, itemCode);
+          const itemSnap = await tx.get(itemRef);
+          if (itemSnap.exists()) {
+            const collision = new Error('ITEM_CODE_COLLISION');
+            collision.code = 'ITEM_CODE_COLLISION';
+            throw collision;
+          }
+          itemPayload = {
+            itemCode,
+            itemQrUrl: itemUrlForCode(itemCode),
+            userId: currentUser.uid,
+            userEmail: currentUser.email || '',
+            capsuleCode: code,
+            capsuleId: liveCodeData.capsuleId || codeData.capsuleId || '',
+            capsuleName,
+            capsuleImageUrl,
+            prizeName: safePrize.name,
+            prizeImageUrl: safePrize.imageUrl || defaultPrizeImage(safePrize.name),
+            chancePercent: safePrize.percentage,
+            rewardType: 'prize',
+            status: 'owned',
+            storeRedeemed: false,
+            createdAt: serverTimestamp()
+          };
+          tx.set(itemRef, itemPayload);
+        }
+        const rewardPayload = itemPayload || {
+          itemCode: '',
+          itemQrUrl: '',
           userId: currentUser.uid,
           userEmail: currentUser.email || '',
           capsuleCode: code,
@@ -954,10 +1027,10 @@ async function redeemCapsuleCode(code, codeData, prize) {
           capsuleName,
           capsuleImageUrl,
           prizeName: safePrize.name,
-          prizeImageUrl: safePrize.imageUrl || defaultPrizeImage(safePrize.name),
+          prizeImageUrl: safePrize.imageUrl || defaultTokenImage(safePrize.name),
           chancePercent: safePrize.percentage,
-          status: 'owned',
-          storeRedeemed: false,
+          rewardType: 'tokens',
+          tokenAmount: safePrize.tokenAmount,
           createdAt: serverTimestamp()
         };
         if (!userSnap.exists()) {
@@ -968,22 +1041,27 @@ async function redeemCapsuleCode(code, codeData, prize) {
             avatar: DEFAULT_AVATAR,
             title: normalizeEmail(currentUser.email) === ADMIN_EMAIL ? 'Owner' : 'User',
             isAdmin: normalizeEmail(currentUser.email) === ADMIN_EMAIL,
+            capsuleTokens: isTokenReward ? safePrize.tokenAmount : 0,
             badges: [],
             createdAt: serverTimestamp()
           }, { merge: true });
+        } else if (isTokenReward) {
+          tx.update(userRef, { capsuleTokens: increment(safePrize.tokenAmount) });
         }
-        tx.set(itemRef, itemPayload);
-        tx.update(codeRef, {
+        const codeUpdate = {
           redeemed: true,
           redeemedBy: currentUser.uid,
           redeemedByEmail: currentUser.email || '',
           redeemedAt: serverTimestamp(),
+          rewardType: safePrize.rewardType,
           prizeName: safePrize.name,
-          prizeImageUrl: safePrize.imageUrl || defaultPrizeImage(safePrize.name),
+          prizeImageUrl: safePrize.imageUrl || (isTokenReward ? defaultTokenImage(safePrize.name) : defaultPrizeImage(safePrize.name)),
           prizeChancePercent: safePrize.percentage,
-          itemCode
-        });
-        return itemPayload;
+          tokenAmount: isTokenReward ? safePrize.tokenAmount : 0
+        };
+        if (!isTokenReward) codeUpdate.itemCode = itemCode;
+        tx.update(codeRef, codeUpdate);
+        return rewardPayload;
       });
     } catch (err) {
       if (err.code === 'ITEM_CODE_COLLISION' || err.message === 'ITEM_CODE_COLLISION') continue;
@@ -1040,6 +1118,25 @@ async function renderUserItems() {
     }
   } catch (err) {
     elements.itemsList.innerHTML = `<p class="capsule-error-text">Could not load items: ${escapeHtml(err.message || 'error')}</p>`;
+  }
+}
+
+async function renderTokenStore() {
+  if (!elements.tokenBalance && !elements.storeStatus) return;
+  if (!currentUser) {
+    if (elements.tokenBalance) elements.tokenBalance.textContent = '0';
+    setStatus(elements.storeStatus, 'Sign in to load your Token balance.');
+    return;
+  }
+  try {
+    const snap = await getDoc(doc(db, 'users', currentUser.uid));
+    const data = snap.exists() ? snap.data() : currentUserData || {};
+    currentUserData = { ...(currentUserData || {}), ...data };
+    const balance = Math.max(0, Math.floor(numberValue(data.capsuleTokens, 0)));
+    if (elements.tokenBalance) elements.tokenBalance.textContent = String(balance);
+    setStatus(elements.storeStatus, `Token balance loaded: ${balance} Token${balance === 1 ? '' : 's'}.`, 'success');
+  } catch (err) {
+    setStatus(elements.storeStatus, `Could not load Token balance: ${err.message || 'error'}`, 'error');
   }
 }
 
@@ -1161,6 +1258,7 @@ async function handleGenerateCodes(event) {
         machineCapsuleTypeCount: MACHINE_CAPSULE_TYPES,
         capsuleId: config.id,
         capsuleName: config.name,
+        capsuleChance: config.capsuleChance,
         capsuleImageUrl: config.imageUrl,
         prizes: cleanPrizes(config.prizes),
         topPrizePreview: topFourPrizes(config.prizes).map((prize) => ({
@@ -1188,11 +1286,20 @@ async function handleGenerateCodes(event) {
 
 function buildMachineSlots(configs) {
   const types = sevenCapsuleTypes(configs);
+  const reserved = Math.min(types.length, PDF_BATCH_SIZE);
+  const remainingSlots = PDF_BATCH_SIZE - reserved;
+  const total = types.reduce((sum, config) => sum + Math.max(0, numberValue(config.capsuleChance, 0)), 0) || types.length;
+  const allocations = types.map((config) => {
+    const exact = (Math.max(0, numberValue(config.capsuleChance, 0)) || 1) / total * remainingSlots;
+    return { config, count: 1 + Math.floor(exact), remainder: exact % 1 };
+  });
+  let assigned = allocations.reduce((sum, entry) => sum + entry.count, 0);
+  allocations.sort((a, b) => b.remainder - a.remainder);
+  for (let i = 0; assigned < PDF_BATCH_SIZE; i += 1, assigned += 1) {
+    allocations[i % allocations.length].count += 1;
+  }
   const slots = [];
-  const base = Math.floor(PDF_BATCH_SIZE / types.length);
-  const remainder = PDF_BATCH_SIZE % types.length;
-  types.forEach((config, index) => {
-    const count = base + (index < remainder ? 1 : 0);
+  allocations.forEach(({ config, count }) => {
     for (let i = 0; i < count; i += 1) {
       slots.push(config);
     }
@@ -1237,13 +1344,14 @@ function renderCodeTable(codes) {
   return `
     <div class="capsule-table-wrap">
       <table class="capsule-table">
-        <thead><tr><th>8 character code</th><th>Gatcha Machine</th><th>Type of Capsule</th><th>Top possible prizes</th><th>Status</th></tr></thead>
+        <thead><tr><th>8 character code</th><th>Gatcha Machine</th><th>Type of Capsule</th><th>Capsule chance</th><th>Top possible rewards</th><th>Status</th></tr></thead>
         <tbody>${codes.map((code) => `
           <tr>
             <td class="eight-code inline">${escapeHtml(code.code || code.id)}</td>
             <td>${escapeHtml(code.gatchaMachineName || code.batchLabel || 'Gatcha Machine')}${code.machineSlot ? `<br><small>Slot ${escapeHtml(code.machineSlot)}</small>` : ''}</td>
             <td>${escapeHtml(code.capsuleName || 'Capsule')}</td>
-            <td>${topFourPrizes(code.prizes).map((prize) => `${escapeHtml(prize.name)} ${formatPercent(prize.percentage)}`).join('<br>')}</td>
+            <td>${formatPercent(code.capsuleChance || 0)}</td>
+            <td>${topFourPrizes(code.prizes).map((prize) => `${escapeHtml(prize.name)} ${formatPercent(prize.percentage)}${prize.rewardType === 'tokens' ? ` (${escapeHtml(prize.tokenAmount)} Tokens)` : ''}`).join('<br>')}</td>
             <td>${code.redeemed ? `Opened: ${escapeHtml(code.prizeName || 'Prize')}` : 'Ready'}</td>
           </tr>
         `).join('')}</tbody>
@@ -1352,9 +1460,11 @@ async function downloadGeneratedPdf() {
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(7.5);
       pdf.text(`Machine slot ${code.machineSlot || i + 1} of ${PDF_BATCH_SIZE}`, x + 110, y + 68, { maxWidth: cardWidth - 124 });
-      pdf.text('4 most common possible prizes:', x + 110, y + 80, { maxWidth: cardWidth - 124 });
+      pdf.text(`Capsule chance: ${formatPercent(code.capsuleChance || 0)}`, x + 110, y + 80, { maxWidth: cardWidth - 124 });
+      pdf.text('4 most common possible rewards:', x + 110, y + 92, { maxWidth: cardWidth - 124 });
       prizes.forEach((prize, prizeIndex) => {
-        pdf.text(`${prize.name} - ${formatPercent(prize.percentage)}`, x + 110, y + 94 + prizeIndex * 11, { maxWidth: cardWidth - 124 });
+        const rewardNote = prize.rewardType === 'tokens' ? ` (${prize.tokenAmount || 0} Tokens)` : '';
+        pdf.text(`${prize.name}${rewardNote} - ${formatPercent(prize.percentage)}`, x + 110, y + 106 + prizeIndex * 10, { maxWidth: cardWidth - 124 });
       });
 
       pdf.setTextColor(120, 135, 158);
@@ -1477,6 +1587,7 @@ function currentPageId() {
   if (path.endsWith('/capsule/account.html')) return 'account';
   if (path.endsWith('/capsule/redeem.html')) return 'redeem';
   if (path.endsWith('/capsule/items.html')) return 'items';
+  if (path.endsWith('/capsule/store.html')) return 'store';
   if (path.endsWith('/capsule/staff.html')) return 'staff';
   if (path.endsWith('/capsule/admin.html')) return 'admin';
   return 'home';
@@ -1561,6 +1672,7 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
     await renderUserItems();
+    await renderTokenStore();
     return;
   }
 
@@ -1591,6 +1703,7 @@ onAuthStateChanged(auth, async (user) => {
       await renderRecentCodes();
     }
     await renderUserItems();
+    await renderTokenStore();
     if (pendingCapsuleCode) {
       const code = pendingCapsuleCode;
       pendingCapsuleCode = null;

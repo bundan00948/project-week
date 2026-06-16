@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Items - Capsule Rewards</title>
+  <title>Store - Capsule Rewards</title>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firestore.googleapis.com">
@@ -14,14 +14,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/capsule.css">
 </head>
-<body data-page="items">
+<body data-page="store">
   <div class="capsule-bg" aria-hidden="true"></div>
   <nav class="capsule-side-nav" aria-label="Capsule pages">
     <a class="side-nav-link" href="/capsule/" data-page-target="home" title="Home" aria-label="Home"><i class="fas fa-house"></i><span>Home</span></a>
     <a class="side-nav-link" href="/capsule/account.html" data-page-target="account" title="Account" aria-label="Account"><i class="fas fa-user"></i><span>Account</span></a>
     <a class="side-nav-link" href="/capsule/redeem.html" data-page-target="redeem" title="Redeem" aria-label="Redeem"><i class="fas fa-qrcode"></i><span>Redeem</span></a>
-    <a class="side-nav-link active" href="/capsule/items.html" data-page-target="items" title="Items" aria-label="Items"><i class="fas fa-ticket"></i><span>Items</span></a>
-    <a class="side-nav-link" href="/capsule/store.html" data-page-target="store" title="Store" aria-label="Store"><i class="fas fa-coins"></i><span>Store</span></a>
+    <a class="side-nav-link" href="/capsule/items.html" data-page-target="items" title="Items" aria-label="Items"><i class="fas fa-ticket"></i><span>Items</span></a>
+    <a class="side-nav-link active" href="/capsule/store.html" data-page-target="store" title="Store" aria-label="Store"><i class="fas fa-coins"></i><span>Store</span></a>
     <a class="side-nav-link" href="/capsule/staff.html" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff" hidden><i class="fas fa-store"></i><span>Staff</span></a>
     <a class="side-nav-link" href="/capsule/admin.html" data-page-target="admin" id="side-admin-nav-link" title="Admin" aria-label="Admin" hidden><i class="fas fa-screwdriver-wrench"></i><span>Admin</span></a>
   </nav>
@@ -31,24 +31,45 @@
       <a href="/capsule/" data-page-target="home"><i class="fas fa-house"></i> Home</a>
       <a href="/capsule/account.html" data-page-target="account"><i class="fas fa-user"></i> Account</a>
       <a href="/capsule/redeem.html" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem</a>
-      <a class="active" href="/capsule/items.html" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
-      <a href="/capsule/store.html" data-page-target="store"><i class="fas fa-coins"></i> Store</a>
+      <a href="/capsule/items.html" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
+      <a class="active" href="/capsule/store.html" data-page-target="store"><i class="fas fa-coins"></i> Store</a>
       <a href="/capsule/staff.html" data-page-target="staff" id="staff-nav-link" hidden><i class="fas fa-store"></i> Staff</a>
       <a href="/capsule/admin.html" data-page-target="admin" id="admin-nav-link" hidden><i class="fas fa-screwdriver-wrench"></i> Admin</a>
     </nav>
     <div class="capsule-account-pill" id="capsule-account-pill"><i class="fas fa-circle-notch fa-spin"></i><span>Checking account...</span></div>
   </header>
   <main class="capsule-shell">
-    <section class="capsule-card capsule-page active" id="items" data-page="items">
+    <section class="capsule-card capsule-page active" id="store" data-page="store">
       <div class="section-header">
         <div>
-          <p class="capsule-kicker">Items</p>
-          <h2>Your item QR codes</h2>
-          <p class="capsule-muted">Show an item QR code in store. Staff scans it once and marks the item redeemed.</p>
+          <p class="capsule-kicker">Token Store</p>
+          <h2>Spend Tokens from capsules</h2>
+          <p class="capsule-muted">Some capsules reveal Store Tokens instead of physical prizes. Tokens are saved here for store rewards.</p>
         </div>
-        <button class="capsule-btn" type="button" id="capsule-refresh-items"><i class="fas fa-rotate"></i> Refresh Items</button>
+        <div class="token-balance-card">
+          <i class="fas fa-coins"></i>
+          <span>Your Tokens</span>
+          <strong id="capsule-token-balance">0</strong>
+        </div>
       </div>
-      <div class="items-grid" id="capsule-items-list"><p class="capsule-muted">Sign in to see your items.</p></div>
+      <div class="store-grid">
+        <article class="store-card">
+          <i class="fas fa-ticket"></i>
+          <h3>Token rewards</h3>
+          <p>When a capsule contains Tokens, they are added to this Store balance immediately.</p>
+        </article>
+        <article class="store-card">
+          <i class="fas fa-gift"></i>
+          <h3>Prize capsules</h3>
+          <p>When a capsule contains a prize, it still goes to Items and receives a store-scannable QR code.</p>
+        </article>
+        <article class="store-card">
+          <i class="fas fa-store"></i>
+          <h3>Store use</h3>
+          <p>Use this balance as the Tokens wallet for capsule store offers and counter rewards.</p>
+        </article>
+      </div>
+      <div class="capsule-status" id="capsule-store-status">Sign in to load your Token balance.</div>
     </section>
   </main>
   <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
