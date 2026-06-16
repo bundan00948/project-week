@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Capsule Rewards</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/capsule.css">
+</head>
+<body data-page="admin">
+  <div class="capsule-bg" aria-hidden="true"></div>
+  <nav class="capsule-side-nav" aria-label="Capsule pages">
+    <a class="side-nav-link" href="/capsule/" data-page-target="home" title="Home" aria-label="Home"><i class="fas fa-house"></i><span>Home</span></a>
+    <a class="side-nav-link" href="/capsule/account.html" data-page-target="account" title="Account" aria-label="Account"><i class="fas fa-user"></i><span>Account</span></a>
+    <a class="side-nav-link" href="/capsule/redeem.html" data-page-target="redeem" title="Redeem" aria-label="Redeem"><i class="fas fa-qrcode"></i><span>Redeem</span></a>
+    <a class="side-nav-link" href="/capsule/items.html" data-page-target="items" title="Items" aria-label="Items"><i class="fas fa-ticket"></i><span>Items</span></a>
+    <a class="side-nav-link" href="/capsule/staff.html" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff" hidden><i class="fas fa-store"></i><span>Staff</span></a>
+    <a class="side-nav-link active" href="/capsule/admin.html" data-page-target="admin" id="side-admin-nav-link" title="Admin" aria-label="Admin"><i class="fas fa-screwdriver-wrench"></i><span>Admin</span></a>
+  </nav>
+  <header class="capsule-topbar">
+    <a class="capsule-brand" href="/capsule/"><span class="capsule-brand-icon"><i class="fas fa-capsules"></i></span><span><strong>Capsule Rewards</strong><small>QR prizes for physical capsules</small></span></a>
+    <nav class="capsule-nav" aria-label="Capsule pages">
+      <a href="/capsule/" data-page-target="home"><i class="fas fa-house"></i> Home</a>
+      <a href="/capsule/account.html" data-page-target="account"><i class="fas fa-user"></i> Account</a>
+      <a href="/capsule/redeem.html" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem</a>
+      <a href="/capsule/items.html" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
+      <a href="/capsule/staff.html" data-page-target="staff" id="staff-nav-link" hidden><i class="fas fa-store"></i> Staff</a>
+      <a class="active" href="/capsule/admin.html" data-page-target="admin" id="admin-nav-link"><i class="fas fa-screwdriver-wrench"></i> Admin</a>
+    </nav>
+    <div class="capsule-account-pill" id="capsule-account-pill"><i class="fas fa-circle-notch fa-spin"></i><span>Checking account...</span></div>
+  </header>
+  <main class="capsule-shell">
+    <section class="capsule-card admin-card capsule-page active" id="admin" data-page="admin">
+      <div class="section-header">
+        <div>
+          <p class="capsule-kicker">Admin panel</p>
+          <h2>Gatcha Machine PDFs and 7 capsule types</h2>
+          <p class="capsule-muted">Each Gatcha Machine has exactly 100 capsules. The machine uses 7 capsule types, and PDF printing creates the full machine batch.</p>
+        </div>
+      </div>
+      <div class="admin-grid">
+        <form id="capsule-config-form" class="capsule-form admin-editor">
+          <input type="hidden" id="capsule-config-id">
+          <h3>Set one of the 7 capsule types</h3>
+          <label for="capsule-config-name">Type of Capsule</label>
+          <input id="capsule-config-name" placeholder="Example: Ocean Capsule" required>
+          <label for="capsule-config-image">Capsule Image URL</label>
+          <input type="url" id="capsule-config-image" placeholder="https://example.com/capsule.png">
+          <label for="capsule-prizes-input">Prizes (one per line)</label>
+          <textarea id="capsule-prizes-input" rows="8" placeholder="Prize name | percentage | image URL&#10;Common Plush | 45 | https://...&#10;Sticker Pack | 25 | https://..."></textarea>
+          <div class="capsule-btn-row">
+            <button class="capsule-btn capsule-btn-primary" type="submit">Save Capsule Type</button>
+            <button class="capsule-btn" type="button" id="capsule-config-clear">Clear</button>
+          </div>
+          <div class="capsule-status" id="capsule-config-status">Capsule type editor ready.</div>
+        </form>
+        <div class="admin-list">
+          <h3>The 7 capsule types</h3>
+          <p class="capsule-muted">The next Gatcha Machine PDF uses these 7 capsule types, spread across 100 capsules.</p>
+          <div id="capsule-config-list" class="config-list"></div>
+          <h3>Print a Gatcha Machine</h3>
+          <form id="capsule-generate-form" class="capsule-form">
+            <label for="capsule-machine-name">Gatcha Machine name</label>
+            <input id="capsule-machine-name" placeholder="Example: Front Store Machine A">
+            <label for="capsule-batch-label">Batch label</label>
+            <input id="capsule-batch-label" placeholder="Example: July machine refill">
+            <div class="batch-count-pill"><i class="fas fa-layer-group"></i> 1 Gatcha Machine = 100 capsules across 7 types</div>
+            <div class="capsule-btn-row">
+              <button class="capsule-btn capsule-btn-primary" type="submit"><i class="fas fa-wand-magic-sparkles"></i> Generate Gatcha Machine PDF</button>
+              <button class="capsule-btn" type="button" id="capsule-download-pdf" disabled><i class="fas fa-file-pdf"></i> Download Machine PDF</button>
+            </div>
+          </form>
+          <div class="capsule-status" id="capsule-admin-status">Admin tools load after sign-in.</div>
+        </div>
+      </div>
+      <h3>Generated this session</h3>
+      <div id="capsule-generated-table"></div>
+      <h3>Recent capsule codes</h3>
+      <div id="capsule-recent-table"></div>
+    </section>
+  </main>
+  <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+  <script type="module" src="/assets/js/games-universe/pages/capsule.js"></script>
+</body>
+</html>

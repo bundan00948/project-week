@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Capsule Rewards</title>
+  <title>Staff - Capsule Rewards</title>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firestore.googleapis.com">
@@ -14,67 +14,57 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/capsule.css">
 </head>
-<body data-page="home">
+<body data-page="staff">
   <div class="capsule-bg" aria-hidden="true"></div>
-
   <nav class="capsule-side-nav" aria-label="Capsule pages">
-    <a class="side-nav-link active" href="/capsule/" data-page-target="home" title="Home" aria-label="Home"><i class="fas fa-house"></i><span>Home</span></a>
+    <a class="side-nav-link" href="/capsule/" data-page-target="home" title="Home" aria-label="Home"><i class="fas fa-house"></i><span>Home</span></a>
     <a class="side-nav-link" href="/capsule/account.html" data-page-target="account" title="Account" aria-label="Account"><i class="fas fa-user"></i><span>Account</span></a>
     <a class="side-nav-link" href="/capsule/redeem.html" data-page-target="redeem" title="Redeem" aria-label="Redeem"><i class="fas fa-qrcode"></i><span>Redeem</span></a>
     <a class="side-nav-link" href="/capsule/items.html" data-page-target="items" title="Items" aria-label="Items"><i class="fas fa-ticket"></i><span>Items</span></a>
-    <a class="side-nav-link" href="/capsule/staff.html" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff" hidden><i class="fas fa-store"></i><span>Staff</span></a>
+    <a class="side-nav-link active" href="/capsule/staff.html" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff"><i class="fas fa-store"></i><span>Staff</span></a>
     <a class="side-nav-link" href="/capsule/admin.html" data-page-target="admin" id="side-admin-nav-link" title="Admin" aria-label="Admin" hidden><i class="fas fa-screwdriver-wrench"></i><span>Admin</span></a>
   </nav>
-
   <header class="capsule-topbar">
-    <a class="capsule-brand" href="/capsule/">
-      <span class="capsule-brand-icon"><i class="fas fa-capsules"></i></span>
-      <span><strong>Capsule Rewards</strong><small>QR prizes for physical capsules</small></span>
-    </a>
+    <a class="capsule-brand" href="/capsule/"><span class="capsule-brand-icon"><i class="fas fa-capsules"></i></span><span><strong>Capsule Rewards</strong><small>QR prizes for physical capsules</small></span></a>
     <nav class="capsule-nav" aria-label="Capsule pages">
-      <a class="active" href="/capsule/" data-page-target="home"><i class="fas fa-house"></i> Home</a>
+      <a href="/capsule/" data-page-target="home"><i class="fas fa-house"></i> Home</a>
       <a href="/capsule/account.html" data-page-target="account"><i class="fas fa-user"></i> Account</a>
       <a href="/capsule/redeem.html" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem</a>
       <a href="/capsule/items.html" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
-      <a href="/capsule/staff.html" data-page-target="staff" id="staff-nav-link" hidden><i class="fas fa-store"></i> Staff</a>
+      <a class="active" href="/capsule/staff.html" data-page-target="staff" id="staff-nav-link"><i class="fas fa-store"></i> Staff</a>
       <a href="/capsule/admin.html" data-page-target="admin" id="admin-nav-link" hidden><i class="fas fa-screwdriver-wrench"></i> Admin</a>
     </nav>
     <div class="capsule-account-pill" id="capsule-account-pill"><i class="fas fa-circle-notch fa-spin"></i><span>Checking account...</span></div>
   </header>
-
   <main class="capsule-shell">
-    <section class="capsule-hero capsule-page active" id="home" data-page="home">
-      <div class="hero-copy">
-        <p class="capsule-kicker">A standalone Gatcha Machine website</p>
-        <h1>Scan a capsule QR, open it, and keep the prize as a redeemable item.</h1>
-        <p>
-          Each Gatcha Machine has 100 physical capsules across 7 capsule types. Printed QR codes
-          detect the capsule type, show the prize odds, animate open, and add the revealed prize to Items.
-        </p>
-        <div class="hero-actions">
-          <a class="capsule-btn capsule-btn-primary" href="/capsule/redeem.html"><i class="fas fa-qrcode"></i> Redeem a Capsule</a>
-          <a class="capsule-btn" href="/capsule/items.html"><i class="fas fa-ticket"></i> View Items</a>
+    <section class="capsule-card staff-card capsule-page active" id="staff" data-page="staff">
+      <div class="section-header">
+        <div>
+          <p class="capsule-kicker">Store staff</p>
+          <h2>Scan an item QR code</h2>
+          <p class="capsule-muted">Use this store scanner to verify and redeem a customer's item QR code.</p>
         </div>
-        <div class="journey-steps" aria-label="Capsule journey">
-          <div><i class="fas fa-user-plus"></i><span>Sign up</span></div>
-          <div><i class="fas fa-camera"></i><span>Scan</span></div>
-          <div><i class="fas fa-gift"></i><span>Reveal</span></div>
-          <div><i class="fas fa-store"></i><span>Redeem in store</span></div>
+        <div class="capsule-btn-row">
+          <button class="capsule-btn capsule-btn-primary" type="button" id="item-start-scan"><i class="fas fa-store"></i> Scan Item QR</button>
+          <button class="capsule-btn" type="button" id="item-stop-scan" disabled>Stop camera</button>
         </div>
       </div>
-      <div class="hero-display" aria-label="Capsule opening preview">
-        <div class="floating-capsule"><span></span><span></span><span></span></div>
-        <div class="odds-card">
-          <strong>Gatcha Machine</strong>
-          <p>100 Capsules</p>
-          <p>7 Capsule Types</p>
-          <p>QR PDF Printing</p>
-          <p>Store Item QR</p>
+      <div class="staff-grid">
+        <div>
+          <div class="scanner-box" id="item-scanner"><div class="scanner-placeholder"><i class="fas fa-barcode"></i><span>Item scanner opens here</span></div></div>
+          <div class="camera-permission-card" id="item-camera-permission"><i class="fas fa-camera"></i><span>Tap Scan Item QR and allow camera access so staff can verify the item.</span></div>
+          <form id="item-lookup-form" class="inline-code-form">
+            <label for="item-lookup-code">Or enter item code</label>
+            <div>
+              <input id="item-lookup-code" inputmode="text" pattern="[A-Za-z0-9]{8}" maxlength="8" placeholder="xT8mN4pQ" autocomplete="off" autocapitalize="off" spellcheck="false">
+              <button class="capsule-btn capsule-btn-primary" type="submit">Lookup Item</button>
+            </div>
+          </form>
         </div>
+        <div class="staff-result" id="item-lookup-result"><p class="capsule-muted">Scan or enter an item code to verify it.</p></div>
       </div>
     </section>
   </main>
-
   <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
