@@ -21,6 +21,7 @@
     <a class="side-nav-link" href="/capsule/account.html" data-page-target="account" title="Account" aria-label="Account"><i class="fas fa-user"></i><span>Account</span></a>
     <a class="side-nav-link" href="/capsule/redeem.html" data-page-target="redeem" title="Redeem" aria-label="Redeem"><i class="fas fa-qrcode"></i><span>Redeem</span></a>
     <a class="side-nav-link" href="/capsule/items.html" data-page-target="items" title="Items" aria-label="Items"><i class="fas fa-ticket"></i><span>Items</span></a>
+    <a class="side-nav-link" href="/capsule/store.html" data-page-target="store" title="Store" aria-label="Store"><i class="fas fa-coins"></i><span>Store</span></a>
     <a class="side-nav-link" href="/capsule/staff.html" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff" hidden><i class="fas fa-store"></i><span>Staff</span></a>
     <a class="side-nav-link active" href="/capsule/admin.html" data-page-target="admin" id="side-admin-nav-link" title="Admin" aria-label="Admin"><i class="fas fa-screwdriver-wrench"></i><span>Admin</span></a>
   </nav>
@@ -31,6 +32,7 @@
       <a href="/capsule/account.html" data-page-target="account"><i class="fas fa-user"></i> Account</a>
       <a href="/capsule/redeem.html" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem</a>
       <a href="/capsule/items.html" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
+      <a href="/capsule/store.html" data-page-target="store"><i class="fas fa-coins"></i> Store</a>
       <a href="/capsule/staff.html" data-page-target="staff" id="staff-nav-link" hidden><i class="fas fa-store"></i> Staff</a>
       <a class="active" href="/capsule/admin.html" data-page-target="admin" id="admin-nav-link"><i class="fas fa-screwdriver-wrench"></i> Admin</a>
     </nav>
@@ -51,6 +53,8 @@
           <h3>Set one of the 7 capsule types</h3>
           <label for="capsule-config-name">Type of Capsule</label>
           <input id="capsule-config-name" placeholder="Example: Ocean Capsule" required>
+          <label for="capsule-config-chance">Chance to obtain this capsule in the Gatcha Machine PDF (%)</label>
+          <input type="number" id="capsule-config-chance" min="0.01" step="0.01" value="14.29">
           <label for="capsule-config-image">Capsule Image URL</label>
           <input type="url" id="capsule-config-image" placeholder="https://example.com/capsule.png">
           <label for="capsule-config-image-file">Or upload capsule image</label>
@@ -61,7 +65,7 @@
           <div class="block-editor-header">
             <div>
               <h4>Prize blocks</h4>
-              <p class="capsule-muted">Edit each prize title, percentage, image URL, or upload an image file.</p>
+              <p class="capsule-muted">Edit each block as a physical prize or Store Tokens reward. Percentages are the odds inside this capsule.</p>
             </div>
             <button class="capsule-btn" type="button" id="capsule-add-prize-block"><i class="fas fa-plus"></i> Add Prize</button>
           </div>
