@@ -615,6 +615,10 @@ function topFourPrizes(prizes) {
   return [...cleanPrizes(prizes)].sort((a, b) => b.percentage - a.percentage).slice(0, 4);
 }
 
+function topThreePrizes(prizes) {
+  return [...cleanPrizes(prizes)].sort((a, b) => b.percentage - a.percentage).slice(0, 3);
+}
+
 function totalChance(prizes) {
   return cleanPrizes(prizes).reduce((sum, prize) => sum + prize.percentage, 0);
 }
@@ -1397,6 +1401,16 @@ function renderQrInto(id, text, size) {
   });
 }
 
+function sortedCodesForPdf(codes) {
+  return [...codes].sort((a, b) => {
+    const chanceDelta = numberValue(b.capsuleChance, 0) - numberValue(a.capsuleChance, 0);
+    if (chanceDelta !== 0) return chanceDelta;
+    const nameDelta = String(a.capsuleName || '').localeCompare(String(b.capsuleName || ''));
+    if (nameDelta !== 0) return nameDelta;
+    return numberValue(a.machineSlot, 0) - numberValue(b.machineSlot, 0);
+  });
+}
+
 async function downloadGeneratedPdf() {
   if (!lastGeneratedCodes.length) {
     setStatus(elements.adminStatus, 'Generate a Gatcha Machine first.', 'error');
@@ -1406,70 +1420,66 @@ async function downloadGeneratedPdf() {
     setStatus(elements.adminStatus, 'PDF library failed to load.', 'error');
     return;
   }
-  setStatus(elements.adminStatus, 'Building the QR PDF...');
+  setStatus(elements.adminStatus, 'Building the white QR PDF...');
   try {
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
+    const pdf = new jsPDF({ unit: 'pt', format: 'letter', orientation: 'landscape' });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 34;
-    const columns = 2;
-    const rows = 4;
-    const cardWidth = (pageWidth - margin * 2 - 14) / columns;
-    const cardHeight = (pageHeight - margin * 2 - 24) / rows;
+    const margin = 16;
+    const headerHeight = 34;
+    const columns = 10;
+    const rows = 5;
+    const gap = 4;
+    const cardWidth = (pageWidth - margin * 2 - gap * (columns - 1)) / columns;
+    const cardHeight = (pageHeight - margin * 2 - headerHeight - gap * (rows - 1)) / rows;
+    const orderedCodes = sortedCodesForPdf(lastGeneratedCodes);
 
-    for (let i = 0; i < lastGeneratedCodes.length; i += 1) {
+    for (let i = 0; i < orderedCodes.length; i += 1) {
       if (i > 0 && i % (columns * rows) === 0) pdf.addPage();
       const index = i % (columns * rows);
       const col = index % columns;
       const row = Math.floor(index / columns);
-      const x = margin + col * (cardWidth + 14);
-      const y = margin + 24 + row * cardHeight;
-      const code = lastGeneratedCodes[i];
+      const x = margin + col * (cardWidth + gap);
+      const y = margin + headerHeight + row * (cardHeight + gap);
+      const code = orderedCodes[i];
       const qr = await qrDataUrl(code.qrUrl, 160);
-      const prizes = topFourPrizes(code.prizes);
-      const machineName = lastGeneratedCodes[0]?.gatchaMachineName || 'Gatcha Machine';
+      const prizes = topThreePrizes(code.prizes);
+      const machineName = orderedCodes[0]?.gatchaMachineName || 'Gatcha Machine';
 
       if (index === 0) {
-        pdf.setFillColor(8, 11, 18);
+        pdf.setFillColor(255, 255, 255);
         pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-        pdf.setTextColor(42, 255, 158);
+        pdf.setTextColor(0, 0, 0);
         pdf.setFont('helvetica', 'bold');
-        pdf.setFontSize(15);
-        pdf.text(`${machineName.toUpperCase()} - 100 CAPSULE GATCHA MACHINE`, margin, margin - 7, { maxWidth: pageWidth - margin * 2 });
-        pdf.setTextColor(180, 193, 214);
-        pdf.setFontSize(8);
-        pdf.text('7 capsule types. Cut and place one printed QR label into each physical capsule.', margin, margin + 6);
+        pdf.setFontSize(12);
+        pdf.text(`${machineName.toUpperCase()} - 100 CAPSULE GATCHA MACHINE`, margin, margin + 2, { maxWidth: pageWidth - margin * 2 });
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(7);
+        pdf.text('White PDF. 10 QR codes per row. Ordered from most common/lowest capsule to rarest. Each label shows the 3 most common rewards.', margin, margin + 14, { maxWidth: pageWidth - margin * 2 });
       }
 
-      pdf.setDrawColor(42, 255, 158);
-      pdf.setFillColor(18, 24, 36);
-      pdf.roundedRect(x, y, cardWidth, cardHeight - 8, 12, 12, 'FD');
-      pdf.addImage(qr, 'PNG', x + 12, y + 16, 88, 88);
+      pdf.setDrawColor(0, 0, 0);
+      pdf.setFillColor(255, 255, 255);
+      pdf.rect(x, y, cardWidth, cardHeight, 'FD');
+      const qrSize = Math.min(34, cardWidth - 10);
+      pdf.addImage(qr, 'PNG', x + (cardWidth - qrSize) / 2, y + 4, qrSize, qrSize);
 
-      pdf.setTextColor(255, 255, 255);
+      pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(11);
-      pdf.text(code.capsuleName || 'Capsule', x + 110, y + 30, { maxWidth: cardWidth - 124 });
+      pdf.setFontSize(5.8);
+      pdf.text(String(code.capsuleName || 'Capsule'), x + 3, y + qrSize + 12, { maxWidth: cardWidth - 6 });
+      pdf.setFontSize(6.6);
+      pdf.text(String(code.code || ''), x + 3, y + qrSize + 20, { maxWidth: cardWidth - 6 });
 
-      pdf.setTextColor(42, 255, 158);
-      pdf.setFontSize(15);
-      pdf.text(String(code.code), x + 110, y + 52, { maxWidth: cardWidth - 124 });
-
-      pdf.setTextColor(180, 193, 214);
+      pdf.setTextColor(40, 40, 40);
       pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(7.5);
-      pdf.text(`Machine slot ${code.machineSlot || i + 1} of ${PDF_BATCH_SIZE}`, x + 110, y + 68, { maxWidth: cardWidth - 124 });
-      pdf.text(`Capsule chance: ${formatPercent(code.capsuleChance || 0)}`, x + 110, y + 80, { maxWidth: cardWidth - 124 });
-      pdf.text('4 most common possible rewards:', x + 110, y + 92, { maxWidth: cardWidth - 124 });
+      pdf.setFontSize(4.6);
+      pdf.text(`Capsule: ${formatPercent(code.capsuleChance || 0)}`, x + 3, y + qrSize + 27, { maxWidth: cardWidth - 6 });
       prizes.forEach((prize, prizeIndex) => {
         const rewardNote = prize.rewardType === 'tokens' ? ` (${prize.tokenAmount || 0} Tokens)` : '';
-        pdf.text(`${prize.name}${rewardNote} - ${formatPercent(prize.percentage)}`, x + 110, y + 106 + prizeIndex * 10, { maxWidth: cardWidth - 124 });
+        pdf.text(`${prize.name}${rewardNote} ${formatPercent(prize.percentage)}`, x + 3, y + qrSize + 34 + prizeIndex * 6, { maxWidth: cardWidth - 6 });
       });
-
-      pdf.setTextColor(120, 135, 158);
-      pdf.setFontSize(6.5);
-      pdf.text('QR code on left. Title is the capsule type. Code is the 8 character capsule code.', x + 12, y + cardHeight - 20, { maxWidth: cardWidth - 24 });
     }
 
     const label = lastGeneratedCodes[0]?.batchId || `capsule-${Date.now()}`;
