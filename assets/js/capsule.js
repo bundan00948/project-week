@@ -23,6 +23,8 @@ import {
 
 const ADMIN_EMAIL = 'chonhouliu@gmail.com';
 const CAPSULE_COLLECTION = 'capsuleCodes';
+const CAPSULE_USERS_COLLECTION = 'capsuleUsers';
+const CAPSULE_GIFTS_COLLECTION = 'capsuleGifts';
 const DEFAULT_AVATAR = 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg';
 
 const firebaseConfig = {
@@ -66,9 +68,9 @@ const elements = {
   logoutBtn: $('capsule-logout-btn'),
   authStatus: $('capsule-auth-status'),
   userEmail: $('capsule-user-email'),
-  userName: $('user-name'),
-  userAvatar: $('user-avatar'),
-  userInfo: $('user-info'),
+  accountName: $('capsule-account-name'),
+  accountAvatar: $('capsule-account-avatar'),
+  accountShell: $('capsule-account'),
   redeemForm: $('capsule-redeem-form'),
   redeemCode: $('capsule-redeem-code'),
   redeemStatus: $('capsule-redeem-status'),
@@ -172,9 +174,9 @@ function setSignedInUi(user, userData) {
   elements.loginPanel?.classList.toggle('active', !signedIn);
   elements.signedInPanel?.classList.toggle('active', signedIn);
   if (elements.userEmail) elements.userEmail.textContent = user?.email || '';
-  if (elements.userInfo) elements.userInfo.style.display = signedIn ? 'flex' : 'none';
-  if (elements.userName) elements.userName.textContent = userData?.username || user?.email || '';
-  if (elements.userAvatar) elements.userAvatar.src = userData?.avatar || DEFAULT_AVATAR;
+  if (elements.accountShell) elements.accountShell.style.display = signedIn ? 'flex' : 'none';
+  if (elements.accountName) elements.accountName.textContent = userData?.displayName || user?.email || '';
+  if (elements.accountAvatar) elements.accountAvatar.src = userData?.avatar || DEFAULT_AVATAR;
 }
 
 function isCapsuleAdmin(user, userData) {
@@ -184,14 +186,14 @@ function isCapsuleAdmin(user, userData) {
 }
 
 async function ensureUserProfile(user) {
-  const userRef = doc(db, 'users', user.uid);
+  const userRef = doc(db, CAPSULE_USERS_COLLECTION, user.uid);
   const snap = await getDoc(userRef);
   const owner = normalizeEmail(user.email) === ADMIN_EMAIL;
   if (!snap.exists()) {
     const profile = {
       email: user.email || '',
       emailLower: normalizeEmail(user.email),
-      username: (user.email || 'player').split('@')[0],
+      displayName: (user.email || 'player').split('@')[0],
       avatar: DEFAULT_AVATAR,
       coins: owner ? 999999 : 0,
       stars: 0,
@@ -257,7 +259,7 @@ async function handleRedeem(event) {
     if (result.rewardType === 'tokens') {
       setStatus(elements.redeemStatus, `${tier.label} capsule redeemed: ${result.tokenAmount} tokens added to your Capsule balance.`, 'success');
     } else {
-      setStatus(elements.redeemStatus, `${tier.label} capsule redeemed: ${result.giftName} added to your inventory.`, 'success');
+      setStatus(elements.redeemStatus, `${tier.label} capsule redeemed: ${result.giftName} added to your Capsule collection.`, 'success');
     }
     if (elements.redeemCode) elements.redeemCode.value = '';
   } catch (err) {
@@ -269,7 +271,7 @@ async function redeemCapsuleCode(code, user) {
   const userEmail = user.email || '';
   return runTransaction(db, async (tx) => {
     const codeRef = doc(db, CAPSULE_COLLECTION, code);
-    const userRef = doc(db, 'users', user.uid);
+    const userRef = doc(db, CAPSULE_USERS_COLLECTION, user.uid);
     const codeSnap = await tx.get(codeRef);
     if (!codeSnap.exists()) throw new Error('That capsule code was not found.');
     const codeData = codeSnap.data() || {};
@@ -286,7 +288,7 @@ async function redeemCapsuleCode(code, user) {
     const baseProfile = {
       email: userEmail,
       emailLower: normalizeEmail(userEmail),
-      username: (userEmail || 'player').split('@')[0],
+      displayName: (userEmail || 'player').split('@')[0],
       avatar: DEFAULT_AVATAR,
       title: normalizeEmail(userEmail) === ADMIN_EMAIL ? 'Owner' : 'User',
       isAdmin: normalizeEmail(userEmail) === ADMIN_EMAIL,
@@ -307,12 +309,12 @@ async function redeemCapsuleCode(code, user) {
       } else {
         tx.set(userRef, { ...baseProfile, coins: 0, stars: giftStars, createdAt: serverTimestamp() }, { merge: true });
       }
-      const inventoryRef = doc(collection(db, 'inventory'));
-      tx.set(inventoryRef, {
+      const giftRef = doc(collection(db, CAPSULE_GIFTS_COLLECTION));
+      tx.set(giftRef, {
         userId: user.uid,
-        packId: 'capsule-machine',
-        packName: 'Capsule Machine',
-        itemName: giftName,
+        capsuleMachineId: 'capsule-machine',
+        sourceName: 'Capsule Machine',
+        giftName,
         rarity: tier,
         imageUrl: String(codeData.giftImageUrl || '').trim() || null,
         starsGained: giftStars,

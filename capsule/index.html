@@ -15,20 +15,18 @@
   <link rel="stylesheet" href="/assets/css/capsule.css">
 </head>
 <body class="capsule-standalone">
-  <div class="site-bg-atlas" aria-hidden="true"></div>
-
-  <div class="capsule-standalone-main" id="main-content">
+  <div class="capsule-site" id="capsule-site">
     <header class="capsule-topbar">
-      <div class="logo"><i class="fas fa-capsules"></i><h1>CAPSULE MACHINE</h1></div>
-      <div id="user-info" style="display:none;">
-        <img id="user-avatar" src="" alt="Avatar">
-        <span id="user-name"></span>
+      <div class="capsule-brand"><i class="fas fa-capsules"></i><h1>CAPSULE MACHINE</h1></div>
+      <div id="capsule-account" style="display:none;">
+        <img id="capsule-account-avatar" src="" alt="Avatar">
+        <span id="capsule-account-name"></span>
         <button id="capsule-logout-btn">Logout</button>
       </div>
     </header>
 
-    <main class="page active" id="capsule-page">
-      <div class="page-content capsule-page-shell">
+    <main class="capsule-site-main" id="capsule-page">
+      <div class="capsule-page-shell">
         <section class="capsule-hero">
           <div class="capsule-card capsule-machine" aria-label="Physical Gatcha machine">
             <div class="capsule-machine-body">
@@ -55,8 +53,8 @@
             <div class="capsule-kicker">Physical Gatcha QR Rewards</div>
             <h2 class="capsule-title">Capsule Machine</h2>
             <p class="capsule-lede">
-              Scan a QR code from a real capsule to redeem either store tokens or a gift.
-              Tokens are added to your Capsule store balance, and gifts appear in your collection.
+              Scan a QR code from a real capsule to redeem either Capsule tokens or a gift.
+              Tokens are added to your Capsule balance, and gifts appear in your Capsule collection.
             </p>
             <div class="capsule-tier-grid" id="capsule-tier-legend"></div>
           </div>
@@ -118,7 +116,7 @@
               <div class="capsule-field">
                 <label for="capsule-reward-type">Reward Type</label>
                 <select id="capsule-reward-type">
-                  <option value="tokens">Tokens for Store</option>
+                  <option value="tokens">Capsule Tokens</option>
                   <option value="gift">Gift Item</option>
                 </select>
               </div>

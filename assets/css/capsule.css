@@ -70,11 +70,7 @@ a {
   color: var(--capsule-mint);
 }
 
-body.capsule-standalone .page {
-  display: block;
-}
-
-.capsule-standalone-main {
+.capsule-site {
   width: min(1280px, 100%);
   min-height: 100vh;
   margin: 0 auto;
@@ -96,29 +92,29 @@ body.capsule-standalone .page {
   z-index: 20;
 }
 
-.capsule-topbar .logo {
+.capsule-topbar .capsule-brand {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.capsule-topbar .logo i {
+.capsule-topbar .capsule-brand i {
   color: var(--capsule-mint);
   font-size: 1.8rem;
 }
 
-.capsule-topbar .logo h1 {
+.capsule-topbar .capsule-brand h1 {
   font-family: 'Titan One', 'Nunito', sans-serif;
   letter-spacing: 0.04em;
   font-size: clamp(1.35rem, 3vw, 2rem);
 }
 
-.capsule-topbar #user-info {
+.capsule-topbar #capsule-account {
   align-items: center;
   gap: 10px;
 }
 
-.capsule-topbar #user-info img {
+.capsule-topbar #capsule-account img {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -135,11 +131,15 @@ body.capsule-standalone .page {
   cursor: pointer;
 }
 
-.capsule-standalone-main footer {
+.capsule-site footer {
   padding: 18px 28px 26px;
   text-align: center;
   color: var(--capsule-muted);
   font-size: 0.82rem;
+}
+
+.capsule-site-main {
+  display: block;
 }
 
 .capsule-page-shell {
