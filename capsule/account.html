@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Capsule Rewards</title>
+  <title>Account - Capsule Rewards</title>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firestore.googleapis.com">
@@ -14,26 +14,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/capsule.css">
 </head>
-<body data-page="home">
+<body data-page="account">
   <div class="capsule-bg" aria-hidden="true"></div>
-
   <nav class="capsule-side-nav" aria-label="Capsule pages">
-    <a class="side-nav-link active" href="/capsule/" data-page-target="home" title="Home" aria-label="Home"><i class="fas fa-house"></i><span>Home</span></a>
-    <a class="side-nav-link" href="/capsule/account.html" data-page-target="account" title="Account" aria-label="Account"><i class="fas fa-user"></i><span>Account</span></a>
+    <a class="side-nav-link" href="/capsule/" data-page-target="home" title="Home" aria-label="Home"><i class="fas fa-house"></i><span>Home</span></a>
+    <a class="side-nav-link active" href="/capsule/account.html" data-page-target="account" title="Account" aria-label="Account"><i class="fas fa-user"></i><span>Account</span></a>
     <a class="side-nav-link" href="/capsule/redeem.html" data-page-target="redeem" title="Redeem" aria-label="Redeem"><i class="fas fa-qrcode"></i><span>Redeem</span></a>
     <a class="side-nav-link" href="/capsule/items.html" data-page-target="items" title="Items" aria-label="Items"><i class="fas fa-ticket"></i><span>Items</span></a>
     <a class="side-nav-link" href="/capsule/staff.html" data-page-target="staff" id="side-staff-nav-link" title="Staff" aria-label="Staff" hidden><i class="fas fa-store"></i><span>Staff</span></a>
     <a class="side-nav-link" href="/capsule/admin.html" data-page-target="admin" id="side-admin-nav-link" title="Admin" aria-label="Admin" hidden><i class="fas fa-screwdriver-wrench"></i><span>Admin</span></a>
   </nav>
-
   <header class="capsule-topbar">
-    <a class="capsule-brand" href="/capsule/">
-      <span class="capsule-brand-icon"><i class="fas fa-capsules"></i></span>
-      <span><strong>Capsule Rewards</strong><small>QR prizes for physical capsules</small></span>
-    </a>
+    <a class="capsule-brand" href="/capsule/"><span class="capsule-brand-icon"><i class="fas fa-capsules"></i></span><span><strong>Capsule Rewards</strong><small>QR prizes for physical capsules</small></span></a>
     <nav class="capsule-nav" aria-label="Capsule pages">
-      <a class="active" href="/capsule/" data-page-target="home"><i class="fas fa-house"></i> Home</a>
-      <a href="/capsule/account.html" data-page-target="account"><i class="fas fa-user"></i> Account</a>
+      <a href="/capsule/" data-page-target="home"><i class="fas fa-house"></i> Home</a>
+      <a class="active" href="/capsule/account.html" data-page-target="account"><i class="fas fa-user"></i> Account</a>
       <a href="/capsule/redeem.html" data-page-target="redeem"><i class="fas fa-qrcode"></i> Redeem</a>
       <a href="/capsule/items.html" data-page-target="items"><i class="fas fa-ticket"></i> Items</a>
       <a href="/capsule/staff.html" data-page-target="staff" id="staff-nav-link" hidden><i class="fas fa-store"></i> Staff</a>
@@ -41,40 +36,36 @@
     </nav>
     <div class="capsule-account-pill" id="capsule-account-pill"><i class="fas fa-circle-notch fa-spin"></i><span>Checking account...</span></div>
   </header>
-
   <main class="capsule-shell">
-    <section class="capsule-hero capsule-page active" id="home" data-page="home">
-      <div class="hero-copy">
-        <p class="capsule-kicker">A standalone Gatcha Machine website</p>
-        <h1>Scan a capsule QR, open it, and keep the prize as a redeemable item.</h1>
-        <p>
-          Each Gatcha Machine has 100 physical capsules across 7 capsule types. Printed QR codes
-          detect the capsule type, show the prize odds, animate open, and add the revealed prize to Items.
-        </p>
-        <div class="hero-actions">
-          <a class="capsule-btn capsule-btn-primary" href="/capsule/redeem.html"><i class="fas fa-qrcode"></i> Redeem a Capsule</a>
-          <a class="capsule-btn" href="/capsule/items.html"><i class="fas fa-ticket"></i> View Items</a>
-        </div>
-        <div class="journey-steps" aria-label="Capsule journey">
-          <div><i class="fas fa-user-plus"></i><span>Sign up</span></div>
-          <div><i class="fas fa-camera"></i><span>Scan</span></div>
-          <div><i class="fas fa-gift"></i><span>Reveal</span></div>
-          <div><i class="fas fa-store"></i><span>Redeem in store</span></div>
-        </div>
+    <section class="capsule-card auth-card capsule-page active" id="account" data-page="account">
+      <div>
+        <p class="capsule-kicker">Account</p>
+        <h2>Sign up like normal</h2>
+        <p class="capsule-muted">Use your Capsule Rewards account to collect items and show staff your item QR codes.</p>
       </div>
-      <div class="hero-display" aria-label="Capsule opening preview">
-        <div class="floating-capsule"><span></span><span></span><span></span></div>
-        <div class="odds-card">
-          <strong>Gatcha Machine</strong>
-          <p>100 Capsules</p>
-          <p>7 Capsule Types</p>
-          <p>QR PDF Printing</p>
-          <p>Store Item QR</p>
-        </div>
+      <div class="auth-layout">
+        <form id="capsule-login-form" class="capsule-form">
+          <h3>Log in</h3>
+          <label for="capsule-login-email">Email</label>
+          <input type="email" id="capsule-login-email" autocomplete="username" required>
+          <label for="capsule-login-password">Password</label>
+          <input type="password" id="capsule-login-password" autocomplete="current-password" required>
+          <button class="capsule-btn capsule-btn-primary" type="submit">Log in</button>
+        </form>
+        <form id="capsule-signup-form" class="capsule-form">
+          <h3>Create account</h3>
+          <label for="capsule-signup-name">Username</label>
+          <input id="capsule-signup-name" autocomplete="nickname" required>
+          <label for="capsule-signup-email">Email</label>
+          <input type="email" id="capsule-signup-email" autocomplete="email" required>
+          <label for="capsule-signup-password">Password</label>
+          <input type="password" id="capsule-signup-password" autocomplete="new-password" minlength="6" required>
+          <button class="capsule-btn" type="submit">Sign up</button>
+        </form>
       </div>
+      <div class="capsule-status" id="capsule-auth-status">Checking sign-in...</div>
     </section>
   </main>
-
   <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>

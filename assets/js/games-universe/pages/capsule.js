@@ -29,7 +29,15 @@ const CAPSULE_CONFIG_COLLECTION = 'capsuleConfigs';
 const CAPSULE_CODE_COLLECTION = 'capsuleCodes';
 const CAPSULE_ITEM_COLLECTION = 'capsuleItems';
 const PDF_BATCH_SIZE = 100;
-const PAGE_IDS = ['home', 'account', 'redeem', 'items', 'staff', 'admin'];
+const MACHINE_CAPSULE_TYPES = 7;
+const PAGE_PATHS = {
+  home: '/capsule/',
+  account: '/capsule/account.html',
+  redeem: '/capsule/redeem.html',
+  items: '/capsule/items.html',
+  staff: '/capsule/staff.html',
+  admin: '/capsule/admin.html'
+};
 const CODE_LENGTH = 8;
 const CODE_UPPER = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 const CODE_LOWER = 'abcdefghijkmnopqrstuvwxyz';
@@ -113,7 +121,7 @@ const elements = {
   configStatus: $('capsule-config-status'),
   configList: $('capsule-config-list'),
   generateForm: $('capsule-generate-form'),
-  generateSelect: $('capsule-generate-select'),
+  machineName: $('capsule-machine-name'),
   batchLabel: $('capsule-batch-label'),
   downloadPdf: $('capsule-download-pdf'),
   adminStatus: $('capsule-admin-status'),
@@ -219,13 +227,13 @@ async function ensureUniqueDisplayId() {
 }
 
 function capsuleUrlForCode(code) {
-  const url = new URL('/capsule/', window.location.origin);
+  const url = new URL(PAGE_PATHS.redeem, window.location.origin);
   url.searchParams.set('code', code);
   return url.toString();
 }
 
 function itemUrlForCode(code) {
-  const url = new URL('/capsule/', window.location.origin);
+  const url = new URL(PAGE_PATHS.staff, window.location.origin);
   url.searchParams.set('item', code);
   return url.toString();
 }
@@ -310,6 +318,88 @@ function cleanCapsuleConfig(id, data = {}) {
     imageUrl: String(data.imageUrl || data.capsuleImageUrl || '').trim() || defaultCapsuleImage(name),
     prizes: cleanPrizes(data.prizes)
   };
+}
+
+function defaultMachineCapsuleConfigs() {
+  return [
+    cleanCapsuleConfig('starter-capsule', {
+      name: 'Starter Capsule',
+      prizes: [
+        { name: 'Common Plush', percentage: 45 },
+        { name: 'Sticker Pack', percentage: 25 },
+        { name: 'Mini Figure', percentage: 20 },
+        { name: 'Golden Ticket', percentage: 10 }
+      ]
+    }),
+    cleanCapsuleConfig('ocean-capsule', {
+      name: 'Ocean Capsule',
+      prizes: [
+        { name: 'Shell Keychain', percentage: 40 },
+        { name: 'Blue Sticker Pack', percentage: 30 },
+        { name: 'Mini Dolphin', percentage: 20 },
+        { name: 'Pearl Prize', percentage: 10 }
+      ]
+    }),
+    cleanCapsuleConfig('neon-capsule', {
+      name: 'Neon Capsule',
+      prizes: [
+        { name: 'Glow Bracelet', percentage: 42 },
+        { name: 'Neon Pin', percentage: 28 },
+        { name: 'Light Charm', percentage: 20 },
+        { name: 'Rainbow Ticket', percentage: 10 }
+      ]
+    }),
+    cleanCapsuleConfig('sweet-capsule', {
+      name: 'Sweet Capsule',
+      prizes: [
+        { name: 'Candy Charm', percentage: 43 },
+        { name: 'Dessert Sticker', percentage: 27 },
+        { name: 'Cupcake Figure', percentage: 20 },
+        { name: 'Golden Candy', percentage: 10 }
+      ]
+    }),
+    cleanCapsuleConfig('animal-capsule', {
+      name: 'Animal Capsule',
+      prizes: [
+        { name: 'Paw Sticker', percentage: 44 },
+        { name: 'Mini Pet', percentage: 26 },
+        { name: 'Animal Pin', percentage: 20 },
+        { name: 'Rare Dragon', percentage: 10 }
+      ]
+    }),
+    cleanCapsuleConfig('space-capsule', {
+      name: 'Space Capsule',
+      prizes: [
+        { name: 'Star Sticker', percentage: 41 },
+        { name: 'Rocket Charm', percentage: 29 },
+        { name: 'Astronaut Mini', percentage: 20 },
+        { name: 'Meteor Ticket', percentage: 10 }
+      ]
+    }),
+    cleanCapsuleConfig('gold-capsule', {
+      name: 'Gold Capsule',
+      prizes: [
+        { name: 'Gold Sticker', percentage: 50 },
+        { name: 'Gold Coin Charm', percentage: 25 },
+        { name: 'Premium Mini', percentage: 15 },
+        { name: 'Grand Prize', percentage: 10 }
+      ]
+    })
+  ];
+}
+
+function sevenCapsuleTypes(configs = capsuleConfigs) {
+  const defaults = defaultMachineCapsuleConfigs();
+  const selected = [];
+  const used = new Set();
+  const addConfig = (config) => {
+    if (!config?.id || used.has(config.id) || selected.length >= MACHINE_CAPSULE_TYPES) return;
+    selected.push(config);
+    used.add(config.id);
+  };
+  configs.forEach(addConfig);
+  defaults.forEach(addConfig);
+  return selected;
 }
 
 function topFourPrizes(prizes) {
@@ -477,30 +567,17 @@ async function loadCapsuleConfigs() {
     capsuleConfigs = [];
     setStatus(elements.adminStatus, `Could not load capsule configs: ${err.message || 'error'}`, 'error');
   }
-  if (!capsuleConfigs.length) {
-    capsuleConfigs = [
-      cleanCapsuleConfig('starter-capsule', {
-        name: 'Starter Capsule',
-        prizes: [
-          { name: 'Common Plush', percentage: 45 },
-          { name: 'Sticker Pack', percentage: 25 },
-          { name: 'Mini Figure', percentage: 20 },
-          { name: 'Golden Ticket', percentage: 10 }
-        ]
-      })
-    ];
-  }
+  capsuleConfigs = sevenCapsuleTypes(capsuleConfigs);
   renderCapsuleConfigs();
-  fillGenerateSelect();
 }
 
 function renderCapsuleConfigs() {
   if (!elements.configList) return;
-  elements.configList.innerHTML = capsuleConfigs.map((config) => `
+  elements.configList.innerHTML = sevenCapsuleTypes().map((config, index) => `
     <div class="config-row">
       <img src="${escapeHtml(config.imageUrl)}" alt="">
       <div>
-        <strong>${escapeHtml(config.name)}</strong>
+        <strong>Type ${index + 1}: ${escapeHtml(config.name)}</strong>
         <small>${topFourPrizes(config.prizes).map((prize) => `${escapeHtml(prize.name)} ${formatPercent(prize.percentage)}`).join(' - ')}</small>
       </div>
       <button type="button" class="capsule-btn config-edit-btn" data-config-id="${escapeHtml(config.id)}">Edit</button>
@@ -509,13 +586,6 @@ function renderCapsuleConfigs() {
   elements.configList.querySelectorAll('.config-edit-btn').forEach((button) => {
     button.addEventListener('click', () => editCapsuleConfig(button.dataset.configId));
   });
-}
-
-function fillGenerateSelect() {
-  if (!elements.generateSelect) return;
-  elements.generateSelect.innerHTML = capsuleConfigs.map((config) => (
-    `<option value="${escapeHtml(config.id)}">${escapeHtml(config.name)}</option>`
-  )).join('');
 }
 
 function editCapsuleConfig(configId) {
@@ -623,7 +693,7 @@ async function handleRedeem(event) {
   if (!currentUser) {
     pendingCapsuleCode = code || pendingCapsuleCode;
     setStatus(elements.redeemStatus, 'Sign in or create an account before opening a capsule.', 'error');
-    location.hash = '#account';
+    window.location.href = code ? `${PAGE_PATHS.account}?code=${encodeURIComponent(code)}` : PAGE_PATHS.account;
     return;
   }
   if (!code) {
@@ -637,7 +707,7 @@ async function openCapsuleByCode(code) {
   if (!currentUser) {
     pendingCapsuleCode = code;
     setStatus(elements.redeemStatus, 'Sign in or create an account before opening a capsule.', 'error');
-    location.hash = '#account';
+    window.location.href = `${PAGE_PATHS.account}?code=${encodeURIComponent(code)}`;
     return;
   }
   setStatus(elements.redeemStatus, 'Detecting capsule type...');
@@ -804,7 +874,7 @@ async function lookupItemCode(code) {
   if (!currentUser || !isStoreStaff(currentUser, currentUserData)) {
     pendingItemCode = code;
     renderItemLookupError('Store staff sign-in is required to redeem item QR codes.');
-    location.hash = '#account';
+    window.location.href = `${PAGE_PATHS.account}?item=${encodeURIComponent(code)}`;
     return;
   }
   if (!elements.itemLookupResult) return;
@@ -868,20 +938,23 @@ async function handleGenerateCodes(event) {
     setStatus(elements.adminStatus, 'Admin access is required to generate QR PDFs.', 'error');
     return;
   }
-  const configId = elements.generateSelect?.value;
-  const config = capsuleConfigs.find((item) => item.id === configId);
-  if (!config) {
-    setStatus(elements.adminStatus, 'Select a capsule type first.', 'error');
+  const machineTypes = sevenCapsuleTypes();
+  if (machineTypes.length !== MACHINE_CAPSULE_TYPES) {
+    setStatus(elements.adminStatus, 'Set exactly 7 capsule types before printing a Gatcha Machine.', 'error');
     return;
   }
-  const batchLabel = elements.batchLabel?.value.trim() || `${config.name} batch`;
+  const machineName = elements.machineName?.value.trim() || 'Gatcha Machine';
+  const batchLabel = elements.batchLabel?.value.trim() || `${machineName} refill`;
   const batchId = `batch-${Date.now()}-${randomMixedCode()}`;
-  setStatus(elements.adminStatus, `Generating ${PDF_BATCH_SIZE} capsule QR codes...`);
+  const machineId = `machine-${Date.now()}-${randomMixedCode()}`;
+  const slots = buildMachineSlots(machineTypes);
+  setStatus(elements.adminStatus, `Generating ${machineName}: ${PDF_BATCH_SIZE} capsule QR codes across ${MACHINE_CAPSULE_TYPES} types...`);
   try {
     const batch = writeBatch(db);
     const generated = [];
     const used = new Set();
-    for (let i = 0; i < PDF_BATCH_SIZE; i += 1) {
+    for (let i = 0; i < slots.length; i += 1) {
+      const config = slots[i];
       let code = randomMixedCode();
       while (used.has(code) || (await getDoc(doc(db, CAPSULE_CODE_COLLECTION, code))).exists()) {
         code = randomMixedCode();
@@ -892,6 +965,11 @@ async function handleGenerateCodes(event) {
         qrUrl: capsuleUrlForCode(code),
         batchId,
         batchLabel,
+        gatchaMachineId: machineId,
+        gatchaMachineName: machineName,
+        machineSlot: i + 1,
+        machineCapsuleCount: PDF_BATCH_SIZE,
+        machineCapsuleTypeCount: MACHINE_CAPSULE_TYPES,
         capsuleId: config.id,
         capsuleName: config.name,
         capsuleImageUrl: config.imageUrl,
@@ -913,10 +991,33 @@ async function handleGenerateCodes(event) {
     if (elements.downloadPdf) elements.downloadPdf.disabled = false;
     renderGeneratedCodes(generated);
     await renderRecentCodes();
-    setStatus(elements.adminStatus, `Generated ${generated.length} ${config.name} QR codes. Download the PDF now.`, 'success');
+    setStatus(elements.adminStatus, `Generated ${machineName}: ${generated.length} capsule QR codes across ${MACHINE_CAPSULE_TYPES} types. Download the Machine PDF now.`, 'success');
   } catch (err) {
     setStatus(elements.adminStatus, `Generation failed: ${err.message || 'unknown error'}`, 'error');
   }
+}
+
+function buildMachineSlots(configs) {
+  const types = sevenCapsuleTypes(configs);
+  const slots = [];
+  const base = Math.floor(PDF_BATCH_SIZE / types.length);
+  const remainder = PDF_BATCH_SIZE % types.length;
+  types.forEach((config, index) => {
+    const count = base + (index < remainder ? 1 : 0);
+    for (let i = 0; i < count; i += 1) {
+      slots.push(config);
+    }
+  });
+  return shuffleArray(slots);
+}
+
+function shuffleArray(values) {
+  const next = [...values];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = randomIndex(i + 1);
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
 }
 
 function renderGeneratedCodes(codes) {
@@ -947,10 +1048,11 @@ function renderCodeTable(codes) {
   return `
     <div class="capsule-table-wrap">
       <table class="capsule-table">
-        <thead><tr><th>8 character code</th><th>Type of Capsule</th><th>Top possible prizes</th><th>Status</th></tr></thead>
+        <thead><tr><th>8 character code</th><th>Gatcha Machine</th><th>Type of Capsule</th><th>Top possible prizes</th><th>Status</th></tr></thead>
         <tbody>${codes.map((code) => `
           <tr>
             <td class="eight-code inline">${escapeHtml(code.code || code.id)}</td>
+            <td>${escapeHtml(code.gatchaMachineName || code.batchLabel || 'Gatcha Machine')}${code.machineSlot ? `<br><small>Slot ${escapeHtml(code.machineSlot)}</small>` : ''}</td>
             <td>${escapeHtml(code.capsuleName || 'Capsule')}</td>
             <td>${topFourPrizes(code.prizes).map((prize) => `${escapeHtml(prize.name)} ${formatPercent(prize.percentage)}`).join('<br>')}</td>
             <td>${code.redeemed ? `Opened: ${escapeHtml(code.prizeName || 'Prize')}` : 'Ready'}</td>
@@ -1000,7 +1102,7 @@ function renderQrInto(id, text, size) {
 
 async function downloadGeneratedPdf() {
   if (!lastGeneratedCodes.length) {
-    setStatus(elements.adminStatus, 'Generate a 100 capsule batch first.', 'error');
+    setStatus(elements.adminStatus, 'Generate a Gatcha Machine first.', 'error');
     return;
   }
   if (!window.jspdf?.jsPDF) {
@@ -1029,6 +1131,7 @@ async function downloadGeneratedPdf() {
       const code = lastGeneratedCodes[i];
       const qr = await qrDataUrl(code.qrUrl, 160);
       const prizes = topFourPrizes(code.prizes);
+      const machineName = lastGeneratedCodes[0]?.gatchaMachineName || 'Gatcha Machine';
 
       if (index === 0) {
         pdf.setFillColor(8, 11, 18);
@@ -1036,7 +1139,10 @@ async function downloadGeneratedPdf() {
         pdf.setTextColor(42, 255, 158);
         pdf.setFont('helvetica', 'bold');
         pdf.setFontSize(15);
-        pdf.text('CAPSULE REWARDS - 100 QR CODE BATCH', margin, margin - 7);
+        pdf.text(`${machineName.toUpperCase()} - 100 CAPSULE GATCHA MACHINE`, margin, margin - 7, { maxWidth: pageWidth - margin * 2 });
+        pdf.setTextColor(180, 193, 214);
+        pdf.setFontSize(8);
+        pdf.text('7 capsule types. Cut and place one printed QR label into each physical capsule.', margin, margin + 6);
       }
 
       pdf.setDrawColor(42, 255, 158);
@@ -1056,14 +1162,15 @@ async function downloadGeneratedPdf() {
       pdf.setTextColor(180, 193, 214);
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(7.5);
-      pdf.text('4 most common possible prizes:', x + 110, y + 70, { maxWidth: cardWidth - 124 });
+      pdf.text(`Machine slot ${code.machineSlot || i + 1} of ${PDF_BATCH_SIZE}`, x + 110, y + 68, { maxWidth: cardWidth - 124 });
+      pdf.text('4 most common possible prizes:', x + 110, y + 80, { maxWidth: cardWidth - 124 });
       prizes.forEach((prize, prizeIndex) => {
-        pdf.text(`${prize.name} - ${formatPercent(prize.percentage)}`, x + 110, y + 84 + prizeIndex * 11, { maxWidth: cardWidth - 124 });
+        pdf.text(`${prize.name} - ${formatPercent(prize.percentage)}`, x + 110, y + 94 + prizeIndex * 11, { maxWidth: cardWidth - 124 });
       });
 
       pdf.setTextColor(120, 135, 158);
       pdf.setFontSize(6.5);
-      pdf.text('QR code on left. 8 character code beside title. Scan to reveal and add item.', x + 12, y + cardHeight - 20, { maxWidth: cardWidth - 24 });
+      pdf.text('QR code on left. Title is the capsule type. Code is the 8 character capsule code.', x + 12, y + cardHeight - 20, { maxWidth: cardWidth - 24 });
     }
 
     const label = lastGeneratedCodes[0]?.batchId || `capsule-${Date.now()}`;
@@ -1176,31 +1283,20 @@ async function stopScanner(kind) {
   if (stopButton) stopButton.disabled = true;
 }
 
-function pageFromHash() {
-  const hash = window.location.hash.replace(/^#/, '').trim();
-  return PAGE_IDS.includes(hash) ? hash : 'home';
+function currentPageId() {
+  const path = window.location.pathname.replace(/\/+$/, '/');
+  if (path.endsWith('/capsule/account.html')) return 'account';
+  if (path.endsWith('/capsule/redeem.html')) return 'redeem';
+  if (path.endsWith('/capsule/items.html')) return 'items';
+  if (path.endsWith('/capsule/staff.html')) return 'staff';
+  if (path.endsWith('/capsule/admin.html')) return 'admin';
+  return 'home';
 }
 
-function canAccessPage(page) {
-  if (page === 'staff') return currentUser && isStoreStaff(currentUser, currentUserData);
-  if (page === 'admin') return currentUser && isCapsuleAdmin(currentUser, currentUserData);
-  return PAGE_IDS.includes(page);
-}
-
-function resolvePage(page) {
-  const wanted = PAGE_IDS.includes(page) ? page : 'home';
-  if (canAccessPage(wanted)) return wanted;
-  return currentUser ? 'items' : 'account';
-}
-
-function setActivePage(page) {
-  const requestedPage = PAGE_IDS.includes(page) ? page : 'home';
-  const activePage = resolvePage(page);
-  if (activePage !== requestedPage && window.location.hash !== `#${activePage}`) {
-    history.replaceState(null, '', `#${activePage}`);
-  }
+function syncActiveNavigation() {
+  const activePage = currentPageId();
   document.querySelectorAll('.capsule-page').forEach((section) => {
-    const active = section.dataset.page === activePage;
+    const active = !section.dataset.page || section.dataset.page === activePage;
     section.classList.toggle('active', active);
     section.setAttribute('aria-hidden', active ? 'false' : 'true');
   });
@@ -1213,15 +1309,6 @@ function setActivePage(page) {
     }
   });
   document.body.dataset.activePage = activePage;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function navigateToPage(page) {
-  const target = resolvePage(page);
-  if (window.location.hash !== `#${target}`) {
-    history.pushState(null, '', `#${target}`);
-  }
-  setActivePage(target);
 }
 
 function setupEvents() {
@@ -1238,13 +1325,6 @@ function setupEvents() {
   elements.configClear?.addEventListener('click', clearCapsuleConfigForm);
   elements.generateForm?.addEventListener('submit', handleGenerateCodes);
   elements.downloadPdf?.addEventListener('click', downloadGeneratedPdf);
-  document.querySelectorAll('[data-page-target]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      navigateToPage(link.dataset.pageTarget);
-    });
-  });
-  window.addEventListener('hashchange', () => setActivePage(pageFromHash()));
 
   const params = new URLSearchParams(window.location.search);
   const code = parseMixedCode(params.get('code'), 'code');
@@ -1253,15 +1333,21 @@ function setupEvents() {
     pendingCapsuleCode = code;
     if (elements.redeemCode) elements.redeemCode.value = code;
     setStatus(elements.redeemStatus, 'Capsule QR code loaded. Sign in, then it will open.', 'success');
-    location.hash = '#redeem';
+    if (currentPageId() !== 'redeem' && currentPageId() !== 'account') {
+      window.location.href = `${PAGE_PATHS.redeem}?code=${encodeURIComponent(code)}`;
+      return;
+    }
   }
   if (item) {
     pendingItemCode = item;
     if (elements.itemLookupCode) elements.itemLookupCode.value = item;
-    location.hash = '#staff';
+    if (currentPageId() !== 'staff' && currentPageId() !== 'account') {
+      window.location.href = `${PAGE_PATHS.staff}?item=${encodeURIComponent(item)}`;
+      return;
+    }
   }
   clearCapsuleConfigForm();
-  setActivePage(pageFromHash());
+  syncActiveNavigation();
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -1270,13 +1356,17 @@ onAuthStateChanged(auth, async (user) => {
     currentUserData = null;
     setAccountPill(null, null);
     setStatus(elements.authStatus, 'Log in or sign up to redeem capsule QR codes.');
-    elements.staffSection.hidden = true;
-    elements.adminSection.hidden = true;
+    if (elements.staffSection) elements.staffSection.hidden = true;
+    if (elements.adminSection) elements.adminSection.hidden = true;
     if (elements.staffNav) elements.staffNav.hidden = true;
     if (elements.adminNav) elements.adminNav.hidden = true;
     if (elements.sideStaffNav) elements.sideStaffNav.hidden = true;
     if (elements.sideAdminNav) elements.sideAdminNav.hidden = true;
-    setActivePage(pageFromHash());
+    syncActiveNavigation();
+    if (currentPageId() === 'staff' || currentPageId() === 'admin') {
+      window.location.href = PAGE_PATHS.account;
+      return;
+    }
     await renderUserItems();
     return;
   }
@@ -1287,15 +1377,23 @@ onAuthStateChanged(auth, async (user) => {
     setStatus(elements.authStatus, 'Signed in and ready to redeem.', 'success');
     const staff = isStoreStaff(user, currentUserData);
     const admin = isCapsuleAdmin(user, currentUserData);
-    elements.staffSection.hidden = !staff;
-    elements.adminSection.hidden = !admin;
+    if (elements.staffSection) elements.staffSection.hidden = !staff;
+    if (elements.adminSection) elements.adminSection.hidden = !admin;
     if (elements.staffNav) elements.staffNav.hidden = !staff;
     if (elements.adminNav) elements.adminNav.hidden = !admin;
     if (elements.sideStaffNav) elements.sideStaffNav.hidden = !staff;
     if (elements.sideAdminNav) elements.sideAdminNav.hidden = !admin;
-    setActivePage(pageFromHash());
+    syncActiveNavigation();
+    if (currentPageId() === 'staff' && !staff) {
+      window.location.href = PAGE_PATHS.items;
+      return;
+    }
+    if (currentPageId() === 'admin' && !admin) {
+      window.location.href = PAGE_PATHS.items;
+      return;
+    }
     if (admin) {
-      setStatus(elements.adminStatus, 'Admin tools ready. Set capsules, generate 100-code PDFs, and review recent codes.', 'success');
+      setStatus(elements.adminStatus, 'Admin tools ready. Set 7 capsule types, generate a 100-capsule Gatcha Machine PDF, and review recent codes.', 'success');
       await loadCapsuleConfigs();
       await renderRecentCodes();
     }
@@ -1303,11 +1401,19 @@ onAuthStateChanged(auth, async (user) => {
     if (pendingCapsuleCode) {
       const code = pendingCapsuleCode;
       pendingCapsuleCode = null;
+      if (currentPageId() !== 'redeem') {
+        window.location.href = `${PAGE_PATHS.redeem}?code=${encodeURIComponent(code)}`;
+        return;
+      }
       await openCapsuleByCode(code);
     }
     if (pendingItemCode && staff) {
       const item = pendingItemCode;
       pendingItemCode = null;
+      if (currentPageId() !== 'staff') {
+        window.location.href = `${PAGE_PATHS.staff}?item=${encodeURIComponent(item)}`;
+        return;
+      }
       await lookupItemCode(item);
     }
   } catch (err) {
