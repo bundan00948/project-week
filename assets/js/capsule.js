@@ -74,7 +74,6 @@ const elements = {
   redeemStatus: $('capsule-redeem-status'),
   adminPanel: $('capsule-admin-panel'),
   adminStatus: $('capsule-admin-status'),
-  staffTab: $('staff-panel-tab'),
   generateForm: $('capsule-generate-form'),
   generatedTable: $('capsule-generated-table'),
   recentTable: $('capsule-recent-table'),
@@ -226,7 +225,7 @@ async function handleLogin(event) {
   const email = elements.loginEmail?.value.trim();
   const password = elements.loginPassword?.value;
   if (!email || !password) {
-    setStatus(elements.authStatus, 'Enter your Game Universe email and password.', 'error');
+    setStatus(elements.authStatus, 'Enter your Capsule email and password.', 'error');
     return;
   }
   setStatus(elements.authStatus, 'Signing in...');
@@ -256,7 +255,7 @@ async function handleRedeem(event) {
     const result = await redeemCapsuleCode(code, currentUser);
     const tier = TIERS[result.tier] || { label: result.tier || 'Capsule' };
     if (result.rewardType === 'tokens') {
-      setStatus(elements.redeemStatus, `${tier.label} capsule redeemed: ${result.tokenAmount} tokens added to your store balance.`, 'success');
+      setStatus(elements.redeemStatus, `${tier.label} capsule redeemed: ${result.tokenAmount} tokens added to your Capsule balance.`, 'success');
     } else {
       setStatus(elements.redeemStatus, `${tier.label} capsule redeemed: ${result.giftName} added to your inventory.`, 'success');
     }
@@ -525,7 +524,7 @@ async function downloadGeneratedPdf() {
         pdf.setTextColor(42, 255, 158);
         pdf.setFont('helvetica', 'bold');
         pdf.setFontSize(18);
-        pdf.text('GAME UNIVERSE CAPSULE QR CODES', margin, margin + 6);
+        pdf.text('CAPSULE MACHINE QR CODES', margin, margin + 6);
         pdf.setTextColor(138, 155, 181);
         pdf.setFontSize(9);
         pdf.text('Cut out and place one QR code inside each physical Gatcha capsule.', margin, margin + 24);
@@ -595,8 +594,7 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) {
     setSignedInUi(null, null);
     elements.adminPanel?.classList.remove('active');
-    if (elements.staffTab) elements.staffTab.style.display = 'none';
-    setStatus(elements.authStatus, 'Sign in with your Game Universe account to redeem capsule codes.');
+    setStatus(elements.authStatus, 'Sign in with your Capsule account to redeem capsule codes.');
     return;
   }
 
@@ -606,9 +604,8 @@ onAuthStateChanged(auth, async (user) => {
     setStatus(elements.authStatus, 'Ready to redeem capsule QR codes.', 'success');
     const admin = isCapsuleAdmin(user, userData);
     elements.adminPanel?.classList.toggle('active', admin);
-    if (elements.staffTab) elements.staffTab.style.display = admin ? 'flex' : 'none';
     if (admin) {
-      setStatus(elements.adminStatus, 'Admin tools ready. Generate codes, download the PDF, or open the store editor.', 'success');
+      setStatus(elements.adminStatus, 'Admin tools ready. Generate codes and download the QR PDF.', 'success');
       await renderRecentCodes();
     }
   } catch (err) {

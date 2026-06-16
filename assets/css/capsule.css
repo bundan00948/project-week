@@ -1,4 +1,10 @@
 :root {
+  --capsule-bg: #0a0c10;
+  --capsule-card-bg: #1a1f2a;
+  --capsule-mint: #2aff9e;
+  --capsule-pink: #ff3d6c;
+  --capsule-text: #ffffff;
+  --capsule-muted: #8a9bb5;
   --capsule-green: #38d66b;
   --capsule-blue: #3f8cff;
   --capsule-red: #ff4f5f;
@@ -9,12 +15,59 @@
   --capsule-gold: #ffbf2f;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: 100%;
+  background: var(--capsule-bg);
+}
+
 body.capsule-standalone {
+  background-color: var(--capsule-bg);
+  background-image: linear-gradient(165deg, #06080d 0%, #0b0f18 35%, #080a0f 70%, #0a1018 100%);
+  color: var(--capsule-text);
   display: block;
+  font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   height: auto;
   min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
+}
+
+body.capsule-standalone::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 15% 15%, rgba(42, 255, 158, 0.11), transparent 52%),
+    radial-gradient(ellipse 75% 50% at 92% 88%, rgba(255, 61, 108, 0.08), transparent 48%),
+    radial-gradient(ellipse 65% 45% at 48% 48%, rgba(66, 165, 245, 0.05), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 75% 25%, rgba(171, 71, 188, 0.06), transparent 50%);
+}
+
+body.capsule-standalone::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(42, 255, 158, 0.042) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 255, 158, 0.034) 1px, transparent 1px);
+  background-size: 175px 175px;
+  mask-image: radial-gradient(ellipse 110% 85% at 50% 30%, black 0%, transparent 72%);
+}
+
+a {
+  color: var(--capsule-mint);
 }
 
 body.capsule-standalone .page {
@@ -50,7 +103,7 @@ body.capsule-standalone .page {
 }
 
 .capsule-topbar .logo i {
-  color: var(--neon-green);
+  color: var(--capsule-mint);
   font-size: 1.8rem;
 }
 
@@ -76,7 +129,7 @@ body.capsule-standalone .page {
   border: 0;
   border-radius: 999px;
   padding: 8px 12px;
-  background: var(--neon-pink);
+  background: var(--capsule-pink);
   color: #fff;
   font-weight: 900;
   cursor: pointer;
@@ -85,7 +138,7 @@ body.capsule-standalone .page {
 .capsule-standalone-main footer {
   padding: 18px 28px 26px;
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--capsule-muted);
   font-size: 0.82rem;
 }
 
@@ -127,7 +180,7 @@ body.capsule-standalone .page {
 }
 
 .capsule-kicker {
-  color: var(--neon-green);
+  color: var(--capsule-mint);
   font-weight: 900;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -135,8 +188,17 @@ body.capsule-standalone .page {
   margin-bottom: 8px;
 }
 
+.capsule-title {
+  font-family: 'Titan One', 'Nunito', sans-serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: 0.03em;
+  line-height: 0.96;
+  margin: 0;
+  text-shadow: 0 0 22px rgba(42, 255, 158, 0.18);
+}
+
 .capsule-lede {
-  color: var(--text-secondary);
+  color: var(--capsule-muted);
   line-height: 1.55;
   margin: 12px 0 0;
 }
@@ -291,7 +353,7 @@ body.capsule-standalone .page {
 
 .capsule-field label {
   display: block;
-  color: var(--text-secondary);
+  color: var(--capsule-muted);
   font-size: 0.78rem;
   font-weight: 800;
   margin-bottom: 6px;
@@ -339,7 +401,7 @@ body.capsule-standalone .page {
 }
 
 .capsule-btn-primary {
-  background: var(--neon-green);
+  background: var(--capsule-mint);
   color: #03120b;
   box-shadow: 0 0 20px rgba(42, 255, 158, 0.32);
 }
@@ -349,7 +411,7 @@ body.capsule-standalone .page {
 }
 
 .capsule-btn-danger {
-  background: var(--neon-pink);
+  background: var(--capsule-pink);
   color: #fff;
 }
 
@@ -368,7 +430,7 @@ body.capsule-standalone .page {
   padding: 8px 12px;
   border-radius: 999px;
   background: rgba(42, 255, 158, 0.12);
-  color: var(--neon-green);
+  color: var(--capsule-mint);
   font-weight: 900;
   font-size: 0.82rem;
   margin-top: 12px;
@@ -379,12 +441,12 @@ body.capsule-standalone .page {
   padding: 12px 14px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.07);
-  color: var(--text-secondary);
+  color: var(--capsule-muted);
   font-weight: 800;
 }
 
 .capsule-status.success {
-  color: var(--neon-green);
+  color: var(--capsule-mint);
   background: rgba(42, 255, 158, 0.1);
 }
 
@@ -420,7 +482,7 @@ body.capsule-standalone .page {
 }
 
 .capsule-table th {
-  color: var(--neon-green);
+  color: var(--capsule-mint);
   font-weight: 900;
 }
 

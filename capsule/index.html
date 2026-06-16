@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Universe - Capsule Machine</title>
+  <title>Capsule Machine</title>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firestore.googleapis.com">
@@ -12,7 +12,6 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/games-universe.css">
   <link rel="stylesheet" href="/assets/css/capsule.css">
 </head>
 <body class="capsule-standalone">
@@ -31,7 +30,7 @@
     <main class="page active" id="capsule-page">
       <div class="page-content capsule-page-shell">
         <section class="capsule-hero">
-          <div class="capsule-card capsule-machine" aria-label="Game Universe physical Gatcha machine">
+          <div class="capsule-card capsule-machine" aria-label="Physical Gatcha machine">
             <div class="capsule-machine-body">
               <div class="capsule-machine-globe">
                 <div class="capsule-balls" aria-hidden="true">
@@ -54,10 +53,10 @@
 
           <div class="capsule-card">
             <div class="capsule-kicker">Physical Gatcha QR Rewards</div>
-            <h2 class="page-title font-titan-header">Capsule Machine</h2>
+            <h2 class="capsule-title">Capsule Machine</h2>
             <p class="capsule-lede">
               Scan a QR code from a real capsule to redeem either store tokens or a gift.
-              Tokens are added to your Game Universe store balance, and gifts appear in your inventory.
+              Tokens are added to your Capsule store balance, and gifts appear in your collection.
             </p>
             <div class="capsule-tier-grid" id="capsule-tier-legend"></div>
           </div>
@@ -68,7 +67,7 @@
             <div class="capsule-kicker">Player</div>
             <h3>Redeem a QR Code</h3>
             <div class="capsule-auth-panel" id="capsule-login-panel">
-              <p class="capsule-lede">Sign in with your Game Universe account before redeeming.</p>
+              <p class="capsule-lede">Sign in with your Capsule account before redeeming.</p>
               <form id="capsule-login-form" class="capsule-form-grid">
                 <div class="capsule-field wide">
                   <label for="capsule-login-email">Email</label>
@@ -160,12 +159,12 @@
       </div>
     </main>
 
-    <footer><p>&copy; 2026 GAME UNIVERSE. ALL RIGHTS RESERVED.</p></footer>
+    <footer><p>&copy; 2026 CAPSULE MACHINE. ALL RIGHTS RESERVED.</p></footer>
   </div>
 
   <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-  <script type="module" src="/assets/js/games-universe/pages/capsule.js"></script>
+  <script type="module" src="/assets/js/capsule.js"></script>
 </body>
 </html>
