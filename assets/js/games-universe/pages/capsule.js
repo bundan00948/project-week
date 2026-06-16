@@ -42,7 +42,7 @@ const PAGE_PATHS = {
   account: '/capsule/account.html',
   redeem: '/capsule/redeem.html',
   items: '/capsule/items.html',
-  store: '/capsule/store.html',
+  store: '/capsule/shop.html',
   staff: '/capsule/staff.html',
   admin: '/capsule/admin.html'
 };
@@ -960,7 +960,7 @@ async function openCapsuleByCode(code) {
     elements.revealStage?.classList.add('opened');
     if (reward.rewardType === 'tokens') {
       if (currentUserData) currentUserData.capsuleTokens = Math.max(0, numberValue(currentUserData.capsuleTokens, 0)) + reward.tokenAmount;
-      setStatus(elements.redeemStatus, `${reward.tokenAmount} Store Tokens added to your Token Store balance.`, 'success');
+      setStatus(elements.redeemStatus, `${reward.tokenAmount} Store Tokens added to your Token Shop balance.`, 'success');
       await renderTokenStore();
     } else {
       setStatus(elements.redeemStatus, `${reward.prizeName} added to your Items with item code ${reward.itemCode}.`, 'success');
@@ -1587,7 +1587,7 @@ function currentPageId() {
   if (path.endsWith('/capsule/account.html')) return 'account';
   if (path.endsWith('/capsule/redeem.html')) return 'redeem';
   if (path.endsWith('/capsule/items.html')) return 'items';
-  if (path.endsWith('/capsule/store.html')) return 'store';
+  if (path.endsWith('/capsule/shop.html') || path.endsWith('/capsule/store.html')) return 'store';
   if (path.endsWith('/capsule/staff.html')) return 'staff';
   if (path.endsWith('/capsule/admin.html')) return 'admin';
   return 'home';
