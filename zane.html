@@ -417,8 +417,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { 
-      getFirestore, collection, addDoc, query, where, orderBy, 
-      getDocs, updateDoc, doc, deleteDoc, Timestamp 
+      getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc, Timestamp 
     } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { 
       getStorage, ref, uploadBytes, getDownloadURL 
@@ -442,23 +441,31 @@
     // ========== PUBLIC GALLERY ==========
     const galleryEl = document.getElementById('gallery');
 
+    function getCreatedAtMillis(photo) {
+      if (!photo?.createdAt) return 0;
+      if (typeof photo.createdAt.toMillis === 'function') return photo.createdAt.toMillis();
+      if (typeof photo.createdAt.seconds === 'number') return photo.createdAt.seconds * 1000;
+      return 0;
+    }
+
     async function loadGallery() {
       galleryEl.innerHTML = '<div class="loading-text">Loading photos...</div>';
       try {
-        const q = query(
-          collection(db, "photos"),
-          where("status", "in", ["approved", "pinned"]),
-          orderBy("status"),
-          orderBy("createdAt", "desc")
-        );
-        const snapshot = await getDocs(q);
+        // Status + createdAt composite indexes are not configured for this project,
+        // so keep the Firestore read simple and sort/filter on the client.
+        const snapshot = await getDocs(collection(db, "photos"));
         const photos = [];
-        snapshot.forEach(doc => photos.push({ id: doc.id, ...doc.data() }));
+        snapshot.forEach(doc => {
+          const photo = { id: doc.id, ...doc.data() };
+          if (photo.status === 'approved' || photo.status === 'pinned') {
+            photos.push(photo);
+          }
+        });
 
         photos.sort((a, b) => {
           if (a.status === 'pinned' && b.status !== 'pinned') return -1;
           if (a.status !== 'pinned' && b.status === 'pinned') return 1;
-          return b.createdAt?.seconds - a.createdAt?.seconds;
+          return getCreatedAtMillis(b) - getCreatedAtMillis(a);
         });
 
         if (photos.length === 0) {
@@ -554,20 +561,23 @@
     async function loadPendingPhotos() {
       pendingListEl.innerHTML = '<p style="color:#ccc;">Loading...</p>';
       try {
-        const q = query(
-          collection(db, "photos"),
-          where("status", "==", "pending"),
-          orderBy("createdAt", "desc")
-        );
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocs(collection(db, "photos"));
+        const pendingPhotos = [];
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data.status === 'pending') {
+            pendingPhotos.push({ id: docSnap.id, ...data });
+          }
+        });
+        pendingPhotos.sort((a, b) => getCreatedAtMillis(b) - getCreatedAtMillis(a));
+
         pendingListEl.innerHTML = '';
-        if (snapshot.empty) {
+        if (pendingPhotos.length === 0) {
           pendingListEl.innerHTML = '<p style="color:#ccc;">No pending photos 🎉</p>';
           return;
         }
-        snapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          const id = docSnap.id;
+        pendingPhotos.forEach((data) => {
+          const id = data.id;
           const div = document.createElement('div');
           div.className = 'pending-item';
           div.innerHTML = `
