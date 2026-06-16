@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Zane's Zesty Photobook | Games Universe</title>
+  <!-- Google Fonts: Nunito + Titan One -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0A0C10;
+      --card-bg: #1A1F2A;
+      --neon-green: #2AFF9E;
+      --neon-pink: #FF3D6C;
+      --theme-grey: #8A9BB5;
+      --text-primary: #FFFFFF;
+      --text-secondary: #8A9BB5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* 🗼 Static Eiffel Tower photo background – higher opacity */
+    .eiffel-photo-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background-image: url('https://media.architecturaldigest.com/photos/66a951edce728792a48166e6/16:9/w_2560%2Cc_limit/GettyImages-955441104.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      filter: grayscale(100%) opacity(0.30);  /* increased from 0.12 */
+      pointer-events: none;
+    }
+
+    /* Dark overlay for readability */
+    .dark-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at 50% 30%, rgba(6,8,13,0.55) 0%, rgba(6,8,13,0.8) 100%);
+      pointer-events: none;
+    }
+
+    /* Main container */
+    .app-container {
+      width: 100%;
+      max-width: 1400px;
+      position: relative;
+      z-index: 20;
+    }
+
+    h1 {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-size: 2.8rem;
+      text-align: center;
+      margin: 1rem 0 2rem;
+      background: linear-gradient(120deg, #FFFFFF, var(--neon-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      text-shadow: 0 0 20px rgba(42, 255, 158, 0.4);
+    }
+
+    /* Gallery grid – floating cards with glass morph */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2rem;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(12, 16, 22, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(42, 255, 158, 0.4);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: float 6s ease-in-out infinite;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 45px rgba(42, 255, 158, 0.25);
+      border-color: var(--neon-green);
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(42, 255, 158, 0.3);
+    }
+
+    .card .caption {
+      padding: 0.9rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #ccddee;
+      background: rgba(0,0,0,0.25);
+      font-weight: 800;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      25% { transform: translateY(-10px); }
+      75% { transform: translateY(5px); }
+    }
+
+    /* Upload button */
+    .upload-btn {
+      position: fixed;
+      bottom: 2.5rem;
+      right: 2.5rem;
+      background: rgba(42, 255, 158, 0.12);
+      border: 1px solid rgba(42, 255, 158, 0.5);
+      border-radius: 60px;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--neon-green);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25s ease;
+      z-index: 100;
+      font-family: 'Nunito', sans-serif;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .upload-btn:hover {
+      background: var(--neon-green);
+      color: #0A0C10;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(42, 255, 158, 0.4);
+    }
+
+    .upload-btn i {
+      font-size: 1.4rem;
+    }
+
+    /* Staff toggle button */
+    .staff-toggle {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 2.5rem;
+      background: rgba(255, 61, 108, 0.12);
+      border: 1px solid rgba(255, 61, 108, 0.5);
+      border-radius: 60px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--neon-pink);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      display: none; /* toggled by JS when ?staff=true */
+    }
+
+    .staff-toggle:hover {
+      background: var(--neon-pink);
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 61, 108, 0.3);
+    }
+
+    /* Staff panel */
+    #staff-panel {
+      display: none;
+      max-width: 1000px;
+      margin: 2rem auto;
+      background: rgba(12, 16, 22, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 61, 108, 0.5);
+      border-radius: 32px;
+      padding: 2rem;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.6);
+      position: relative;
+      z-index: 50;
+    }
+
+    #staff-panel h2 {
+      font-family: 'Titan One', sans-serif;
+      font-size: 1.8rem;
+      color: var(--neon-pink);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 15px rgba(255, 61, 108, 0.4);
+    }
+
+    .pending-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .pending-item {
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255, 61, 108, 0.5);
+      border-radius: 20px;
+      padding: 1rem;
+      width: 200px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .pending-item img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 0.7rem;
+      border: 1px solid rgba(42, 255, 158, 0.3);
+    }
+
+    .pending-actions button {
+      margin: 0.2rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      transition: 0.2s;
+    }
+    .approve-btn { background: var(--neon-green); color: #000; }
+    .approve-btn:hover { box-shadow: 0 0 15px var(--neon-green); }
+    .pin-btn { background: #ffaa00; color: #000; }
+    .pin-btn:hover { box-shadow: 0 0 15px #ffaa00; }
+    .delete-btn { background: var(--neon-pink); color: #fff; }
+    .delete-btn:hover { box-shadow: 0 0 15px var(--neon-pink); }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+
+    .modal {
+      background: rgba(12, 16, 22, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(42, 255, 158, 0.5);
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      width: 90%;
+      max-width: 440px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+      text-align: center;
+    }
+
+    .modal h2 {
+      font-family: 'Titan One', sans-serif;
+      color: var(--neon-green);
+      margin-bottom: 1.8rem;
+      font-size: 1.6rem;
+    }
+
+    .modal input[type="file"],
+    .modal input[type="text"] {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.8rem 0;
+      border-radius: 14px;
+      border: 1px solid rgba(42, 255, 158, 0.4);
+      background: rgba(0,0,0,0.3);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .modal input:focus {
+      outline: none;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 12px rgba(42, 255, 158, 0.3);
+    }
+
+    .modal button {
+      background: transparent;
+      border: 1px solid rgba(42, 255, 158, 0.5);
+      color: var(--neon-green);
+      padding: 0.7rem 1.8rem;
+      border-radius: 30px;
+      font-weight: 800;
+      margin: 0.6rem;
+      cursor: pointer;
+      transition: 0.25s;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .modal button:hover {
+      background: var(--neon-green);
+      color: #000;
+      box-shadow: 0 0 20px rgba(42, 255, 158, 0.4);
+    }
+
+    .modal .close-btn {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+    .modal .close-btn:hover {
+      background: var(--neon-pink);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 61, 108, 0.4);
+    }
+
+    .loading-text {
+      text-align: center;
+      padding: 3rem;
+      color: var(--neon-green);
+      font-size: 1.2rem;
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .upload-btn { padding: 10px 20px; font-size: 1rem; }
+      .staff-toggle { padding: 6px 14px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed background: higher opacity Eiffel Tower photo -->
+  <div class="eiffel-photo-bg"></div>
+  <div class="dark-overlay"></div>
+
+  <div class="app-container">
+    <h1>📸 Zane's Zesty Photobook</h1>
+
+    <!-- Public gallery -->
+    <div id="gallery" class="gallery">
+      <div class="loading-text">Loading photos...</div>
+    </div>
+  </div>
+
+  <!-- Upload button (green neon) -->
+  <button class="upload-btn" id="openUploadModal">
+    <i class="fas fa-cloud-upload-alt"></i> Upload
+  </button>
+
+  <!-- Staff toggle (appears only with ?staff=true) -->
+  <button class="staff-toggle" id="staffToggle">🛠️ Staff Panel</button>
+
+  <!-- Staff Panel -->
+  <div id="staff-panel">
+    <h2>👑 Staff Panel – Pending Approvals</h2>
+    <div class="pending-list" id="pendingList">
+      <p style="color: #ccc;">No pending photos 🎉</p>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal">
+      <h2>Submit Your Photo</h2>
+      <input type="file" id="photoFile" accept="image/*">
+      <input type="text" id="photoCaption" placeholder="Caption (optional)">
+      <div>
+        <button id="submitPhoto"><i class="fas fa-check"></i> Upload</button>
+        <button class="close-btn" id="closeModal"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (modular) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, query, where, orderBy, 
+      getDocs, updateDoc, doc, deleteDoc, Timestamp 
+    } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { 
+      getStorage, ref, uploadBytes, getDownloadURL 
+    } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC49VFcW1pjHq0sCkdcps_DwUAoo4z5oaw",
+      authDomain: "blacket-65c5b.firebaseapp.com",
+      databaseURL: "https://blacket-65c5b-default-rtdb.firebaseio.com",
+      projectId: "blacket-65c5b",
+      storageBucket: "blacket-65c5b.firebasestorage.app",
+      messagingSenderId: "497023905730",
+      appId: "1:497023905730:web:a59093052a3f93a476305b",
+      measurementId: "G-XZZR5DH79B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    // ========== PUBLIC GALLERY ==========
+    const galleryEl = document.getElementById('gallery');
+
+    async function loadGallery() {
+      galleryEl.innerHTML = '<div class="loading-text">Loading photos...</div>';
+      try {
+        const q = query(
+          collection(db, "photos"),
+          where("status", "in", ["approved", "pinned"]),
+          orderBy("status"),
+          orderBy("createdAt", "desc")
+        );
+        const snapshot = await getDocs(q);
+        const photos = [];
+        snapshot.forEach(doc => photos.push({ id: doc.id, ...doc.data() }));
+
+        photos.sort((a, b) => {
+          if (a.status === 'pinned' && b.status !== 'pinned') return -1;
+          if (a.status !== 'pinned' && b.status === 'pinned') return 1;
+          return b.createdAt?.seconds - a.createdAt?.seconds;
+        });
+
+        if (photos.length === 0) {
+          galleryEl.innerHTML = '<div class="loading-text">No photos yet. Be the first to upload!</div>';
+          return;
+        }
+
+        galleryEl.innerHTML = '';
+        photos.forEach((photo) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const delay = (Math.random() * 2).toFixed(2);
+          const duration = (5 + Math.random() * 4).toFixed(2);
+          card.style.animationDelay = `${delay}s`;
+          card.style.animationDuration = `${duration}s`;
+          card.innerHTML = `
+            <img src="${photo.imageUrl}" alt="photo" loading="lazy">
+            <div class="caption">${photo.caption || ''}</div>
+          `;
+          galleryEl.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        galleryEl.innerHTML = '<div class="loading-text">Failed to load photos. Check console.</div>';
+      }
+    }
+
+    // ========== UPLOAD MODAL ==========
+    const uploadModal = document.getElementById('uploadModal');
+    const openBtn = document.getElementById('openUploadModal');
+    const closeBtn = document.getElementById('closeModal');
+    const submitBtn = document.getElementById('submitPhoto');
+    const fileInput = document.getElementById('photoFile');
+    const captionInput = document.getElementById('photoCaption');
+
+    openBtn.addEventListener('click', () => uploadModal.style.display = 'flex');
+    closeBtn.addEventListener('click', () => {
+      uploadModal.style.display = 'none';
+      fileInput.value = '';
+      captionInput.value = '';
+    });
+
+    submitBtn.addEventListener('click', async () => {
+      const file = fileInput.files[0];
+      if (!file) return alert('Please select an image.');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Uploading...';
+      try {
+        const storageRef = ref(storage, `photos/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        
+        await addDoc(collection(db, "photos"), {
+          imageUrl: downloadURL,
+          caption: captionInput.value.trim(),
+          status: "pending",
+          createdAt: Timestamp.now()
+        });
+        
+        alert('Photo submitted for approval!');
+        uploadModal.style.display = 'none';
+        fileInput.value = '';
+        captionInput.value = '';
+      } catch (err) {
+        console.error(err);
+        alert('Upload failed: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> Upload';
+      }
+    });
+
+    // ========== STAFF PANEL ==========
+    const staffToggle = document.getElementById('staffToggle');
+    const staffPanel = document.getElementById('staff-panel');
+    const pendingListEl = document.getElementById('pendingList');
+    let staffVisible = false;
+
+    if (window.location.search.includes('staff=true')) {
+      staffToggle.style.display = 'block';
+      staffVisible = true;
+      staffPanel.style.display = 'block';
+      loadPendingPhotos();
+    }
+
+    staffToggle.addEventListener('click', () => {
+      staffVisible = !staffVisible;
+      staffPanel.style.display = staffVisible ? 'block' : 'none';
+      if (staffVisible) loadPendingPhotos();
+    });
+
+    async function loadPendingPhotos() {
+      pendingListEl.innerHTML = '<p style="color:#ccc;">Loading...</p>';
+      try {
+        const q = query(
+          collection(db, "photos"),
+          where("status", "==", "pending"),
+          orderBy("createdAt", "desc")
+        );
+        const snapshot = await getDocs(q);
+        pendingListEl.innerHTML = '';
+        if (snapshot.empty) {
+          pendingListEl.innerHTML = '<p style="color:#ccc;">No pending photos 🎉</p>';
+          return;
+        }
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const id = docSnap.id;
+          const div = document.createElement('div');
+          div.className = 'pending-item';
+          div.innerHTML = `
+            <img src="${data.imageUrl}" alt="pending">
+            <p style="color:#ccc; margin-bottom:0.5rem;">${data.caption || ''}</p>
+            <div class="pending-actions">
+              <button class="approve-btn" data-id="${id}">✅ Approve</button>
+              <button class="pin-btn" data-id="${id}">📌 Pin</button>
+              <button class="delete-btn" data-id="${id}">🗑️ Delete</button>
+            </div>
+          `;
+          pendingListEl.appendChild(div);
+        });
+
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+          btn.addEventListener('click', () => updateStatus(btn.dataset.id, 'approved'));
+        });
+        document.querySelectorAll('.pin-btn').forEach(btn => {
+          btn.addEventListener('click', () => updateStatus(btn.dataset.id, 'pinned'));
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', () => deletePhoto(btn.dataset.id));
+        });
+      } catch (err) {
+        console.error(err);
+        pendingListEl.innerHTML = '<p style="color:#ff4466;">Failed to load pending photos.</p>';
+      }
+    }
+
+    async function updateStatus(docId, newStatus) {
+      try {
+        await updateDoc(doc(db, "photos", docId), { status: newStatus });
+        loadPendingPhotos();
+        loadGallery();
+      } catch (err) {
+        console.error(err);
+        alert('Update failed: ' + err.message);
+      }
+    }
+
+    async function deletePhoto(docId) {
+      if (!confirm('Delete this photo permanently?')) return;
+      try {
+        await deleteDoc(doc(db, "photos", docId));
+        loadPendingPhotos();
+        loadGallery();
+      } catch (err) {
+        console.error(err);
+        alert('Delete failed: ' + err.message);
+      }
+    }
+
+    loadGallery();
+    setInterval(loadGallery, 30000);
+  </script>
+</body>
+</html>
