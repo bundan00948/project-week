@@ -22,6 +22,12 @@ import {
   serverTimestamp,
   runTransaction
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
 const ADMIN_EMAIL = 'chonhouliu@gmail.com';
 const DEFAULT_AVATAR = 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg';
@@ -58,6 +64,7 @@ const firebaseConfig = {
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 let currentUser = null;
 let currentUserData = null;
@@ -116,7 +123,11 @@ const elements = {
   configId: $('capsule-config-id'),
   configName: $('capsule-config-name'),
   configImage: $('capsule-config-image'),
+  configImageFile: $('capsule-config-image-file'),
+  uploadCapsuleImage: $('capsule-upload-capsule-image'),
   prizesInput: $('capsule-prizes-input'),
+  prizeBlocks: $('capsule-prize-blocks'),
+  addPrizeBlock: $('capsule-add-prize-block'),
   configClear: $('capsule-config-clear'),
   configStatus: $('capsule-config-status'),
   configList: $('capsule-config-list'),
@@ -295,6 +306,169 @@ function parsePrizeTextarea(value) {
       return cleanPrize({ name: parts[0], percentage: parts[1], imageUrl: parts.slice(2).join('|') }, index);
     })
     .filter(Boolean);
+}
+
+function sanitizeFileName(name) {
+  return String(name || 'image')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80) || 'image';
+}
+
+async function uploadImageFile(file, folder) {
+  if (!file) return '';
+  if (!currentUser) throw new Error('Sign in before uploading images.');
+  if (!file.type || !file.type.startsWith('image/')) {
+    throw new Error('Only image uploads are allowed.');
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error('Image uploads must be 5 MB or smaller.');
+  }
+  const safeName = sanitizeFileName(file.name);
+  const path = `capsule-rewards/${folder}/${currentUser.uid}/${Date.now()}-${randomMixedCode()}-${safeName}`;
+  const storageRef = ref(storage, path);
+  await uploadBytes(storageRef, file, { contentType: file.type });
+  return getDownloadURL(storageRef);
+}
+
+function syncPrizeTextareaFromBlocks() {
+  if (!elements.prizesInput || !elements.prizeBlocks) return;
+  const lines = Array.from(elements.prizeBlocks.querySelectorAll('.prize-block')).map((block) => {
+    const name = block.querySelector('[data-prize-field="name"]')?.value.trim() || '';
+    const percentage = block.querySelector('[data-prize-field="percentage"]')?.value.trim() || '';
+    const imageUrl = block.querySelector('[data-prize-field="imageUrl"]')?.value.trim() || '';
+    return `${name} | ${percentage} | ${imageUrl}`;
+  });
+  elements.prizesInput.value = lines.join('\n');
+}
+
+function prizeBlockTemplate(prize = {}, index = 0) {
+  const safePrize = cleanPrize(prize, index) || {
+    name: String(prize?.name || `Prize ${index + 1}`),
+    percentage: Math.max(1, numberValue(prize?.percentage, 1)),
+    imageUrl: String(prize?.imageUrl || '')
+  };
+  return `
+    <div class="prize-block" data-prize-index="${index}">
+      <div class="prize-block-top">
+        <div class="prize-block-badge">Prize ${index + 1}</div>
+        <button class="capsule-btn prize-remove-btn" type="button" data-prize-action="remove"><i class="fas fa-trash"></i> Remove</button>
+      </div>
+      <label>Prize title</label>
+      <input data-prize-field="name" value="${escapeHtml(safePrize.name)}" placeholder="Prize title">
+      <label>Drop percentage</label>
+      <input data-prize-field="percentage" type="number" min="0.01" step="0.01" value="${escapeHtml(safePrize.percentage)}" placeholder="25">
+      <label>Prize image URL</label>
+      <input data-prize-field="imageUrl" type="url" value="${escapeHtml(safePrize.imageUrl && !safePrize.imageUrl.startsWith('data:') ? safePrize.imageUrl : '')}" placeholder="https://...">
+      <label>Or upload prize image</label>
+      <div class="upload-row">
+        <input data-prize-field="file" type="file" accept="image/*">
+        <button class="capsule-btn" type="button" data-prize-action="upload"><i class="fas fa-upload"></i> Upload</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderPrizeBlocks(prizes) {
+  if (!elements.prizeBlocks) return;
+  const list = cleanPrizes(prizes).slice(0, 12);
+  elements.prizeBlocks.innerHTML = list.map((prize, index) => prizeBlockTemplate(prize, index)).join('');
+  syncPrizeTextareaFromBlocks();
+}
+
+function addPrizeBlock(prize = {}) {
+  if (!elements.prizeBlocks) return;
+  const index = elements.prizeBlocks.querySelectorAll('.prize-block').length;
+  elements.prizeBlocks.insertAdjacentHTML('beforeend', prizeBlockTemplate(prize, index));
+  renumberPrizeBlocks();
+  syncPrizeTextareaFromBlocks();
+}
+
+function renumberPrizeBlocks() {
+  if (!elements.prizeBlocks) return;
+  elements.prizeBlocks.querySelectorAll('.prize-block').forEach((block, index) => {
+    block.dataset.prizeIndex = String(index);
+    const badge = block.querySelector('.prize-block-badge');
+    if (badge) badge.textContent = `Prize ${index + 1}`;
+  });
+}
+
+async function collectPrizesFromBlocks() {
+  if (!elements.prizeBlocks) return parsePrizeTextarea(elements.prizesInput?.value);
+  const blocks = Array.from(elements.prizeBlocks.querySelectorAll('.prize-block'));
+  const prizes = [];
+  for (let index = 0; index < blocks.length; index += 1) {
+    const block = blocks[index];
+    const name = block.querySelector('[data-prize-field="name"]')?.value.trim();
+    const percentage = block.querySelector('[data-prize-field="percentage"]')?.value;
+    const imageInput = block.querySelector('[data-prize-field="imageUrl"]');
+    const fileInput = block.querySelector('[data-prize-field="file"]');
+    let imageUrl = imageInput?.value.trim() || '';
+    if (fileInput?.files?.[0]) {
+      setStatus(elements.configStatus, `Uploading image for ${name || `Prize ${index + 1}`}...`);
+      imageUrl = await uploadImageFile(fileInput.files[0], 'prizes');
+      if (imageInput) imageInput.value = imageUrl;
+      fileInput.value = '';
+    }
+    const cleaned = cleanPrize({ name, percentage, imageUrl }, index);
+    if (cleaned) prizes.push(cleaned);
+  }
+  syncPrizeTextareaFromBlocks();
+  return prizes;
+}
+
+async function handlePrizeBlockClick(event) {
+  const target = event.target?.closest ? event.target : null;
+  const action = target?.closest('[data-prize-action]')?.dataset.prizeAction;
+  if (!action) return;
+  const block = target.closest('.prize-block');
+  if (!block) return;
+  if (action === 'remove') {
+    block.remove();
+    if (!elements.prizeBlocks?.querySelector('.prize-block')) addPrizeBlock({ name: 'New Prize', percentage: 100 });
+    renumberPrizeBlocks();
+    syncPrizeTextareaFromBlocks();
+    return;
+  }
+  if (action === 'upload') {
+    const fileInput = block.querySelector('[data-prize-field="file"]');
+    const imageInput = block.querySelector('[data-prize-field="imageUrl"]');
+    const name = block.querySelector('[data-prize-field="name"]')?.value.trim() || 'Prize';
+    const file = fileInput?.files?.[0];
+    if (!file) {
+      setStatus(elements.configStatus, 'Choose an image file before uploading.', 'error');
+      return;
+    }
+    try {
+      setStatus(elements.configStatus, `Uploading image for ${name}...`);
+      const url = await uploadImageFile(file, 'prizes');
+      if (imageInput) imageInput.value = url;
+      if (fileInput) fileInput.value = '';
+      syncPrizeTextareaFromBlocks();
+      setStatus(elements.configStatus, `Uploaded image for ${name}.`, 'success');
+    } catch (err) {
+      setStatus(elements.configStatus, `Upload failed: ${err.message || 'unknown error'}`, 'error');
+    }
+  }
+}
+
+async function handleCapsuleImageUpload() {
+  const file = elements.configImageFile?.files?.[0];
+  if (!file) {
+    setStatus(elements.configStatus, 'Choose a capsule image file before uploading.', 'error');
+    return;
+  }
+  try {
+    setStatus(elements.configStatus, 'Uploading capsule image...');
+    const url = await uploadImageFile(file, 'capsules');
+    if (elements.configImage) elements.configImage.value = url;
+    if (elements.configImageFile) elements.configImageFile.value = '';
+    setStatus(elements.configStatus, 'Capsule image uploaded.', 'success');
+  } catch (err) {
+    setStatus(elements.configStatus, `Upload failed: ${err.message || 'unknown error'}`, 'error');
+  }
 }
 
 function cleanPrizes(prizes) {
@@ -595,6 +769,7 @@ function editCapsuleConfig(configId) {
   if (elements.configName) elements.configName.value = config.name;
   if (elements.configImage) elements.configImage.value = config.imageUrl.startsWith('data:') ? '' : config.imageUrl;
   if (elements.prizesInput) elements.prizesInput.value = prizeLinesForTextarea(config.prizes);
+  renderPrizeBlocks(config.prizes);
   setStatus(elements.configStatus, `Editing ${config.name}.`, 'success');
 }
 
@@ -602,14 +777,15 @@ function clearCapsuleConfigForm() {
   if (elements.configId) elements.configId.value = '';
   if (elements.configName) elements.configName.value = '';
   if (elements.configImage) elements.configImage.value = '';
-  if (elements.prizesInput) {
-    elements.prizesInput.value = [
-      'Common Plush | 45 |',
-      'Sticker Pack | 25 |',
-      'Mini Figure | 20 |',
-      'Golden Ticket | 10 |'
-    ].join('\n');
-  }
+  if (elements.configImageFile) elements.configImageFile.value = '';
+  const defaultPrizes = cleanPrizes([
+    { name: 'Common Plush', percentage: 45 },
+    { name: 'Sticker Pack', percentage: 25 },
+    { name: 'Mini Figure', percentage: 20 },
+    { name: 'Golden Ticket', percentage: 10 }
+  ]);
+  if (elements.prizesInput) elements.prizesInput.value = prizeLinesForTextarea(defaultPrizes);
+  renderPrizeBlocks(defaultPrizes);
   setStatus(elements.configStatus, 'Ready to create a new capsule type.');
 }
 
@@ -620,9 +796,15 @@ async function handleSaveCapsuleConfig(event) {
     return;
   }
   const name = elements.configName?.value.trim();
-  const prizes = parsePrizeTextarea(elements.prizesInput?.value);
   if (!name) {
     setStatus(elements.configStatus, 'Enter a capsule type name.', 'error');
+    return;
+  }
+  let prizes = [];
+  try {
+    prizes = await collectPrizesFromBlocks();
+  } catch (err) {
+    setStatus(elements.configStatus, `Image upload failed: ${err.message || 'unknown error'}`, 'error');
     return;
   }
   if (!prizes.length) {
@@ -630,11 +812,11 @@ async function handleSaveCapsuleConfig(event) {
     return;
   }
   const id = elements.configId?.value || slugify(name);
-  const imageUrl = elements.configImage?.value.trim() || defaultCapsuleImage(name);
+  let imageUrl = elements.configImage?.value.trim() || '';
   const total = totalChance(prizes);
   const payload = {
     name,
-    imageUrl,
+    imageUrl: imageUrl || defaultCapsuleImage(name),
     prizes,
     topPrizePreview: topFourPrizes(prizes).map((prize) => ({ name: prize.name, percentage: prize.percentage })),
     updatedBy: currentUser.uid,
@@ -643,6 +825,13 @@ async function handleSaveCapsuleConfig(event) {
   };
   setStatus(elements.configStatus, 'Saving capsule...');
   try {
+    if (elements.configImageFile?.files?.[0]) {
+      setStatus(elements.configStatus, 'Uploading capsule image...');
+      imageUrl = await uploadImageFile(elements.configImageFile.files[0], 'capsules');
+      if (elements.configImage) elements.configImage.value = imageUrl;
+      elements.configImageFile.value = '';
+      payload.imageUrl = imageUrl;
+    }
     await setDoc(doc(db, CAPSULE_CONFIG_COLLECTION, id), payload, { merge: true });
     await loadCapsuleConfigs();
     if (elements.configId) elements.configId.value = id;
@@ -1323,6 +1512,10 @@ function setupEvents() {
   elements.itemLookupForm?.addEventListener('submit', handleLookupItem);
   elements.configForm?.addEventListener('submit', handleSaveCapsuleConfig);
   elements.configClear?.addEventListener('click', clearCapsuleConfigForm);
+  elements.uploadCapsuleImage?.addEventListener('click', handleCapsuleImageUpload);
+  elements.addPrizeBlock?.addEventListener('click', () => addPrizeBlock({ name: 'New Prize', percentage: 1 }));
+  elements.prizeBlocks?.addEventListener('click', handlePrizeBlockClick);
+  elements.prizeBlocks?.addEventListener('input', syncPrizeTextareaFromBlocks);
   elements.generateForm?.addEventListener('submit', handleGenerateCodes);
   elements.downloadPdf?.addEventListener('click', downloadGeneratedPdf);
 
