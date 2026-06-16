@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Universe - Capsule Machine</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Titan+One&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/games-universe.css">
+  <link rel="stylesheet" href="/assets/css/capsule.css">
+</head>
+<body>
+  <div class="site-bg-atlas" aria-hidden="true"></div>
+
+  <div class="sidebar active" id="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-user"></i>
+      <h2>USER PANEL</h2>
+    </div>
+    <div class="sidebar-scroll">
+      <div class="sidebar-tabs">
+        <a class="tab-button" data-page="main-page" href="/games/dashboard">
+          <i class="fas fa-home"></i> Main Page
+        </a>
+        <a class="tab-button" data-page="movies-page" href="/games/movies">
+          <i class="fas fa-film"></i> Movies
+        </a>
+        <a class="tab-button" data-page="profile-page" href="/games/profile">
+          <i class="fas fa-user"></i> Profile
+        </a>
+        <a class="tab-button active" data-page="capsule-page" href="/capsule">
+          <i class="fas fa-capsules"></i> Capsule
+        </a>
+        <a class="tab-button" data-page="shop-page" href="/games/shop">
+          <i class="fas fa-shopping-bag"></i> Shop
+        </a>
+        <a class="tab-button" data-page="inventory-page" href="/games/inventory">
+          <i class="fas fa-box-open"></i> Inventory
+        </a>
+        <a class="tab-button" data-page="missions-page" href="/games/missions">
+          <i class="fas fa-tasks"></i> Missions
+        </a>
+        <a class="tab-button" data-page="chat-page" href="/games/chat">
+          <i class="fas fa-comments"></i> Chat
+        </a>
+        <a class="tab-button" data-page="friends-page" href="/games/friends">
+          <i class="fas fa-user-friends"></i> Friends
+        </a>
+        <a class="tab-button" data-page="settings-page" href="/games/settings">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+        <a class="tab-button" data-page="staff-page" id="staff-panel-tab" href="/games/staff" style="display:none;">
+          <i class="fas fa-shield-alt"></i> Staff Panel
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content sidebar-active" id="main-content">
+    <header>
+      <div class="logo"><i class="fas fa-gamepad"></i><h1>GAME UNIVERSE</h1></div>
+      <nav>
+        <ul>
+          <li><a href="/games/home" id="home-tab">Home</a></li>
+          <li><a href="/games/contact" id="contact-tab">Contact Us</a></li>
+          <li>
+            <div id="user-info" style="display:none;">
+              <img id="user-avatar" src="" alt="Avatar">
+              <span id="user-name"></span>
+              <button id="capsule-logout-btn">Logout</button>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="page active" id="capsule-page">
+      <div class="page-content capsule-page-shell">
+        <section class="capsule-hero">
+          <div class="capsule-card capsule-machine" aria-label="Game Universe physical Gatcha machine">
+            <div class="capsule-machine-body">
+              <div class="capsule-machine-globe">
+                <div class="capsule-balls" aria-hidden="true">
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                  <span class="capsule-ball"></span>
+                </div>
+              </div>
+              <div class="capsule-machine-face">
+                <div class="capsule-machine-slot"></div>
+                <div class="capsule-machine-knob"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="capsule-card">
+            <div class="capsule-kicker">Physical Gatcha QR Rewards</div>
+            <h2 class="page-title font-titan-header">Capsule Machine</h2>
+            <p class="capsule-lede">
+              Scan a QR code from a real capsule to redeem either store tokens or a gift.
+              Tokens are added to your Game Universe store balance, and gifts appear in your inventory.
+            </p>
+            <div class="capsule-tier-grid" id="capsule-tier-legend"></div>
+          </div>
+        </section>
+
+        <section class="capsule-layout">
+          <div class="capsule-card">
+            <div class="capsule-kicker">Player</div>
+            <h3>Redeem a QR Code</h3>
+            <div class="capsule-auth-panel" id="capsule-login-panel">
+              <p class="capsule-lede">Sign in with your Game Universe account before redeeming.</p>
+              <form id="capsule-login-form" class="capsule-form-grid">
+                <div class="capsule-field wide">
+                  <label for="capsule-login-email">Email</label>
+                  <input type="email" id="capsule-login-email" autocomplete="username" required>
+                </div>
+                <div class="capsule-field wide">
+                  <label for="capsule-login-password">Password</label>
+                  <input type="password" id="capsule-login-password" autocomplete="current-password" required>
+                </div>
+                <div class="capsule-btn-row wide">
+                  <button class="capsule-btn capsule-btn-primary" type="submit">Sign In</button>
+                  <a class="capsule-btn" href="/games/home">Create an Account</a>
+                </div>
+              </form>
+            </div>
+
+            <div class="capsule-auth-panel" id="capsule-signed-in-panel">
+              <div class="capsule-user-pill"><i class="fas fa-circle-check"></i> <span id="capsule-user-email"></span></div>
+              <form id="capsule-redeem-form" class="capsule-form-grid" style="margin-top:16px;">
+                <div class="capsule-field wide">
+                  <label for="capsule-redeem-code">Capsule Code</label>
+                  <input id="capsule-redeem-code" placeholder="CAP-GOL-ABCD-2345" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="capsule-btn-row wide">
+                  <button class="capsule-btn capsule-btn-primary" type="submit"><i class="fas fa-qrcode"></i> Redeem Capsule</button>
+                  <a class="capsule-btn" href="/games/shop"><i class="fas fa-shopping-bag"></i> Open Store</a>
+                  <a class="capsule-btn" href="/games/inventory"><i class="fas fa-box-open"></i> Inventory</a>
+                </div>
+              </form>
+            </div>
+            <div class="capsule-status" id="capsule-auth-status">Checking sign-in...</div>
+            <div class="capsule-status" id="capsule-redeem-status">Scan a QR code or type a code to begin.</div>
+          </div>
+
+          <div class="capsule-card capsule-admin" id="capsule-admin-panel">
+            <div class="capsule-kicker">Admin</div>
+            <h3>Generate Capsule QR PDF</h3>
+            <p class="capsule-lede">
+              Owner/admin tools generate single-use QR codes for the physical machines.
+              Download the PDF and place one printed code inside each matching capsule.
+            </p>
+            <form id="capsule-generate-form" class="capsule-form-grid" style="margin-top:16px;">
+              <div class="capsule-field">
+                <label for="capsule-count">Number of QR Codes</label>
+                <input type="number" id="capsule-count" min="1" max="120" value="12">
+              </div>
+              <div class="capsule-field">
+                <label for="capsule-tier">Capsule Rarity</label>
+                <select id="capsule-tier"></select>
+              </div>
+              <div class="capsule-field">
+                <label for="capsule-reward-type">Reward Type</label>
+                <select id="capsule-reward-type">
+                  <option value="tokens">Tokens for Store</option>
+                  <option value="gift">Gift Item</option>
+                </select>
+              </div>
+              <div class="capsule-field">
+                <label for="capsule-token-amount">Token Amount</label>
+                <input type="number" id="capsule-token-amount" min="0" value="25">
+              </div>
+              <div class="capsule-field">
+                <label for="capsule-gift-name">Gift Name</label>
+                <input id="capsule-gift-name" placeholder="Gold Capsule Gift">
+              </div>
+              <div class="capsule-field">
+                <label for="capsule-gift-stars">Gift Stars</label>
+                <input type="number" id="capsule-gift-stars" min="0" value="5">
+              </div>
+              <div class="capsule-field wide">
+                <label for="capsule-gift-image">Gift Image URL</label>
+                <input type="url" id="capsule-gift-image" placeholder="https://...">
+              </div>
+              <div class="capsule-field wide">
+                <label for="capsule-batch-label">Batch Label</label>
+                <input id="capsule-batch-label" placeholder="Example: June arcade night">
+              </div>
+              <div class="capsule-btn-row wide">
+                <button class="capsule-btn capsule-btn-primary" type="submit"><i class="fas fa-wand-magic-sparkles"></i> Generate Codes</button>
+                <button class="capsule-btn" type="button" id="capsule-download-pdf" disabled><i class="fas fa-file-pdf"></i> Download QR PDF</button>
+                <a class="capsule-btn" href="/games/staff"><i class="fas fa-store"></i> Open Store Editor</a>
+              </div>
+            </form>
+            <div class="capsule-status" id="capsule-admin-status">Admin tools load after sign-in.</div>
+
+            <h4 style="margin-top:20px;">Generated This Session</h4>
+            <div id="capsule-generated-table"></div>
+
+            <h4 style="margin-top:20px;">Recent Capsule Codes</h4>
+            <div id="capsule-recent-table"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer><p>&copy; 2026 GAME UNIVERSE. ALL RIGHTS RESERVED.</p></footer>
+  </div>
+
+  <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script type="module" src="/assets/js/games-universe/pages/capsule.js"></script>
+</body>
+</html>
