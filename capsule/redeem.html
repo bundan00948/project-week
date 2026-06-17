@@ -51,48 +51,29 @@
           <button class="capsule-btn" type="button" id="capsule-stop-scan" disabled>Stop camera</button>
         </div>
       </div>
-      <div class="redeem-grid">
-        <div>
+      <div class="redeem-grid redeem-grid-single">
+        <div class="redeem-entry-card">
           <div class="scanner-box" id="capsule-scanner"><div class="scanner-placeholder"><i class="fas fa-qrcode"></i><span>Camera scanner opens here</span></div></div>
           <div class="camera-permission-card" id="capsule-camera-permission"><i class="fas fa-camera"></i><span>Tap Scan QR and your browser will ask for camera permission before the scanner opens.</span></div>
           <form id="capsule-redeem-form" class="inline-code-form">
             <label for="capsule-redeem-code">Or enter 8 character code</label>
             <div>
               <input id="capsule-redeem-code" inputmode="text" pattern="[A-Za-z0-9]{8}" maxlength="8" placeholder="aB7kQ2Z9" autocomplete="off" autocapitalize="off" spellcheck="false">
-              <button class="capsule-btn capsule-btn-primary" type="submit">Open Capsule</button>
+              <button class="capsule-btn capsule-btn-primary" type="submit">Redeem Capsule</button>
             </div>
           </form>
           <div class="capsule-status" id="capsule-redeem-status">Scan a QR code or enter the 8 character capsule code.</div>
-        </div>
-        <div class="reveal-panel" id="capsule-reveal-panel">
-          <div class="capsule-left-preview">
-            <p class="capsule-kicker">Capsule type</p>
-            <h3 id="capsule-preview-title">Waiting for scan</h3>
-            <div class="capsule-image-frame"><img id="capsule-preview-image" alt="" hidden><div class="css-capsule-fallback" id="capsule-preview-fallback" aria-hidden="true"></div></div>
-            <div id="capsule-preview-code" class="eight-code">--------</div>
-          </div>
-          <div class="capsule-reveal-stage" id="capsule-reveal-stage">
-            <div class="reward-banner" id="reward-banner" hidden>
-              <span id="reward-banner-title">Reward revealed</span>
-            </div>
-            <button class="capsule-open-button" id="capsule-open-button" type="button" disabled>
-              <span class="capsule-shell-visual" aria-hidden="true"><span class="capsule-half capsule-half-top"></span><span class="capsule-half capsule-half-bottom"></span></span>
-              <span class="capsule-open-hint" id="capsule-open-hint">Scan a capsule first</span>
-            </button>
-            <div class="revealed-prize" id="revealed-prize-panel">
-              <img id="revealed-prize-image" alt="" hidden>
-              <div class="revealed-prize-fallback" id="revealed-prize-fallback"><i class="fas fa-gift"></i></div>
-              <h3 id="revealed-prize-name">Prize inside</h3>
-              <p id="revealed-prize-percent">Scan to reveal the chance.</p>
-            </div>
-            <div class="odds-list" id="capsule-odds-list"><p class="capsule-muted">The most common possible rewards will appear here.</p></div>
-          </div>
         </div>
       </div>
     </section>
   </main>
   <div class="capsule-open-overlay" id="capsule-open-overlay" hidden aria-hidden="true">
     <div class="capsule-open-backdrop"></div>
+    <div class="capsule-open-fx" aria-hidden="true">
+      <div class="capsule-open-aurora"></div>
+      <div class="capsule-open-rays"></div>
+      <div class="capsule-open-sparkles"></div>
+    </div>
     <div class="capsule-open-scene">
       <button class="capsule-overlay-capsule" id="capsule-overlay-capsule" type="button" disabled aria-label="Open capsule">
         <span class="capsule-overlay-image-wrap">

@@ -659,14 +659,6 @@ textarea {
   letter-spacing: 0.12em;
 }
 
-.reveal-panel {
-  display: grid;
-  grid-template-columns: minmax(190px, 0.75fr) minmax(260px, 1fr);
-  gap: 16px;
-}
-
-.capsule-left-preview,
-.capsule-reveal-stage,
 .staff-result,
 .admin-editor,
 .admin-list {
@@ -676,40 +668,12 @@ textarea {
   padding: 18px;
 }
 
-.capsule-left-preview h3 {
-  font-size: 1.5rem;
-}
-
-.capsule-image-frame {
-  display: grid;
-  width: 100%;
-  aspect-ratio: 1;
-  place-items: center;
-  overflow: hidden;
-  margin: 14px 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  background: radial-gradient(circle at 50% 40%, rgba(42, 255, 158, 0.18), rgba(0, 0, 0, 0.2));
-}
-
-.capsule-image-frame img,
-.revealed-prize img,
 .item-art img,
 .staff-item-result img,
 .config-row img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-.css-capsule-fallback {
-  width: 62%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    linear-gradient(to bottom, #ff3d6c 0 48%, #fff 48% 54%, var(--capsule-green) 54% 100%);
-  border: 5px solid rgba(255, 255, 255, 0.22);
-  box-shadow: inset -14px -18px 0 rgba(0, 0, 0, 0.18), inset 18px 18px 0 rgba(255, 255, 255, 0.16);
 }
 
 .eight-code {
@@ -735,74 +699,6 @@ textarea {
   font-size: 0.82em;
 }
 
-.capsule-reveal-stage {
-  position: relative;
-  display: grid;
-  gap: 14px;
-  place-items: center;
-  min-height: 430px;
-  align-content: space-between;
-}
-
-.reward-banner {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 216, 74, 0.44);
-  border-radius: 18px;
-  color: #111827;
-  background: linear-gradient(135deg, #ffe88a, var(--capsule-yellow));
-  box-shadow: 0 16px 34px rgba(255, 216, 74, 0.18);
-  font-weight: 1000;
-  text-align: center;
-}
-
-.reward-banner span {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.capsule-open-button {
-  display: grid;
-  gap: 12px;
-  place-items: center;
-  width: min(100%, 300px);
-  border: 0;
-  border-radius: 28px;
-  padding: 14px 12px;
-  color: var(--capsule-text);
-  background: radial-gradient(circle at 50% 38%, rgba(42, 255, 158, 0.18), rgba(255, 255, 255, 0.055));
-  cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-}
-
-.capsule-open-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.capsule-open-button.ready {
-  box-shadow: 0 0 0 1px rgba(42, 255, 158, 0.24), 0 22px 48px rgba(42, 255, 158, 0.12);
-  animation: capsule-ready-pulse 1.4s ease-in-out infinite;
-}
-
-.capsule-open-button.ready:hover {
-  transform: translateY(-3px) scale(1.015);
-}
-
-.capsule-reveal-stage.opened .capsule-open-button {
-  opacity: 1;
-}
-
-.capsule-open-hint {
-  color: var(--capsule-green);
-  font-size: 0.86rem;
-  font-weight: 1000;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .capsule-open-overlay {
   position: fixed;
   inset: 0;
@@ -817,6 +713,50 @@ textarea {
   inset: 0;
   background: rgba(0, 0, 0, 0.82);
   backdrop-filter: blur(8px);
+}
+
+.capsule-open-fx,
+.capsule-open-aurora,
+.capsule-open-rays,
+.capsule-open-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.capsule-open-fx {
+  overflow: hidden;
+}
+
+.capsule-open-aurora {
+  background:
+    radial-gradient(circle at 24% 22%, rgba(42, 255, 158, 0.32), transparent 24%),
+    radial-gradient(circle at 78% 28%, rgba(255, 61, 108, 0.26), transparent 26%),
+    radial-gradient(circle at 50% 78%, rgba(255, 216, 74, 0.22), transparent 28%);
+  filter: blur(18px);
+  animation: capsule-aurora-shift 4.8s ease-in-out infinite alternate;
+}
+
+.capsule-open-rays {
+  left: 50%;
+  top: 50%;
+  width: 130vmax;
+  height: 130vmax;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.1) 0 5deg, transparent 5deg 14deg);
+  opacity: 0.16;
+  transform: translate(-50%, -50%);
+  animation: capsule-rays-spin 16s linear infinite;
+}
+
+.capsule-open-sparkles {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(42, 255, 158, 0.9) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255, 216, 74, 0.9) 0 1px, transparent 2px);
+  background-size: 90px 90px, 130px 130px, 170px 170px;
+  background-position: 10px 20px, 60px 40px, 30px 80px;
+  opacity: 0.55;
+  animation: capsule-sparkle-drift 7s linear infinite;
 }
 
 .capsule-open-scene {
@@ -907,10 +847,12 @@ textarea {
   left: 50%;
   overflow: hidden;
   width: min(92vw, 430px);
-  border: 1px solid rgba(255, 216, 74, 0.5);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(20, 24, 34, 0.98), rgba(8, 12, 18, 0.98));
-  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 32px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(20, 24, 34, 0.98), rgba(8, 12, 18, 0.98));
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.6), 0 0 0 8px rgba(255, 255, 255, 0.035);
   opacity: 0;
   transform: translate(-50%, -44%) scale(0.92);
   transition: opacity 0.28s ease, transform 0.34s ease;
@@ -926,10 +868,12 @@ textarea {
   grid-template-columns: auto 1fr;
   gap: 14px;
   align-items: center;
-  min-height: 110px;
+  min-height: 132px;
   padding: 18px 20px;
   color: #111827;
-  background: linear-gradient(135deg, #fff1a8, var(--capsule-yellow));
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55), transparent 26%),
+    linear-gradient(135deg, #fff1a8, var(--capsule-yellow));
   font-weight: 1000;
 }
 
@@ -952,7 +896,7 @@ textarea {
   display: grid;
   gap: 12px;
   justify-items: center;
-  padding: 22px;
+  padding: 26px 22px 24px;
   text-align: center;
 }
 
@@ -968,115 +912,6 @@ textarea {
   margin: 0;
   color: var(--capsule-muted);
   font-weight: 900;
-}
-
-.capsule-shell-visual {
-  position: relative;
-  display: block;
-  width: 190px;
-  height: 190px;
-  margin-top: 8px;
-}
-
-.capsule-half {
-  position: absolute;
-  left: 0;
-  width: 190px;
-  height: 95px;
-  border: 5px solid rgba(255, 255, 255, 0.24);
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
-  box-shadow: inset -18px -18px 0 rgba(0, 0, 0, 0.18), inset 18px 18px 0 rgba(255, 255, 255, 0.14);
-}
-
-.capsule-half-top {
-  top: 0;
-  border-radius: 95px 95px 18px 18px;
-  background: linear-gradient(145deg, #ff8aa6, var(--capsule-pink));
-  transform-origin: bottom center;
-}
-
-.capsule-half-bottom {
-  top: 95px;
-  border-radius: 18px 18px 95px 95px;
-  background: linear-gradient(145deg, #ddfff4, var(--capsule-green));
-  transform-origin: top center;
-}
-
-.capsule-reveal-stage.opening .capsule-half-top {
-  transform: translate(-34px, -54px) rotate(-24deg);
-}
-
-.capsule-reveal-stage.opening .capsule-half-bottom {
-  transform: translate(34px, 54px) rotate(20deg);
-}
-
-.revealed-prize {
-  display: grid;
-  place-items: center;
-  text-align: center;
-  opacity: 0.35;
-  transform: translateY(18px) scale(0.94);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  width: 100%;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.055);
-}
-
-.capsule-reveal-stage.opened .revealed-prize {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.revealed-prize img,
-.revealed-prize-fallback {
-  width: 148px;
-  height: 148px;
-  margin-bottom: 12px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.revealed-prize-fallback {
-  display: grid;
-  place-items: center;
-  color: var(--capsule-green);
-  font-size: 3rem;
-}
-
-.revealed-prize h3 {
-  font-size: 1.55rem;
-}
-
-.revealed-prize p {
-  margin: 6px 0 0;
-  color: var(--capsule-green);
-  font-weight: 1000;
-}
-
-.odds-list {
-  width: 100%;
-  align-self: stretch;
-}
-
-.odds-list strong {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.odds-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 9px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #dbe6f6;
-  font-weight: 900;
-}
-
-.odds-row b {
-  color: var(--capsule-green);
 }
 
 .items-grid {
@@ -1422,6 +1257,27 @@ textarea {
   }
 }
 
+@keyframes capsule-aurora-shift {
+  from {
+    transform: scale(1) translate3d(-2%, -1%, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(2%, 1%, 0);
+  }
+}
+
+@keyframes capsule-rays-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes capsule-sparkle-drift {
+  to {
+    background-position: 100px 180px, 180px 220px, 140px 260px;
+  }
+}
+
 @media (max-width: 980px) {
   .capsule-topbar,
   .section-header,
@@ -1437,8 +1293,7 @@ textarea {
   .capsule-hero,
   .redeem-grid,
   .staff-grid,
-  .admin-grid,
-  .reveal-panel {
+  .admin-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1537,18 +1392,12 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .redeem-grid,
-  .reveal-panel {
+  .redeem-grid {
     gap: 12px;
   }
 
   .scanner-box {
     min-height: 240px;
-  }
-
-  .capsule-reveal-stage {
-    min-height: 520px;
-    padding: 14px;
   }
 
   .capsule-open-overlay {
@@ -1568,26 +1417,6 @@ textarea {
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-  }
-
-  .capsule-shell-visual {
-    width: 156px;
-    height: 156px;
-  }
-
-  .capsule-half {
-    width: 156px;
-    height: 78px;
-  }
-
-  .capsule-half-bottom {
-    top: 78px;
-  }
-
-  .revealed-prize img,
-  .revealed-prize-fallback {
-    width: 116px;
-    height: 116px;
   }
 
   .block-editor-header,
