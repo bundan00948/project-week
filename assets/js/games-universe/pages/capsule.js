@@ -117,6 +117,17 @@ const elements = {
   rewardBannerTitle: $('reward-banner-title'),
   openCapsuleBtn: $('capsule-open-button'),
   openCapsuleHint: $('capsule-open-hint'),
+  openOverlay: $('capsule-open-overlay'),
+  overlayCapsuleBtn: $('capsule-overlay-capsule'),
+  overlayCapsuleTop: $('capsule-overlay-image-top'),
+  overlayCapsuleBottom: $('capsule-overlay-image-bottom'),
+  overlayHint: $('capsule-overlay-hint'),
+  overlayReward: $('capsule-overlay-reward'),
+  overlayRewardImage: $('capsule-overlay-reward-image'),
+  overlayRewardBannerText: $('capsule-overlay-reward-banner-text'),
+  overlayRewardTitle: $('capsule-overlay-reward-title'),
+  overlayRewardDetail: $('capsule-overlay-reward-detail'),
+  overlayClose: $('capsule-overlay-close'),
   oddsList: $('capsule-odds-list'),
   refreshItems: $('capsule-refresh-items'),
   itemsList: $('capsule-items-list'),
@@ -670,8 +681,60 @@ function setCapsuleOpenReady(ready, message = '') {
     elements.openCapsuleBtn.disabled = !ready;
     elements.openCapsuleBtn.classList.toggle('ready', ready);
   }
+  if (elements.overlayCapsuleBtn) {
+    elements.overlayCapsuleBtn.disabled = !ready;
+    elements.overlayCapsuleBtn.classList.toggle('ready', ready);
+  }
   if (elements.openCapsuleHint) {
     elements.openCapsuleHint.textContent = message || (ready ? 'Tap capsule to open' : 'Scan a capsule first');
+  }
+  if (elements.overlayHint) {
+    elements.overlayHint.textContent = message || (ready ? 'Tap capsule to open' : 'Scan a capsule first');
+  }
+}
+
+function setOverlayCapsuleImage(src, alt) {
+  const imageUrl = String(src || '').trim();
+  [elements.overlayCapsuleTop, elements.overlayCapsuleBottom].forEach((img) => {
+    if (!img) return;
+    img.src = imageUrl;
+    img.alt = alt || '';
+  });
+}
+
+function showCapsuleOverlay(src, title) {
+  if (!elements.openOverlay) return;
+  setOverlayCapsuleImage(src, title);
+  elements.openOverlay.hidden = false;
+  elements.openOverlay.setAttribute('aria-hidden', 'false');
+  elements.openOverlay.classList.remove('opening', 'opened');
+  if (elements.overlayReward) elements.overlayReward.hidden = true;
+}
+
+function hideCapsuleOverlay() {
+  if (!elements.openOverlay) return;
+  elements.openOverlay.hidden = true;
+  elements.openOverlay.setAttribute('aria-hidden', 'true');
+  elements.openOverlay.classList.remove('opening', 'opened');
+}
+
+function renderOverlayReward(reward) {
+  if (!elements.openOverlay) return;
+  elements.openOverlay.classList.add('opened');
+  if (elements.overlayReward) elements.overlayReward.hidden = false;
+  renderImage(elements.overlayRewardImage, null, reward.prizeImageUrl, reward.prizeName);
+  if (elements.overlayRewardBannerText) {
+    elements.overlayRewardBannerText.textContent = reward.rewardType === 'tokens'
+      ? `${reward.tokenAmount} Store Tokens`
+      : reward.prizeName;
+  }
+  if (elements.overlayRewardTitle) {
+    elements.overlayRewardTitle.textContent = reward.rewardType === 'tokens' ? 'Store Tokens' : reward.prizeName;
+  }
+  if (elements.overlayRewardDetail) {
+    elements.overlayRewardDetail.textContent = reward.rewardType === 'tokens'
+      ? `${formatPercent(reward.chancePercent)} chance - added to Token Shop balance`
+      : `${formatPercent(reward.chancePercent)} chance - item QR created`;
   }
 }
 
@@ -679,6 +742,7 @@ function resetRevealStage() {
   pendingCapsuleOpen = null;
   capsuleOpeningInProgress = false;
   elements.revealStage?.classList.remove('loaded', 'opening', 'opened');
+  hideCapsuleOverlay();
   if (elements.rewardBanner) elements.rewardBanner.hidden = true;
   if (elements.rewardBannerTitle) elements.rewardBannerTitle.textContent = 'Reward revealed';
   setCapsuleOpenReady(false, 'Scan a capsule first');
@@ -926,6 +990,7 @@ function renderCapsulePreview(code, codeData) {
   if (elements.previewTitle) elements.previewTitle.textContent = config.name;
   if (elements.previewCode) elements.previewCode.textContent = code;
   renderImage(elements.previewImage, elements.previewFallback, config.imageUrl, config.name);
+  showCapsuleOverlay(config.imageUrl, config.name);
   elements.revealStage?.classList.add('loaded');
   if (elements.prizeName) elements.prizeName.textContent = 'Capsule ready';
   if (elements.prizePercent) elements.prizePercent.textContent = 'Tap the capsule image above to open it.';
@@ -995,6 +1060,7 @@ async function revealPendingCapsule() {
   setStatus(elements.redeemStatus, 'Opening capsule...');
   try {
     elements.revealStage?.classList.add('opening');
+    elements.openOverlay?.classList.add('opening');
     const prize = pickPrize(codeData.prizes);
     const reward = await redeemCapsuleCode(code, codeData, prize);
     await wait(650);
@@ -1003,6 +1069,7 @@ async function revealPendingCapsule() {
     if (elements.rewardBannerTitle) elements.rewardBannerTitle.textContent = reward.rewardType === 'tokens'
       ? `${reward.tokenAmount} Store Tokens`
       : reward.prizeName;
+    renderOverlayReward(reward);
     if (elements.prizeName) elements.prizeName.textContent = reward.rewardType === 'tokens' ? 'Token reward' : reward.prizeName;
     if (elements.prizePercent) {
       elements.prizePercent.textContent = reward.rewardType === 'tokens'
@@ -1021,6 +1088,7 @@ async function revealPendingCapsule() {
     }
   } catch (err) {
     elements.revealStage?.classList.remove('opening');
+    elements.openOverlay?.classList.remove('opening');
     setCapsuleOpenReady(true, 'Try opening again');
     capsuleOpeningInProgress = false;
     setStatus(elements.redeemStatus, err.message || 'Could not open this capsule.', 'error');
@@ -1690,6 +1758,8 @@ function setupEvents() {
   elements.signupForm?.addEventListener('submit', handleSignup);
   elements.redeemForm?.addEventListener('submit', handleRedeem);
   elements.openCapsuleBtn?.addEventListener('click', revealPendingCapsule);
+  elements.overlayCapsuleBtn?.addEventListener('click', revealPendingCapsule);
+  elements.overlayClose?.addEventListener('click', hideCapsuleOverlay);
   elements.startScan?.addEventListener('click', () => startScanner('capsule'));
   elements.stopScan?.addEventListener('click', () => stopScanner('capsule'));
   elements.refreshItems?.addEventListener('click', renderUserItems);
