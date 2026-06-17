@@ -741,10 +741,71 @@ textarea {
   gap: 14px;
   place-items: center;
   min-height: 430px;
+  align-content: space-between;
+}
+
+.reward-banner {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 216, 74, 0.44);
+  border-radius: 18px;
+  color: #111827;
+  background: linear-gradient(135deg, #ffe88a, var(--capsule-yellow));
+  box-shadow: 0 16px 34px rgba(255, 216, 74, 0.18);
+  font-weight: 1000;
+  text-align: center;
+}
+
+.reward-banner span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.capsule-open-button {
+  display: grid;
+  gap: 12px;
+  place-items: center;
+  width: min(100%, 300px);
+  border: 0;
+  border-radius: 28px;
+  padding: 14px 12px;
+  color: var(--capsule-text);
+  background: radial-gradient(circle at 50% 38%, rgba(42, 255, 158, 0.18), rgba(255, 255, 255, 0.055));
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.capsule-open-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.capsule-open-button.ready {
+  box-shadow: 0 0 0 1px rgba(42, 255, 158, 0.24), 0 22px 48px rgba(42, 255, 158, 0.12);
+  animation: capsule-ready-pulse 1.4s ease-in-out infinite;
+}
+
+.capsule-open-button.ready:hover {
+  transform: translateY(-3px) scale(1.015);
+}
+
+.capsule-reveal-stage.opened .capsule-open-button {
+  opacity: 1;
+}
+
+.capsule-open-hint {
+  color: var(--capsule-green);
+  font-size: 0.86rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .capsule-shell-visual {
   position: relative;
+  display: block;
   width: 190px;
   height: 190px;
   margin-top: 8px;
@@ -789,11 +850,16 @@ textarea {
   opacity: 0.35;
   transform: translateY(18px) scale(0.94);
   transition: opacity 0.5s ease, transform 0.5s ease;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
 }
 
 .capsule-reveal-stage.opened .revealed-prize {
   opacity: 1;
-  transform: translateY(-14px) scale(1);
+  transform: translateY(0) scale(1);
 }
 
 .revealed-prize img,
@@ -1169,6 +1235,16 @@ textarea {
   }
 }
 
+@keyframes capsule-ready-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(42, 255, 158, 0.24), 0 22px 48px rgba(42, 255, 158, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(42, 255, 158, 0.16), 0 26px 58px rgba(42, 255, 158, 0.2);
+  }
+}
+
 @media (max-width: 980px) {
   .capsule-topbar,
   .section-header,
@@ -1204,19 +1280,26 @@ textarea {
 
 @media (max-width: 620px) {
   body {
-    padding-left: 64px;
+    padding-left: 0;
+    padding-bottom: 76px;
   }
 
   .capsule-side-nav {
-    left: 8px;
-    width: 48px;
-    padding: 7px;
-    border-radius: 18px;
+    left: 10px;
+    right: 10px;
+    top: auto;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-around;
+    width: auto;
+    padding: 8px;
+    border-radius: 22px;
+    transform: none;
   }
 
   .side-nav-link {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     border-radius: 12px;
     font-size: 0.82rem;
   }
@@ -1229,6 +1312,7 @@ textarea {
 
   .capsule-topbar {
     padding: 12px 10px;
+    position: relative;
   }
 
   .capsule-brand small,
@@ -1243,8 +1327,8 @@ textarea {
   }
 
   .capsule-shell {
-    width: min(100% - 20px, 1180px);
-    padding-top: 18px;
+    width: min(100% - 16px, 1180px);
+    padding: 12px 0 18px;
   }
 
   .capsule-card,
@@ -1274,6 +1358,40 @@ textarea {
 
   .journey-steps {
     grid-template-columns: 1fr;
+  }
+
+  .redeem-grid,
+  .reveal-panel {
+    gap: 12px;
+  }
+
+  .scanner-box {
+    min-height: 240px;
+  }
+
+  .capsule-reveal-stage {
+    min-height: 520px;
+    padding: 14px;
+  }
+
+  .capsule-shell-visual {
+    width: 156px;
+    height: 156px;
+  }
+
+  .capsule-half {
+    width: 156px;
+    height: 78px;
+  }
+
+  .capsule-half-bottom {
+    top: 78px;
+  }
+
+  .revealed-prize img,
+  .revealed-prize-fallback {
+    width: 116px;
+    height: 116px;
   }
 
   .block-editor-header,

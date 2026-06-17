@@ -72,14 +72,20 @@
             <div id="capsule-preview-code" class="eight-code">--------</div>
           </div>
           <div class="capsule-reveal-stage" id="capsule-reveal-stage">
-            <div class="capsule-shell-visual" aria-hidden="true"><div class="capsule-half capsule-half-top"></div><div class="capsule-half capsule-half-bottom"></div></div>
-            <div class="revealed-prize">
+            <div class="reward-banner" id="reward-banner" hidden>
+              <span id="reward-banner-title">Reward revealed</span>
+            </div>
+            <button class="capsule-open-button" id="capsule-open-button" type="button" disabled>
+              <span class="capsule-shell-visual" aria-hidden="true"><span class="capsule-half capsule-half-top"></span><span class="capsule-half capsule-half-bottom"></span></span>
+              <span class="capsule-open-hint" id="capsule-open-hint">Scan a capsule first</span>
+            </button>
+            <div class="revealed-prize" id="revealed-prize-panel">
               <img id="revealed-prize-image" alt="" hidden>
               <div class="revealed-prize-fallback" id="revealed-prize-fallback"><i class="fas fa-gift"></i></div>
               <h3 id="revealed-prize-name">Prize inside</h3>
               <p id="revealed-prize-percent">Scan to reveal the chance.</p>
             </div>
-            <div class="odds-list" id="capsule-odds-list"><p class="capsule-muted">The four most common possible prizes will appear here.</p></div>
+            <div class="odds-list" id="capsule-odds-list"><p class="capsule-muted">The most common possible rewards will appear here.</p></div>
           </div>
         </div>
       </div>
