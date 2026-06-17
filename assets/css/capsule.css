@@ -803,6 +803,173 @@ textarea {
   letter-spacing: 0.08em;
 }
 
+.capsule-open-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+}
+
+.capsule-open-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.capsule-open-scene {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(92vw, 560px);
+  min-height: min(86vh, 680px);
+  place-items: center;
+  gap: 22px;
+}
+
+.capsule-overlay-capsule {
+  display: grid;
+  gap: 16px;
+  place-items: center;
+  border: 0;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+}
+
+.capsule-overlay-capsule:disabled {
+  cursor: not-allowed;
+}
+
+.capsule-overlay-capsule.ready {
+  animation: overlay-capsule-float 1.7s ease-in-out infinite;
+}
+
+.capsule-overlay-image-wrap {
+  position: relative;
+  display: block;
+  width: min(56vw, 340px);
+  height: min(56vw, 340px);
+  filter: drop-shadow(0 36px 48px rgba(0, 0, 0, 0.55));
+}
+
+.capsule-overlay-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.85s cubic-bezier(0.2, 1, 0.25, 1), opacity 0.35s ease, filter 0.35s ease;
+  transform-origin: center;
+}
+
+.capsule-overlay-image-top {
+  clip-path: inset(0 0 50% 0);
+}
+
+.capsule-overlay-image-bottom {
+  clip-path: inset(50% 0 0 0);
+}
+
+.capsule-open-overlay.opening .capsule-overlay-image-top,
+.capsule-open-overlay.opened .capsule-overlay-image-top {
+  transform: translate(-44px, -86px) rotate(-17deg) scale(1.02);
+  filter: brightness(1.05);
+}
+
+.capsule-open-overlay.opening .capsule-overlay-image-bottom,
+.capsule-open-overlay.opened .capsule-overlay-image-bottom {
+  transform: translate(44px, 86px) rotate(17deg) scale(1.02);
+  filter: brightness(0.98);
+}
+
+.capsule-overlay-hint {
+  padding: 10px 14px;
+  border: 1px solid rgba(42, 255, 158, 0.32);
+  border-radius: 999px;
+  color: var(--capsule-green);
+  background: rgba(42, 255, 158, 0.1);
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.capsule-open-overlay.opened .capsule-overlay-hint {
+  opacity: 0;
+}
+
+.capsule-overlay-reward {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  width: min(92vw, 430px);
+  border: 1px solid rgba(255, 216, 74, 0.5);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(20, 24, 34, 0.98), rgba(8, 12, 18, 0.98));
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translate(-50%, -44%) scale(0.92);
+  transition: opacity 0.28s ease, transform 0.34s ease;
+}
+
+.capsule-open-overlay.opened .capsule-overlay-reward {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.capsule-overlay-reward-banner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  min-height: 110px;
+  padding: 18px 20px;
+  color: #111827;
+  background: linear-gradient(135deg, #fff1a8, var(--capsule-yellow));
+  font-weight: 1000;
+}
+
+.capsule-overlay-reward-banner img {
+  width: 78px;
+  height: 78px;
+  border-radius: 18px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.capsule-overlay-reward-banner span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+}
+
+.capsule-overlay-reward-body {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 22px;
+  text-align: center;
+}
+
+.capsule-overlay-reward-body h2 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Titan One', cursive;
+  font-size: clamp(1.9rem, 8vw, 3rem);
+  line-height: 0.95;
+}
+
+.capsule-overlay-reward-body p {
+  margin: 0;
+  color: var(--capsule-muted);
+  font-weight: 900;
+}
+
 .capsule-shell-visual {
   position: relative;
   display: block;
@@ -1245,6 +1412,16 @@ textarea {
   }
 }
 
+@keyframes overlay-capsule-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.02);
+  }
+}
+
 @media (max-width: 980px) {
   .capsule-topbar,
   .section-header,
@@ -1372,6 +1549,25 @@ textarea {
   .capsule-reveal-stage {
     min-height: 520px;
     padding: 14px;
+  }
+
+  .capsule-open-overlay {
+    padding: 12px;
+  }
+
+  .capsule-open-scene {
+    min-height: 82vh;
+  }
+
+  .capsule-overlay-image-wrap {
+    width: min(78vw, 260px);
+    height: min(78vw, 260px);
+  }
+
+  .capsule-overlay-reward-banner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
   }
 
   .capsule-shell-visual {

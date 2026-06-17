@@ -91,6 +91,29 @@
       </div>
     </section>
   </main>
+  <div class="capsule-open-overlay" id="capsule-open-overlay" hidden aria-hidden="true">
+    <div class="capsule-open-backdrop"></div>
+    <div class="capsule-open-scene">
+      <button class="capsule-overlay-capsule" id="capsule-overlay-capsule" type="button" disabled aria-label="Open capsule">
+        <span class="capsule-overlay-image-wrap">
+          <img class="capsule-overlay-image capsule-overlay-image-top" id="capsule-overlay-image-top" alt="">
+          <img class="capsule-overlay-image capsule-overlay-image-bottom" id="capsule-overlay-image-bottom" alt="">
+        </span>
+        <span class="capsule-overlay-hint" id="capsule-overlay-hint">Scan a capsule first</span>
+      </button>
+      <div class="capsule-overlay-reward" id="capsule-overlay-reward" hidden>
+        <div class="capsule-overlay-reward-banner">
+          <img id="capsule-overlay-reward-image" alt="" hidden>
+          <span id="capsule-overlay-reward-banner-text">Reward revealed</span>
+        </div>
+        <div class="capsule-overlay-reward-body">
+          <h2 id="capsule-overlay-reward-title">Reward</h2>
+          <p id="capsule-overlay-reward-detail">Reward details</p>
+          <button class="capsule-btn capsule-btn-primary" type="button" id="capsule-overlay-close">Collect Reward</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="capsule-qr-work" class="capsule-hidden-qr" aria-hidden="true"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
