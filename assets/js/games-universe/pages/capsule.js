@@ -76,6 +76,8 @@ let capsuleScanner = null;
 let itemScanner = null;
 let pendingCapsuleCode = null;
 let pendingItemCode = null;
+let pendingCapsuleOpen = null;
+let capsuleOpeningInProgress = false;
 
 const $ = (id) => document.getElementById(id);
 
@@ -110,6 +112,11 @@ const elements = {
   prizeFallback: $('revealed-prize-fallback'),
   prizeName: $('revealed-prize-name'),
   prizePercent: $('revealed-prize-percent'),
+  prizePanel: $('revealed-prize-panel'),
+  rewardBanner: $('reward-banner'),
+  rewardBannerTitle: $('reward-banner-title'),
+  openCapsuleBtn: $('capsule-open-button'),
+  openCapsuleHint: $('capsule-open-hint'),
   oddsList: $('capsule-odds-list'),
   refreshItems: $('capsule-refresh-items'),
   itemsList: $('capsule-items-list'),
@@ -658,6 +665,28 @@ function renderImage(imgEl, fallbackEl, src, alt) {
   }
 }
 
+function setCapsuleOpenReady(ready, message = '') {
+  if (elements.openCapsuleBtn) {
+    elements.openCapsuleBtn.disabled = !ready;
+    elements.openCapsuleBtn.classList.toggle('ready', ready);
+  }
+  if (elements.openCapsuleHint) {
+    elements.openCapsuleHint.textContent = message || (ready ? 'Tap capsule to open' : 'Scan a capsule first');
+  }
+}
+
+function resetRevealStage() {
+  pendingCapsuleOpen = null;
+  capsuleOpeningInProgress = false;
+  elements.revealStage?.classList.remove('loaded', 'opening', 'opened');
+  if (elements.rewardBanner) elements.rewardBanner.hidden = true;
+  if (elements.rewardBannerTitle) elements.rewardBannerTitle.textContent = 'Reward revealed';
+  setCapsuleOpenReady(false, 'Scan a capsule first');
+  renderImage(elements.prizeImage, elements.prizeFallback, '', '');
+  if (elements.prizeName) elements.prizeName.textContent = 'Prize inside';
+  if (elements.prizePercent) elements.prizePercent.textContent = 'Scan to reveal the chance.';
+}
+
 function setAccountPill(user, userData) {
   if (!elements.accountPill) return;
   if (!user) {
@@ -893,17 +922,17 @@ function renderCapsulePreview(code, codeData) {
     imageUrl: codeData.capsuleImageUrl,
     prizes: codeData.prizes
   });
+  resetRevealStage();
   if (elements.previewTitle) elements.previewTitle.textContent = config.name;
   if (elements.previewCode) elements.previewCode.textContent = code;
   renderImage(elements.previewImage, elements.previewFallback, config.imageUrl, config.name);
-  if (elements.revealStage) elements.revealStage.classList.remove('opening', 'opened');
-  renderImage(elements.prizeImage, elements.prizeFallback, '', '');
-  if (elements.prizeName) elements.prizeName.textContent = 'Prize inside';
-  if (elements.prizePercent) elements.prizePercent.textContent = 'Opening will reveal your exact prize percentage.';
+  elements.revealStage?.classList.add('loaded');
+  if (elements.prizeName) elements.prizeName.textContent = 'Capsule ready';
+  if (elements.prizePercent) elements.prizePercent.textContent = 'Tap the capsule image above to open it.';
   if (elements.oddsList) {
     elements.oddsList.innerHTML = `
-      <strong>Most common possible prizes</strong>
-      ${topFourPrizes(config.prizes).map((prize) => `
+      <strong>Most common possible rewards</strong>
+      ${topThreePrizes(config.prizes).map((prize) => `
         <div class="odds-row">
           <span>${escapeHtml(prize.name)}${prize.rewardType === 'tokens' ? ` (${escapeHtml(prize.tokenAmount)} Tokens)` : ''}</span>
           <b>${formatPercent(prize.percentage)}</b>
@@ -944,24 +973,44 @@ async function openCapsuleByCode(code) {
     window.location.href = `${PAGE_PATHS.account}?code=${encodeURIComponent(code)}`;
     return;
   }
+  resetRevealStage();
   setStatus(elements.redeemStatus, 'Detecting capsule type...');
   try {
     const codeData = await getCapsuleCode(code);
     renderCapsulePreview(code, codeData);
-    setStatus(elements.redeemStatus, `${codeData.capsuleName || 'Capsule'} detected. Opening capsule...`, 'success');
-    await wait(450);
+    pendingCapsuleOpen = { code, codeData };
+    setCapsuleOpenReady(true, 'Tap capsule to open');
+    setStatus(elements.redeemStatus, `${codeData.capsuleName || 'Capsule'} detected. Tap the capsule image to open it.`, 'success');
+    if (elements.redeemCode) elements.redeemCode.value = '';
+  } catch (err) {
+    setStatus(elements.redeemStatus, err.message || 'Could not open this capsule.', 'error');
+  }
+}
+
+async function revealPendingCapsule() {
+  if (!pendingCapsuleOpen || capsuleOpeningInProgress) return;
+  capsuleOpeningInProgress = true;
+  setCapsuleOpenReady(false, 'Opening...');
+  const { code, codeData } = pendingCapsuleOpen;
+  setStatus(elements.redeemStatus, 'Opening capsule...');
+  try {
     elements.revealStage?.classList.add('opening');
     const prize = pickPrize(codeData.prizes);
     const reward = await redeemCapsuleCode(code, codeData, prize);
     await wait(650);
     renderImage(elements.prizeImage, elements.prizeFallback, reward.prizeImageUrl, reward.prizeName);
-    if (elements.prizeName) elements.prizeName.textContent = reward.prizeName;
+    if (elements.rewardBanner) elements.rewardBanner.hidden = false;
+    if (elements.rewardBannerTitle) elements.rewardBannerTitle.textContent = reward.rewardType === 'tokens'
+      ? `${reward.tokenAmount} Store Tokens`
+      : reward.prizeName;
+    if (elements.prizeName) elements.prizeName.textContent = reward.rewardType === 'tokens' ? 'Token reward' : reward.prizeName;
     if (elements.prizePercent) {
       elements.prizePercent.textContent = reward.rewardType === 'tokens'
-        ? `${formatPercent(reward.chancePercent)} chance - ${reward.tokenAmount} Store Tokens`
-        : `${formatPercent(reward.chancePercent)} chance in this capsule`;
+        ? `${formatPercent(reward.chancePercent)} chance - added to Token Shop balance`
+        : `${formatPercent(reward.chancePercent)} chance - item QR created`;
     }
     elements.revealStage?.classList.add('opened');
+    pendingCapsuleOpen = null;
     if (reward.rewardType === 'tokens') {
       if (currentUserData) currentUserData.capsuleTokens = Math.max(0, numberValue(currentUserData.capsuleTokens, 0)) + reward.tokenAmount;
       setStatus(elements.redeemStatus, `${reward.tokenAmount} Store Tokens added to your Token Shop balance.`, 'success');
@@ -970,10 +1019,14 @@ async function openCapsuleByCode(code) {
       setStatus(elements.redeemStatus, `${reward.prizeName} added to your Items with item code ${reward.itemCode}.`, 'success');
       await renderUserItems();
     }
-    if (elements.redeemCode) elements.redeemCode.value = '';
   } catch (err) {
+    elements.revealStage?.classList.remove('opening');
+    setCapsuleOpenReady(true, 'Try opening again');
+    capsuleOpeningInProgress = false;
     setStatus(elements.redeemStatus, err.message || 'Could not open this capsule.', 'error');
+    return;
   }
+  capsuleOpeningInProgress = false;
 }
 
 async function redeemCapsuleCode(code, codeData, prize) {
@@ -1434,14 +1487,14 @@ async function downloadGeneratedPdf() {
   setStatus(elements.adminStatus, 'Building the white QR PDF...');
   try {
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit: 'pt', format: 'letter', orientation: 'landscape' });
+    const pdf = new jsPDF({ unit: 'pt', format: 'letter', orientation: 'portrait' });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 16;
     const headerHeight = 40;
-    const columns = 10;
-    const rows = 2;
-    const gap = 5;
+    const columns = 4;
+    const rows = 5;
+    const gap = 8;
     const cardWidth = (pageWidth - margin * 2 - gap * (columns - 1)) / columns;
     const cardHeight = (pageHeight - margin * 2 - headerHeight - gap * (rows - 1)) / rows;
     const orderedCodes = sortedCodesForPdf(lastGeneratedCodes);
@@ -1467,7 +1520,7 @@ async function downloadGeneratedPdf() {
         pdf.text(`${machineName.toUpperCase()} - 100 CAPSULE GATCHA MACHINE`, margin, margin + 2, { maxWidth: pageWidth - margin * 2 });
         pdf.setFont('helvetica', 'normal');
         pdf.setFontSize(7);
-        pdf.text('White PDF. 10 QR codes per row, 20 labels per page. Ordered from lowest/common capsule to rarest. Each label shows the 3 most common rewards.', margin, margin + 14, { maxWidth: pageWidth - margin * 2 });
+        pdf.text('White PDF. 4 QR codes per row, 5 rows per page. Ordered from lowest/common capsule to rarest. Each label shows the 3 most common rewards.', margin, margin + 14, { maxWidth: pageWidth - margin * 2 });
       }
 
       pdf.setDrawColor(0, 0, 0);
@@ -1475,21 +1528,21 @@ async function downloadGeneratedPdf() {
       pdf.rect(x, y, cardWidth, cardHeight, 'FD');
       const innerX = x + 4;
       const innerWidth = cardWidth - 8;
-      const qrSize = Math.min(58, innerWidth);
+      const qrSize = Math.min(64, innerWidth);
       pdf.addImage(qr, 'PNG', x + (cardWidth - qrSize) / 2, y + 8, qrSize, qrSize);
 
       pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(7);
-      pdf.text(truncatePdfText(code.capsuleName || 'Capsule', 20), innerX, y + qrSize + 22, { maxWidth: innerWidth });
       pdf.setFontSize(8);
-      pdf.text(String(code.code || ''), innerX, y + qrSize + 34, { maxWidth: innerWidth });
+      pdf.text(truncatePdfText(code.capsuleName || 'Capsule', 26), innerX, y + qrSize + 22, { maxWidth: innerWidth });
+      pdf.setFontSize(10);
+      pdf.text(String(code.code || ''), innerX, y + qrSize + 36, { maxWidth: innerWidth });
 
       pdf.setTextColor(40, 40, 40);
       pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(6.2);
+      pdf.setFontSize(7);
       prizes.forEach((prize, prizeIndex) => {
-        pdf.text(formatPdfRewardLine(prize), innerX, y + qrSize + 52 + prizeIndex * 13, { maxWidth: innerWidth });
+        pdf.text(formatPdfRewardLine(prize), innerX, y + qrSize + 56 + prizeIndex * 14, { maxWidth: innerWidth });
       });
     }
 
@@ -1636,6 +1689,7 @@ function setupEvents() {
   elements.loginForm?.addEventListener('submit', handleLogin);
   elements.signupForm?.addEventListener('submit', handleSignup);
   elements.redeemForm?.addEventListener('submit', handleRedeem);
+  elements.openCapsuleBtn?.addEventListener('click', revealPendingCapsule);
   elements.startScan?.addEventListener('click', () => startScanner('capsule'));
   elements.stopScan?.addEventListener('click', () => stopScanner('capsule'));
   elements.refreshItems?.addEventListener('click', renderUserItems);
