@@ -1411,6 +1411,17 @@ function sortedCodesForPdf(codes) {
   });
 }
 
+function truncatePdfText(value, maxLength) {
+  const text = String(value || '').trim();
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, Math.max(0, maxLength - 3)).trim()}...`;
+}
+
+function formatPdfRewardLine(prize) {
+  const rewardNote = prize.rewardType === 'tokens' ? ` (${prize.tokenAmount || 0} Tokens)` : '';
+  return `${formatPercent(prize.percentage)} - ${truncatePdfText(`${prize.name}${rewardNote}`, 14)}`;
+}
+
 async function downloadGeneratedPdf() {
   if (!lastGeneratedCodes.length) {
     setStatus(elements.adminStatus, 'Generate a Gatcha Machine first.', 'error');
@@ -1427,10 +1438,10 @@ async function downloadGeneratedPdf() {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 16;
-    const headerHeight = 34;
+    const headerHeight = 40;
     const columns = 10;
-    const rows = 5;
-    const gap = 4;
+    const rows = 2;
+    const gap = 5;
     const cardWidth = (pageWidth - margin * 2 - gap * (columns - 1)) / columns;
     const cardHeight = (pageHeight - margin * 2 - headerHeight - gap * (rows - 1)) / rows;
     const orderedCodes = sortedCodesForPdf(lastGeneratedCodes);
@@ -1456,29 +1467,29 @@ async function downloadGeneratedPdf() {
         pdf.text(`${machineName.toUpperCase()} - 100 CAPSULE GATCHA MACHINE`, margin, margin + 2, { maxWidth: pageWidth - margin * 2 });
         pdf.setFont('helvetica', 'normal');
         pdf.setFontSize(7);
-        pdf.text('White PDF. 10 QR codes per row. Ordered from most common/lowest capsule to rarest. Each label shows the 3 most common rewards.', margin, margin + 14, { maxWidth: pageWidth - margin * 2 });
+        pdf.text('White PDF. 10 QR codes per row, 20 labels per page. Ordered from lowest/common capsule to rarest. Each label shows the 3 most common rewards.', margin, margin + 14, { maxWidth: pageWidth - margin * 2 });
       }
 
       pdf.setDrawColor(0, 0, 0);
       pdf.setFillColor(255, 255, 255);
       pdf.rect(x, y, cardWidth, cardHeight, 'FD');
-      const qrSize = Math.min(34, cardWidth - 10);
-      pdf.addImage(qr, 'PNG', x + (cardWidth - qrSize) / 2, y + 4, qrSize, qrSize);
+      const innerX = x + 4;
+      const innerWidth = cardWidth - 8;
+      const qrSize = Math.min(58, innerWidth);
+      pdf.addImage(qr, 'PNG', x + (cardWidth - qrSize) / 2, y + 8, qrSize, qrSize);
 
       pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(5.8);
-      pdf.text(String(code.capsuleName || 'Capsule'), x + 3, y + qrSize + 12, { maxWidth: cardWidth - 6 });
-      pdf.setFontSize(6.6);
-      pdf.text(String(code.code || ''), x + 3, y + qrSize + 20, { maxWidth: cardWidth - 6 });
+      pdf.setFontSize(7);
+      pdf.text(truncatePdfText(code.capsuleName || 'Capsule', 20), innerX, y + qrSize + 22, { maxWidth: innerWidth });
+      pdf.setFontSize(8);
+      pdf.text(String(code.code || ''), innerX, y + qrSize + 34, { maxWidth: innerWidth });
 
       pdf.setTextColor(40, 40, 40);
       pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(4.6);
-      pdf.text(`Capsule: ${formatPercent(code.capsuleChance || 0)}`, x + 3, y + qrSize + 27, { maxWidth: cardWidth - 6 });
+      pdf.setFontSize(6.2);
       prizes.forEach((prize, prizeIndex) => {
-        const rewardNote = prize.rewardType === 'tokens' ? ` (${prize.tokenAmount || 0} Tokens)` : '';
-        pdf.text(`${prize.name}${rewardNote} ${formatPercent(prize.percentage)}`, x + 3, y + qrSize + 34 + prizeIndex * 6, { maxWidth: cardWidth - 6 });
+        pdf.text(formatPdfRewardLine(prize), innerX, y + qrSize + 52 + prizeIndex * 13, { maxWidth: innerWidth });
       });
     }
 
