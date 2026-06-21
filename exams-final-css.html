@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Quiz – Cascading Style Sheets Test</title>
+    <style>
+        /* ----- global reset & base ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f4f7fc;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 30px 20px;
+            color: #1e2b3a;
+        }
+
+        .quiz-container {
+            max-width: 920px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0, 20, 40, 0.12);
+            padding: 40px 45px;
+        }
+
+        /* ----- header ----- */
+        .quiz-header {
+            border-bottom: 3px solid #e8edf4;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quiz-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #0b1a2e;
+        }
+
+        .quiz-header .sub {
+            font-size: 15px;
+            color: #4a5f73;
+            font-weight: 500;
+        }
+
+        .score-badge {
+            background: #1e2b3a;
+            color: #fff;
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .score-badge span {
+            color: #8bb9fe;
+        }
+
+        /* ----- questions ----- */
+        .question {
+            background: #f9faff;
+            border-radius: 16px;
+            padding: 22px 26px;
+            margin-bottom: 18px;
+            border: 1px solid #e9eef5;
+            transition: background 0.15s;
+        }
+
+        .question.correct {
+            border-left: 6px solid #2b8c5e;
+            background: #f3faf7;
+        }
+
+        .question.incorrect {
+            border-left: 6px solid #c73e3e;
+            background: #fdf5f5;
+        }
+
+        .q-head {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .q-number {
+            font-weight: 700;
+            font-size: 17px;
+            color: #1e2b3a;
+            background: #e2e9f3;
+            padding: 0 14px;
+            border-radius: 30px;
+            line-height: 30px;
+            min-width: 48px;
+            text-align: center;
+        }
+
+        .q-marks {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a6a85;
+            background: #e8edf4;
+            padding: 0 14px;
+            border-radius: 30px;
+            line-height: 28px;
+        }
+
+        .q-text {
+            font-size: 16.5px;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 8px 0 12px 0;
+            color: #0f1e2f;
+        }
+
+        .q-text code,
+        .code-snip {
+            background: #eef3f9;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 15px;
+            color: #1b3a5c;
+            display: inline-block;
+        }
+
+        .code-block {
+            background: #1a2533;
+            color: #d6e3f0;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 15px;
+            line-height: 1.8;
+            margin: 10px 0 14px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .code-block .hl {
+            background: #f5b34240;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .code-block .hl-purple {
+            background: #b77ef040;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        /* ----- options (radio) ----- */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 4px 0;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            background: #ffffff;
+            border: 1px solid #dfe6ef;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.1s, border 0.1s;
+        }
+
+        .options label:hover {
+            background: #f0f5fe;
+            border-color: #b8cce0;
+        }
+
+        .options input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1f6390;
+            flex-shrink: 0;
+        }
+
+        .options .selected-correct {
+            background: #dff0e6;
+            border-color: #2b8c5e;
+        }
+
+        .options .selected-incorrect {
+            background: #fce8e8;
+            border-color: #c73e3e;
+        }
+
+        .options .show-correct {
+            background: #dff0e6;
+            border-color: #2b8c5e;
+            opacity: 0.9;
+        }
+
+        /* ----- text inputs (coding) ----- */
+        .code-input-area {
+            margin: 10px 0 4px 0;
+        }
+
+        .code-input-area textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 15px;
+            border: 2px solid #d6e0ea;
+            border-radius: 12px;
+            background: #fafcff;
+            resize: vertical;
+            transition: border 0.15s;
+            color: #0f1e2f;
+            line-height: 1.6;
+        }
+
+        .code-input-area textarea:focus {
+            outline: none;
+            border-color: #1f6390;
+            box-shadow: 0 0 0 4px #1f639020;
+        }
+
+        .code-input-area textarea.correct-input {
+            border-color: #2b8c5e;
+            background: #f3faf7;
+        }
+
+        .code-input-area textarea.incorrect-input {
+            border-color: #c73e3e;
+            background: #fdf5f5;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            background: #f0f4fa;
+            border: 1px solid #dce4ef;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct-fb {
+            background: #e6f4ed;
+            border-color: #8fc7ae;
+            color: #1a533a;
+        }
+
+        .feedback.incorrect-fb {
+            background: #fceeec;
+            border-color: #e6b4b4;
+            color: #7a2e2e;
+        }
+
+        .feedback .fb-label {
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        /* ----- submit / reset ----- */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 2px solid #e8edf4;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #1e2b3a;
+            color: #fff;
+            border: none;
+            padding: 14px 44px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn:hover {
+            background: #0f1e2f;
+            transform: scale(1.01);
+        }
+
+        .btn-secondary {
+            background: #dce4ef;
+            color: #1e2b3a;
+        }
+
+        .btn-secondary:hover {
+            background: #c8d3e2;
+        }
+
+        .btn-success {
+            background: #1f7a4e;
+        }
+
+        .btn-success:hover {
+            background: #14633d;
+        }
+
+        .result-box {
+            margin-top: 24px;
+            padding: 24px 30px;
+            background: #1e2b3a;
+            border-radius: 16px;
+            color: #fff;
+            text-align: left;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box .score-row {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .result-box .score-row .out-of {
+            color: #8bb9fe;
+        }
+
+        .result-box .grade-row {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 8px 0 12px 0;
+        }
+
+        .result-box .grade-row .grade-label {
+            background: #f5b342;
+            padding: 4px 16px;
+            border-radius: 30px;
+            color: #1e2b3a;
+            display: inline-block;
+        }
+
+        .result-box .summary-text {
+            font-size: 16px;
+            font-weight: 400;
+            color: #b6ccde;
+            line-height: 1.6;
+            margin-top: 8px;
+            border-top: 1px solid #3a4b5e;
+            padding-top: 14px;
+        }
+
+        .result-box .summary-text strong {
+            color: #fff;
+        }
+
+        .result-box .summary-text .suggestion {
+            color: #f5b342;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        /* ----- responsive ----- */
+        @media (max-width: 640px) {
+            .quiz-container {
+                padding: 20px 16px;
+            }
+            .quiz-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .score-badge {
+                align-self: flex-start;
+            }
+            .q-head {
+                gap: 8px;
+            }
+            .q-number {
+                font-size: 14px;
+                min-width: 40px;
+                line-height: 26px;
+            }
+            .q-text {
+                font-size: 15px;
+            }
+            .code-block {
+                font-size: 13px;
+                padding: 10px 14px;
+            }
+            .btn {
+                padding: 12px 28px;
+                font-size: 16px;
+                width: 100%;
+            }
+            .options label {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media print {
+            .btn,
+            .actions {
+                display: none !important;
+            }
+            .feedback {
+                display: block !important;
+                background: #f0f4fa !important;
+                border: 1px solid #ccc !important;
+            }
+            .question {
+                break-inside: avoid;
+                border: 1px solid #ccc !important;
+            }
+            .result-box {
+                display: block !important;
+                background: #eee !important;
+                color: #111 !important;
+            }
+            .result-box .out-of {
+                color: #1f6390 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container" id="app">
+        <!-- header -->
+        <div class="quiz-header">
+            <div>
+                <h1>📄 Cascading Style Sheets Test</h1>
+                <div class="sub">Unit 2.2 – Web Design · CSS &nbsp;|&nbsp; Author: Mr. Mark Nicholls</div>
+            </div>
+            <div class="score-badge" id="scoreBadge">
+                Score: <span id="scoreDisplay">—</span> / <span id="totalPossible">50</span>
+            </div>
+        </div>
+
+        <!-- question container -->
+        <div id="questionsContainer"></div>
+
+        <!-- actions -->
+        <div class="actions">
+            <button class="btn btn-success" id="submitBtn">✅ Submit &amp; Grade</button>
+            <button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
+        </div>
+
+        <!-- result -->
+        <div class="result-box" id="resultBox">
+            <div class="score-row">
+                Your Score: <span id="finalScore">0</span> <span class="out-of">/ <span id="finalTotal">50</span></span>
+            </div>
+            <div class="grade-row">
+                Grade: <span class="grade-label" id="gradeLabel">—</span>
+            </div>
+            <div class="summary-text" id="resultDetail"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===================================================================
+        // DATA – 100% matches the document, with fixed placeholders
+        // ===================================================================
+
+        const QUESTIONS = [{
+            id: 'q1',
+            type: 'text',
+            label: 'Q1. Please enter your full name.',
+            marks: 0,
+            maxMarks: 0,
+            answer: null,
+            placeholder: 'Enter your full name'
+        }, {
+            id: 'q2',
+            type: 'mc',
+            label: 'Q2. What does "CSS" stand for?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Computer Styling Syntax', 'Cascading Style Sheets', 'Creative Style Syntax',
+                'Cascading Scripting Styles'
+            ],
+            correct: 1
+        }, {
+            id: 'q3',
+            type: 'mc',
+            label: 'Q3. Which web development layer is formed by CSS?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Structure', 'Presentation', 'Behaviour'],
+            correct: 1
+        }, {
+            id: 'q4',
+            type: 'mc',
+            label: 'Q4. What is the main purpose of CSS?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'To code the main elements of a web page (Text, Images etc.)',
+                'To code features that allow the web page to respond to user input',
+                'To control how the web page looks (Colours, Image effects etc.)',
+                'To store data that users may enter into the web page.'
+            ],
+            correct: 2
+        }, {
+            id: 'q5',
+            type: 'mc',
+            label: 'Q5. One CSS file can affect the presentation of many web pages?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['True', 'False'],
+            correct: 0
+        }, {
+            id: 'q6',
+            type: 'mc',
+            label: 'Q6. If we had a Style Sheet called "style", which HTML code would we use to link it to a web page?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                '<link rel="stylesheet" type="text/css" href="style sheet.css">',
+                '<link rel="stylesheet" type="text/css" "style.css">',
+                '<link rel="stylesheet" type="text/css" href="style.css">',
+                '<style src="style.css">'
+            ],
+            correct: 2
+        }, {
+            id: 'q7',
+            type: 'mc',
+            label: 'Q7. In which section of an HTML web page should the code to link the style sheet be placed?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['<BODY></BODY>', '<TITLE></TITLE>', '<H1></H1>', '<HEAD></HEAD>'],
+            correct: 3
+        }, {
+            id: 'q8',
+            type: 'mc',
+            label: 'Q8. Look at this image of CSS code. What is the correct name of the section coloured yellow?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Declaration', 'Selector', 'Property', 'Value'],
+            correct: 1,
+            codeHint: `<span style="background-color: #FFE066; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">h1</span> {
+        color: blue;
+        font-size: 24px;
+      }`
+        }, {
+            id: 'q9',
+            type: 'mc',
+            label: 'Q9. Look at this image of CSS code. What is the correct name of the sections coloured purple?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Declaration', 'Selector', 'Property', 'Value'],
+            correct: 0,
+            codeHint: `h1 {
+        <span style="background-color: #D8B4FE; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">color: blue;</span>
+        <span style="background-color: #D8B4FE; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">font-size: 24px;</span>
+      }`
+        }, {
+            id: 'q10',
+            type: 'mc',
+            label: 'Q10. Look at this image of CSS code. How many declarations are we using?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['2', '3', '4'],
+            correct: 1,
+            codeHint: `p {
+        color: red;
+        font-size: 16px;
+        text-align: center;
+      }`
+        }, {
+            id: 'q11',
+            type: 'mc',
+            label: 'Q11. Look at this image of CSS code. What is the correct name of the "width" and "border" parts of the code?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Declaration', 'Selector', 'Property', 'Value'],
+            correct: 2,
+            codeHint: `img {
+        <span style="background-color: #93C5FD; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">width</span>: 400px;
+        <span style="background-color: #93C5FD; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">border</span>: solid 8px #333;
+      }`
+        }, {
+            id: 'q12',
+            type: 'mc',
+            label: 'Q12. Look at this image of CSS code. What is the correct name of the "400px" and "solid 8px" parts of the code?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Declaration', 'Selector', 'Property', 'Value'],
+            correct: 3,
+            codeHint: `img {
+        width: <span style="background-color: #FCA5A5; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">400px</span>;
+        border: <span style="background-color: #FCA5A5; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">solid 8px #333</span>;
+      }`
+        }, {
+            id: 'q13',
+            type: 'mc',
+            label: 'Q13. Look at this image of CSS code. What is the purpose of the semicolons (;)?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'To separate declarations from each other',
+                'To contain the declarations that apply to the selector',
+                'To separate the properties and values from each other',
+                'To link the style sheet to a web page'
+            ],
+            correct: 0,
+            codeHint: `p {
+        color: red<span style="background-color: #FF0000; color: white; padding: 0 4px; border-radius: 4px;">;</span>
+        font-size: 16px<span style="background-color: #FF0000; color: white; padding: 0 4px; border-radius: 4px;">;</span>
+      }`
+        }, {
+            id: 'q14',
+            type: 'mc',
+            label: 'Q14. Look at this image of CSS code. What is the purpose of the curly brackets / braces { }?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'To separate declarations from each other',
+                'To contain the declarations that apply to the selector',
+                'To separate the properties and values from each other',
+                'To link the style sheet to a web page'
+            ],
+            correct: 1,
+            codeHint: `p <span style="background-color: #86EFAC; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">{</span>
+        color: red;
+        font-size: 16px;
+      <span style="background-color: #86EFAC; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">}</span>`
+        }, {
+            id: 'q15',
+            type: 'mc',
+            label: 'Q15. Look at this image of CSS code. What is the purpose of the colons (:)?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'To separate declarations from each other',
+                'To contain the declarations that apply to the selector',
+                'To separate the properties and values from each other',
+                'To link the style sheet to a web page'
+            ],
+            correct: 2,
+            codeHint: `p {
+        color<span style="background-color: #60A5FA; padding: 0 4px; border-radius: 4px; color: #1e2b3a;">:</span> red;
+        font-size<span style="background-color: #60A5FA; padding: 0 4px; border-radius: 4px; color: #1e2b3a;">:</span> 16px;
+      }`
+        }, {
+            id: 'q16',
+            type: 'mc',
+            label: 'Q16. Look at this image of CSS code. Which part of a web page will it affect?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Paragraph text', 'Hyperlinks', 'Largest headings', 'Images'],
+            correct: 1,
+            codeHint: `<span style="background-color: #F9A8D4; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">a:link</span> { color: red; }
+      <span style="background-color: #F9A8D4; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">a:visited</span> { color: green; }`
+        }, {
+            id: 'q17',
+            type: 'mc',
+            label: 'Q17. Look at this image of CSS code. Which part of a web page will it affect?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Paragraph text', 'Hyperlinks', 'Largest headings', 'Images'],
+            correct: 0,
+            codeHint: `<span style="background-color: #FFE066; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">p</span> {
+        text-shadow: 5px 5px 3px grey;
+      }`
+        }, {
+            id: 'q18',
+            type: 'mc',
+            label: 'Q18. Look at this image of CSS code. Which part of a web page will it affect?',
+            marks: 1,
+            maxMarks: 1,
+            options: ['Paragraph text', 'Hyperlinks', 'Largest headings', 'Images'],
+            correct: 3,
+            codeHint: `<span style="background-color: #FFE066; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">img</span> { width: 500px; }
+      <span style="background-color: #FFE066; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">img</span> { opacity: 0.5; }
+      <span style="background-color: #FFE066; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">img</span> { border:6px dotted #000099; }
+      <span style="background-color: #FFE066; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">img</span> { border-radius: 15px; }`
+        }, {
+            id: 'q19',
+            type: 'mc',
+            label: 'Q19. Look at this image of CSS code. What effect will it have?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'Add a dashed border to an image',
+                'Add a solid border to an image',
+                'Add a rounded border to an image',
+                'Add a dotted border to an image'
+            ],
+            correct: 2,
+            codeHint: `img {
+        <span style="background-color: #93C5FD; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">border-radius</span>: 15px;
+      }`
+        }, {
+            id: 'q20',
+            type: 'mc',
+            label: 'Q20. Look at this image of CSS code. What effect will it have?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'Add a single colour background to the web page',
+                'Add a 2-colour gradient background',
+                'Change the colour of heading text',
+                'Add a background colour to paragraph text'
+            ],
+            correct: 0,
+            codeHint: `body {
+        <span style="background-color: #93C5FD; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">background-color</span>: #F3E1F5;
+      }`
+        }, {
+            id: 'q21',
+            type: 'mc',
+            label: 'Q21. Look at this image of CSS code. What effect will it have?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'Apply a shadow effect to an image',
+                'Apply a shadow effect to a heading',
+                'Create a grey background image',
+                'Change the font size of a heading to 8px'
+            ],
+            correct: 1,
+            codeHint: `h2 {
+        <span style="background-color: #93C5FD; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">text-shadow</span>: 8px 4px 4px grey;
+      }`
+        }, {
+            id: 'q22',
+            type: 'mc',
+            label: 'Q22. Look at this image of CSS code. What effect will it have?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'Apply a shadow effect to an image',
+                'Alter the border size of an image',
+                'Make an image transparent (see through)',
+                'Change the font size of paragraph text'
+            ],
+            correct: 2,
+            codeHint: `img {
+        <span style="background-color: #93C5FD; padding: 0 6px; border-radius: 4px; color: #1e2b3a;">opacity</span>: 0.5;
+      }`
+        }, {
+            id: 'q23',
+            type: 'mc',
+            label: 'Q23. Look at this image of CSS code. Which code will determine the colour of a hyperlink when we first visit the web page?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'a:link { color: red; }',
+                'a:visited { color: green; }',
+                'a:active { color: pink; }'
+            ],
+            correct: 0,
+            codeHint: `a:link { color: red; }
+      a:visited { color: green; }
+      a:active { color: pink; }`
+        }, {
+            id: 'q24',
+            type: 'mc',
+            label: 'Q24. Look at this image of CSS code. Which code will determine the colour of a hyperlink as we click it?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'a:link { color: red; }',
+                'a:visited { color: green; }',
+                'a:active { color: pink; }'
+            ],
+            correct: 2,
+            codeHint: `a:link { color: red; }
+      a:visited { color: green; }
+      a:active { color: pink; }`
+        }, {
+            id: 'q25',
+            type: 'mc',
+            label: 'Q25. Look at this image of CSS code. Which code will determine the colour of a hyperlink after we click the link?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'a:link { color: red; }',
+                'a:visited { color: green; }',
+                'a:active { color: pink; }'
+            ],
+            correct: 1,
+            codeHint: `a:link { color: red; }
+      a:visited { color: green; }
+      a:active { color: pink; }`
+        }, {
+            id: 'q26',
+            type: 'mc',
+            label: 'Q26. Which CSS code is written 100% correctly and will make paragraph text bold?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'h1 { font-weight: bold; }',
+                'p { text-weight: bold; }',
+                'p { font-weight="bold"; }',
+                'p { font-weight: bold; }'
+            ],
+            correct: 3
+        }, {
+            id: 'q27',
+            type: 'mc',
+            label: 'Q27. Which CSS code is written 100% correctly and will align large headings to the center?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'h1 { align: center; }',
+                'h1 { text-align: center; }',
+                'h1 { font-align: center; }',
+                'h1 { text-align: center; }'
+            ],
+            correct: [1, 3]
+        }, {
+            id: 'q28',
+            type: 'mc',
+            label: 'Q28. Which CSS code is written 100% correctly and will change the font color of paragraph text to red?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'p { color: #FF0000; }',
+                'p { colour: red; }',
+                'p { color = #FF0000; }',
+                'p { color: #0000FF; }'
+            ],
+            correct: 0
+        }, {
+            id: 'q29',
+            type: 'mc',
+            label: 'Q29. Which CSS code is written 100% correctly and will change the background color of a web page to green?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'background { background-color: green; }',
+                'html { background-color: green; }',
+                'body { background-color: green; }',
+                'body { color: green; }'
+            ],
+            correct: 2
+        }, {
+            id: 'q30',
+            type: 'mc',
+            label: 'Q30. Which CSS code is written 100% correctly and will change the width of an image to 500 pixels?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'img { width: 500 pixels; }',
+                'img { width: 500; }',
+                'image { width: 500px; }',
+                'img { width: 500px; }'
+            ],
+            correct: 3
+        }, {
+            id: 'q31',
+            type: 'mc',
+            label: 'Q31. Which CSS code is written 100% correctly and will set the font style of some paragraph text to Calibri?',
+            marks: 1,
+            maxMarks: 1,
+            options: [
+                'p { font: Calibri; }',
+                'p { font-family: Calibri; }',
+                'p { font-style: Calibri; }',
+                'p { font-type: Calibri; }'
+            ],
+            correct: 1
+        }, {
+            id: 'q32',
+            type: 'code',
+            label: 'Q32. The CSS code below should cause a hyperlink to turn blue when we move the mouse cursor over it but it does not work. Please rewrite the code to fix the errors.',
+            marks: 1,
+            maxMarks: 2,
+            placeholder: 'Enter your CSS code here...',
+            correctAnswer: 'a:hover { color: blue; }',
+            codeHint: 'a active { color: blue; }'
+        }, {
+            id: 'q33',
+            type: 'code',
+            label: 'Q33. The CSS code below should insert a JPG image called "pageback" as a web page background but it does not work. Please rewrite the code to fix the errors.',
+            marks: 1,
+            maxMarks: 2,
+            placeholder: 'Enter your CSS code here...',
+            correctAnswer: 'body{ background-image: url("pageback.jpg"); }',
+            codeHint: 'img{ background image: url(pageback.gif);'
+        }, {
+            id: 'q34',
+            type: 'code',
+            label: 'Q34. Write CSS code that will style the largest heading to meet the following requirements: Text size 36px, Font color to pure green.',
+            marks: 3,
+            maxMarks: 4,
+            placeholder: 'Enter your CSS code here...',
+            correctAnswer: 'h1{ font-size: 36px; color: #00FF00; }',
+            codeHint: 'h1 { font-size: 36px; color: green; }'
+        }, {
+            id: 'q35',
+            type: 'code',
+            label: 'Q35. Write CSS code that will set paragraph text to meet the following requirements: Arial font, Aligned to the center of the page, Bold.',
+            marks: 5,
+            maxMarks: 5,
+            placeholder: 'Enter your CSS code here...',
+            correctAnswer: 'p{ font-family: Arial; text-align: center; font-weight: bold; }',
+            codeHint: 'p { font-family: Arial; text-align: center; font-weight: bold; }'
+        }, {
+            id: 'q36',
+            type: 'code',
+            label: 'Q36. Write CSS code that will set a two-colour linear gradient to the background of a web page. The colours you use are your choice and can be either named colours or use hexadecimal code.',
+            marks: 2,
+            maxMarks: 5,
+            placeholder: 'Enter your CSS code here...',
+            correctAnswer: 'body{ background: linear-gradient(blue, white); }',
+            codeHint: 'body { background: linear-gradient(blue, white); }'
+        }];
+
+        // ===================================================================
+        // RENDER
+        // ===================================================================
+
+        const container = document.getElementById('questionsContainer');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const totalPossibleSpan = document.getElementById('totalPossible');
+        const finalScoreSpan = document.getElementById('finalScore');
+        const finalTotalSpan = document.getElementById('finalTotal');
+        const resultBox = document.getElementById('resultBox');
+        const resultDetail = document.getElementById('resultDetail');
+        const gradeLabel = document.getElementById('gradeLabel');
+
+        let totalMarks = 0;
+        QUESTIONS.forEach(q => { totalMarks += q.maxMarks; });
+        totalPossibleSpan.textContent = totalMarks;
+        finalTotalSpan.textContent = totalMarks;
+
+        function renderQuestions() {
+            let html = '';
+            QUESTIONS.forEach((q, idx) => {
+                const qNum = idx + 1;
+                const marksStr = q.maxMarks > 0 ? `${q.marks}/${q.maxMarks}` : '0/0';
+
+                html += `<div class="question" id="qContainer_${q.id}" data-qid="${q.id}">`;
+                html += `<div class="q-head">`;
+                html += `<span class="q-number">Q${qNum}</span>`;
+                html += `<span class="q-marks">${marksStr}</span>`;
+                html += `</div>`;
+                html += `<div class="q-text">${q.label}</div>`;
+
+                if (q.codeHint) {
+                    html += `<div class="code-block">${q.codeHint}</div>`;
+                }
+
+                if (q.type === 'mc') {
+                    html += `<div class="options" id="opts_${q.id}">`;
+                    q.options.forEach((opt, oi) => {
+                        const val = String.fromCharCode(65 + oi);
+                        html += `<label data-optindex="${oi}">`;
+                        html += `<input type="radio" name="${q.id}" value="${oi}" />`;
+                        html += `<span>${val}. ${escapeHtml(opt)}</span>`;
+                        html += `</label>`;
+                    });
+                    html += `</div>`;
+                } else if (q.type === 'text') {
+                    html +=
+                        `<div class="code-input-area"><input type="text" name="${q.id}" placeholder="${escapeHtml(q.placeholder || '')}" style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #d6e0ea;font-size:15px;" /></div>`;
+                } else if (q.type === 'code') {
+                    html += `<div class="code-input-area">`;
+                    html +=
+                        `<textarea name="${q.id}" placeholder="${escapeHtml(q.placeholder || '')}" rows="3"></textarea>`;
+                    html += `</div>`;
+                }
+
+                html += `<div class="feedback" id="fb_${q.id}"></div>`;
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // ===================================================================
+        // GRADING with new 1-5+ scale
+        // ===================================================================
+
+        function getGrade(percentage) {
+            if (percentage >= 90) return '5';
+            if (percentage >= 85) return '4+';
+            if (percentage >= 75) return '4';
+            if (percentage >= 65) return '3+';
+            if (percentage >= 55) return '3';
+            if (percentage >= 45) return '2+';
+            if (percentage >= 35) return '2';
+            if (percentage >= 25) return '1+';
+            return '1';
+        }
+
+        function getSuggestion(percentage, incorrectQuestionIds) {
+            // Determine weak areas based on question categories
+            // For simplicity, we'll use generic advice based on score.
+            if (percentage >= 85) {
+                return 'You have a strong grasp of CSS. To push further, practice writing complex selectors and responsive layouts.';
+            } else if (percentage >= 65) {
+                return 'You understand the basics but should review selector syntax, property-value pairs, and common CSS properties. Try more coding exercises.';
+            } else if (percentage >= 45) {
+                return 'Focus on the fundamental concepts: selectors, declarations, properties, and values. Revisit the difference between inline and external CSS.';
+            } else {
+                return 'Start from the beginning: learn what CSS is, how to link it, and the basic syntax of selectors and declarations. Use online interactive tutorials.';
+            }
+        }
+
+        function gradeQuiz() {
+            let totalEarned = 0;
+            let totalPossible = 0;
+            let details = [];
+            let correctCount = 0;
+            let totalScoredQuestions = 0;
+            let incorrectQuestionIds = [];
+
+            QUESTIONS.forEach((q, idx) => {
+                const container = document.getElementById(`qContainer_${q.id}`);
+                const fb = document.getElementById(`fb_${q.id}`);
+                let earned = 0;
+                let maxPossible = q.maxMarks;
+                let isCorrect = false;
+                let feedbackMsg = '';
+
+                container.classList.remove('correct', 'incorrect');
+
+                if (q.type === 'mc') {
+                    const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+                    const userVal = selected ? parseInt(selected.value) : -1;
+                    const correctVals = Array.isArray(q.correct) ? q.correct : [q.correct];
+                    const labels = container.querySelectorAll('.options label');
+
+                    labels.forEach((label, li) => {
+                        label.classList.remove('selected-correct', 'selected-incorrect', 'show-correct');
+                        if (correctVals.includes(li)) {
+                            label.classList.add('show-correct');
+                        }
+                        if (li === userVal && correctVals.includes(userVal)) {
+                            label.classList.add('selected-correct');
+                        } else if (li === userVal && !correctVals.includes(userVal)) {
+                            label.classList.add('selected-incorrect');
+                        }
+                    });
+
+                    if (correctVals.includes(userVal)) {
+                        earned = maxPossible;
+                        isCorrect = true;
+                        container.classList.add('correct');
+                        feedbackMsg = '✅ Correct!';
+                    } else {
+                        earned = 0;
+                        container.classList.add('incorrect');
+                        const correctText = q.options[correctVals[0]] || '';
+                        feedbackMsg = `❌ Incorrect. The correct answer was: "${correctText}".`;
+                        incorrectQuestionIds.push(q.id);
+                    }
+                } else if (q.type === 'text') {
+                    earned = 0;
+                    maxPossible = 0;
+                    feedbackMsg = '';
+                } else if (q.type === 'code') {
+                    const textarea = container.querySelector(`textarea[name="${q.id}"]`);
+                    const userInput = textarea ? textarea.value.trim() : '';
+                    const result = gradeCodeQuestion(q, userInput);
+                    earned = result.earned;
+                    maxPossible = q.maxMarks;
+                    isCorrect = (earned >= maxPossible && maxPossible > 0);
+                    feedbackMsg = result.feedback;
+
+                    if (textarea) {
+                        textarea.classList.remove('correct-input', 'incorrect-input');
+                        if (earned > 0 && earned >= maxPossible) {
+                            textarea.classList.add('correct-input');
+                            container.classList.add('correct');
+                        } else if (earned > 0) {
+                            textarea.classList.add('incorrect-input');
+                            container.classList.add('incorrect');
+                        } else {
+                            textarea.classList.add('incorrect-input');
+                            container.classList.add('incorrect');
+                        }
+                    }
+                    if (!isCorrect) incorrectQuestionIds.push(q.id);
+                }
+
+                const marksSpan = container.querySelector('.q-marks');
+                if (marksSpan) {
+                    const displayMax = (q.type === 'text' && q.maxMarks === 0) ? 0 : maxPossible;
+                    marksSpan.textContent = `${earned}/${displayMax}`;
+                }
+
+                if (fb) {
+                    fb.className = 'feedback show';
+                    fb.classList.add(isCorrect ? 'correct-fb' : 'incorrect-fb');
+                    if (q.type === 'code' && feedbackMsg) {
+                        fb.innerHTML = feedbackMsg;
+                    } else if (q.type === 'mc' && feedbackMsg) {
+                        fb.innerHTML = feedbackMsg;
+                    } else if (q.type === 'text') {
+                        fb.innerHTML = '📝 Name recorded (not scored).';
+                        fb.className = 'feedback show correct-fb';
+                    } else {
+                        fb.innerHTML = '';
+                        fb.className = 'feedback';
+                    }
+                }
+
+                totalEarned += earned;
+                totalPossible += maxPossible;
+                if (maxPossible > 0) {
+                    totalScoredQuestions++;
+                    if (isCorrect) correctCount++;
+                }
+                details.push({ qId: q.id, earned, maxPossible, isCorrect });
+            });
+
+            // Update score display
+            scoreDisplay.textContent = totalEarned;
+            finalScoreSpan.textContent = totalEarned;
+            finalTotalSpan.textContent = totalPossible;
+
+            // Calculate percentage
+            const pct = totalPossible > 0 ? Math.round((totalEarned / totalPossible) * 100) : 0;
+            const grade = getGrade(pct);
+            gradeLabel.textContent = grade;
+
+            // Build summary
+            const totalQs = QUESTIONS.filter(q => q.maxMarks > 0).length;
+            const incorrectCount = totalScoredQuestions - correctCount;
+            let summary = `<strong>Summary:</strong> You answered <strong>${correctCount}</strong> out of <strong>${totalQs}</strong> scored questions correctly (${pct}%).<br>`;
+            if (incorrectCount > 0) {
+                summary += `You got <strong>${incorrectCount}</strong> questions wrong. `;
+            } else {
+                summary += `Perfect! All questions correct. 🎉`;
+            }
+
+            // Add a personalised suggestion
+            const suggestion = getSuggestion(pct, incorrectQuestionIds);
+            summary += `<br><div class="suggestion">📌 <strong>Next Steps:</strong> ${suggestion}</div>`;
+
+            // Breakdown of correct/incorrect
+            let breakdown = '<br><strong>Breakdown:</strong> ';
+            const qNumbers = QUESTIONS.map((q, i) => {
+                if (q.maxMarks === 0) return null;
+                const isCorrect = details[i]?.isCorrect;
+                return isCorrect ? `Q${i+1}✅` : `Q${i+1}❌`;
+            }).filter(Boolean);
+            breakdown += qNumbers.join(' ');
+
+            resultDetail.innerHTML = summary + breakdown;
+
+            resultBox.classList.add('show');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function gradeCodeQuestion(q, input) {
+            const max = q.maxMarks;
+            let earned = 0;
+            let parts = [];
+            const clean = input.replace(/\s+/g, ' ').trim();
+
+            if (q.id === 'q32') {
+                if (/hover/i.test(clean)) earned += 1;
+                if (/color\s*:\s*blue/i.test(clean)) earned += 1;
+                parts.push('Check for "hover" and "color: blue"');
+                if (earned === 0) parts.push('No key parts found.');
+                else if (earned < max) parts.push(`Found ${earned} of ${max} required parts.`);
+                else parts.push('✅ Perfect!');
+            } else if (q.id === 'q33') {
+                if (/body\s*\{/i.test(clean)) earned += 0.5;
+                if (/background-image\s*:/i.test(clean)) earned += 0.5;
+                if (/url\s*\(/i.test(clean)) earned += 0.5;
+                if (/pageback\.jpg/i.test(clean)) earned += 0.5;
+                earned = Math.round(earned);
+                parts.push('Check for "body", "background-image", "url()", "pageback.jpg"');
+                if (earned === 0) parts.push('No key parts found.');
+                else if (earned < max) parts.push(`Found ${earned} of ${max} required parts.`);
+                else parts.push('✅ Perfect!');
+            } else if (q.id === 'q34') {
+                if (/h1\s*\{/i.test(clean)) earned += 1;
+                if (/font-size\s*:\s*36px/i.test(clean)) earned += 1;
+                if (/color\s*:\s*#00FF00/i.test(clean) || /color\s*:\s*#00ff00/i.test(clean)) earned += 1;
+                if (/\{.*\}/s.test(clean) && /:\s*/.test(clean) && /;\s*/.test(clean)) earned += 1;
+                earned = Math.min(earned, max);
+                parts.push('Check for "h1", "font-size: 36px", "color: #00FF00", and correct syntax');
+                if (earned === 0) parts.push('No key parts found.');
+                else if (earned < max) parts.push(`Found ${earned} of ${max} required parts.`);
+                else parts.push('✅ Perfect!');
+            } else if (q.id === 'q35') {
+                if (/p\s*\{/i.test(clean)) earned += 1;
+                if (/font-family\s*:\s*Arial/i.test(clean) || /font-family\s*:\s*arial/i.test(clean)) earned += 1;
+                if (/text-align\s*:\s*center/i.test(clean)) earned += 1;
+                if (/font-weight\s*:\s*bold/i.test(clean)) earned += 1;
+                if (/\{.*\}/s.test(clean) && /:\s*/.test(clean) && /;\s*/.test(clean)) earned += 1;
+                earned = Math.min(earned, max);
+                parts.push('Check for "p", "font-family: Arial", "text-align: center", "font-weight: bold", and syntax');
+                if (earned === 0) parts.push('No key parts found.');
+                else if (earned < max) parts.push(`Found ${earned} of ${max} required parts.`);
+                else parts.push('✅ Perfect!');
+            } else if (q.id === 'q36') {
+                if (/body\s*\{/i.test(clean)) earned += 1;
+                if (/background\s*:/i.test(clean)) earned += 1;
+                if (/linear-gradient\s*\(/i.test(clean)) earned += 1;
+                const colorMatches = clean.match(/[#a-f0-9]{3,6}|[a-z]+/gi);
+                let colorCount = 0;
+                if (colorMatches) {
+                    const colorKeywords = ['blue', 'white', 'red', 'green', 'pink', 'black', 'yellow', 'purple', 'orange',
+                        'grey', 'gray', 'cyan', 'magenta', 'lime', 'olive', 'maroon', 'navy', 'teal', 'aqua', 'fuchsia',
+                        'silver', 'gold', 'tan', 'coral', 'salmon', 'khaki', 'plum', 'orchid', 'violet', 'indigo',
+                        'crimson', 'dark', 'light'
+                    ];
+                    let foundColors = colorMatches.filter(c => {
+                        const lower = c.toLowerCase();
+                        if (/^#[0-9a-f]{3,6}$/i.test(lower)) return true;
+                        return colorKeywords.some(k => lower === k);
+                    });
+                    foundColors = [...new Set(foundColors.map(c => c.toLowerCase()))];
+                    colorCount = Math.min(foundColors.length, 2);
+                }
+                earned += Math.min(colorCount, 2);
+                if (/\{.*\}/s.test(clean) && /:\s*/.test(clean) && /;\s*/.test(clean)) earned += 1;
+                earned = Math.min(earned, max);
+                parts.push(
+                    'Check for "body", "background", "linear-gradient()", two colours, and correct syntax');
+                if (earned === 0) parts.push('No key parts found.');
+                else if (earned < max) parts.push(`Found ${earned} of ${max} required parts.`);
+                else parts.push('✅ Perfect!');
+            }
+
+            return { earned, feedback: parts.join('<br>') };
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+
+            document.querySelectorAll('.question').forEach(el => {
+                el.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('.options label').forEach(el => {
+                el.classList.remove('selected-correct', 'selected-incorrect', 'show-correct');
+            });
+            document.querySelectorAll('.feedback').forEach(el => {
+                el.className = 'feedback';
+                el.innerHTML = '';
+            });
+            document.querySelectorAll('.code-input-area textarea').forEach(el => {
+                el.classList.remove('correct-input', 'incorrect-input');
+            });
+
+            document.querySelectorAll('.q-marks').forEach(el => {
+                const qId = el.closest('.question').dataset.qid;
+                const q = QUESTIONS.find(q => q.id === qId);
+                if (q) {
+                    const maxStr = q.maxMarks > 0 ? `${q.marks}/${q.maxMarks}` : '0/0';
+                    el.textContent = maxStr;
+                }
+            });
+
+            scoreDisplay.textContent = '—';
+            finalScoreSpan.textContent = '0';
+            gradeLabel.textContent = '—';
+            resultBox.classList.remove('show');
+            resultDetail.innerHTML = '';
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', gradeQuiz);
+        document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+
+        renderQuestions();
+    </script>
+</body>
+</html>
