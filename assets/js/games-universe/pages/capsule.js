@@ -1476,7 +1476,7 @@ function fitPdfText(pdf, value, maxWidth) {
   const text = String(value || '').trim();
   if (pdf.getTextWidth(text) <= maxWidth) return text;
   let next = text;
-  while (next.length > 0 && pdf.getTextWidth(`${next}...`) > maxWidth) {
+  while (next.length > 0 && pdf.getTextWidth(`${next.trimEnd()}...`) > maxWidth) {
     next = next.slice(0, -1).trimEnd();
   }
   return next ? `${next}...` : '...';
