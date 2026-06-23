@@ -103,7 +103,6 @@
                 <button class="staff-sub-tab" data-staff-tab="staff-badges"><i class="fas fa-medal"></i> Badges</button>
                 <button class="staff-sub-tab" data-staff-tab="staff-rarity"><i class="fas fa-palette"></i> Rarity & site</button>
                 <button class="staff-sub-tab" data-staff-tab="staff-missions"><i class="fas fa-tasks"></i> Missions</button>
-                <button class="staff-sub-tab" data-staff-tab="staff-access-codes"><i class="fas fa-key"></i> Dev access</button>
                 <button class="staff-sub-tab" data-staff-tab="staff-stars"><i class="fas fa-star"></i> Stars</button>
                 <button class="staff-sub-tab" data-staff-tab="staff-star-badges"><i class="fas fa-medal"></i> Star badges</button>
                 <button class="staff-sub-tab" data-staff-tab="staff-chatview"><i class="fas fa-eye"></i> Chat Viewer</button>
@@ -135,7 +134,7 @@
                     <input type="hidden" id="staff-movie-category-id">
                     <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Name</label><input id="staff-movie-category-name" placeholder="e.g. Drama"></div>
                     <div class="staff-form-group" style="margin:0;min-width:210px;flex:1.2;"><label>Gradient CSS</label><input id="staff-movie-category-gradient" placeholder="linear-gradient(...)"></div>
-                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Corner art URL</label><input id="staff-movie-category-art" placeholder="https://...png"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Corner art URL</label><input id="staff-movie-category-art" placeholder="https://...webp"></div>
                     <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art position</label><select id="staff-movie-category-art-pos"><option value="bottom">Bottom</option><option value="middle">Middle</option></select></div>
                     <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art size</label><select id="staff-movie-category-art-scale"><option value="50">50%</option><option value="75">75%</option><option value="100" selected>100%</option><option value="125">125%</option><option value="150">150%</option></select></div>
                     <div class="staff-form-group" style="margin:0;min-width:90px;"><label>Order</label><input id="staff-movie-category-order" type="number" value="0"></div>
@@ -152,7 +151,7 @@
                     <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Category</label><select id="staff-movie-category"></select></div>
                     <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Year</label><input id="staff-movie-year" type="number" min="1900" max="2100" value="2024"></div>
                     <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Score</label><input id="staff-movie-score" type="number" min="0" max="10" step="0.1" value="8.0"></div>
-                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...jpg"></div>
+                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...webp"></div>
                     <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Title Image URL</label><input id="staff-movie-title-image" placeholder="Optional: title logo image URL"></div>
                     <div class="staff-form-group" style="margin:0;min-width:200px;flex:1.2;"><label>Trailer (YouTube URL or ID)</label><input id="staff-movie-trailer" placeholder="Optional — plays behind pre-movie view"></div>
                     <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Movie URL (direct link)</label><input id="staff-movie-url" placeholder="https://..."></div>
@@ -268,47 +267,6 @@
                 <div class="staff-card">
                   <div class="staff-card-header"><h3>Mission Manager</h3><button class="staff-btn staff-btn-primary" id="staff-add-mission-btn"><i class="fas fa-plus"></i> Create Mission</button></div>
                   <div id="staff-missions-list"></div>
-                </div>
-              </div>
-
-              <!-- Dev catalogue access codes -->
-              <div class="staff-section" id="staff-access-codes">
-                <div class="staff-card">
-                  <div class="staff-card-header">
-                    <h3>Dev catalogue access codes</h3>
-                  </div>
-                  <p style="font-size:0.82rem;color:var(--text-secondary);margin:0 0 14px;">Create codes for <code>/dev/games</code> and <code>/dev/movies</code>. Set expiry, use limits, and copy share links.</p>
-                  <input type="hidden" id="staff-access-code-edit">
-                  <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
-                    <div class="staff-form-group" style="margin:0;min-width:150px;">
-                      <label>Catalogue</label>
-                      <select id="staff-access-code-catalog">
-                        <option value="games">Dev games</option>
-                        <option value="movies">Dev movies</option>
-                        <option value="both">Both catalogues</option>
-                      </select>
-                    </div>
-                    <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;">
-                      <label>Label (optional)</label>
-                      <input id="staff-access-code-label" placeholder="e.g. Beta testers">
-                    </div>
-                    <div class="staff-form-group" style="margin:0;min-width:190px;flex:1;">
-                      <label>Code (auto-generated if empty)</label>
-                      <input id="staff-access-code-code" placeholder="DEV-GAM-XXXXXX" autocomplete="off" spellcheck="false">
-                    </div>
-                    <div class="staff-form-group" style="margin:0;min-width:190px;">
-                      <label>Expires (optional)</label>
-                      <input type="datetime-local" id="staff-access-code-expires">
-                    </div>
-                    <div class="staff-form-group" style="margin:0;min-width:120px;">
-                      <label>Max uses</label>
-                      <input type="number" id="staff-access-code-max-uses" min="1" placeholder="Unlimited">
-                    </div>
-                    <button type="button" class="staff-btn staff-btn-primary" id="staff-access-code-save" style="margin-bottom:2px;">Create code</button>
-                    <button type="button" class="staff-btn" id="staff-access-code-reset" style="margin-bottom:2px;">Clear</button>
-                  </div>
-                  <div id="staff-access-code-created" hidden style="margin-top:14px;padding:12px 14px;border-radius:12px;border:1px solid rgba(42,255,158,0.35);background:rgba(42,255,158,0.08);font-size:0.82rem;line-height:1.5;"></div>
-                  <div style="overflow-x:auto;margin-top:16px;" id="staff-access-codes-list"></div>
                 </div>
               </div>
     
@@ -574,7 +532,7 @@
             <div class="modal-body">
               <div class="send-gift-header">
                 <div class="send-gift-avatar">
-                  <img id="send-gift-user-avatar" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="User Avatar">
+                  <img id="send-gift-user-avatar" src="https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82" alt="User Avatar">
                 </div>
                 <div class="send-gift-info">
                   <h3 id="send-gift-username">Username</h3>
@@ -635,7 +593,7 @@
             </section>
           </div>
         </div>
-        <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
+        <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="eager" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals allow-popups allow-downloads allow-presentation" referrerpolicy="no-referrer"></iframe></div></div>
         <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
   </div>
 <!-- Staff Panel Modals -->
@@ -653,7 +611,7 @@
 
   <div class="staff-modal" id="staff-title-modal"><div class="staff-modal-content"><h3 id="staff-title-modal-title">Create Title</h3><input type="hidden" id="staff-title-id"><div class="staff-form-group"><label>Title Name</label><input id="staff-title-name" required placeholder="e.g. Moderator"></div><div class="staff-form-group"><label>Title Color (hex)</label><input id="staff-title-color" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Gradient?</label><select id="staff-title-gradient"><option value="false">No (solid color)</option><option value="true">Yes (gradient)</option></select></div><div class="staff-form-group" id="staff-gradient-colors-group" style="display:none;"><label>Gradient Colors (comma separated hex)</label><input id="staff-title-gradient-colors" placeholder="#ff0000, #00ff00, #0000ff"><div class="staff-form-group"><label>Running Gradient? (animated)</label><select id="staff-title-running"><option value="false">No (static)</option><option value="true">Yes (animated moving colors)</option></select></div><div class="gradient-preview-box" id="staff-gradient-preview">Preview</div></div><div class="staff-form-group"><label>Display Priority (higher = shows first in lists)</label><input id="staff-title-priority" type="number" value="0"></div><h4 style="margin-top:16px;font-size:0.9rem;">Permissions</h4><div class="title-perm-toolbar"><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="all">All</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="none">None</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="moderation">Moderation</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="content">Content</button><button type="button" class="staff-btn staff-btn-sm" data-perm-preset="economy">Economy</button></div><div class="title-perm-count" id="staff-title-perm-count">0 / 0 selected</div><div class="title-perm-grid" id="staff-title-perms"></div><div class="staff-flex-row" style="margin-top:20px;"><button class="staff-btn staff-btn-primary" id="staff-save-title-btn">Save Title</button><button class="staff-btn" id="staff-close-title-modal">Cancel</button></div></div></div>
 
-  <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.png"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
+  <div class="staff-modal" id="staff-badge-modal"><div class="staff-modal-content"><h3 id="staff-badge-modal-title">Create Badge</h3><input type="hidden" id="staff-badge-id"><div class="staff-form-group"><label>Badge Name</label><input id="staff-badge-name" required></div><div class="staff-form-group"><label>Icon — URL or upload</label><input id="staff-badge-icon" placeholder="https://example.com/badge.webp"></div><div class="staff-form-group"><label>Or upload icon image</label><input type="file" id="staff-badge-icon-file" accept="image/*"></div><div class="staff-form-group"><label>Background Color</label><input id="staff-badge-bg" type="color" value="#2AFF9E"></div><div class="staff-form-group"><label>Text Color</label><input id="staff-badge-text-color" type="color" value="#000000"></div><div class="staff-form-group"><label>Description (shown on click)</label><textarea id="staff-badge-desc" rows="2"></textarea></div><div class="staff-flex-row" style="margin-top:16px;"><button class="staff-btn staff-btn-primary" id="staff-save-badge-btn">Save Badge</button><button class="staff-btn" id="staff-close-badge-modal">Cancel</button></div></div></div>
 
   <div class="staff-modal" id="staff-banner-shop-modal"><div class="staff-modal-content" style="max-width:520px;"><h3 id="staff-banner-shop-modal-title">Shop banner</h3><input type="hidden" id="staff-banner-shop-id"><div class="staff-form-group"><label>Name (internal)</label><input id="staff-banner-shop-name" required placeholder="e.g. Neon skyline"></div><div class="staff-form-group"><label>Price (coins)</label><input id="staff-banner-shop-price" type="number" required value="500"></div><p style="font-size:0.78rem;color:var(--text-secondary);margin:-4px 0 8px;">Market card uses the same frame as packs; set inner/outer colors to match rarity.</p><div class="staff-flex-row" style="gap:12px;flex-wrap:wrap;"><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Inner color</label><input id="staff-banner-shop-inner" type="color" value="#5a7a9a"></div><div class="staff-form-group" style="flex:1;min-width:140px;margin:0;"><label>Outer color</label><input id="staff-banner-shop-outer" type="color" value="#1a2a3a"></div></div><div class="staff-form-group"><label>Banner image URL</label><input id="staff-banner-shop-url" placeholder="https://..."></div><div class="staff-form-group"><label>Or upload image</label><input type="file" id="staff-banner-shop-file" accept="image/*"></div><div id="staff-banner-shop-preview" class="staff-pack-preview-box" aria-hidden="true"></div><div class="staff-flex-row" style="margin-top:16px;"><button type="button" class="staff-btn staff-btn-primary" id="staff-save-banner-shop-btn">Save</button><button type="button" class="staff-btn" id="staff-close-banner-shop-modal">Cancel</button></div></div></div>
 
