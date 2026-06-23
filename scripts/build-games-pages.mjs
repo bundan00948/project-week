@@ -52,12 +52,26 @@ if (!/function getCurrentRoutePath\(\)/.test(js)) {
 }
 
 js = js.replace(
-  /async function init\(\) \{[\s\S]*?\/\/ ========== Event Listeners ==========/,
-  `async function init() {
+  /(?:function showPageLoadError\(pageId, err\) \{[\s\S]*?\n\s*\}\n\n\s*)?async function init\(\) \{[\s\S]*?\/\/ ========== Event Listeners ==========/,
+  `function showPageLoadError(pageId, err) {
+      const message = err?.message || String(err || 'Unknown error');
+      const activePage = document.getElementById(pageId) || document.querySelector('.page.active');
+      const host = activePage || document.getElementById('main-content');
+      if (!host) return;
+      let errorEl = host.querySelector(':scope > .games-page-load-error');
+      if (!errorEl) {
+        errorEl = document.createElement('div');
+        errorEl.className = 'games-page-load-error';
+        errorEl.setAttribute('role', 'alert');
+        host.prepend(errorEl);
+      }
+      errorEl.textContent = \`Could not load this page. \${message}\`;
+    }
+
+    async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
       activateInitialPage(pageId);
-      hidePageLoading();
       try {
         await Promise.all([
           refreshRarityOrderFromServer(),
@@ -65,10 +79,13 @@ js = js.replace(
         ]);
       } catch (err) {
         console.error('Game Universe init failed:', err);
+        showPageLoadError(pageId, err);
+      } finally {
+        hidePageLoading();
       }
     }
 
-    init().catch(() => hidePageLoading());
+    init().catch((err) => { console.error('Game Universe boot failed:', err); showPageLoadError(getCurrentPageId(), err); hidePageLoading(); });
     setTimeout(hidePageLoading, 12000);
     // ========== Event Listeners ==========`
 );
