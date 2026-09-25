@@ -3719,134 +3719,97 @@
             });
             
             // Weather Data Functions
-            function loadWeatherData() {
+            async function loadWeatherData() {
                 const weatherLoading = document.getElementById('weather-loading');
                 const warningLoading = document.getElementById('warning-loading');
                 const currentWeather = document.getElementById('current-weather');
                 const weatherWarnings = document.getElementById('weather-warnings');
-                
-                // Fetch current weather
-                fetch('https://rss.smg.gov.mo/c_ActualWeather_rss.xml')
-                    .then(response => response.text())
-                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-                    .then(data => {
-                        weatherLoading.style.display = 'none';
-                        
-                        const items = data.querySelectorAll("item");
-                        if (items.length > 0) {
-                            const item = items[0];
-                            const title = item.querySelector("title").textContent;
-                            const description = item.querySelector("description").textContent;
-                            
-                            // Parse weather data
-                            const tempMatch = description.match(/Temperature: ([\d.]+)C/);
-                            const humidityMatch = description.match(/Humidity: ([\d.]+)%/);
-                            const pressureMatch = description.match(/Pressure: ([\d.]+) hPa/);
-                            
-                            const temp = tempMatch ? tempMatch[1] : '--';
-                            const humidity = humidityMatch ? humidityMatch[1] : '--';
-                            const pressure = pressureMatch ? pressureMatch[1] : '--';
-                            
-                            // Simple weather icon based on description
-                            let weatherIcon = 'fas fa-cloud-sun';
-                            if (description.includes('rain')) {
-                                weatherIcon = 'fas fa-cloud-rain';
-                            } else if (description.includes('cloud')) {
-                                weatherIcon = 'fas fa-cloud';
-                            } else if (description.includes('sun')) {
-                                weatherIcon = 'fas fa-sun';
-                            }
-                            
-                            currentWeather.innerHTML = `
-                                <div class="weather-data">
-                                    <div class="weather-main">
-                                        <div class="weather-icon">
-                                            <i class="${weatherIcon}"></i>
-                                        </div>
-                                        <div class="weather-details">
-                                            <div class="weather-temp">${temp}°C</div>
-                                            <div class="weather-desc">${title}</div>
-                                        </div>
+
+                const decodeFeedItems = (feed) => {
+                    if (!feed) return [];
+                    if (feed.type === 'json') {
+                        return (feed.payload.items || []).map((item) => ({
+                            title: item.title || '',
+                            description: item.description || '',
+                            pubDate: item.pubDate || item.pubdate || ''
+                        }));
+                    }
+                    return Array.from(feed.payload.querySelectorAll('item')).map((item) => ({
+                        title: item.querySelector('title')?.textContent || '',
+                        description: item.querySelector('description')?.textContent || '',
+                        pubDate: item.querySelector('pubDate')?.textContent || ''
+                    }));
+                };
+
+                try {
+                    const actualFeed = await fetchSmgFeedData('https://rss.smg.gov.mo/c_ActualWeather_rss.xml');
+                    const items = decodeFeedItems(actualFeed);
+                    if (weatherLoading) weatherLoading.style.display = 'none';
+
+                    if (items.length > 0) {
+                        const item = items[0];
+                        const title = item.title;
+                        const description = item.description;
+
+                        const tempMatch = description.match(/Temperature: ([\d.]+)C/i) || description.match(/氣溫[：:]?\s*([\d.]+)/);
+                        const humidityMatch = description.match(/Humidity: ([\d.]+)%/i) || description.match(/相對濕度[：:]?\s*([\d.]+)/);
+                        const pressureMatch = description.match(/Pressure: ([\d.]+) hPa/i) || description.match(/氣壓[：:]?\s*([\d.]+)/);
+
+                        const temp = tempMatch ? tempMatch[1] : '--';
+                        const humidity = humidityMatch ? humidityMatch[1] : '--';
+                        const pressure = pressureMatch ? pressureMatch[1] : '--';
+
+                        let weatherIcon = 'fas fa-cloud-sun';
+                        const descLower = description.toLowerCase();
+                        if (descLower.includes('rain') || description.includes('雨')) {
+                            weatherIcon = 'fas fa-cloud-rain';
+                        } else if (descLower.includes('cloud') || description.includes('雲')) {
+                            weatherIcon = 'fas fa-cloud';
+                        } else if (descLower.includes('sun') || description.includes('晴')) {
+                            weatherIcon = 'fas fa-sun';
+                        }
+
+                        currentWeather.innerHTML = `
+                            <div class="weather-data">
+                                <div class="weather-main">
+                                    <div class="weather-icon">
+                                        <i class="${weatherIcon}"></i>
                                     </div>
-                                    <div class="weather-extra">
-                                        <div>
-                                            <span>Humidity</span>
-                                            <strong>${humidity}%</strong>
-                                        </div>
-                                        <div>
-                                            <span>Pressure</span>
-                                            <strong>${pressure} hPa</strong>
-                                        </div>
+                                    <div class="weather-details">
+                                        <div class="weather-temp">${temp}°C</div>
+                                        <div class="weather-desc">${title}</div>
                                     </div>
                                 </div>
-                            `;
-                        } else {
-                            currentWeather.innerHTML = '<p>Weather data not available</p>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching weather: ', error);
-                        weatherLoading.style.display = 'none';
-                        currentWeather.innerHTML = '<p>Error loading weather data</p>';
-                    });
-                
-                // Fetch weather warnings
-                fetch('https://rss.smg.gov.mo/c_WSignal_rss.xml')
-                    .then(response => response.text())
-                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-                    .then(data => {
-                        warningLoading.style.display = 'none';
-                        
-                        const items = data.querySelectorAll("item");
-                        if (items.length > 0) {
-                            let warningsHTML = '';
-                            items.forEach(item => {
-                                const title = item.querySelector("title").textContent;
-                                const description = item.querySelector("description").textContent;
-                                const pubDate = item.querySelector("pubDate").textContent;
-                                
-                                // Format date
-                                const date = new Date(pubDate);
-                                const formattedDate = date.toLocaleString();
-                                
-                                // Simple warning icon
-                                let warningIcon = 'fas fa-exclamation-triangle';
-                                if (title.includes('Typhoon') || title.includes('颱風')) {
-                                    warningIcon = 'fas fa-wind';
-                                } else if (title.includes('Rain') || title.includes('雨')) {
-                                    warningIcon = 'fas fa-cloud-showers-heavy';
-                                } else if (title.includes('Thunder') || title.includes('雷')) {
-                                    warningIcon = 'fas fa-bolt';
-                                }
-                                
-                                warningsHTML += `
-                                    <div class="warning-item">
-                                        <div class="warning-logo">
-                                            <i class="${warningIcon}"></i>
-                                        </div>
-                                        <div class="warning-details">
-                                            <div class="warning-title-text">${title}</div>
-                                            <div class="warning-desc">${description}</div>
-                                            <div class="warning-issued">Issued: ${formattedDate}</div>
-                                        </div>
+                                <div class="weather-extra">
+                                    <div>
+                                        <span>Humidity</span>
+                                        <strong>${humidity}%</strong>
                                     </div>
-                                `;
-                            });
-                            weatherWarnings.innerHTML = warningsHTML;
-                        } else {
-                            weatherWarnings.innerHTML = `
-                                <div class="no-warning">
-                                    <i class="fas fa-check-circle"></i>
-                                    <p>No current weather warnings</p>
+                                    <div>
+                                        <span>Pressure</span>
+                                        <strong>${pressure} hPa</strong>
+                                    </div>
                                 </div>
-                            `;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching warnings: ', error);
-                        warningLoading.style.display = 'none';
-                        weatherWarnings.innerHTML = '<p>Error loading warnings data</p>';
-                    });
+                            </div>
+                        `;
+                    } else {
+                        currentWeather.innerHTML = '<p>Weather data not available</p>';
+                    }
+                } catch (error) {
+                    console.error('Error fetching weather: ', error);
+                    if (weatherLoading) weatherLoading.style.display = 'none';
+                    if (currentWeather) currentWeather.innerHTML = '<p>Error loading weather data</p>';
+                }
+
+                if (warningLoading) warningLoading.style.display = 'none';
+                if (weatherWarnings && !weatherWarnings.querySelector('.warning-item') && !weatherWarnings.querySelector('.no-warning')) {
+                    weatherWarnings.innerHTML = `
+                        <div class="no-warning">
+                            <i class="fas fa-check-circle"></i>
+                            <p>No current weather warnings</p>
+                        </div>
+                    `;
+                }
             }
 
             const SMG_LOGO_URL = 'https://rss.smg.gov.mo/images/smglogo.gif';
