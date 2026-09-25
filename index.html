@@ -1516,6 +1516,10 @@
             display: none;
         }
 
+        #weather-page .weather-panel {
+            margin-top: 0;
+        }
+
         .weather-warning-primary {
             background: rgba(255, 228, 230, 0.96);
             border: 1px solid rgba(235, 157, 165, 0.9);
@@ -1706,6 +1710,7 @@
             
             <div class="nav-tabs">
                 <a class="nav-tab active" data-page="dashboard" id="nav-dashboard" href="dashboard.html">Dashboard</a>
+                <a class="nav-tab" data-page="weather" id="nav-weather" href="weather.html">Weather</a>
                 <a class="nav-tab" data-page="cameras" id="nav-cameras" href="cameras.html">Live Cameras</a>
                 <a class="nav-tab" data-page="news" id="nav-news" href="news.html">News</a>
                 <a class="nav-tab" data-page="chat" id="nav-chat" href="chat.html">Community Chat</a>
@@ -1843,7 +1848,38 @@
                 </div>
             </div>
             
-            <!-- Weather Panel -->
+            <div class="additional-info">
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> <span id="website-info-title">Website Traffic Information</span></h3>
+                    <div class="info-content">
+                        <p id="website-info-desc">This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.</p>
+                        <ul>
+                            <li id="info-point-1">Times are updated every 30 seconds based on current traffic conditions</li>
+                            <li id="info-point-2">Colors indicate traffic severity levels</li>
+                            <li id="info-point-3">Data is simulated for demonstration purposes</li>
+                            <li id="info-point-4">Actual travel times may vary</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> <span id="travel-tips-title">Travel Tips</span></h3>
+                    <div class="info-content">
+                        <ul>
+                            <li id="tip-1">Avoid peak hours (7:00-9:30 and 17:00-19:00) when possible</li>
+                            <li id="tip-2">Please note that Macau's maximum speed in normal roads is 50 km/h, whole bridges are 80 km/h.</li>
+                            <li id="tip-3">Consider using public transportation during heavy traffic periods</li>
+                            <li id="tip-4">Check border crossing times before traveling</li>
+                            <li id="tip-5">Plan extra time for important appointments</li>
+                            <li id="tip-6">Use alternative routes when main roads show heavy congestion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Weather Page -->
+        <div class="page" id="weather-page">
             <div class="weather-panel">
                 <h2 class="panel-title"><i class="fas fa-cloud-sun"></i> <span id="weather-title">Weather Information</span></h2>
                 
@@ -1897,38 +1933,9 @@
                                 </div>
                             </div>
                             <div class="rss-meta">
-                                Source: <a href="https://rss.smg.gov.mo/" target="_blank" rel="noopener noreferrer">SMG weather service</a>
+                                Source: <a href="https://rss.smg.gov.mo/" target="_blank" rel="noopener noreferrer" data-source-link>SMG weather service</a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="additional-info">
-                <div class="info-box">
-                    <h3><i class="fas fa-info-circle"></i> <span id="website-info-title">Website Traffic Information</span></h3>
-                    <div class="info-content">
-                        <p id="website-info-desc">This real-time traffic monitor provides estimated waiting times for major roads and border crossings in Macau.</p>
-                        <ul>
-                            <li id="info-point-1">Times are updated every 30 seconds based on current traffic conditions</li>
-                            <li id="info-point-2">Colors indicate traffic severity levels</li>
-                            <li id="info-point-3">Data is simulated for demonstration purposes</li>
-                            <li id="info-point-4">Actual travel times may vary</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="info-box">
-                    <h3><i class="fas fa-exclamation-triangle"></i> <span id="travel-tips-title">Travel Tips</span></h3>
-                    <div class="info-content">
-                        <ul>
-                            <li id="tip-1">Avoid peak hours (7:00-9:30 and 17:00-19:00) when possible</li>
-                            <li id="tip-2">Please note that Macau's maximum speed in normal roads is 50 km/h, whole bridges are 80 km/h.</li>
-                            <li id="tip-3">Consider using public transportation during heavy traffic periods</li>
-                            <li id="tip-4">Check border crossing times before traveling</li>
-                            <li id="tip-5">Plan extra time for important appointments</li>
-                            <li id="tip-6">Use alternative routes when main roads show heavy congestion</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -2200,7 +2207,7 @@
                 }
             }
             
-            const validPages = new Set(['dashboard', 'cameras', 'news', 'chat', 'about']);
+            const validPages = new Set(['dashboard', 'weather', 'cameras', 'news', 'chat', 'about']);
 
             function activatePage(pageName) {
                 const selectedPage = validPages.has(pageName) ? pageName : 'dashboard';
@@ -2223,7 +2230,7 @@
                 if (selectedPage === 'chat') {
                     initChat();
                 }
-                if (selectedPage === 'dashboard') {
+                if (selectedPage === 'weather') {
                     loadWeatherData();
                     loadSmgRssData();
                 }
@@ -2238,6 +2245,7 @@
                     'index.html': 'dashboard',
                     'dashboard.html': 'dashboard',
                     'traffic.html': 'dashboard',
+                    'weather.html': 'weather',
                     'cameras.html': 'cameras',
                     'news.html': 'news',
                     'chat.html': 'chat',
@@ -2315,6 +2323,7 @@
                     "welcome-message": "Hello! Welcome to visit our website!",                           
                     "header-subtitle": "Real-time traffic conditions and waiting times for Macau's major roads and border crossings",                           
                     "nav-dashboard": "Dashboard",                           
+                    "nav-weather": "Weather",                           
                     "nav-cameras": "Live Cameras",                           
                     "nav-news": "News",                
                     "nav-chat": "Community Chat",                           
@@ -2448,6 +2457,7 @@
                     "welcome-message": "您好！歡迎訪問我們的網站！",                           
                     "header-subtitle": "澳門主要道路和邊境口岸的實時交通狀況和等待時間",                           
                     "nav-dashboard": "儀表板",                           
+                    "nav-weather": "天氣",                           
                     "nav-cameras": "實時攝像頭",                           
                     "nav-news": "新聞",                
                     "nav-chat": "社區聊天",                           
@@ -2581,6 +2591,7 @@
                     "welcome-message": "Olá! Bem-vindo ao nosso website!",                           
                     "header-subtitle": "Condições de trânsito em tempo real e tempos de espera para as principais estradas e travessias fronteiriças de Macau",                           
                     "nav-dashboard": "Painel",                           
+                    "nav-weather": "Tempo",                           
                     "nav-cameras": "Câmaras ao Vivo",                           
                     "nav-news": "Notícias",                
                     "nav-chat": "Chat Comunitário",                           
@@ -2714,6 +2725,7 @@
                     "welcome-message": "こんにちは！当サイトへようこそ！",                           
                     "header-subtitle": "マカオの主要道路と国境横断地点のリアルタイム交通状況と待ち時間",                           
                     "nav-dashboard": "ダッシュボード",                           
+                    "nav-weather": "天気",                           
                     "nav-cameras": "ライブカメラ",                           
                     "nav-news": "ニュース",                
                     "nav-chat": "コミュニティチャット",                           
