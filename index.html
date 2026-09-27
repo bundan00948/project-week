@@ -15,7 +15,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-        import { getDatabase, ref, onValue, push, set, remove, onChildAdded, onChildChanged, onChildRemoved } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, set, remove, get, query, orderByChild, equalTo, limitToLast, onChildAdded, onChildChanged, onChildRemoved } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         
         // Your web app's Firebase configuration
@@ -40,10 +40,11 @@
         window.firebaseDatabase = database;
         window.firebaseAuth = auth;
         window.firebaseFunctions = {
-            ref, onValue, push, set, remove, onChildAdded, onChildChanged, onChildRemoved,  
+            ref, onValue, push, set, remove, get, query, orderByChild, equalTo, limitToLast, onChildAdded, onChildChanged, onChildRemoved,  
             createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
         };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js"></script>
     
     <style>
         /* All existing CSS styles remain unchanged */
@@ -664,6 +665,81 @@
             height: 100%;
             border: none;
         }
+        .camera-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+            display: block;
+        }
+        .camera-status {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            margin-top: 8px;
+        }
+        .weather-icon img {
+            width: 72px;
+            height: 72px;
+        }
+        .today-forecast-card {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .weather-warning-card.inactive {
+            opacity: 0.72;
+        }
+        .rss-weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .auth-error {
+            color: #ffb4b4;
+            min-height: 1.2em;
+            font-size: 0.9rem;
+        }
+        .auth-hint {
+            opacity: 0.8;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+        .password-wrap {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ffd700;
+            cursor: pointer;
+        }
+        .message.own-message {
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+        }
+        .chat-meta-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .chat-char-count {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-align: right;
+            margin-top: 6px;
+        }
+        .auth-label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
         
         @media (max-width: 768px) {
             .camera-grid {
@@ -1219,6 +1295,67 @@
             margin-bottom: 20px;
             font-size: 1.8rem;
         }
+        .user-avatar, .chat-avatar, .avatar-choice img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #222;
+            object-fit: cover;
+            border: 2px solid rgba(255,215,0,0.7);
+        }
+        .user-info { gap: 10px; flex-wrap: wrap; }
+        .auth-shell {
+            max-width: 560px;
+            margin: 0 auto 20px;
+            background: rgba(0,0,0,0.62);
+            border: 1px solid rgba(255,215,0,0.35);
+            border-radius: 18px;
+            padding: 22px;
+        }
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .auth-tab {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .auth-tab.active {
+            background: #ffd700;
+            color: #111;
+        }
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .avatar-choice {
+            border: 2px solid transparent;
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 6px;
+            cursor: pointer;
+        }
+        .avatar-choice.selected { border-color: #ffd700; }
+        .message {
+            display: grid;
+            grid-template-columns: 44px 1fr;
+            gap: 10px;
+            align-items: start;
+        }
+        .auth-container { margin: 0; max-width: none; padding: 0; background: transparent; }
+        @media (max-width: 600px) {
+            .avatar-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
         
         .moderation-panel {
             background: rgba(255, 0, 0, 0.2);
@@ -1919,21 +2056,26 @@
                     </div>
 
                     <div class="weather-section">
-                        <h3><i class="fas fa-cloud-sun-rain"></i> Daily Weather Forecast</h3>
+                        <h3><i class="fas fa-calendar-day"></i> Today's Forecast</h3>
+                        <div class="weather-info" id="today-forecast">
+                            <div class="loading" id="today-forecast-loading">
+                                <div class="spinner"></div>
+                                <span>Loading today's forecast...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-section">
+                        <h3><i class="fas fa-cloud-sun-rain"></i> 7-Day Weather Forecast</h3>
                         <div class="warning-info">
-                            <div class="rss-weather-grid">
-                                <div>
-                                    <div class="rss-card-title">Daily Forecast</div>
-                                    <div id="rss-forecast-container">
-                                        <div class="loading">
-                                            <div class="spinner"></div>
-                                            <span>Loading weather forecast...</span>
-                                        </div>
-                                    </div>
+                            <div class="rss-weather-grid" id="rss-forecast-container">
+                                <div class="loading">
+                                    <div class="spinner"></div>
+                                    <span>Loading weather forecast...</span>
                                 </div>
                             </div>
                             <div class="rss-meta">
-                                Source: <a href="https://rss.smg.gov.mo/" target="_blank" rel="noopener noreferrer" data-source-link>SMG weather service</a>
+                                Source: <a href="https://rss.smg.gov.mo/e_rss_main.html" target="_blank" rel="noopener noreferrer" data-source-link>SMG English RSS Channel</a>
                             </div>
                         </div>
                     </div>
@@ -1944,7 +2086,7 @@
         <!-- Live Cameras Page -->
         <div class="page" id="cameras-page">
             <div class="bug-fix-note">
-                <strong>Bug Fix Note: </strong> The language switching bug has been resolved. 
+                <strong>Live cameras:</strong> Streams play in the page. Only the selected area is loaded so devices do not download every camera at once.
             </div>
             
             <div class="camera-feeds">
@@ -1984,15 +2126,66 @@
         
         <!-- Community Chat Page -->
         <div class="page" id="chat-page">
+            <div class="auth-shell" id="authShell">
+                <div class="auth-tabs">
+                    <button type="button" class="auth-tab active" id="authTabLogin">Login</button>
+                    <button type="button" class="auth-tab" id="authTabSignup">Sign up</button>
+                </div>
+                <p class="auth-hint" id="authIntro">Use Community Chat to share live traffic tips. Login if you already have an account, or tap <strong>Sign up</strong> to create one in under a minute.</p>
+
+                <div class="auth-container" id="authContainer">
+                    <h2 class="auth-title">Login</h2>
+                    <form class="auth-form" id="loginForm">
+                        <div>
+                            <label class="auth-label" for="loginUsername">Email or username</label>
+                            <input type="text" class="auth-input" id="loginUsername" placeholder="name@email.com or username" autocomplete="username" required>
+                        </div>
+                        <div class="password-wrap">
+                            <label class="auth-label" for="loginPassword">Password</label>
+                            <input type="password" class="auth-input" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" data-toggle-password="loginPassword"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="auth-error" id="loginError"></div>
+                        <button type="submit" class="auth-btn" id="loginSubmitBtn">Login</button>
+                    </form>
+                </div>
+
+                <div class="auth-container" id="signupContainer" style="display: none;">
+                    <h2 class="auth-title">Create an account</h2>
+                    <form class="auth-form" id="signupForm">
+                        <div>
+                            <label class="auth-label" for="signupUsername">Username</label>
+                            <input type="text" class="auth-input" id="signupUsername" placeholder="3-20 letters or numbers" minlength="3" maxlength="20" autocomplete="nickname" required>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="signupEmail">Email</label>
+                            <input type="email" class="auth-input" id="signupEmail" placeholder="you@email.com" autocomplete="email" required>
+                        </div>
+                        <div class="password-wrap">
+                            <label class="auth-label" for="signupPassword">Password</label>
+                            <input type="password" class="auth-input" id="signupPassword" placeholder="At least 6 characters" minlength="6" autocomplete="new-password" required>
+                            <button type="button" class="password-toggle" data-toggle-password="signupPassword"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="signupPasswordConfirm">Confirm password</label>
+                            <input type="password" class="auth-input" id="signupPasswordConfirm" placeholder="Repeat password" minlength="6" autocomplete="new-password" required>
+                        </div>
+                        <div>
+                            <label class="auth-label">Pick a profile picture</label>
+                            <div class="avatar-grid" id="signupAvatarGrid"></div>
+                            <input type="hidden" id="signupAvatarStyle" value="thumbs">
+                        </div>
+                        <div class="auth-error" id="signupError"></div>
+                        <button type="submit" class="auth-btn" id="signupSubmitBtn">Create account</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="chat-container">
                 <div class="chat-header">
                     <h2 class="chat-title"><i class="fas fa-comments"></i> Community Chat</h2>
-                    <div class="user-info" id="userInfo">
-                        <!-- User info will be displayed here -->
-                    </div>
+                    <div class="user-info" id="userInfo"></div>
                 </div>
-                
-                <!-- Moderation Panel (visible to Admins and Moderators) -->
                 <div class="moderation-panel" id="moderationPanel">
                     <h3><i class="fas fa-gavel"></i> Moderation Panel</h3>
                     <div class="moderation-form">
@@ -2005,41 +2198,18 @@
                         <button class="moderation-btn" id="banUserBtn">Ban User</button>
                     </div>
                 </div>
-                
-                <!-- Chat Messages -->
-                <div class="chat-messages" id="chatMessages">
-                    <!-- Messages will be loaded here -->
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-meta-row">
+                    <span id="chatOnlineHint">Sign in above to share live traffic updates.</span>
+                    <span id="chatMessageCount"></span>
                 </div>
-                
-                <!-- Chat Input -->
                 <div class="chat-input-container">
-                    <input type="text" class="chat-input" id="messageInput" placeholder="Type your message...">
-                    <button class="send-btn" id="sendMessageBtn">Send</button>
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Share a traffic update..." maxlength="400" disabled>
+                    <button class="send-btn" id="sendMessageBtn" disabled>Send</button>
                 </div>
+                <div class="chat-char-count" id="chatCharCount">0 / 400</div>
             </div>
-            
-            <!-- Authentication Container -->
-            <div class="auth-container" id="authContainer">
-                <h2 class="auth-title">Login to Chat</h2>
-                <form class="auth-form" id="loginForm">
-                    <input type="text" class="auth-input" id="loginUsername" placeholder="Username" required>
-                    <input type="password" class="auth-input" id="loginPassword" placeholder="Password" required>
-                    <button type="submit" class="auth-btn">Login</button>
-                </form>
-                <div class="auth-toggle" id="showSignup">Don't have an account? Sign up</div>
-            </div>
-            
-            <div class="auth-container" id="signupContainer" style="display: none;">
-                <h2 class="auth-title">Create Account</h2>
-                <form class="auth-form" id="signupForm">
-                    <input type="text" class="auth-input" id="signupUsername" placeholder="Username" required>
-                    <input type="password" class="auth-input" id="signupPassword" placeholder="Password" required>
-                    <input type="email" class="auth-input" id="signupEmail" placeholder="Email" required>
-                    <button type="submit" class="auth-btn">Sign Up</button>
-                </form>
-                <div class="auth-toggle" id="showLogin">Already have an account? Login</div>
-            </div>
-            
+
             <div class="content-section">
                 <h2 id="community-guidelines-title">Community Guidelines</h2>
                 <p id="community-guidelines-desc">Welcome to the Macau Traffic Monitor community chat! This space is for sharing real-time traffic updates, road conditions, and travel tips with fellow Macau residents and visitors.</p>
@@ -2163,7 +2333,7 @@
             const database = window.firebaseDatabase;
             const auth = window.firebaseAuth;
             const {
-                ref, onValue, push, set, remove, onChildAdded, onChildChanged, onChildRemoved,  
+                ref, onValue, push, set, remove, get, query, orderByChild, equalTo, limitToLast, onChildAdded, onChildChanged, onChildRemoved,  
                 createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
             } = window.firebaseFunctions;
             
@@ -2177,6 +2347,11 @@
             const bannedOverlay = document.getElementById('bannedOverlay');
             const banDetailsOverlay = document.getElementById('banDetails');
             
+            window.avatarUrlFor = window.avatarUrlFor || function(username, style) {
+                const seed = encodeURIComponent(username || 'guest');
+                return `https://api.dicebear.com/9.x/${style || 'thumbs'}/svg?seed=${seed}`;
+            };
+
             // Chat System Elements
             const chatPage = document.getElementById('chat-page');
             const authContainer = document.getElementById('authContainer');
@@ -2223,6 +2398,8 @@
 
                 if (selectedPage === 'cameras') {
                     loadCamerasFromFirebase();
+                } else if (typeof destroyCameraPlayers === 'function') {
+                    destroyCameraPlayers();
                 }
                 if (selectedPage === 'news') {
                     loadNewsFromFirebase();
@@ -2271,19 +2448,137 @@
                 });
             });
             
-            // Camera tab navigation
+            let cameraStore = null;
+            let cameraPlayers = [];
+
+            function destroyCameraPlayers() {
+                cameraPlayers.forEach((player) => {
+                    try {
+                        if (player.hls) player.hls.destroy();
+                        if (player.video) {
+                            player.video.pause();
+                            player.video.removeAttribute('src');
+                            player.video.load();
+                        }
+                    } catch (error) {}
+                });
+                cameraPlayers = [];
+            }
+
+            function streamKind(url) {
+                const value = (url || '').toLowerCase();
+                if (value.includes('youtube.com') || value.includes('youtu.be')) return 'youtube';
+                if (value.includes('.m3u8')) return 'hls';
+                if (/\.(jpg|jpeg|png|gif|webp)(\?|$)/.test(value)) return 'image';
+                return 'hls';
+            }
+
+            function youtubeEmbed(url) {
+                try {
+                    const parsed = new URL(url);
+                    let id = parsed.searchParams.get('v');
+                    if (!id && parsed.pathname.includes('/embed/')) id = parsed.pathname.split('/embed/')[1];
+                    if (!id && parsed.hostname.includes('youtu.be')) id = parsed.pathname.replace('/', '');
+                    id = (id || '').split('?')[0];
+                    return id ? `https://www.youtube-nocookie.com/embed/${id}` : url;
+                } catch (error) {
+                    return url;
+                }
+            }
+
+            function attachCameraStream(video, streamUrl) {
+                if (!streamUrl) return;
+                if (window.Hls && Hls.isSupported()) {
+                    const hls = new Hls({
+                        enableWorker: true,
+                        lowLatencyMode: true,
+                        maxBufferLength: 8,
+                        capLevelToPlayerSize: true
+                    });
+                    hls.loadSource(streamUrl);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.ERROR, (_, data) => {
+                        if (data.fatal) {
+                            video.insertAdjacentHTML('afterend', '<div class="camera-status">This camera is offline right now.</div>');
+                        }
+                    });
+                    cameraPlayers.push({ hls, video });
+                    return;
+                }
+                if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = streamUrl;
+                    cameraPlayers.push({ video });
+                    return;
+                }
+                video.insertAdjacentHTML('afterend', '<div class="camera-status">This browser cannot play live camera streams.</div>');
+            }
+
+            function renderCameraGroup(location) {
+                destroyCameraPlayers();
+                const container = document.getElementById(`${location}-content`);
+                if (!container || !cameraStore) return;
+
+                const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+                const camerasList = cameraStore[location] || [];
+                if (!camerasList.length) {
+                    container.innerHTML = '<p>No cameras available for this location.</p>';
+                    return;
+                }
+
+                container.innerHTML = '<div class="camera-grid">' + camerasList.map((camera, index) => {
+                    const titles = camera.titles || {};
+                    const cameraTitle = titles[currentLang] || titles.en || camera.title || 'Camera';
+                    const streamUrl = camera.embedUrl || camera.url || '';
+                    const kind = streamKind(streamUrl);
+                    let media = '';
+                    if (kind === 'youtube') {
+                        media = `<iframe src="${youtubeEmbed(streamUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+                    } else if (kind === 'image') {
+                        media = `<img src="${streamUrl}" alt="${cameraTitle}" style="width:100%;height:100%;object-fit:cover">`;
+                    } else {
+                        media = `<video muted playsinline controls controlslist="nodownload noplaybackrate" preload="none" data-stream="${streamUrl}" data-autostart="${index < 3 ? '1' : '0'}"></video>`;
+                    }
+                    return `
+                        <div class="camera-item">
+                            <div class="camera-title">${cameraTitle}</div>
+                            <div class="camera-container">${media}</div>
+                            <div class="camera-status">${kind === 'hls' ? 'Live DSAT stream · tap play if paused' : 'Camera feed'}</div>
+                        </div>
+                    `;
+                }).join('') + '</div>';
+
+                container.querySelectorAll('video[data-stream]').forEach((video) => {
+                    const url = video.getAttribute('data-stream');
+                    const start = () => {
+                        if (video.dataset.bound) return;
+                        video.dataset.bound = '1';
+                        attachCameraStream(video, url);
+                    };
+                    if (video.getAttribute('data-autostart') === '1') {
+                        start();
+                        video.play().catch(() => {});
+                    } else {
+                        video.addEventListener('play', start, { once: true });
+                    }
+                });
+            }
+
+            function switchCameraTab(location) {
+                document.querySelectorAll('.camera-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.camera-content').forEach(c => {
+                    c.classList.remove('active');
+                    c.innerHTML = '';
+                });
+                const tab = document.querySelector(`.camera-tab[data-camera-tab="${location}"]`);
+                if (tab) tab.classList.add('active');
+                const content = document.getElementById(`${location}-content`);
+                if (content) content.classList.add('active');
+                renderCameraGroup(location);
+            }
+
             document.querySelectorAll('.camera-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Remove active class from all camera tabs and contents
-                    document.querySelectorAll('.camera-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.camera-content').forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    tab.classList.add('active');
-                    
-                    // Show corresponding camera content
-                    const contentId = tab.getAttribute('data-camera-tab') + '-content';
-                    document.getElementById(contentId).classList.add('active');
+                    switchCameraTab(tab.getAttribute('data-camera-tab'));
                 });
             });
             
@@ -3240,60 +3535,25 @@
             }
 
             function displayCameras(cameras) {
-                const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-
-                // Convert and sort cameras by position
                 const camerasArray = Object.keys(cameras).map(cameraId => ({
-                    id: cameraId,               
+                    id: cameraId,
                     ...cameras[cameraId]
                 }));
-                
-                camerasArray.sort((a, b) => (a.position || 0) - (b.position || 0)); // Sort by position
+                camerasArray.sort((a, b) => (a.position || 0) - (b.position || 0));
 
-                const groupedCameras = {
-                    'macau-city': [],               
-                    'taipa': [],               
-                    'bridges': [],               
+                cameraStore = {
+                    'macau-city': [],
+                    'taipa': [],
+                    'bridges': [],
                     'border': []
                 };
-
                 camerasArray.forEach(camera => {
-                    groupedCameras[camera.location].push(camera);
+                    if (cameraStore[camera.location]) cameraStore[camera.location].push(camera);
                 });
 
-                Object.keys(groupedCameras).forEach(location => {
-                    const container = document.getElementById(`${location}-content`);
-                    const camerasList = groupedCameras[location];
-
-                    if (camerasList.length === 0) {
-                        container.innerHTML = '<p>No cameras available for this location.</p>';
-                        return;
-                    }
-
-                    let html = '<div class="camera-grid">';
-                    camerasList.forEach(camera => {
-                        let cameraTitle = camera.titles.en; // default to English
-                        if (currentLang === 'zh' && camera.titles.zh) {
-                            cameraTitle = camera.titles.zh;
-                        } else if (currentLang === 'pt' && camera.titles.pt) {
-                            cameraTitle = camera.titles.pt;
-                        } else if (currentLang === 'ja' && camera.titles.ja) {
-                            cameraTitle = camera.titles.ja;
-                        }
-
-                        html += `
-                            <div class="camera-item">
-                                <div class="camera-title">${cameraTitle}</div>
-                                <div class="camera-container">
-                                    <iframe src="${camera.embedUrl}" allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    html += '</div>';
-                    container.innerHTML = html;
-                });
+                const activeTab = document.querySelector('.camera-tab.active');
+                const location = (activeTab && activeTab.getAttribute('data-camera-tab')) || 'macau-city';
+                switchCameraTab(location);
             }
             
             // Display message when no cameras are found
@@ -3393,92 +3653,217 @@
 
             // Chat System Functions
             function initChat() {
-                // Show signup form
-                showSignup.addEventListener('click', () => {
-                    authContainer.style.display = 'none';
-                    signupContainer.style.display = 'flex';
+                if (window.__chatWired) {
+                    refreshChatAuthUi();
+                    return;
+                }
+                window.__chatWired = true;
+
+                document.querySelectorAll('[data-toggle-password]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const input = document.getElementById(btn.getAttribute('data-toggle-password'));
+                        if (!input) return;
+                        input.type = input.type === 'password' ? 'text' : 'password';
+                        btn.innerHTML = input.type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                    });
                 });
-                
-                // Show login form
-                showLogin.addEventListener('click', () => {
-                    signupContainer.style.display = 'none';
-                    authContainer.style.display = 'flex';
-                });
-                
-                // Signup form submission
-                signupForm.addEventListener('submit', (e) => {
+
+                const authTabLogin = document.getElementById('authTabLogin');
+                const authTabSignup = document.getElementById('authTabSignup');
+                const authShell = document.getElementById('authShell');
+                const avatarStyles = ['thumbs', 'adventurer', 'fun-emoji', 'bottts', 'lorelei', 'identicon', 'avataaars', 'notionists'];
+                const avatarGrid = document.getElementById('signupAvatarGrid');
+                const avatarStyleInput = document.getElementById('signupAvatarStyle');
+                const usernameInput = document.getElementById('signupUsername');
+
+                window.avatarUrlFor = function(username, style) {
+                    const seed = encodeURIComponent(username || 'guest');
+                    const s = style || 'thumbs';
+                    return `https://api.dicebear.com/9.x/${s}/svg?seed=${seed}`;
+                };
+
+                function renderAvatarChoices() {
+                    if (!avatarGrid) return;
+                    const seed = usernameInput.value.trim() || 'new-user';
+                    const selected = avatarStyleInput.value || 'thumbs';
+                    avatarGrid.innerHTML = avatarStyles.map((style) => `
+                        <button type="button" class="avatar-choice ${style === selected ? 'selected' : ''}" data-style="${style}">
+                            <img src="${window.avatarUrlFor(seed, style)}" alt="${style} avatar">
+                        </button>
+                    `).join('');
+                    avatarGrid.querySelectorAll('.avatar-choice').forEach((btn) => {
+                        btn.addEventListener('click', () => {
+                            avatarStyleInput.value = btn.getAttribute('data-style');
+                            renderAvatarChoices();
+                        });
+                    });
+                }
+                renderAvatarChoices();
+                usernameInput.addEventListener('input', renderAvatarChoices);
+
+                function showAuthMode(mode) {
+                    const isSignup = mode === 'signup';
+                    authContainer.style.display = isSignup ? 'none' : 'block';
+                    signupContainer.style.display = isSignup ? 'block' : 'none';
+                    authTabLogin.classList.toggle('active', !isSignup);
+                    authTabSignup.classList.toggle('active', isSignup);
+                }
+                authTabLogin.addEventListener('click', () => showAuthMode('login'));
+                authTabSignup.addEventListener('click', () => showAuthMode('signup'));
+
+                const loginError = document.getElementById('loginError');
+                const signupError = document.getElementById('signupError');
+                const setBusy = (btn, busy, label) => {
+                    if (!btn) return;
+                    btn.disabled = busy;
+                    btn.textContent = label;
+                };
+
+                signupForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    const username = document.getElementById('signupUsername').value;
+                    signupError.textContent = '';
+                    const username = document.getElementById('signupUsername').value.trim();
                     const password = document.getElementById('signupPassword').value;
-                    const email = document.getElementById('signupEmail').value;
-                    
-                    // Create user in Firebase Auth
-                    createUserWithEmailAndPassword(auth, email, password)
-                        .then((userCredential) => {
-                            // Save additional user data to database
-                            const userId = userCredential.user.uid;
-                            const userData = {
-                                username: username,      
-                                email: email,      
-                                role: 'member',      
-                                createdAt: new Date().toISOString()
-                            };
-                            
-                            return set(ref(database, 'users/' + userId), userData);
-                        })
-                        .then(() => {
-                            alert('Account created successfully! Please login.');
-                            signupContainer.style.display = 'none';
-                            authContainer.style.display = 'flex';
-                        })
-                        .catch((error) => {
-                            alert('Error: ' + error.message);
-                        });
-                });
-                
-                // Login form submission
-                loginForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('loginUsername').value;
-                    const password = document.getElementById('loginPassword').value;
-                    
-                    // For demo purposes, we'll allow login with username or email
-                    // In a real app, you'd need to store usernames separately
-                    signInWithEmailAndPassword(auth, email.includes('@') ? email : email + '@example.com', password)
-                        .then((userCredential) => {
-                            // Get user data from database
-                            const userId = userCredential.user.uid;
-                            return onValue(ref(database, 'users/' + userId), (snapshot) => {
-                                if (snapshot.exists()) {
-                                    currentUser = snapshot.val();
-                                    userRole = currentUser.role || 'member';
-                                    displayUserInfo();
-                                    authContainer.style.display = 'none';
-                                    loadChatMessages();
-                                    setupModerationPanel();
-                                } else {
-                                    alert('User data not found');
-                                    signOut(auth);
-                                }
-                            }, { onlyOnce: true });
-                        })
-                        .catch((error) => {
-                            alert('Login error: ' + error.message);
-                        });
-                });
-                
-                // Send message
-                sendMessageBtn.addEventListener('click', sendMessage);
-                messageInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        sendMessage();
+                    const confirm = document.getElementById('signupPasswordConfirm').value;
+                    const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+                    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+                        signupError.textContent = 'Username must be 3-20 letters, numbers, or underscores.';
+                        return;
+                    }
+                    if (password.length < 6) {
+                        signupError.textContent = 'Password must be at least 6 characters.';
+                        return;
+                    }
+                    if (password !== confirm) {
+                        signupError.textContent = 'Passwords do not match.';
+                        return;
+                    }
+                    const submitBtn = document.getElementById('signupSubmitBtn');
+                    setBusy(submitBtn, true, 'Creating...');
+                    try {
+                        const taken = await get(ref(database, 'usernames/' + username.toLowerCase()));
+                        if (taken.exists()) {
+                            throw new Error('That username is already taken.');
+                        }
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        const userId = userCredential.user.uid;
+                        const avatarStyle = document.getElementById('signupAvatarStyle').value || 'thumbs';
+                        const photoURL = window.avatarUrlFor(username, avatarStyle);
+                        const userData = {
+                            username,
+                            usernameLower: username.toLowerCase(),
+                            email,
+                            role: 'member',
+                            avatarStyle,
+                            photoURL,
+                            createdAt: new Date().toISOString()
+                        };
+                        await set(ref(database, 'users/' + userId), userData);
+                        await set(ref(database, 'usernames/' + username.toLowerCase()), { uid: userId, email });
+                    } catch (error) {
+                        signupError.textContent = error.message || 'Could not create the account.';
+                        setBusy(submitBtn, false, 'Create account');
                     }
                 });
+
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    loginError.textContent = '';
+                    const identifier = document.getElementById('loginUsername').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+                    const submitBtn = document.getElementById('loginSubmitBtn');
+                    setBusy(submitBtn, true, 'Signing in...');
+                    try {
+                        let email = identifier;
+                        if (!identifier.includes('@')) {
+                            const named = await get(ref(database, 'usernames/' + identifier.toLowerCase()));
+                            if (named.exists() && named.val().email) {
+                                email = named.val().email;
+                            } else {
+                                const usersSnap = await get(ref(database, 'users'));
+                                const users = usersSnap.val() || {};
+                                const match = Object.values(users).find((u) => (u.username || '').toLowerCase() === identifier.toLowerCase());
+                                if (!match || !match.email) throw new Error('No account found for that username.');
+                                email = match.email;
+                            }
+                        }
+                        await signInWithEmailAndPassword(auth, email, password);
+                    } catch (error) {
+                        loginError.textContent = error.message || 'Login failed. Check your email/username and password.';
+                        setBusy(submitBtn, false, 'Login');
+                    }
+                });
+
+                sendMessageBtn.addEventListener('click', sendMessage);
+                messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendMessage();
+                });
+                messageInput.addEventListener('input', () => {
+                    document.getElementById('chatCharCount').textContent = `${messageInput.value.length} / 400`;
+                });
+                refreshChatAuthUi();
             }
-            
-            // Display user info
+
+            function setChatComposerEnabled(enabled) {
+                messageInput.disabled = !enabled;
+                sendMessageBtn.disabled = !enabled;
+                document.getElementById('chatOnlineHint').textContent = enabled
+                    ? 'Signed in · keep reports short and useful'
+                    : 'Sign in to share live traffic updates.';
+            }
+
+            async function hydrateUserSession(user) {
+                const snap = await get(ref(database, 'users/' + user.uid));
+                if (!snap.exists()) {
+                    currentUser = {
+                        username: (user.email || 'member').split('@')[0],
+                        email: user.email,
+                        role: 'member'
+                    };
+                    userRole = 'member';
+                    await set(ref(database, 'users/' + user.uid), {
+                        ...currentUser,
+                        createdAt: new Date().toISOString()
+                    });
+                } else {
+                    currentUser = snap.val();
+                    userRole = currentUser.role || 'member';
+                }
+                displayUserInfo();
+                const shell = document.getElementById('authShell');
+                if (shell) shell.style.display = 'none';
+                authContainer.style.display = 'none';
+                signupContainer.style.display = 'none';
+                setChatComposerEnabled(true);
+                loadChatMessages();
+                setupModerationPanel();
+            }
+
+            function refreshChatAuthUi() {
+                const shell = document.getElementById('authShell');
+                if (currentUser) {
+                    if (shell) shell.style.display = 'none';
+                    authContainer.style.display = 'none';
+                    signupContainer.style.display = 'none';
+                    setChatComposerEnabled(true);
+                    displayUserInfo();
+                    loadChatMessages();
+                    setupModerationPanel();
+                } else {
+                    if (shell) shell.style.display = 'block';
+                    authContainer.style.display = 'block';
+                    signupContainer.style.display = 'none';
+                    document.getElementById('authTabLogin')?.classList.add('active');
+                    document.getElementById('authTabSignup')?.classList.remove('active');
+                    setChatComposerEnabled(false);
+                }
+            }
+
+                        // Display user info
             function displayUserInfo() {
+                const photo = currentUser.photoURL || window.avatarUrlFor(currentUser.username, currentUser.avatarStyle);
                 userInfo.innerHTML = `
+                    <img class="user-avatar" src="${photo}" alt="">
                     <span>Welcome, ${currentUser.username}</span>
                     <span class="user-role role-${userRole}">${userRole.charAt(0).toUpperCase() + userRole.slice(1)}</span>
                     <button class="logout-btn" id="logoutBtn">
@@ -3488,11 +3873,6 @@
                 
                 document.getElementById('logoutBtn').addEventListener('click', () => {
                     signOut(auth);
-                    currentUser = null;
-                    userRole = 'member';
-                    authContainer.style.display = 'flex';
-                    userInfo.innerHTML = '';
-                    moderationPanel.classList.remove('active');
                 });
             }
             
@@ -3569,25 +3949,32 @@
             }
             
             // Load chat messages
+            let chatListenerBound = false;
             function loadChatMessages() {
+                if (chatListenerBound) return;
+                chatListenerBound = true;
                 chatMessages.innerHTML = '';
-                
-                const chatRef = ref(database, 'chat');
+                const chatRef = query(ref(database, 'chat'), limitToLast(120));
                 onChildAdded(chatRef, (snapshot) => {
                     const message = snapshot.val();
                     displayMessage(message, snapshot.key);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    const count = chatMessages.querySelectorAll('.message').length;
+                    const counter = document.getElementById('chatMessageCount');
+                    if (counter) counter.textContent = `${count} messages`;
                 });
             }
             
             // Display a message
             function displayMessage(message, messageId) {
                 const messageElement = document.createElement('div');
-                messageElement.className = 'message';
+                const own = currentUser && message.username === currentUser.username;
+                messageElement.className = own ? 'message own-message' : 'message';
                 
                 if (message.type === 'system') {
                     messageElement.classList.add('system-message');
                     messageElement.innerHTML = `
-                        <div class="message-content">${message.content}</div>
+                        <div class="message-content"></div>
                         <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
                     `;
                 } else {
@@ -3595,7 +3982,10 @@
                     const messageRole = message.role || 'member';
                     const roleClass = `role-${messageRole}`;
                     
+                    const photo = message.photoURL || window.avatarUrlFor(message.username, message.avatarStyle);
                     messageElement.innerHTML = `
+                        <img class="chat-avatar" src="${photo}" alt="">
+                        <div>
                         <div class="message-header">
                             <div class="message-user">
                                 <span class="user-role ${roleClass}">${messageRole.charAt(0).toUpperCase() + messageRole.slice(1)}</span>
@@ -3603,7 +3993,7 @@
                             </div>
                             <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
                         </div>
-                        <div class="message-content">${message.content}</div>
+                        <div class="message-content"></div>
                         ${canDeleteMessage(message.username) ? `
                             <div class="message-actions">
                                 <button class="action-btn delete-btn" data-id="${messageId}">
@@ -3611,6 +4001,7 @@
                                 </button>
                             </div>
                         ` : ''}
+                        </div>
                     `;
                     
                     // Add delete functionality
@@ -3622,6 +4013,8 @@
                     }
                 }
                 
+                const contentNode = messageElement.querySelector('.message-content');
+                if (contentNode) contentNode.textContent = message.content || '';
                 chatMessages.appendChild(messageElement);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
@@ -3646,7 +4039,7 @@
             
             // Send message
             function sendMessage() {
-                const content = messageInput.value.trim();
+                const content = messageInput.value.trim().slice(0, 400);
                 if (!content) return;
                 
                 if (!currentUser) {
@@ -3689,10 +4082,13 @@
                     
                     // Send message
                     const messageData = {
-                        username: currentUser.username,      
-                        role: userRole,      
-                        content: content,      
-                        timestamp: new Date().toISOString()
+                        username: currentUser.username,
+                        role: userRole,
+                        content: content,
+                        timestamp: new Date().toISOString(),
+                        photoURL: currentUser.photoURL || window.avatarUrlFor(currentUser.username, currentUser.avatarStyle),
+                        avatarStyle: currentUser.avatarStyle || 'thumbs',
+                        uid: window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid
                     };
                     
                     const chatRef = push(ref(database, 'chat'));
@@ -3709,146 +4105,78 @@
             // Auth state change listener
             onAuthStateChanged(auth, (user) => {
                 if (!user) {
-                    // User is signed out
                     currentUser = null;
                     userRole = 'member';
-                    authContainer.style.display = 'flex';
+                    const shell = document.getElementById('authShell');
+                    if (shell) shell.style.display = 'block';
+                    authContainer.style.display = 'block';
+                    signupContainer.style.display = 'none';
                     userInfo.innerHTML = '';
                     moderationPanel.classList.remove('active');
+                    setChatComposerEnabled(false);
+                    const loginBtn = document.getElementById('loginSubmitBtn');
+                    const signupBtn = document.getElementById('signupSubmitBtn');
+                    if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'Login'; }
+                    if (signupBtn) { signupBtn.disabled = false; signupBtn.textContent = 'Create account'; }
+                    return;
                 }
+                hydrateUserSession(user).catch((error) => {
+                    console.error(error);
+                });
             });
             
             // Weather Data Functions
             async function loadWeatherData() {
-                const weatherLoading = document.getElementById('weather-loading');
-                const warningLoading = document.getElementById('warning-loading');
-                const currentWeather = document.getElementById('current-weather');
-                const weatherWarnings = document.getElementById('weather-warnings');
-
-                const decodeFeedItems = (feed) => {
-                    if (!feed) return [];
-                    if (feed.type === 'json') {
-                        return (feed.payload.items || []).map((item) => ({
-                            title: item.title || '',
-                            description: item.description || '',
-                            pubDate: item.pubDate || item.pubdate || ''
-                        }));
-                    }
-                    return Array.from(feed.payload.querySelectorAll('item')).map((item) => ({
-                        title: item.querySelector('title')?.textContent || '',
-                        description: item.querySelector('description')?.textContent || '',
-                        pubDate: item.querySelector('pubDate')?.textContent || ''
-                    }));
-                };
-
-                try {
-                    const actualFeed = await fetchSmgFeedData('https://rss.smg.gov.mo/c_ActualWeather_rss.xml');
-                    const items = decodeFeedItems(actualFeed);
-                    if (weatherLoading) weatherLoading.style.display = 'none';
-
-                    if (items.length > 0) {
-                        const item = items[0];
-                        const title = item.title;
-                        const description = item.description;
-
-                        const tempMatch = description.match(/Temperature: ([\d.]+)C/i) || description.match(/氣溫[：:]?\s*([\d.]+)/);
-                        const humidityMatch = description.match(/Humidity: ([\d.]+)%/i) || description.match(/相對濕度[：:]?\s*([\d.]+)/);
-                        const pressureMatch = description.match(/Pressure: ([\d.]+) hPa/i) || description.match(/氣壓[：:]?\s*([\d.]+)/);
-
-                        const temp = tempMatch ? tempMatch[1] : '--';
-                        const humidity = humidityMatch ? humidityMatch[1] : '--';
-                        const pressure = pressureMatch ? pressureMatch[1] : '--';
-
-                        let weatherIcon = 'fas fa-cloud-sun';
-                        const descLower = description.toLowerCase();
-                        if (descLower.includes('rain') || description.includes('雨')) {
-                            weatherIcon = 'fas fa-cloud-rain';
-                        } else if (descLower.includes('cloud') || description.includes('雲')) {
-                            weatherIcon = 'fas fa-cloud';
-                        } else if (descLower.includes('sun') || description.includes('晴')) {
-                            weatherIcon = 'fas fa-sun';
-                        }
-
-                        currentWeather.innerHTML = `
-                            <div class="weather-data">
-                                <div class="weather-main">
-                                    <div class="weather-icon">
-                                        <i class="${weatherIcon}"></i>
-                                    </div>
-                                    <div class="weather-details">
-                                        <div class="weather-temp">${temp}°C</div>
-                                        <div class="weather-desc">${title}</div>
-                                    </div>
-                                </div>
-                                <div class="weather-extra">
-                                    <div>
-                                        <span>Humidity</span>
-                                        <strong>${humidity}%</strong>
-                                    </div>
-                                    <div>
-                                        <span>Pressure</span>
-                                        <strong>${pressure} hPa</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        currentWeather.innerHTML = '<p>Weather data not available</p>';
-                    }
-                } catch (error) {
-                    console.error('Error fetching weather: ', error);
-                    if (weatherLoading) weatherLoading.style.display = 'none';
-                    if (currentWeather) currentWeather.innerHTML = '<p>Error loading weather data</p>';
-                }
-
-                if (warningLoading) warningLoading.style.display = 'none';
-                if (weatherWarnings && !weatherWarnings.querySelector('.warning-item') && !weatherWarnings.querySelector('.no-warning')) {
-                    weatherWarnings.innerHTML = `
-                        <div class="no-warning">
-                            <i class="fas fa-check-circle"></i>
-                            <p>No current weather warnings</p>
-                        </div>
-                    `;
-                }
+                await loadSmgRssData();
             }
 
-            const SMG_LOGO_URL = 'https://rss.smg.gov.mo/images/smglogo.gif';
-            const WEATHER_CACHE_KEY = 'smgWeatherMergedCacheV1';
+                        const SMG_LOGO_URL = 'https://rss.smg.gov.mo/images/smglogo.gif';
+            const WEATHER_CACHE_KEY = 'smgWeatherMergedCacheV3';
             const WEATHER_CACHE_TTL = 5 * 60 * 1000;
             const TEST_WARNING_URL = 'https://macau-traffic-database-default-rtdb.firebaseio.com/weather_test_warning/current.json';
 
             async function fetchSmgFeedData(feedUrl) {
+                const encoded = encodeURIComponent(feedUrl);
                 const targets = [
-                    {
-                        type: 'json',
-                        url: `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`
-                    },
-                    {
-                        type: 'xml',
-                        url: `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(feedUrl)}`
-                    },
-                    {
-                        type: 'xml',
-                        url: `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`
-                    }
+                    { kind: 'rss2json', url: `https://api.rss2json.com/v1/api.json?rss_url=${encoded}` },
+                    { kind: 'allorigins-json', url: `https://api.allorigins.win/get?url=${encoded}` },
+                    { kind: 'xml', url: `https://corsproxy.io/?${encoded}` },
+                    { kind: 'xml', url: feedUrl },
+                    { kind: 'xml', url: `https://api.codetabs.com/v1/proxy/?quest=${encoded}` },
+                    { kind: 'xml', url: `https://api.allorigins.win/raw?url=${encoded}` }
                 ];
 
                 let lastError = null;
                 for (const target of targets) {
                     try {
-                        const response = await fetch(target.url);
+                        const response = await fetch(target.url, { cache: 'no-store' });
                         if (!response.ok) {
                             lastError = new Error(`Failed ${response.status} from ${target.url}`);
                             continue;
                         }
 
-                        if (target.type === 'json') {
+                        if (target.kind === 'rss2json') {
                             const payload = await response.json();
-                            if (payload && payload.status === 'ok') {
+                            if (payload && payload.status === 'ok' && Array.isArray(payload.items)) {
                                 return { type: 'json', payload };
                             }
                             lastError = new Error('rss2json returned non-ok status');
                             continue;
+                        }
+
+                        if (target.kind === 'allorigins-json') {
+                            const wrapper = await response.json();
+                            const xmlText = wrapper && wrapper.contents;
+                            if (!xmlText) {
+                                lastError = new Error('allorigins returned empty contents');
+                                continue;
+                            }
+                            const xml = new window.DOMParser().parseFromString(xmlText, 'text/xml');
+                            if (xml.querySelector('parsererror')) {
+                                lastError = new Error('Invalid XML from allorigins');
+                                continue;
+                            }
+                            return { type: 'xml', payload: xml };
                         }
 
                         const xmlText = await response.text();
@@ -3887,6 +4215,12 @@
                 const wrapper = document.createElement('div');
                 wrapper.innerHTML = (descriptionHtml || '').replace(/<br\s*\/?>/gi, '\n');
                 const text = (wrapper.textContent || '').trim();
+                if (!text) return [];
+
+                const daySplits = text.split(/(?=Forecast\s+\d{4}-\d{2}-\d{2})/i)
+                    .map((block) => block.trim())
+                    .filter(Boolean);
+                if (daySplits.length > 1) return daySplits.slice(0, 7);
 
                 return text
                     .split(/\n\s*\n/g)
@@ -3907,11 +4241,17 @@
                 const patterns = [
                     /現時並沒有/,
                     /現時沒有/,
-                    /現時沒有/,
                     /沒有.*警告/,
-                    /no .* warning/,
-                    /not .* warning/,
-                    /no warning signal/
+                    /there is no /i,
+                    /no .* warning/i,
+                    /not .* warning/i,
+                    /no warning signal/i,
+                    /no tropical cyclone/i,
+                    /no rainstorm/i,
+                    /no monsoon warning/i,
+                    /no thunderstorm/i,
+                    /no stormsurge/i,
+                    /no tsunami/i
                 ];
                 return patterns.some((pattern) => pattern.test(normalized) || pattern.test(detailText));
             }
@@ -3950,9 +4290,10 @@
                     const safeDetail = warning.detail || 'No details available';
                     const safeUpdated = warning.updatedAt ? `Updated: ${warning.updatedAt}` : 'Updated from SMG feed';
                     const signalImage = getWarningSignalImage(safeType, warning.signalImage || fallbackImage);
+                    const inactiveClass = isInactiveWarning(safeDetail) ? ' inactive' : '';
 
                     return `
-                        <article class="weather-warning-card">
+                        <article class="weather-warning-card${inactiveClass}">
                             <img class="weather-warning-signal" src="${signalImage}" alt="${safeType} signal image" onerror="this.src='${SMG_LOGO_URL}'">
                             <div>
                                 <div class="weather-warning-card-title">${safeType}</div>
@@ -4012,10 +4353,62 @@
                 }
             }
 
+            function renderTodayForecast(htmlText) {
+                const box = document.getElementById('today-forecast');
+                if (!box) return;
+                const holder = document.createElement('div');
+                holder.innerHTML = (htmlText || '').replace(/<br\s*\/?>/gi, '\n');
+                const plain = (holder.textContent || '').trim();
+                if (!plain) {
+                    box.innerHTML = '<p>Today\'s forecast is currently unavailable.</p>';
+                    return;
+                }
+                box.innerHTML = `<div class="today-forecast-card">${plain.replace(/</g, '')}</div>`;
+            }
+
+            function fillCurrentWeather(data) {
+                const currentWeather = document.getElementById('current-weather');
+                const weatherLoading = document.getElementById('weather-loading');
+                if (weatherLoading) weatherLoading.style.display = 'none';
+                if (!currentWeather || !data) return;
+                const description = data.actualDescription || '';
+                const title = data.actualTitle || 'Present weather';
+                if (!description) return;
+                const tempMatch = description.match(/Temperature:\s*([\d.]+)\s*°?C/i);
+                const humidityMatch = description.match(/Humidity:\s*([\d.]+)\s*%/i);
+                const windDirMatch = description.match(/Wind Direction:\s*([^;\n<]+)/i);
+                const windSpeedMatch = description.match(/Wind Speed:\s*([\d.]+)\s*km\/h/i);
+                const iconMatch = description.match(/<img[^>]+src=["']([^"']+)["']/i);
+                const temp = tempMatch ? tempMatch[1] : '--';
+                const humidity = humidityMatch ? humidityMatch[1] : '--';
+                const wind = windDirMatch ? windDirMatch[1].trim() : '--';
+                const windSpeed = windSpeedMatch ? windSpeedMatch[1] : '--';
+                const iconHtml = iconMatch
+                    ? `<img src="${iconMatch[1]}" alt="SMG weather icon">`
+                    : '<i class="fas fa-cloud-sun"></i>';
+                currentWeather.innerHTML = `
+                    <div class="weather-data">
+                        <div class="weather-main">
+                            <div class="weather-icon">${iconHtml}</div>
+                            <div class="weather-details">
+                                <div class="weather-temp">${temp}°C</div>
+                                <div class="weather-desc">${title}</div>
+                            </div>
+                        </div>
+                        <div class="weather-extra">
+                            <div><span>Humidity</span><strong>${humidity}%</strong></div>
+                            <div><span>Wind</span><strong>${wind} ${windSpeed} km/h</strong></div>
+                        </div>
+                    </div>
+                `;
+            }
+
             function renderWeatherPayload(data) {
                 if (!data) return;
                 renderWarningSignals(data.warnings || [], data.warningMeta || '', data.signalFallback || SMG_LOGO_URL);
                 renderForecastFromBlocks(data.forecastBlocks || []);
+                renderTodayForecast(data.todayForecast || '');
+                fillCurrentWeather(data);
             }
 
             async function loadStaffTestWarning() {
@@ -4046,28 +4439,44 @@
                     return;
                 }
 
+                const feedDescription = (feed) => {
+                    if (!feed) return '';
+                    if (feed.type === 'json') return feed.payload.items?.[0]?.description || '';
+                    return feed.payload.querySelector('item description')?.textContent || '';
+                };
+                const feedTitle = (feed) => {
+                    if (!feed) return '';
+                    if (feed.type === 'json') return feed.payload.items?.[0]?.title || '';
+                    return feed.payload.querySelector('item title')?.textContent || '';
+                };
+
                 try {
-                    const [actualFeed, alertsFeed, forecastFeed, staffTestWarning] = await Promise.all([
-                        fetchSmgFeedData('https://rss.smg.gov.mo/c_ActualWeather_rss.xml'),
-                        fetchSmgFeedData('https://rss.smg.gov.mo/c_WSignal_rss.xml'),
-                        fetchSmgFeedData('https://rss.smg.gov.mo/c_WForecast7days_rss.xml'),
+                    const results = await Promise.allSettled([
+                        fetchSmgFeedData('https://rss.smg.gov.mo/e_ActualWeather_rss.xml'),
+                        fetchSmgFeedData('https://rss.smg.gov.mo/e_WSignal_rss.xml'),
+                        fetchSmgFeedData('https://rss.smg.gov.mo/e_WForecast7days_rss.xml'),
+                        fetchSmgFeedData('https://rss.smg.gov.mo/e_WForecast_rss.xml'),
                         loadStaffTestWarning()
                     ]);
+                    const valueAt = (index) => results[index].status === 'fulfilled' ? results[index].value : null;
+                    const actualFeed = valueAt(0);
+                    const alertsFeed = valueAt(1);
+                    const forecastFeed = valueAt(2);
+                    const todayFeed = valueAt(3);
+                    const staffTestWarning = valueAt(4);
 
-                    const actualDescription = actualFeed.type === 'json'
-                        ? (actualFeed.payload.items?.[0]?.description || '')
-                        : (actualFeed.payload.querySelector('item description')?.textContent || '');
+                    if (!actualFeed && !alertsFeed && !forecastFeed && !todayFeed) {
+                        throw new Error('All SMG RSS feeds failed');
+                    }
+
+                    const actualDescription = feedDescription(actualFeed);
                     const fallbackSignalImage = extractActualWeatherGraphic(actualDescription) || SMG_LOGO_URL;
 
-                    const alertDescription = alertsFeed.type === 'json'
-                        ? (alertsFeed.payload.items?.[0]?.description || '')
-                        : (alertsFeed.payload.querySelector('item description')?.textContent || '');
-                    const warningMeta = alertsFeed.type === 'json'
-                        ? (alertsFeed.payload.items?.[0]?.title || 'SMG Weather Warning Signal')
-                        : (alertsFeed.payload.querySelector('item title')?.textContent || 'SMG Weather Warning Signal');
+                    const alertDescription = feedDescription(alertsFeed);
+                    const warningMeta = feedTitle(alertsFeed) || 'SMG Weather Warning Signal';
 
                     const alertRows = extractAlertRows(alertDescription);
-                    const activeWarnings = alertRows.filter((entry) => !isInactiveWarning(entry.detail));
+                    const activeWarnings = alertRows.slice();
 
                     if (staffTestWarning) {
                         activeWarnings.unshift({
@@ -4078,15 +4487,18 @@
                         });
                     }
 
-                    const forecastDescription = forecastFeed.type === 'json'
-                        ? (forecastFeed.payload.items?.[0]?.description || '')
-                        : (forecastFeed.payload.querySelector('item description')?.textContent || '');
+                    const forecastDescription = feedDescription(forecastFeed);
                     const forecastBlocks = extractForecastBlocks(forecastDescription);
+
+                    const todayDescription = feedDescription(todayFeed) || feedTitle(todayFeed);
 
                     const payload = {
                         warnings: activeWarnings,
                         warningMeta,
                         forecastBlocks,
+                        todayForecast: todayDescription,
+                        actualDescription,
+                        actualTitle: feedTitle(actualFeed),
                         signalFallback: fallbackSignalImage
                     };
 
