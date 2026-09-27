@@ -1,1 +1,33 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macau Traffic Monitor</title>
+<script>
+(async function () {
+  const urls = [
+    "https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html",
+    "https://raw.githack.com/bundan00948/project-week/6e724c55b1264ae7998cba313d861fd6734eee41/index.html",
+    "https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55/index.html"
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) continue;
+      const html = await res.text();
+      if (!html.includes("Macau Traffic Monitor")) continue;
+      document.open();
+      document.write(html);
+      document.close();
+      return;
+    } catch (e) {}
+  }
+  document.body.innerHTML = "<p style=\"color:#fff;font-family:sans-serif;padding:2rem\">Loading site… if this persists, refresh.</p>";
+})();
+</script>
+</head>
+<body style="background:#111;color:#fff;font-family:sans-serif;padding:2rem">
+Restoring Macau Traffic Monitor…
+</body>
+</html>
