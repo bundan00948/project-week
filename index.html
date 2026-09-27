@@ -4,30 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Macau Traffic Monitor</title>
-<script>
-(async function () {
-  const urls = [
-    "https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html",
-    "https://raw.githack.com/bundan00948/project-week/6e724c55b1264ae7998cba313d861fd6734eee41/index.html",
-    "https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55/index.html"
-  ];
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) continue;
-      const html = await res.text();
-      if (!html.includes("Macau Traffic Monitor")) continue;
-      document.open();
-      document.write(html);
-      document.close();
-      return;
-    } catch (e) {}
-  }
-  document.body.innerHTML = "<p style=\"color:#fff;font-family:sans-serif;padding:2rem\">Loading site… if this persists, refresh.</p>";
-})();
-</script>
 </head>
 <body style="background:#111;color:#fff;font-family:sans-serif;padding:2rem">
-Restoring Macau Traffic Monitor…
+Loading Macau Traffic Monitor…
+<script type="module">
+const CHUNK_URLS = [
+  "b64/chunk0.txt",
+  "b64/chunk1.txt",
+  "b64/chunk2.txt",
+  "b64/chunk3.txt"
+].map(p => new URL(p, location.href).href);
+
+async function inflate(b64) {
+  const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const ds = new DecompressionStream("gzip");
+  const stream = new Blob([bin]).stream().pipeThrough(ds);
+  const buf = await new Response(stream).arrayBuffer();
+  return new TextDecoder().decode(buf);
+}
+
+try {
+  const parts = await Promise.all(CHUNK_URLS.map(async (u) => {
+    const r = await fetch(u, { cache: "no-store" });
+    if (!r.ok) throw new Error("chunk fail " + u + " " + r.status);
+    return r.text();
+  }));
+  const html = await inflate(parts.join("").trim());
+  document.open();
+  document.write(html);
+  document.close();
+} catch (e) {
+  console.error(e);
+  location.replace("https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html");
+}
+</script>
 </body>
 </html>
