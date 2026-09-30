@@ -29,13 +29,15 @@
 <body>
 <div class="box">
   <div class="spin"></div>
-  <div>Loading Macau Traffic Monitor…</div>
+  <div>Loading updated Macau Traffic Monitor…</div>
 </div>
 <script>
 (async function () {
+  // Load the improved version that was generated in the Grok workspace
   const urls = [
-    'https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html',
-    'https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55/index.html'
+    'https://cdn.jsdelivr.net/gh/bundan00948/project-week@main/preview-site/index.html',
+    'https://raw.githubusercontent.com/bundan00948/project-week/main/preview-site/index.html',
+    'https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html'
   ];
   let lastErr = null;
   for (const url of urls) {
@@ -54,7 +56,7 @@
       lastErr = e;
     }
   }
-  document.body.innerHTML = '<div class="box"><p>Could not load the site automatically.</p><p><a style="color:#ffd700" href="https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html">Open previous version</a></p><pre style="text-align:left;opacity:0.7;max-width:90vw;overflow:auto">' + (lastErr && lastErr.message ? lastErr.message : 'unknown error') + '</pre></div>';
+  document.body.innerHTML = '<div class="box"><p>Could not load the updated site.</p><p><a style="color:#ffd700" href="https://cdn.jsdelivr.net/gh/bundan00948/project-week@6e724c55b1264ae7998cba313d861fd6734eee41/index.html">Open previous version</a></p><pre style="text-align:left;opacity:0.7;max-width:90vw;overflow:auto">' + (lastErr && lastErr.message ? lastErr.message : 'unknown error') + '</pre></div>';
 })();
 </script>
 </body>
