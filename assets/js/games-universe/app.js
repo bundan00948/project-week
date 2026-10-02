@@ -31,8 +31,7 @@
       deleteDoc,    
       increment,
       runTransaction,
-      deleteField,
-      Timestamp
+      deleteField
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     import { 
       getStorage,     
@@ -403,13 +402,31 @@
     /** @type {'firestore' | 'auth_first' | 'unknown'} */
     let loginWizardPath = 'unknown';
 
-    /** Resize/compress remote images via wsrv.nl (smaller downloads for game art, blooks, pack UI). */
+    function resolveLocalWebpAssetUrl(url) {
+      const u = String(url || '').trim();
+      const match = u.match(/^([^?#]+)\.(?:jpe?g|png)([?#].*)?$/i);
+      if (!match) return u;
+      const normalizedPath = match[1].replace(/^\/+/, '');
+      const isGameAsset = normalizedPath.startsWith('images/games/') ||
+        normalizedPath.startsWith('games/among-run/images/') ||
+        normalizedPath.startsWith('games/among-run/icons/');
+      if (!isGameAsset) return u;
+      const leadingSlash = match[1].startsWith('/') ? '/' : '';
+      return `${leadingSlash}${normalizedPath}.webp${match[2] || ''}`;
+    }
+
+    /** Resize/compress remote images via wsrv.nl and prefer local WebP game art. */
     function mediaThumbUrl(url, maxEdge, quality) {
       const u = String(url || '').trim();
-      if (!u || !/^https?:\/\//i.test(u)) return u;
+      if (!u) return u;
+      const localWebp = resolveLocalWebpAssetUrl(u);
+      if (localWebp !== u) return localWebp;
+      if (!/^https?:\/\//i.test(u)) return u;
       const q = Math.min(100, Math.max(40, Number(quality) || 80));
       const w = Math.min(1200, Math.max(64, Math.round(Number(maxEdge) || 480)));
       try {
+        const parsed = new URL(u);
+        if (parsed.hostname === 'wsrv.nl' && parsed.searchParams.get('output') === 'webp') return u;
         return `https://wsrv.nl/?url=${encodeURIComponent(u)}&w=${w}&output=webp&q=${q}`;
       } catch (_) {
         return u;
@@ -722,14 +739,13 @@
 
     // ========== Save user profile ==========
     async function saveUserProfile(uid, email, username, avatarUrl, options = {}) {
-      const defaultAvatar = "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+      const defaultAvatar = "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82";
       const avatar = avatarUrl || defaultAvatar;
       const requirePasswordMigration = options.requirePasswordMigration === true;
       const initialPassword = typeof options.initialPassword === 'string' ? options.initialPassword : '';
       let coins = 0;
       let title = "User";
-      const isOwnerAccount = String(email || '').toLowerCase() === "chonhouliu@gmail.com";
-      if (isOwnerAccount) { coins = 999999; title = "Owner"; }
+      if (email === "chonhouliu@gmail.com") { coins = 999999; title = "Owner"; }
       const displayId = await ensureUniqueDisplayId();
       await setDoc(doc(db, "users", uid), {
         email,
@@ -744,7 +760,6 @@
         coins,
         stars: 0,
         title,
-        isAdmin: isOwnerAccount,
         badges: [],
         displayId,
         ownedBannerIds: [],
@@ -929,8 +944,8 @@
         const data = userDoc.data();
         favoriteMovieIds = new Set(Array.isArray(data.favoriteMovieIds) ? data.favoriteMovieIds.map(String) : []);
         if (userNameSpan) userNameSpan.textContent = data.username || user.email;
-        if (userAvatar) userAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
-        if (profileAvatar) profileAvatar.src = data.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+        if (userAvatar) userAvatar.src = data.avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82";
+        if (profileAvatar) profileAvatar.src = data.avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82";
         if (profileUsername) profileUsername.textContent = data.username || user.email;
         if (profileTitle) applyTitleStyle(profileTitle, data.title || "User");
         renderProfileBadges(data.badges || []);
@@ -1034,9 +1049,9 @@
           if (!d0.passwordMigrationVersion) patch.passwordMigrationVersion = PASSWORD_MIGRATION_VERSION;
           if (Object.keys(patch).length) await updateDoc(doc(db, "users", user.uid), patch);
           mergedUserData = { ...d0, ...patch };
-          if (String(user.email || '').toLowerCase() === "chonhouliu@gmail.com") {
-            await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner", isAdmin: true });
-            mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner", isAdmin: true };
+          if (user.email === "chonhouliu@gmail.com") {
+            await updateDoc(doc(db, "users", user.uid), { coins: 999999, title: "Owner" });
+            mergedUserData = { ...(mergedUserData || {}), coins: 999999, title: "Owner" };
           }
         }
         try {
@@ -1385,7 +1400,15 @@
 
     // ========== Game confirmation and play logging ==========
     function showConfirmModal(game) {
-      if (!confirmModal) return;
+      const play = async () => {
+        const opened = openGameModal(game.title, game.url, { systemOrdered: true });
+        if (!opened) return;
+        await logGamePlay(game);
+      };
+      if (!confirmModal) {
+        play();
+        return;
+      }
       const nameEl = document.getElementById('confirmGameName');
       if (nameEl) nameEl.textContent = `"${game.title}"?`;
       confirmModal.style.display = 'flex';
@@ -1394,9 +1417,7 @@
       if (confirmYes) {
         confirmYes.onclick = async () => {
           confirmModal.style.display = 'none';
-          const opened = openGameModal(game.title, game.url, { systemOrdered: true });
-          if (!opened) return;
-          await logGamePlay(game);
+          await play();
         };
       }
       if (confirmNo) confirmNo.onclick = () => { confirmModal.style.display = 'none'; };
@@ -1469,16 +1490,18 @@
     function openGameModal(title, url, options = {}) {
       const resolved = resolveFrameUrl(url, options);
       if (!resolved) {
-        showNotification('Blocked external frame URL. Only system-approved hosts are allowed.', 'error');
+        showNotification('This game does not have a valid playable URL yet.', 'error');
         return false;
       }
-      if (gameModalTitle) gameModalTitle.textContent = title;
-      if (gameFrame) {
-        gameFrame.dataset.allowedHost = resolved.host;
-        gameFrame.dataset.systemOrdered = options.systemOrdered ? '1' : '';
-        gameFrame.src = resolved.href;
+      if (!gameModal || !gameFrame) {
+        window.location.assign(resolved.href);
+        return true;
       }
-      if (gameModal) gameModal.style.display = 'block';
+      if (gameModalTitle) gameModalTitle.textContent = title;
+      gameFrame.dataset.allowedHost = resolved.host;
+      gameFrame.dataset.systemOrdered = options.systemOrdered ? '1' : '';
+      gameFrame.src = resolved.href;
+      gameModal.style.display = 'block';
       document.body.style.overflow = 'hidden';
       syncGameFullscreenUi();
       return true;
@@ -1963,6 +1986,10 @@
 
     async function handleGameClick(gameId, gameTitle, gameUrl) {
       const game = (gameLookupById && gameLookupById.get(String(gameId))) || { id: gameId, title: gameTitle, url: gameUrl };
+      if (!String(game?.url || '').trim()) {
+        showNotification('This game does not have a playable URL yet.', 'error');
+        return;
+      }
       if (!currentUser) {
         pendingGame = game;
         if (noticeModal) noticeModal.style.display = 'flex';
@@ -1992,7 +2019,7 @@
         games.sort((a, b) => (playCounts[b.id]||0) - (playCounts[a.id]||0));
         gameLookupById = new Map(games.map((game) => [String(game.id), game]));
         const topGames = games.slice(0, 5).map((g, i)=>({...g, rank: i+1}));
-        const heroGames = (games.filter(hasGameHeroArt).slice(0, 5).map((g, i) => ({ ...g, rank: i + 1 })));
+        const heroGames = games.filter(hasGameHeroArt).slice(0, 5).map((g, i) => ({ ...g, rank: i + 1 }));
         const newGames = games.slice(5);
         const allGames = games;
         return { heroGames, topGames, newGames, allGames };
@@ -2467,6 +2494,10 @@
         const slide = document.createElement('div');
         slide.className = `carousel-slide ${idx===0?'active': ''}`;
         const imgEsc = escapeHtml(game.image || '');
+        const safeTitle = escapeHtml(game.title || 'Game');
+        const safeDescription = escapeHtml(game.description || 'No description available.');
+        const safeUrl = escapeHtml(game.url || '');
+        const safeId = escapeHtml(game.id || '');
         const bgHtml = (idx === 0 && game.image)
           ? `<div class="slide-background lazy-bg-loaded" style="background-image: url(${JSON.stringify(mediaThumbUrl(game.image, 1200, 82))});" data-bg-ready="1"></div>`
           : `<div class="slide-background" data-lazy-bg="${imgEsc}"></div>`;
@@ -2474,10 +2505,10 @@
           ${bgHtml}
           <div class="slide-content">
             <div class="slide-info">
-              <h2>${game.title}</h2>
-              <div class="game-meta"><span><i class="fas fa-star"></i> ${game.rating||'N/A'}</span><span><i class="${game.multiplayer?'fas fa-users': 'fas fa-user'}"></i> ${game.multiplayer?'Multiplayer': 'Single Player'}</span><span><i class="fas fa-trophy"></i> TOP ${game.rank}</span></div>
-              <p>${game.description||'No description available.'}</p>
-              <button class="slide-play-button" data-url="${game.url}" data-id="${game.id}" data-title="${game.title}">PLAY NOW</button>
+              <h2>${safeTitle}</h2>
+              <div class="game-meta"><span><i class="fas fa-star"></i> ${escapeHtml(game.rating || 'N/A')}</span><span><i class="${game.multiplayer ? 'fas fa-users' : 'fas fa-user'}"></i> ${game.multiplayer ? 'Multiplayer' : 'Single Player'}</span><span><i class="fas fa-trophy"></i> TOP ${escapeHtml(game.rank || '')}</span></div>
+              <p>${safeDescription}</p>
+              <button class="slide-play-button" data-url="${safeUrl}" data-id="${safeId}" data-title="${safeTitle}">PLAY NOW</button>
             </div>
           </div>
         `;
@@ -2502,13 +2533,13 @@
       const slides = root.querySelectorAll('.carousel-slide');
       const dots = root.querySelectorAll('.carousel-dot');
       if (!slides.length) return;
-      if (i >= slides.length) i = 0;
-      if (i < 0) i = slides.length - 1;
-      slides.forEach(s => s.classList.remove('active'));
-      dots.forEach(d => d.classList.remove('active'));
+      if(i>=slides.length)i=0;
+      if(i<0)i=slides.length-1;
+      slides.forEach(s=>s.classList.remove('active'));
+      dots.forEach(d=>d.classList.remove('active'));
       slides[i].classList.add('active');
       if (dots[i]) dots[i].classList.add('active');
-      currentSlide = i;
+      currentSlide=i;
       preloadCarouselSlideBgs(i);
     }
     function nextSlide(){ showSlide(currentSlide+1); }
@@ -2743,37 +2774,37 @@
           await mountMoviesPageContent();
           break;
         case 'profile-page':
-          if (currentUser?.uid) loadProfilePage(currentUser.uid);
+          if (currentUser?.uid) await loadProfilePage(currentUser.uid);
           break;
         case 'history-page':
-          if (currentUser?.uid) loadPlayHistory(currentUser.uid);
+          if (currentUser?.uid) await loadPlayHistory(currentUser.uid);
           break;
         case 'shop-page':
           if (currentUser?.uid) {
-            loadShopPacks();
-            loadUserBalance(currentUser.uid);
+            await loadShopPacks();
+            await loadUserBalance(currentUser.uid);
           }
           break;
         case 'inventory-page':
           if (currentUser?.uid) {
-            loadInventory(currentUser.uid);
-            loadFriends(currentUser.uid);
+            await loadInventory(currentUser.uid);
+            await loadFriends(currentUser.uid);
           }
           break;
         case 'missions-page':
-          if (currentUser?.uid) loadMissions(currentUser.uid);
+          if (currentUser?.uid) await loadMissions(currentUser.uid);
           break;
         case 'chat-page':
-          loadGlobalChat();
+          await loadGlobalChat();
           break;
         case 'friends-page':
-          if (currentUser?.uid) loadFriends(currentUser.uid);
+          if (currentUser?.uid) await loadFriends(currentUser.uid);
           break;
         case 'settings-page':
-          if (currentUser?.uid) loadSettings(currentUser.uid);
+          if (currentUser?.uid) await loadSettings(currentUser.uid);
           break;
         case 'staff-page':
-          loadStaffPanel();
+          await loadStaffPanel();
           break;
         case 'view-profile-page':
           await loadViewProfilePage(String(new URLSearchParams(window.location.search).get('uid') || '').trim());
@@ -2850,7 +2881,7 @@
     }
 
     async function populateProfileLayout(userId, ids) {
-      const defaultAvatar = "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+      const defaultAvatar = "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82";
       const userDoc = await getDoc(doc(db, "users", userId));
       if (!userDoc.exists()) return;
       const data = userDoc.data();
@@ -5176,7 +5207,7 @@
         }
       }
       const safeName = escapeHtml(msg.senderName || '');
-      const av = escapeHtml(msg.senderAvatar || 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg');
+      const av = escapeHtml(msg.senderAvatar || 'https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82');
       const hideHeader = !!opts.groupWithPrevious;
       if (hideHeader) div.classList.add('chat-msg-grouped');
       const timeStr = formatMessageTime(msg.timestamp);
@@ -5345,7 +5376,7 @@
         message,
         senderId: currentUser.uid,
         senderName: userData.username || currentUser.email,
-        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        senderAvatar: userData.avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82",
         timestamp: serverTimestamp(),
         type: 'global'
       });
@@ -5364,7 +5395,7 @@
         imageUrl,
         senderId: currentUser.uid,
         senderName: userData.username || currentUser.email,
-        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        senderAvatar: userData.avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82",
         timestamp: serverTimestamp(),
         type: 'global'
       });
@@ -5413,7 +5444,7 @@
         message,
         senderId: currentUser.uid,
         senderName: userData.username || currentUser.email,
-        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        senderAvatar: userData.avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82",
         timestamp: serverTimestamp(),
         type: 'private',
         chatId: `${uids[0]}_${uids[1]}`,
@@ -5435,7 +5466,7 @@
         imageUrl,
         senderId: currentUser.uid,
         senderName: userData.username || currentUser.email,
-        senderAvatar: userData.avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg",
+        senderAvatar: userData.avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82",
         timestamp: serverTimestamp(),
         type: 'private',
         chatId: `${uids[0]}_${uids[1]}`,
@@ -5663,7 +5694,7 @@
     async function loadSettings(userId) {
       const userDoc = await getDoc(doc(db, "users", userId));
       if (userDoc.exists()) {
-        const avatar = userDoc.data().avatar || "https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg";
+        const avatar = userDoc.data().avatar || "https://wsrv.nl/?url=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F00%2F64%2F67%2F80%2F360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg&w=160&output=webp&q=82";
         if (currentAvatar) currentAvatar.src = avatar;
         if (usernameInput) usernameInput.value = userDoc.data().username || "";
       }
@@ -5809,8 +5840,6 @@
       { key: 'edit_daily_reward', label: 'Edit Daily Reward', desc: 'Change daily reward stars/coins', group: 'System' },
       { key: 'edit_rarity_order', label: 'Edit Rarity Order', desc: 'Change rarity sort order', group: 'System' },
       { key: 'edit_rarity_styles', label: 'Edit Rarity Styles', desc: 'Create/update rarity appearance rules', group: 'System' },
-      { key: 'view_dev_access_codes', label: 'View Dev Access Codes', desc: 'View dev catalogue access codes', group: 'System' },
-      { key: 'manage_dev_access_codes', label: 'Manage Dev Access Codes', desc: 'Create and manage dev access codes', group: 'System' },
     ];
 
     let currentUserPermissions = [];
@@ -5926,14 +5955,6 @@
       return hasAnyPermission(['delete_missions', 'manage_missions', 'manage_games']);
     }
 
-    function canViewDevAccessCodesAdmin() {
-      return hasAnyPermission(['view_dev_access_codes', 'manage_dev_access_codes']);
-    }
-
-    function canManageDevAccessCodes() {
-      return hasPermission('manage_dev_access_codes');
-    }
-
     function canViewUsersAdmin() {
       return hasAnyPermission(['view_users_admin', 'edit_user_profile', 'edit_user_balance', 'edit_user_moderation', 'view_user_passwords', 'set_user_passwords', 'manage_users', 'assign_titles', 'assign_badges', 'custom_avatar', 'manage_inventory', 'mute_users', 'ban_users']);
     }
@@ -6043,10 +6064,8 @@
     async function checkStaffAccess(user) {
       currentUserPermissions = await getUserPermissions(user.uid);
       const staffTab = document.getElementById('staff-panel-tab');
-      if (hasPermission('staff_access')) {
-        staffTab.style.display = 'flex';
-      } else {
-        staffTab.style.display = 'none';
+      if (staffTab) {
+        staffTab.style.display = hasPermission('staff_access') ? 'flex' : 'none';
       }
       applyNonStaffMediaUi();
     }
@@ -6132,9 +6151,7 @@
       obs.observe(el);
     }
     function preloadCarouselSlideBgs(index) {
-      const root = getHeroCarouselRoot();
-      if (!root) return;
-      const slides = root.querySelectorAll('.carousel-slide');
+      const slides = document.querySelectorAll('.carousel-slide');
       if (!slides.length) return;
       const n = slides.length;
       const want = new Set([index, (index + 1) % n, (index - 1 + n) % n]);
@@ -6299,7 +6316,6 @@
       'staff-badges': () => hasPermission('manage_badges'),
       'staff-rarity': () => canManageSiteConfig(),
       'staff-missions': () => canManageMissions(),
-      'staff-access-codes': () => canViewDevAccessCodesAdmin(),
       'staff-stars': () => canViewStarsPanel(),
       'staff-star-badges': () => canManageStarBadges(),
       'staff-chatview': () => hasPermission('view_chats'),
@@ -6323,7 +6339,6 @@
         case 'staff-titles': loadStaffTitles(); break;
         case 'staff-badges': loadStaffBadges(); break;
         case 'staff-missions': loadStaffMissions(); break;
-        case 'staff-access-codes': loadStaffAccessCodes(); break;
         case 'staff-star-badges': loadStaffStarBadgesPanel(); break;
         case 'staff-chatview': loadStaffChatViewer(); break;
         case 'staff-rarity': loadStaffRaritySitePanel(); break;
@@ -7348,195 +7363,6 @@
       } catch(e) { container.innerHTML = '<p style="color:var(--neon-pink);">Error loading missions.</p>'; }
     }
 
-    function generateStaffDevAccessCode(catalog = 'games') {
-      const prefix = catalog === 'movies' ? 'MOV' : catalog === 'both' ? 'ALL' : 'GAM';
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let suffix = '';
-      for (let i = 0; i < 6; i += 1) suffix += chars[Math.floor(Math.random() * chars.length)];
-      return `DEV-${prefix}-${suffix}`;
-    }
-
-    function normalizeStaffDevAccessCode(value) {
-      return String(value || '').trim().toUpperCase();
-    }
-
-    function formatStaffDevAccessCatalog(catalog) {
-      const value = String(catalog || 'games').toLowerCase();
-      if (value === 'movies') return 'Dev movies';
-      if (value === 'both') return 'Both catalogues';
-      return 'Dev games';
-    }
-
-    function getStaffDevAccessCodeStatus(row) {
-      if (row.active === false) return { label: 'Inactive', tone: 'muted' };
-      const expiresAt = row.expiresAt?.toDate ? row.expiresAt.toDate() : null;
-      if (expiresAt && expiresAt.getTime() <= Date.now()) return { label: 'Expired', tone: 'danger' };
-      const maxUses = row.maxUses;
-      const useCount = Number(row.useCount) || 0;
-      if (maxUses != null && Number.isFinite(Number(maxUses)) && useCount >= Number(maxUses)) {
-        return { label: 'Exhausted', tone: 'danger' };
-      }
-      return { label: 'Active', tone: 'ok' };
-    }
-
-    function buildStaffDevAccessShareLinks(code, catalog) {
-      const value = String(catalog || 'games').toLowerCase();
-      const origin = window.location.origin;
-      const links = [];
-      if (value === 'games' || value === 'both') {
-        links.push({ label: 'Games link', href: `${origin}/dev/games/?code=${encodeURIComponent(code)}` });
-      }
-      if (value === 'movies' || value === 'both') {
-        links.push({ label: 'Movies link', href: `${origin}/dev/movies/?code=${encodeURIComponent(code)}` });
-      }
-      return links;
-    }
-
-    function resetStaffAccessCodeForm() {
-      document.getElementById('staff-access-code-edit').value = '';
-      document.getElementById('staff-access-code-catalog').value = 'games';
-      document.getElementById('staff-access-code-label').value = '';
-      document.getElementById('staff-access-code-code').value = '';
-      document.getElementById('staff-access-code-code').readOnly = false;
-      document.getElementById('staff-access-code-expires').value = '';
-      document.getElementById('staff-access-code-max-uses').value = '';
-      const saveBtn = document.getElementById('staff-access-code-save');
-      if (saveBtn) saveBtn.textContent = 'Create code';
-      const created = document.getElementById('staff-access-code-created');
-      if (created) created.hidden = true;
-    }
-
-    async function loadStaffAccessCodes() {
-      const container = document.getElementById('staff-access-codes-list');
-      if (!container) return;
-      if (!canViewDevAccessCodesAdmin()) {
-        container.innerHTML = '<p style="color:var(--neon-pink);">No permission.</p>';
-        return;
-      }
-      const canManage = canManageDevAccessCodes();
-      try {
-        let snap;
-        try {
-          snap = await getDocs(query(collection(db, 'devAccessCodes'), orderBy('createdAt', 'desc')));
-        } catch (_) {
-          snap = await getDocs(collection(db, 'devAccessCodes'));
-        }
-        const rows = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        rows.sort((a, b) => {
-          const aTime = a.createdAt?.toMillis?.() || 0;
-          const bTime = b.createdAt?.toMillis?.() || 0;
-          return bTime - aTime;
-        });
-        if (!rows.length) {
-          container.innerHTML = '<p style="color:var(--text-secondary);">No dev access codes yet.</p>';
-          return;
-        }
-        container.innerHTML = `
-          <table class="staff-table">
-            <thead>
-              <tr>
-                <th>Code</th>
-                <th>Catalogue</th>
-                <th>Label</th>
-                <th>Uses</th>
-                <th>Expires</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows.map((row) => {
-                const status = getStaffDevAccessCodeStatus(row);
-                const statusColor = status.tone === 'ok'
-                  ? 'var(--neon-green)'
-                  : status.tone === 'danger'
-                    ? 'var(--neon-pink)'
-                    : 'var(--text-secondary)';
-                const usesText = row.maxUses != null && Number.isFinite(Number(row.maxUses))
-                  ? `${Number(row.useCount) || 0} / ${Number(row.maxUses)}`
-                  : `${Number(row.useCount) || 0} / ∞`;
-                const expiresText = row.expiresAt?.toDate
-                  ? row.expiresAt.toDate().toLocaleString()
-                  : 'Never';
-                const links = buildStaffDevAccessShareLinks(row.id, row.catalog).map((link) =>
-                  `<button type="button" class="staff-btn staff-btn-sm staff-access-copy" data-copy="${escapeHtml(link.href)}" title="${escapeHtml(link.href)}">Copy ${escapeHtml(link.label)}</button>`
-                ).join(' ');
-                const manageBtns = canManage ? `
-                  <button type="button" class="staff-btn staff-btn-sm staff-access-edit" data-id="${escapeHtml(row.id)}">Edit</button>
-                  <button type="button" class="staff-btn staff-btn-sm staff-access-toggle" data-id="${escapeHtml(row.id)}" data-active="${row.active === false ? '0' : '1'}">${row.active === false ? 'Activate' : 'Deactivate'}</button>
-                  <button type="button" class="staff-btn staff-btn-danger staff-btn-sm staff-access-del" data-id="${escapeHtml(row.id)}">Delete</button>
-                ` : '<span style="color:var(--text-secondary);font-size:0.78rem;">Read only</span>';
-                return `
-                  <tr>
-                    <td><code>${escapeHtml(row.id)}</code></td>
-                    <td>${escapeHtml(formatStaffDevAccessCatalog(row.catalog))}</td>
-                    <td>${escapeHtml(row.label || '—')}</td>
-                    <td>${escapeHtml(usesText)}</td>
-                    <td>${escapeHtml(expiresText)}</td>
-                    <td style="color:${statusColor};font-weight:800;">${escapeHtml(status.label)}</td>
-                    <td><div class="staff-flex-row" style="gap:6px;flex-wrap:wrap;">${links}${manageBtns}</div></td>
-                  </tr>
-                `;
-              }).join('')}
-            </tbody>
-          </table>
-        `;
-        container.querySelectorAll('.staff-access-copy').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const text = btn.dataset.copy || '';
-            try {
-              await navigator.clipboard.writeText(text);
-              showNotification('Link copied', 'success');
-            } catch (_) {
-              showNotification('Could not copy link', 'error');
-            }
-          });
-        });
-        container.querySelectorAll('.staff-access-edit').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            if (!canManageDevAccessCodes()) { showNotification('No permission', 'error'); return; }
-            const snapDoc = await getDoc(doc(db, 'devAccessCodes', btn.dataset.id));
-            if (!snapDoc.exists()) return;
-            const row = snapDoc.data() || {};
-            document.getElementById('staff-access-code-edit').value = btn.dataset.id;
-            document.getElementById('staff-access-code-catalog').value = String(row.catalog || 'games').toLowerCase();
-            document.getElementById('staff-access-code-label').value = row.label || '';
-            document.getElementById('staff-access-code-code').value = btn.dataset.id;
-            document.getElementById('staff-access-code-code').readOnly = true;
-            document.getElementById('staff-access-code-expires').value = row.expiresAt?.toDate
-              ? new Date(row.expiresAt.toDate().getTime() - row.expiresAt.toDate().getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-              : '';
-            document.getElementById('staff-access-code-max-uses').value = row.maxUses != null ? String(row.maxUses) : '';
-            document.getElementById('staff-access-code-save').textContent = 'Save changes';
-            document.getElementById('staff-access-codes')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-        });
-        container.querySelectorAll('.staff-access-toggle').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            if (!canManageDevAccessCodes()) { showNotification('No permission', 'error'); return; }
-            const nextActive = btn.dataset.active !== '1';
-            await updateDoc(doc(db, 'devAccessCodes', btn.dataset.id), {
-              active: nextActive,
-              updatedAt: serverTimestamp()
-            });
-            loadStaffAccessCodes();
-            showNotification(nextActive ? 'Code activated' : 'Code deactivated', 'success');
-          });
-        });
-        container.querySelectorAll('.staff-access-del').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            if (!canManageDevAccessCodes()) { showNotification('No permission', 'error'); return; }
-            if (!confirm('Delete this access code?')) return;
-            await deleteDoc(doc(db, 'devAccessCodes', btn.dataset.id));
-            loadStaffAccessCodes();
-            showNotification('Access code deleted', 'success');
-          });
-        });
-      } catch (e) {
-        container.innerHTML = '<p style="color:var(--neon-pink);">Error loading dev access codes.</p>';
-      }
-    }
-
     /**
      * Resolve a user uid from an email for staff tools — matches Firebase-style
      * normalization (case-insensitive) and falls back to authUsers bridge doc id (= uid).
@@ -8098,77 +7924,6 @@
         showNotification('Mission saved','success');
       });
 
-      document.getElementById('staff-access-code-reset')?.addEventListener('click', () => {
-        resetStaffAccessCodeForm();
-      });
-
-      document.getElementById('staff-access-code-save')?.addEventListener('click', async () => {
-        if (!canManageDevAccessCodes()) {
-          showNotification('No permission to manage dev access codes', 'error');
-          return;
-        }
-        const editId = String(document.getElementById('staff-access-code-edit')?.value || '').trim();
-        const catalog = String(document.getElementById('staff-access-code-catalog')?.value || 'games').toLowerCase();
-        const label = String(document.getElementById('staff-access-code-label')?.value || '').trim();
-        const expiresRaw = String(document.getElementById('staff-access-code-expires')?.value || '').trim();
-        const maxUsesRaw = String(document.getElementById('staff-access-code-max-uses')?.value || '').trim();
-        let code = normalizeStaffDevAccessCode(document.getElementById('staff-access-code-code')?.value);
-        if (!editId && !code) code = generateStaffDevAccessCode(catalog);
-        if (!editId && !/^[A-Z0-9-]{6,64}$/.test(code)) {
-          showNotification('Code must be 6–64 letters, numbers, or dashes', 'error');
-          return;
-        }
-        const maxUses = maxUsesRaw ? Number.parseInt(maxUsesRaw, 10) : null;
-        if (maxUsesRaw && (!Number.isFinite(maxUses) || maxUses < 1)) {
-          showNotification('Max uses must be at least 1', 'error');
-          return;
-        }
-        const expiresAt = expiresRaw ? Timestamp.fromDate(new Date(expiresRaw)) : null;
-        const payload = {
-          catalog,
-          label,
-          expiresAt,
-          maxUses,
-          updatedAt: serverTimestamp()
-        };
-        try {
-          if (editId) {
-            await updateDoc(doc(db, 'devAccessCodes', editId), payload);
-            resetStaffAccessCodeForm();
-            loadStaffAccessCodes();
-            showNotification('Access code updated', 'success');
-            return;
-          }
-          const existing = await getDoc(doc(db, 'devAccessCodes', code));
-          if (existing.exists()) {
-            showNotification('That code already exists — choose another', 'error');
-            return;
-          }
-          await setDoc(doc(db, 'devAccessCodes', code), {
-            ...payload,
-            active: true,
-            useCount: 0,
-            createdAt: serverTimestamp(),
-            createdBy: currentUser?.uid || '',
-            createdByEmail: currentUser?.email || '',
-            lastUsedAt: null
-          });
-          const created = document.getElementById('staff-access-code-created');
-          if (created) {
-            const links = buildStaffDevAccessShareLinks(code, catalog).map((link) =>
-              `<div><strong>${escapeHtml(link.label)}:</strong> <code>${escapeHtml(link.href)}</code></div>`
-            ).join('');
-            created.innerHTML = `<strong>Code created:</strong> <code>${escapeHtml(code)}</code>${links ? `<div style="margin-top:8px;">${links}</div>` : ''}`;
-            created.hidden = false;
-          }
-          resetStaffAccessCodeForm();
-          loadStaffAccessCodes();
-          showNotification('Access code created', 'success');
-        } catch (err) {
-          showNotification('Could not save access code: ' + (err?.message || String(err)), 'error');
-        }
-      });
-
       document.getElementById('staff-mod-apply-btn')?.addEventListener('click', async () => {
         const lookup = document.getElementById('staff-mod-lookup')?.value || '';
         const action = document.getElementById('staff-mod-action')?.value || 'open';
@@ -8299,11 +8054,25 @@
     setupStaffEventListeners();
 
     // ========== Initialize the app ==========
+    function showPageLoadError(pageId, err) {
+      const message = err?.message || String(err || 'Unknown error');
+      const activePage = document.getElementById(pageId) || document.querySelector('.page.active');
+      const host = activePage || document.getElementById('main-content');
+      if (!host) return;
+      let errorEl = host.querySelector(':scope > .games-page-load-error');
+      if (!errorEl) {
+        errorEl = document.createElement('div');
+        errorEl.className = 'games-page-load-error';
+        errorEl.setAttribute('role', 'alert');
+        host.prepend(errorEl);
+      }
+      errorEl.textContent = `Could not load this page. ${message}`;
+    }
+
     async function init() {
       applyFixedSiteTheme();
       const pageId = getCurrentPageId();
       activateInitialPage(pageId);
-      hidePageLoading();
       try {
         await Promise.all([
           refreshRarityOrderFromServer(),
@@ -8311,10 +8080,13 @@
         ]);
       } catch (err) {
         console.error('Game Universe init failed:', err);
+        showPageLoadError(pageId, err);
+      } finally {
+        hidePageLoading();
       }
     }
 
-    init().catch(() => hidePageLoading());
+    init().catch((err) => { console.error('Game Universe boot failed:', err); showPageLoadError(getCurrentPageId(), err); hidePageLoading(); });
     setTimeout(hidePageLoading, 12000);
     // ========== Event Listeners ==========
     document.addEventListener('fullscreenchange', syncGameFullscreenUi);
