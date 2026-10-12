@@ -2,34 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie Redirect</title>
-  <script>
-    (function () {
-      const target = new URL("/movie/", window.location.origin);
-      const parts = window.location.pathname.split("/").filter(Boolean);
-      const marker = parts.findIndex((part) => part.toLowerCase() === "movie");
-      const year = marker >= 0 ? String(parts[marker + 1] || "").trim() : "";
-      const categoryId = marker >= 0 ? String(parts[marker + 2] || "").trim() : "";
-      const movieId = marker >= 0 ? String(parts[marker + 3] || "").trim() : "";
-      if (year && categoryId && movieId) {
-        target.pathname = `/movie/${encodeURIComponent(year)}/${encodeURIComponent(categoryId)}/${encodeURIComponent(movieId)}`;
-      }
-      const raw = String(window.location.search || "").replace(/^\?/, "");
-      if (raw.startsWith("=")) {
-        try {
-          target.searchParams.set("url", decodeURIComponent(raw.slice(1)));
-        } catch (_) {
-          target.searchParams.set("url", raw.slice(1));
-        }
-      } else if (raw) {
-        target.search = `?${raw}`;
-      }
-      window.location.replace(target.toString());
-    })();
-  </script>
+  <meta http-equiv="refresh" content="0; url=/games/dashboard">
+  <title>Game Universe</title>
+  <script>location.replace("/games/dashboard");</script>
 </head>
-<body>
-  Redirecting...
-</body>
+<body></body>
 </html>

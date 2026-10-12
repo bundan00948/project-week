@@ -34,9 +34,6 @@
       <a class="tab-button" data-page="main-page" href="/games/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button" data-page="movies-page" href="/games/movies">
-        <i class="fas fa-film"></i> Movies
-      </a>
       <a class="tab-button" data-page="profile-page" href="/games/profile">
         <i class="fas fa-user"></i> Profile
       </a>
@@ -379,34 +376,7 @@
           </div>
         </div>
     
-        <div id="movieInfoModal" class="modal movie-info-modal">
-          <div class="movie-info-shell" id="movieInfoShell" role="dialog" aria-modal="true" aria-labelledby="movieInfoTitle">
-            <div class="movie-info-background" id="movieInfoBackground"></div>
-            <div class="movie-info-trailer-stage" id="movieInfoTrailerStage" aria-hidden="true">
-              <iframe class="movie-info-trailer-frame" id="movieInfoTrailerFrame" title="" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
-            </div>
-            <div class="movie-info-overlay"></div>
-            <button type="button" class="movie-info-close" id="movieInfoCloseBtn" aria-label="Close movie details">×</button>
-            <section class="movie-info-panel">
-              <div class="movie-info-main">
-                <div class="movie-info-kicker"><i class="fas fa-film" aria-hidden="true"></i> PRE-MOVIE VIEW</div>
-                <img id="movieInfoTitleImage" class="movie-info-title-image" src="" alt="Movie title logo" loading="lazy">
-                <h2 class="movie-info-title" id="movieInfoTitle">Movie title</h2>
-                <div class="movie-info-meta">
-                  <span class="movie-info-chip"><i class="fas fa-tag" aria-hidden="true"></i><span id="movieInfoCategory">Category</span></span>
-                  <span class="movie-info-chip"><i class="fas fa-calendar-alt" aria-hidden="true"></i><span id="movieInfoYear">Year</span></span>
-                  <span class="movie-info-chip"><i class="fas fa-star" aria-hidden="true"></i><span id="movieInfoScore">Score</span></span>
-                </div>
-                <p class="movie-info-desc" id="movieInfoDescription">No description available yet.</p>
-                <div class="movie-info-actions" id="movieInfoActions">
-                  <button type="button" class="movie-info-watch-btn" id="movieInfoWatchBtn">WATCH MOVIE</button>
-                  <button type="button" class="movie-info-back-btn" id="movieInfoBackBtn">BACK</button>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
+                <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
         <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
   </div>
 <!-- Staff Panel Modals -->

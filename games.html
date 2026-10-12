@@ -6142,9 +6142,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       <a class="tab-button active" data-page="main-page" href="/games/dashboard">
         <i class="fas fa-home"></i> Main Page
       </a>
-      <a class="tab-button" data-page="movies-page" href="/games/movies">
-        <i class="fas fa-film"></i> Movies
-      </a>
       <a class="tab-button" data-page="profile-page" href="/games/profile">
         <i class="fas fa-user"></i> Profile
       </a>
@@ -6208,40 +6205,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       </section>
     </div>
 
-    <!-- Movies Page -->
-    <div class="page movies-page" id="movies-page">
-      <section class="hero movies-hero">
-        <div class="movies-hero-shell">
-          <p class="movies-kicker">Spotlight &amp; catalogue</p>
-          <div class="movies-heading-row">
-            <h2>Movies</h2>
-            <p class="movies-overview">Pick a category, open a title for the pre-movie view, then start playback when you&rsquo;re signed in. Titles with a trailer link show subtle motion behind the details—no controls, just atmosphere.</p>
-          </div>
-          <div class="movies-hero-stats">
-            <span class="movies-hero-stat"><strong id="moviesTotalCount">0</strong> Titles</span>
-            <span class="movies-hero-stat"><strong id="moviesCategoryCount">0</strong> Categories</span>
-          </div>
-        </div>
-        <div class="movie-carousel-container" id="topMoviesCarousel"></div>
-      </section>
-      <section class="movies-category-selector">
-        <div class="movies-section-head">
-          <h2>Browse by category</h2>
-          <span class="movies-active-category" id="moviesActiveCategoryLabel">None selected</span>
-        </div>
-        <div class="movies-category-buttons" id="movieCategoryButtons"></div>
-      </section>
-      <section class="movies-list-shell">
-        <div class="movies-search-row">
-          <label class="movies-search-box" for="movieSearchInput">
-            <i class="fas fa-search movies-search-icon" aria-hidden="true"></i>
-            <input type="text" id="movieSearchInput" class="movies-search-input" placeholder="Search movies by title...">
-          </label>
-          <div class="movies-result-summary" id="moviesResultSummary">0 titles</div>
-        </div>
-        <div class="movies-grid" id="movieGrid"></div>
-      </section>
-    </div>
 
     <!-- Profile Page (own profile - Blooket style) -->
     <div class="page" id="profile-page">
@@ -6338,7 +6301,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         <div class="history-stats" id="history-stats">
           <div class="history-stat"><span class="history-stat-label">Total</span><strong class="history-stat-value">0</strong></div>
           <div class="history-stat"><span class="history-stat-label">Games</span><strong class="history-stat-value">0</strong></div>
-          <div class="history-stat"><span class="history-stat-label">Movies</span><strong class="history-stat-value">0</strong></div>
         </div>
         <div class="history-list" id="play-history-list">
           <!-- History items will be added here -->
@@ -6505,7 +6467,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           <div class="staff-sub-tabs" id="staff-sub-tabs">
             <button class="staff-sub-tab active" data-staff-tab="staff-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
             <button class="staff-sub-tab" data-staff-tab="staff-games"><i class="fas fa-gamepad"></i> Games</button>
-            <button class="staff-sub-tab" data-staff-tab="staff-movies"><i class="fas fa-film"></i> Movies</button>
             <button class="staff-sub-tab" data-staff-tab="staff-tags"><i class="fas fa-tags"></i> Tags</button>
             <button class="staff-sub-tab" data-staff-tab="staff-plays"><i class="fas fa-history"></i> History & IP</button>
             <button class="staff-sub-tab" data-staff-tab="staff-packs"><i class="fas fa-cubes"></i> Packs & Items</button>
@@ -6524,7 +6485,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
             <div class="staff-dashboard-overview" id="staff-dashboard-overview"></div>
             <div class="staff-stats-grid" id="staff-stats-grid"></div>
             <div class="staff-dashboard-grid">
-              <div class="staff-card staff-quick-actions-card"><h3>Quick Actions</h3><div class="staff-flex-row" style="margin-top:14px;"><button class="staff-btn staff-btn-primary" id="staff-quick-add-game"><i class="fas fa-plus"></i> Add Game</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-movie"><i class="fas fa-film"></i> Add Movie</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-pack"><i class="fas fa-plus"></i> Add Pack</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-title"><i class="fas fa-plus"></i> Add Title</button><button class="staff-btn" id="staff-quick-add-mission"><i class="fas fa-tasks"></i> New Mission</button></div></div>
+              <div class="staff-card staff-quick-actions-card"><h3>Quick Actions</h3><div class="staff-flex-row" style="margin-top:14px;"><button class="staff-btn staff-btn-primary" id="staff-quick-add-game"><i class="fas fa-plus"></i> Add Game</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-pack"><i class="fas fa-plus"></i> Add Pack</button><button class="staff-btn staff-btn-primary" id="staff-quick-add-title"><i class="fas fa-plus"></i> Add Title</button><button class="staff-btn" id="staff-quick-add-mission"><i class="fas fa-tasks"></i> New Mission</button></div></div>
               <div class="staff-card"><h3>Module Access</h3><div class="staff-access-grid" id="staff-dashboard-access-list"></div></div>
             </div>
           </div>
@@ -6537,42 +6498,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
             </div>
           </div>
 
-          <!-- Staff Movies -->
-          <div class="staff-section" id="staff-movies">
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Movie Categories</h3></div>
-              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
-                <input type="hidden" id="staff-movie-category-id">
-                <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Name</label><input id="staff-movie-category-name" placeholder="e.g. Drama"></div>
-                <div class="staff-form-group" style="margin:0;min-width:210px;flex:1.2;"><label>Gradient CSS</label><input id="staff-movie-category-gradient" placeholder="linear-gradient(...)"></div>
-                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Corner art URL</label><input id="staff-movie-category-art" placeholder="https://...png"></div>
-                <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art position</label><select id="staff-movie-category-art-pos"><option value="bottom">Bottom</option><option value="middle">Middle</option></select></div>
-                <div class="staff-form-group" style="margin:0;min-width:130px;"><label>Art size</label><select id="staff-movie-category-art-scale"><option value="50">50%</option><option value="75">75%</option><option value="100" selected>100%</option><option value="125">125%</option><option value="150">150%</option></select></div>
-                <div class="staff-form-group" style="margin:0;min-width:90px;"><label>Order</label><input id="staff-movie-category-order" type="number" value="0"></div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-category-btn" style="margin-bottom:2px;">Save Category</button>
-                <button type="button" class="staff-btn" id="staff-reset-movie-category-btn" style="margin-bottom:2px;">Clear</button>
-              </div>
-              <div id="staff-movie-categories-list" style="margin-top:14px;"></div>
-            </div>
-            <div class="staff-card">
-              <div class="staff-card-header"><h3>Movies Management</h3><div class="staff-flex-row"><input type="text" class="staff-search" id="staff-search-movie" placeholder="Search movies..."></div></div>
-              <div class="staff-flex-row" style="gap:10px;flex-wrap:wrap;align-items:flex-end;">
-                <input type="hidden" id="staff-movie-id">
-                <div class="staff-form-group" style="margin:0;min-width:220px;flex:1.5;"><label>Title</label><input id="staff-movie-title" placeholder="Movie title"></div>
-                <div class="staff-form-group" style="margin:0;min-width:170px;flex:1;"><label>Category</label><select id="staff-movie-category"></select></div>
-                <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Year</label><input id="staff-movie-year" type="number" min="1900" max="2100" value="2024"></div>
-                <div class="staff-form-group" style="margin:0;min-width:100px;"><label>Score</label><input id="staff-movie-score" type="number" min="0" max="10" step="0.1" value="8.0"></div>
-                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Banner URL</label><input id="staff-movie-banner" placeholder="https://...jpg"></div>
-                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Title Image URL</label><input id="staff-movie-title-image" placeholder="Optional: title logo image URL"></div>
-                <div class="staff-form-group" style="margin:0;min-width:200px;flex:1.2;"><label>Trailer (YouTube URL or ID)</label><input id="staff-movie-trailer" placeholder="Optional — plays behind pre-movie view"></div>
-                <div class="staff-form-group" style="margin:0;min-width:180px;flex:1;"><label>Movie URL (direct link)</label><input id="staff-movie-url" placeholder="https://..."></div>
-                <div class="staff-form-group" style="margin:0;min-width:260px;flex:2;flex-basis:100%;"><label>Description</label><textarea id="staff-movie-desc" rows="2" placeholder="Movie description for the pre-movie screen"></textarea></div>
-                <button type="button" class="staff-btn staff-btn-primary" id="staff-save-movie-btn" style="margin-bottom:2px;">Save Movie</button>
-                <button type="button" class="staff-btn" id="staff-reset-movie-btn" style="margin-bottom:2px;">Clear</button>
-              </div>
-              <div style="overflow-x:auto;margin-top:14px;" id="staff-movies-table"></div>
-            </div>
-          </div>
 
           <!-- Staff Tags -->
           <div class="staff-section" id="staff-tags">
@@ -6585,7 +6510,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
           <!-- Staff Plays & IP -->
           <div class="staff-section" id="staff-plays">
             <div class="staff-card">
-              <div class="staff-card-header"><h3>History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user, game, movie, or IP..."></div>
+              <div class="staff-card-header"><h3>History & IP Logs</h3><input type="text" class="staff-search" id="staff-filter-plays" placeholder="Filter by user, game, or IP..."></div>
               <div style="overflow-x:auto;"><table class="staff-table" id="staff-plays-table"><thead><tr><th>User</th><th>Type</th><th>Title</th><th>Time</th><th>IP Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
             </div>
           </div>
@@ -7058,34 +6983,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       </div>
     </div>
 
-    <div id="movieInfoModal" class="modal movie-info-modal">
-      <div class="movie-info-shell" id="movieInfoShell" role="dialog" aria-modal="true" aria-labelledby="movieInfoTitle">
-        <div class="movie-info-background" id="movieInfoBackground"></div>
-        <div class="movie-info-trailer-stage" id="movieInfoTrailerStage" aria-hidden="true">
-          <iframe class="movie-info-trailer-frame" id="movieInfoTrailerFrame" title="" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
-        </div>
-        <div class="movie-info-overlay"></div>
-        <button type="button" class="movie-info-close" id="movieInfoCloseBtn" aria-label="Close movie details">×</button>
-        <section class="movie-info-panel">
-          <div class="movie-info-main">
-            <div class="movie-info-kicker"><i class="fas fa-film" aria-hidden="true"></i> PRE-MOVIE VIEW</div>
-            <img id="movieInfoTitleImage" class="movie-info-title-image" src="" alt="Movie title logo" loading="lazy">
-            <h2 class="movie-info-title" id="movieInfoTitle">Movie title</h2>
-            <div class="movie-info-meta">
-              <span class="movie-info-chip"><i class="fas fa-tag" aria-hidden="true"></i><span id="movieInfoCategory">Category</span></span>
-              <span class="movie-info-chip"><i class="fas fa-calendar-alt" aria-hidden="true"></i><span id="movieInfoYear">Year</span></span>
-              <span class="movie-info-chip"><i class="fas fa-star" aria-hidden="true"></i><span id="movieInfoScore">Score</span></span>
-            </div>
-            <p class="movie-info-desc" id="movieInfoDescription">No description available yet.</p>
-            <div class="movie-info-actions" id="movieInfoActions">
-              <button type="button" class="movie-info-watch-btn" id="movieInfoWatchBtn">WATCH MOVIE</button>
-              <button type="button" class="movie-info-back-btn" id="movieInfoBackBtn">BACK</button>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
+        <div id="gameModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="modalGameTitle">GAME TITLE</h2><div class="modal-header-controls"><button type="button" class="game-fullscreen-btn" id="gameFullscreenBtn">FULL SCREEN</button><button type="button" class="close" aria-label="Close game modal">×</button></div></div><button type="button" class="game-exit-fullscreen-btn" id="gameExitFullscreenBtn" aria-label="Exit fullscreen">Exit Fullscreen</button><iframe id="gameFrame" class="game-frame" src="" loading="lazy" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals" referrerpolicy="no-referrer"></iframe></div></div>
     <footer><p>© 2026 GAME UNIVERSE. ALL RIGHTS RESERVED. | DESIGNED WITH ❤️</p></footer>
   </div>
 
@@ -9490,6 +9388,7 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
 
     function navigateToPage(routeId, options = {}) {
       const id = String(routeId || '').trim();
+      if (id === 'movies-page') { window.location.replace('/games/dashboard'); return; }
       if (!PAGE_ROUTE_IDS.has(id)) return;
       const path = PAGE_PATH_MAP[id];
       if (!path) return;
@@ -9818,8 +9717,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         case 'contact':
           break;
         case 'movies-page':
-          await mountMoviesPageContent();
-          break;
+          window.location.replace('/games/dashboard');
+          return;
         case 'profile-page':
           if (currentUser?.uid) loadProfilePage(currentUser.uid);
           break;
@@ -10121,20 +10020,19 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
               historyStatsBar.innerHTML = `
                 <div class="history-stat"><span class="history-stat-label">Total</span><strong class="history-stat-value">0</strong></div>
                 <div class="history-stat"><span class="history-stat-label">Games</span><strong class="history-stat-value">0</strong></div>
-                <div class="history-stat"><span class="history-stat-label">Movies</span><strong class="history-stat-value">0</strong></div>
               `;
             }
-            playHistoryList.innerHTML = '<div class="history-empty">No history yet. Start a game or watch a movie to build your activity timeline.</div>';
+            playHistoryList.innerHTML = '<div class="history-empty">No history yet. Start a game to build your activity timeline.</div>';
             return;
           }
           snapshot.forEach((doc) => {
             const data = doc.data();
+            const type = String(data.entryType || data.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
+            if (type === 'movie') return;
             totalEntries += 1;
+            gameEntries += 1;
             const timestamp = data.timestamp?.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
             const formattedTime = timestamp.toLocaleString();
-            const type = String(data.entryType || data.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
-            if (type === 'movie') movieEntries += 1;
-            else gameEntries += 1;
             const title = type === 'movie'
               ? String(data.movieTitle || data.gameTitle || 'Movie')
               : String(data.gameTitle || data.movieTitle || 'Game');
@@ -10190,7 +10088,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
             historyStatsBar.innerHTML = `
               <div class="history-stat"><span class="history-stat-label">Total</span><strong class="history-stat-value">${totalEntries}</strong></div>
               <div class="history-stat"><span class="history-stat-label">Games</span><strong class="history-stat-value">${gameEntries}</strong></div>
-              <div class="history-stat"><span class="history-stat-label">Movies</span><strong class="history-stat-value">${movieEntries}</strong></div>
             `;
           }
         });
@@ -12842,14 +12739,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       { key: 'edit_games', label: 'Edit Games', desc: 'Edit existing games', group: 'Content' },
       { key: 'delete_games', label: 'Delete Games', desc: 'Delete existing games', group: 'Content' },
 
-      { key: 'create_movies', label: 'Create Movies', desc: 'Add new movies', group: 'Content' },
-      { key: 'edit_movies', label: 'Edit Movies', desc: 'Edit existing movies', group: 'Content' },
-      { key: 'delete_movies', label: 'Delete Movies', desc: 'Delete existing movies', group: 'Content' },
-
-      { key: 'create_movie_categories', label: 'Create Movie Categories', desc: 'Add movie categories', group: 'Content' },
-      { key: 'edit_movie_categories', label: 'Edit Movie Categories', desc: 'Edit movie categories', group: 'Content' },
-      { key: 'delete_movie_categories', label: 'Delete Movie Categories', desc: 'Delete movie categories', group: 'Content' },
-
       { key: 'create_tags', label: 'Create Tags', desc: 'Create tags', group: 'Content' },
       { key: 'delete_tags', label: 'Delete Tags', desc: 'Delete tags', group: 'Content' },
 
@@ -13356,7 +13245,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     const STAFF_TAB_ACCESS_RULES = {
       'staff-dashboard': () => hasPermission('view_dashboard'),
       'staff-games': () => canViewGamesAdmin(),
-      'staff-movies': () => canAccessMoviesPanel(),
       'staff-tags': () => canViewTagsAdmin(),
       'staff-plays': () => hasPermission('view_plays'),
       'staff-packs': () => hasPermission('manage_packs'),
@@ -13380,7 +13268,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       switch (tabId) {
         case 'staff-dashboard': loadStaffDashboard(); break;
         case 'staff-games': loadStaffGames(); break;
-        case 'staff-movies': loadStaffMoviesPanel(); break;
         case 'staff-tags': loadStaffTags(); break;
         case 'staff-plays': loadStaffPlays(); break;
         case 'staff-packs': loadStaffPacks(); break;
@@ -13465,11 +13352,10 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
     // ========== Staff Dashboard ==========
     async function loadStaffDashboard() {
       if (!hasPermission('view_dashboard')) return;
-      const [gamesSnap, usersSnap, playsSnap, packsSnap, titlesSnap, badgesSnap, moviesSnap, movieCatsSnap] = await Promise.all([
+      const [gamesSnap, usersSnap, playsSnap, packsSnap, titlesSnap, badgesSnap] = await Promise.all([
         getDocs(collection(db,"games")), getDocs(collection(db,"users")),
         getDocs(collection(db,"plays")), getDocs(collection(db,"packs")),
-        getDocs(collection(db,"titles")), getDocs(collection(db,"badges")),
-        getDocs(collection(db,"movies")), getDocs(collection(db,"movieCategories"))
+        getDocs(collection(db,"titles")), getDocs(collection(db,"badges"))
       ]);
       const overviewEl = document.getElementById('staff-dashboard-overview');
       const accessListEl = document.getElementById('staff-dashboard-access-list');
@@ -13493,8 +13379,6 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       }
       document.getElementById('staff-stats-grid').innerHTML = `
         <div class="staff-stat-card"><h4>Total Games</h4><div class="staff-stat-number">${gamesSnap.size}</div></div>
-        <div class="staff-stat-card"><h4>Total Movies</h4><div class="staff-stat-number">${moviesSnap.size}</div></div>
-        <div class="staff-stat-card"><h4>Movie Categories</h4><div class="staff-stat-number">${movieCatsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Registered Users</h4><div class="staff-stat-number">${usersSnap.size}</div></div>
         <div class="staff-stat-card"><h4>History Records</h4><div class="staff-stat-number">${playsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Packs</h4><div class="staff-stat-number">${packsSnap.size}</div></div>
@@ -13818,7 +13702,8 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       const q = String(filter || '').toLowerCase();
       const filtered = plays.filter((p) => {
         const type = String(p.entryType || p.itemType || 'game').toLowerCase();
-        const title = String(p.movieTitle || p.gameTitle || '');
+        if (type === 'movie') return false;
+        const title = String(p.gameTitle || '');
         const ipStr = String(p.ipAddress || '').toLowerCase();
         return (p.userEmail||p.userId||'').toLowerCase().includes(q) || title.toLowerCase().includes(q) || type.includes(q) || ipStr.includes(q);
       });

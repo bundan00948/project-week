@@ -2354,6 +2354,7 @@
 
     function navigateToPage(routeId, options = {}) {
       const id = String(routeId || '').trim();
+      if (id === 'movies-page') { window.location.replace('/games/dashboard'); return; }
       if (!PAGE_ROUTE_IDS.has(id)) return;
       const path = PAGE_PATH_MAP[id];
       if (!path) return;
@@ -2740,8 +2741,8 @@
         case 'contact':
           break;
         case 'movies-page':
-          await mountMoviesPageContent();
-          break;
+          window.location.replace('/games/dashboard');
+          return;
         case 'profile-page':
           if (currentUser?.uid) loadProfilePage(currentUser.uid);
           break;
@@ -3043,20 +3044,19 @@
               historyStatsBar.innerHTML = `
                 <div class="history-stat"><span class="history-stat-label">Total</span><strong class="history-stat-value">0</strong></div>
                 <div class="history-stat"><span class="history-stat-label">Games</span><strong class="history-stat-value">0</strong></div>
-                <div class="history-stat"><span class="history-stat-label">Movies</span><strong class="history-stat-value">0</strong></div>
               `;
             }
-            playHistoryList.innerHTML = '<div class="history-empty">No history yet. Start a game or watch a movie to build your activity timeline.</div>';
+            playHistoryList.innerHTML = '<div class="history-empty">No history yet. Start a game to build your activity timeline.</div>';
             return;
           }
           snapshot.forEach((doc) => {
             const data = doc.data();
+            const type = String(data.entryType || data.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
+            if (type === 'movie') return;
             totalEntries += 1;
+            gameEntries += 1;
             const timestamp = data.timestamp?.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
             const formattedTime = timestamp.toLocaleString();
-            const type = String(data.entryType || data.itemType || 'game').toLowerCase() === 'movie' ? 'movie' : 'game';
-            if (type === 'movie') movieEntries += 1;
-            else gameEntries += 1;
             const title = type === 'movie'
               ? String(data.movieTitle || data.gameTitle || 'Movie')
               : String(data.gameTitle || data.movieTitle || 'Game');
@@ -3112,7 +3112,6 @@
             historyStatsBar.innerHTML = `
               <div class="history-stat"><span class="history-stat-label">Total</span><strong class="history-stat-value">${totalEntries}</strong></div>
               <div class="history-stat"><span class="history-stat-label">Games</span><strong class="history-stat-value">${gameEntries}</strong></div>
-              <div class="history-stat"><span class="history-stat-label">Movies</span><strong class="history-stat-value">${movieEntries}</strong></div>
             `;
           }
         });
@@ -5764,14 +5763,6 @@
       { key: 'edit_games', label: 'Edit Games', desc: 'Edit existing games', group: 'Content' },
       { key: 'delete_games', label: 'Delete Games', desc: 'Delete existing games', group: 'Content' },
 
-      { key: 'create_movies', label: 'Create Movies', desc: 'Add new movies', group: 'Content' },
-      { key: 'edit_movies', label: 'Edit Movies', desc: 'Edit existing movies', group: 'Content' },
-      { key: 'delete_movies', label: 'Delete Movies', desc: 'Delete existing movies', group: 'Content' },
-
-      { key: 'create_movie_categories', label: 'Create Movie Categories', desc: 'Add movie categories', group: 'Content' },
-      { key: 'edit_movie_categories', label: 'Edit Movie Categories', desc: 'Edit movie categories', group: 'Content' },
-      { key: 'delete_movie_categories', label: 'Delete Movie Categories', desc: 'Delete movie categories', group: 'Content' },
-
       { key: 'create_tags', label: 'Create Tags', desc: 'Create tags', group: 'Content' },
       { key: 'delete_tags', label: 'Delete Tags', desc: 'Delete tags', group: 'Content' },
 
@@ -6290,7 +6281,6 @@
     const STAFF_TAB_ACCESS_RULES = {
       'staff-dashboard': () => hasPermission('view_dashboard'),
       'staff-games': () => canViewGamesAdmin(),
-      'staff-movies': () => canAccessMoviesPanel(),
       'staff-tags': () => canViewTagsAdmin(),
       'staff-plays': () => hasPermission('view_plays'),
       'staff-packs': () => hasPermission('manage_packs'),
@@ -6315,7 +6305,6 @@
       switch (tabId) {
         case 'staff-dashboard': loadStaffDashboard(); break;
         case 'staff-games': loadStaffGames(); break;
-        case 'staff-movies': loadStaffMoviesPanel(); break;
         case 'staff-tags': loadStaffTags(); break;
         case 'staff-plays': loadStaffPlays(); break;
         case 'staff-packs': loadStaffPacks(); break;
@@ -6401,11 +6390,10 @@
     // ========== Staff Dashboard ==========
     async function loadStaffDashboard() {
       if (!hasPermission('view_dashboard')) return;
-      const [gamesSnap, usersSnap, playsSnap, packsSnap, titlesSnap, badgesSnap, moviesSnap, movieCatsSnap] = await Promise.all([
+      const [gamesSnap, usersSnap, playsSnap, packsSnap, titlesSnap, badgesSnap] = await Promise.all([
         getDocs(collection(db,"games")), getDocs(collection(db,"users")),
         getDocs(collection(db,"plays")), getDocs(collection(db,"packs")),
-        getDocs(collection(db,"titles")), getDocs(collection(db,"badges")),
-        getDocs(collection(db,"movies")), getDocs(collection(db,"movieCategories"))
+        getDocs(collection(db,"titles")), getDocs(collection(db,"badges"))
       ]);
       const overviewEl = document.getElementById('staff-dashboard-overview');
       const accessListEl = document.getElementById('staff-dashboard-access-list');
@@ -6429,8 +6417,6 @@
       }
       document.getElementById('staff-stats-grid').innerHTML = `
         <div class="staff-stat-card"><h4>Total Games</h4><div class="staff-stat-number">${gamesSnap.size}</div></div>
-        <div class="staff-stat-card"><h4>Total Movies</h4><div class="staff-stat-number">${moviesSnap.size}</div></div>
-        <div class="staff-stat-card"><h4>Movie Categories</h4><div class="staff-stat-number">${movieCatsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Registered Users</h4><div class="staff-stat-number">${usersSnap.size}</div></div>
         <div class="staff-stat-card"><h4>History Records</h4><div class="staff-stat-number">${playsSnap.size}</div></div>
         <div class="staff-stat-card"><h4>Packs</h4><div class="staff-stat-number">${packsSnap.size}</div></div>
@@ -6754,7 +6740,8 @@
       const q = String(filter || '').toLowerCase();
       const filtered = plays.filter((p) => {
         const type = String(p.entryType || p.itemType || 'game').toLowerCase();
-        const title = String(p.movieTitle || p.gameTitle || '');
+        if (type === 'movie') return false;
+        const title = String(p.gameTitle || '');
         const ipStr = String(p.ipAddress || '').toLowerCase();
         return (p.userEmail||p.userId||'').toLowerCase().includes(q) || title.toLowerCase().includes(q) || type.includes(q) || ipStr.includes(q);
       });
@@ -7383,12 +7370,7 @@
       const value = String(catalog || 'games').toLowerCase();
       const origin = window.location.origin;
       const links = [];
-      if (value === 'games' || value === 'both') {
-        links.push({ label: 'Games link', href: `${origin}/dev/games/?code=${encodeURIComponent(code)}` });
-      }
-      if (value === 'movies' || value === 'both') {
-        links.push({ label: 'Movies link', href: `${origin}/dev/movies/?code=${encodeURIComponent(code)}` });
-      }
+      links.push({ label: 'Games link', href: `${origin}/dev/games/?code=${encodeURIComponent(code)}` });
       return links;
     }
 
