@@ -858,6 +858,17 @@ textarea {
   transition: opacity 0.28s ease, transform 0.34s ease;
 }
 
+.capsule-pack-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.18), transparent 26%),
+    radial-gradient(circle at 16% 90%, rgba(42, 255, 158, 0.12), transparent 28%),
+    radial-gradient(circle at 86% 88%, rgba(255, 61, 108, 0.12), transparent 28%);
+  pointer-events: none;
+}
+
 .capsule-open-overlay.opened .capsule-overlay-reward {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
@@ -875,6 +886,22 @@ textarea {
     radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55), transparent 26%),
     linear-gradient(135deg, #fff1a8, var(--capsule-yellow));
   font-weight: 1000;
+}
+
+.capsule-pack-modal-banner {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.capsule-pack-modal-banner::after {
+  content: '';
+  position: absolute;
+  inset: -60% -30%;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.55) 48%, transparent 62%);
+  transform: translateX(-55%) rotate(8deg);
+  animation: capsule-banner-shine 2.8s ease-in-out infinite;
 }
 
 .capsule-overlay-reward-banner img {
@@ -898,6 +925,13 @@ textarea {
   justify-items: center;
   padding: 26px 22px 24px;
   text-align: center;
+}
+
+.capsule-pack-modal-body {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    radial-gradient(circle at 50% 0%, rgba(42, 255, 158, 0.08), transparent 42%);
 }
 
 .capsule-overlay-reward-body h2 {
@@ -1275,6 +1309,17 @@ textarea {
 @keyframes capsule-sparkle-drift {
   to {
     background-position: 100px 180px, 180px 220px, 140px 260px;
+  }
+}
+
+@keyframes capsule-banner-shine {
+  0%,
+  38% {
+    transform: translateX(-60%) rotate(8deg);
+  }
+  72%,
+  100% {
+    transform: translateX(60%) rotate(8deg);
   }
 }
 
