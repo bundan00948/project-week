@@ -17,6 +17,51 @@
   <link rel="stylesheet" href="/assets/css/games-universe.css">
 </head>
 <body>
+<div id="archive-notice" class="archive-notice" role="status">The current site will be officially archived by November 30th, 2026 at 23:59. Please navigate and re-register at <a href="https://games.macautraffic.com">https://games.macautraffic.com</a>.</div>
+<script>
+(function () {
+  var MARK = "archive-notice";
+  var HTML = '<div id="archive-notice" class="archive-notice" role="status">The current site will be officially archived by November 30th, 2026 at 23:59. Please navigate and re-register at <a href="https://games.macautraffic.com">https://games.macautraffic.com</a>.</div>';
+  var busy = false;
+  function place() {
+    if (busy || !document.body) return;
+    busy = true;
+    try {
+      var el = document.getElementById(MARK);
+      if (!el) {
+        document.body.insertAdjacentHTML("afterbegin", HTML);
+        el = document.getElementById(MARK);
+      } else if (document.body.firstElementChild !== el) {
+        document.body.insertBefore(el, document.body.firstChild);
+      }
+      if (el.hasAttribute("hidden")) el.removeAttribute("hidden");
+      var cs = getComputedStyle(el);
+      if (cs.display === "none") el.style.setProperty("display", "block", "important");
+      if (cs.visibility === "hidden") el.style.setProperty("visibility", "visible", "important");
+      if (parseFloat(cs.opacity) === 0) el.style.setProperty("opacity", "1", "important");
+      var next = Math.max(el.offsetHeight, 36) + "px";
+      if (document.documentElement.style.getPropertyValue("--archive-banner-h").trim() !== next) {
+        document.documentElement.style.setProperty("--archive-banner-h", next);
+      }
+    } finally {
+      busy = false;
+    }
+  }
+  function watch(el) {
+    if (!el || el.dataset.archiveWatch === "1") return;
+    el.dataset.archiveWatch = "1";
+    new MutationObserver(place).observe(el, { attributes: true, attributeFilter: ["hidden", "style", "class"] });
+  }
+  place();
+  watch(document.getElementById(MARK));
+  window.addEventListener("resize", place);
+  new MutationObserver(function () {
+    var el = document.getElementById(MARK);
+    if (!el || document.body.firstElementChild !== el) place();
+    watch(document.getElementById(MARK));
+  }).observe(document.body, { childList: true });
+})();
+</script>
 <div class="site-bg-atlas" aria-hidden="true"></div>
   <div class="page-loading-overlay" id="page-loading-overlay" aria-busy="true" aria-label="Loading">
     <div class="loading-universe-icon" role="presentation" aria-hidden="true"><i class="fas fa-gamepad"></i></div>
