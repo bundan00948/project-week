@@ -1023,9 +1023,15 @@
         modal.innerHTML = '<div class="register-move-card" role="dialog" aria-modal="true" aria-labelledby="register-move-title">'
           + '<h3 id="register-move-title">Register on the new site</h3>'
           + '<p>This site shuts down on November 22nd, 2026 at 23:59. Register on the new Game Universe to keep your account.</p>'
+          + '<div class="register-move-actions">'
           + '<a class="register-move-btn" href="' + MOVE_SITE_URL + '">Register</a>'
+          + '<button type="button" class="register-move-ignore" id="register-move-ignore">Ignore</button>'
+          + '</div>'
           + '</div>';
         document.body.appendChild(modal);
+        modal.querySelector('#register-move-ignore')?.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
       }
       modal.style.display = 'flex';
     }
@@ -1034,6 +1040,50 @@
       const modal = document.getElementById('register-move-modal');
       if (modal) modal.style.display = 'none';
     }
+
+    let aadsIgnored = false;
+
+    function mountAadsUnit() {
+      let wrap = document.getElementById('frame');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.id = 'frame';
+        wrap.innerHTML = '<iframe data-aa="2461723" src="//acceptable.a-ads.com/2461723/?size=Adaptive" title="Advertisement" style="border:0;padding:0;width:70%;height:auto;overflow:hidden;display:block;margin:auto;min-height:90px"></iframe>';
+      }
+      if (!wrap.querySelector('#aads-ignore')) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = 'aads-ignore';
+        btn.className = 'aads-ignore';
+        btn.hidden = true;
+        btn.textContent = 'Ignore';
+        wrap.appendChild(btn);
+      }
+      const host = document.querySelector('.main-content');
+      const header = host?.querySelector(':scope > header');
+      if (header) header.insertAdjacentElement('afterend', wrap);
+      else if (host && wrap.parentNode !== host) host.prepend(wrap);
+      wrap.querySelector('#aads-ignore')?.addEventListener('click', () => {
+        aadsIgnored = true;
+        wrap.classList.add('aads-ignored');
+        const btn = document.getElementById('aads-ignore');
+        if (btn) btn.hidden = true;
+      });
+    }
+
+    function syncAadsForGame(open) {
+      const wrap = document.getElementById('frame');
+      const btn = document.getElementById('aads-ignore');
+      if (!wrap || !btn) return;
+      if (aadsIgnored) {
+        wrap.classList.add('aads-ignored');
+        btn.hidden = true;
+        return;
+      }
+      btn.hidden = !open;
+    }
+
+    mountAadsUnit();
 
     // ========== Auth state observer with owner enforcement ==========
     onAuthStateChanged(auth, async (user) => {
@@ -1491,6 +1541,7 @@
       document.body.style.overflow = '';
       exitGameFullscreen();
       syncGameFullscreenUi();
+      syncAadsForGame(false);
     }
 
     function openGameModal(title, url, options = {}) {
@@ -1508,6 +1559,7 @@
       if (gameModal) gameModal.style.display = 'block';
       document.body.style.overflow = 'hidden';
       syncGameFullscreenUi();
+      syncAadsForGame(true);
       return true;
     }
 

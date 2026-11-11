@@ -6209,3 +6209,38 @@
       font-size: 1.05rem;
     }
     .register-move-btn:hover { filter: brightness(1.05); }
+    .register-move-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .register-move-ignore,
+    .aads-ignore {
+      background: transparent;
+      color: #fff7ed;
+      border: 1px solid rgba(255, 247, 237, 0.45);
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .register-move-ignore:hover,
+    .aads-ignore:hover { background: rgba(255, 255, 255, 0.08); }
+    #frame {
+      width: 100%;
+      margin: 12px auto 8px;
+      position: relative;
+      z-index: 99998;
+    }
+    #frame.aads-ignored { display: none !important; }
+    .aads-ignore {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      z-index: 2;
+      background: #11161F;
+    }
+    .aads-ignore[hidden] { display: none !important; }
