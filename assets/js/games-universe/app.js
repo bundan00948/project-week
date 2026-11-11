@@ -1011,6 +1011,30 @@
       if (friendCount) friendCount.textContent = friendsSnap.size;
     }
 
+    const MOVE_SITE_URL = 'https://games.macautraffic.com';
+
+    function showMoveRegisterPopup() {
+      if (getCurrentPageId() !== 'main-page' || !currentUser) return;
+      let modal = document.getElementById('register-move-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'register-move-modal';
+        modal.className = 'register-move-modal';
+        modal.innerHTML = '<div class="register-move-card" role="dialog" aria-modal="true" aria-labelledby="register-move-title">'
+          + '<h3 id="register-move-title">Register on the new site</h3>'
+          + '<p>This site shuts down on November 22nd, 2026 at 23:59. Register on the new Game Universe to keep your account.</p>'
+          + '<a class="register-move-btn" href="' + MOVE_SITE_URL + '">Register</a>'
+          + '</div>';
+        document.body.appendChild(modal);
+      }
+      modal.style.display = 'flex';
+    }
+
+    function hideMoveRegisterPopup() {
+      const modal = document.getElementById('register-move-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
     // ========== Auth state observer with owner enforcement ==========
     onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
@@ -1091,9 +1115,11 @@
         }
         sidebar?.classList.add('active');
         mainContent?.classList.add('sidebar-active');
+        showMoveRegisterPopup();
         await loadActivePageContent(getCurrentPageId(), { forceGames: !mainPageGamesMounted });
       } else {
         favoriteMovieIds = new Set();
+        hideMoveRegisterPopup();
         currentUserPermissions = [];
         currentUserTitle = 'User';
         applyNonStaffMediaUi();
@@ -1282,12 +1308,13 @@
         return;
       }
       try {
-        redirectToProfileAfterAuth = true;
+        redirectToProfileAfterAuth = false;
         const cred = await signInWithEmailAndPassword(auth, email, password);
         await syncAuthIdentityToFirestore(cred.user, { event: 'login', forceProfileMirror: true });
         loginModal.style.display = 'none';
         resetLoginWizard();
         showNotification('Login successful!', 'success');
+        if (getCurrentPageId() !== 'main-page') navigateToPage('main-page');
       } catch (error) {
         redirectToProfileAfterAuth = false;
         showNotification(error.message, 'error');

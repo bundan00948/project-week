@@ -6162,3 +6162,50 @@
       bottom: 0 !important;
       height: auto !important;
     }
+    .register-move-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000000;
+      left: 0;
+      right: 0;
+      top: var(--archive-banner-h, 56px);
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.88);
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .register-move-card {
+      background: #11161F;
+      border: 2px solid #ff8a3d;
+      border-radius: 24px;
+      max-width: 460px;
+      width: 100%;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+    }
+    .register-move-card h3 {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-weight: 400;
+      font-size: 1.7rem;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .register-move-card p {
+      color: #d7deea;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+    .register-move-btn {
+      display: inline-block;
+      background: #2AFF9E;
+      color: #06120c;
+      font-weight: 900;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+    }
+    .register-move-btn:hover { filter: brightness(1.05); }

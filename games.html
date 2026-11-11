@@ -6160,15 +6160,62 @@
       bottom: 0 !important;
       height: auto !important;
     }
+    .register-move-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000000;
+      left: 0;
+      right: 0;
+      top: var(--archive-banner-h, 56px);
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.88);
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .register-move-card {
+      background: #11161F;
+      border: 2px solid #ff8a3d;
+      border-radius: 24px;
+      max-width: 460px;
+      width: 100%;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+    }
+    .register-move-card h3 {
+      font-family: 'Titan One', 'Nunito', sans-serif;
+      font-weight: 400;
+      font-size: 1.7rem;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .register-move-card p {
+      color: #d7deea;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+    .register-move-btn {
+      display: inline-block;
+      background: #2AFF9E;
+      color: #06120c;
+      font-weight: 900;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+    }
+    .register-move-btn:hover { filter: brightness(1.05); }
 
   </style>
 </head>
 <body>
-<div id="archive-notice" class="archive-notice" role="status">The current site will be officially archived by November 30th, 2026 at 23:59. Please navigate and re-register at <a href="https://games.macautraffic.com">https://games.macautraffic.com</a>.</div>
+<div id="archive-notice" class="archive-notice" role="status">The current site will be officially archived by November 22nd, 2026 at 23:59. Please navigate and re-register at <a href="https://games.macautraffic.com">https://games.macautraffic.com</a>.</div>
 <script>
 (function () {
   var MARK = "archive-notice";
-  var HTML = '<div id="archive-notice" class="archive-notice" role="status">The current site will be officially archived by November 30th, 2026 at 23:59. Please navigate and re-register at <a href="https://games.macautraffic.com">https://games.macautraffic.com</a>.</div>';
+  var HTML = '<div id="archive-notice" class="archive-notice" role="status">The current site will be officially archived by November 22nd, 2026 at 23:59. Please navigate and re-register at <a href="https://games.macautraffic.com">https://games.macautraffic.com</a>.</div>';
   var busy = false;
   function place() {
     if (busy || !document.body) return;
@@ -6210,7 +6257,7 @@
 })();
 </script>
 <script>
-if (/\\/games\\.html$/i.test(location.pathname)) {
+if (/\/games\.html$/i.test(location.pathname)) {
   location.replace('/games/dashboard' + location.search + location.hash);
 }
 </script>
@@ -8130,6 +8177,32 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
       if (friendCount) friendCount.textContent = friendsSnap.size;
     }
 
+    const MOVE_SITE_URL = 'https://games.macautraffic.com';
+
+    function showMoveRegisterPopup() {
+      const main = document.getElementById('main-page');
+      const onMain = main ? main.classList.contains('active') : true;
+      if (!onMain || !currentUser) return;
+      let modal = document.getElementById('register-move-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'register-move-modal';
+        modal.className = 'register-move-modal';
+        modal.innerHTML = '<div class="register-move-card" role="dialog" aria-modal="true" aria-labelledby="register-move-title">'
+          + '<h3 id="register-move-title">Register on the new site</h3>'
+          + '<p>This site shuts down on November 22nd, 2026 at 23:59. Register on the new Game Universe to keep your account.</p>'
+          + '<a class="register-move-btn" href="' + MOVE_SITE_URL + '">Register</a>'
+          + '</div>';
+        document.body.appendChild(modal);
+      }
+      modal.style.display = 'flex';
+    }
+
+    function hideMoveRegisterPopup() {
+      const modal = document.getElementById('register-move-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
     // ========== Auth state observer with owner enforcement ==========
     onAuthStateChanged(auth, async (user) => {
       authStateKnown = true;
@@ -8210,9 +8283,11 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         }
         sidebar?.classList.add('active');
         mainContent?.classList.add('sidebar-active');
+        showMoveRegisterPopup();
         await loadActivePageContent(getCurrentPageId(), { forceGames: !mainPageGamesMounted });
       } else {
         favoriteMovieIds = new Set();
+        hideMoveRegisterPopup();
         currentUserPermissions = [];
         currentUserTitle = 'User';
         applyNonStaffMediaUi();
@@ -8401,12 +8476,14 @@ if (/\\/games\\.html$/i.test(location.pathname)) {
         return;
       }
       try {
-        redirectToProfileAfterAuth = true;
+        redirectToProfileAfterAuth = false;
         const cred = await signInWithEmailAndPassword(auth, email, password);
         await syncAuthIdentityToFirestore(cred.user, { event: 'login', forceProfileMirror: true });
         loginModal.style.display = 'none';
         resetLoginWizard();
         showNotification('Login successful!', 'success');
+        if (getCurrentPageId() !== 'main-page') navigateToPage('main-page');
+        else showMoveRegisterPopup();
       } catch (error) {
         redirectToProfileAfterAuth = false;
         showNotification(error.message, 'error');
